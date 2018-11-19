@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{1} --- %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ROOT" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${zj.loggingRoot}/root.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%t] [%X{requestURIWithQueryString}] %-5p %c{2} %l - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="PROJECT" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${zj.loggingRoot}/service.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%t] [%X{requestURIWithQueryString}] %-5p %c{2} %l - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="DAO" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${zj.loggingRoot}/dao.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%t] [%X{requestURIWithQueryString}] %-5p %c{2} %l - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="com.ibatis" additivity="false">
+        <level value="${zj.loggingLevel}"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="DAO"/>
+    </logger>
+
+    <logger name="java.sql" additivity="false">
+        <level value="${zj.loggingLevel}"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="DAO"/>
+    </logger>
+
+    <logger name="org.apache" additivity="false">
+        <level value="${zj.loggingLevel}"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROOT"/>
+    </logger>
+
+    <logger name="org.springframework" additivity="false">
+        <!--<level value="${distributioncenter.loggingLevel}"/>-->
+        <level value="ERROR"/>
+        <!--<appender-ref ref="CONSOLE"/>-->
+        <appender-ref ref="ROOT"/>
+    </logger>
+
+    <logger name="org.apache.zookeeper" additivity="false">
+        <level value="${zj.loggingLevel}"/>
+        <!--<appender-ref ref="CONSOLE"/>-->
+        <appender-ref ref="ROOT"/>
+    </logger>
+
+    <logger name="com.alibaba.dubbo.rpc" additivity="false">
+        <level value="${zj.loggingLevel}"/>
+        <appender-ref ref="ROOT"/>
+    </logger>
+
+    <root>
+        <level value="${zj.loggingLevel}"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROOT"/>
+    </root>
+
+</log4j:configuration>
