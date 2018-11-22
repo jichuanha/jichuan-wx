@@ -3,17 +3,16 @@
  */
 package com.hzkans.crm.modules.sys.interceptor;
 
-import java.text.SimpleDateFormat;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.utils.DateUtils;
 import com.hzkans.crm.modules.sys.utils.LogUtils;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 
 /**
  * 日志拦截器

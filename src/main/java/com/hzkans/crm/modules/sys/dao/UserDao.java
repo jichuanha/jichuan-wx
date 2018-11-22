@@ -3,11 +3,11 @@
  */
 package com.hzkans.crm.modules.sys.dao;
 
-import java.util.List;
-
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.sys.entity.User;
+
+import java.util.List;
 
 /**
  * 用户DAO接口

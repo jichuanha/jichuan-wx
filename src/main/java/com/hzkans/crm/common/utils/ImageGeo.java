@@ -1,10 +1,11 @@
 package com.hzkans.crm.common.utils;
 
-import com.drew.metadata.*;
-import com.drew.metadata.exif.*;
-import com.drew.imaging.jpeg.*;
-import com.drew.lang.*;
-import java.io.*;
+import com.drew.imaging.jpeg.JpegMetadataReader;
+import com.drew.lang.Rational;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.GpsDirectory;
+
+import java.io.File;
 
 public class ImageGeo {
 	public double lat = 0.0;

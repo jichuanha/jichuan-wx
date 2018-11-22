@@ -3,12 +3,9 @@
  */
 package com.hzkans.crm.common.supcan;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.supcan.annotation.treelist.SupTreeList;
 import com.hzkans.crm.common.supcan.annotation.treelist.cols.SupCol;
 import com.hzkans.crm.common.supcan.annotation.treelist.cols.SupGroup;
@@ -16,18 +13,20 @@ import com.hzkans.crm.common.supcan.treelist.TreeList;
 import com.hzkans.crm.common.supcan.treelist.cols.Col;
 import com.hzkans.crm.common.supcan.treelist.cols.Group;
 import com.hzkans.crm.common.utils.CacheUtils;
+import com.hzkans.crm.common.utils.SpringContextHolder;
+import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.common.web.BaseController;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.hzkans.crm.common.config.Global;
-import com.hzkans.crm.common.utils.SpringContextHolder;
-import com.hzkans.crm.common.utils.StringUtils;
-import com.hzkans.crm.common.web.BaseController;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 硕正Controller

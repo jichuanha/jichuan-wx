@@ -3,21 +3,19 @@
  */
 package com.hzkans.crm.common.persistence;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlTransient;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Maps;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.supcan.annotation.treelist.SupTreeList;
 import com.hzkans.crm.common.supcan.annotation.treelist.cols.SupCol;
+import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Maps;
-import com.hzkans.crm.common.utils.StringUtils;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Entity支持类

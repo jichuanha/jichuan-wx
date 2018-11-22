@@ -3,14 +3,13 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 /**
  * 角色Entity

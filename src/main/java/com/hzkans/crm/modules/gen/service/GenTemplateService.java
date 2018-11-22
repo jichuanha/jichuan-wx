@@ -7,12 +7,11 @@ import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.gen.dao.GenTemplateDao;
+import com.hzkans.crm.modules.gen.entity.GenTemplate;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hzkans.crm.modules.gen.entity.GenTemplate;
 
 /**
  * 代码模板Service

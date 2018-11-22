@@ -3,17 +3,16 @@
  */
 package com.hzkans.crm.common.service;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import com.hzkans.crm.common.persistence.BaseEntity;
+import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.sys.entity.Role;
 import com.hzkans.crm.modules.sys.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-import com.hzkans.crm.common.utils.StringUtils;
+import java.util.List;
 
 /**
  * Service基类

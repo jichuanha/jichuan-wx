@@ -3,11 +3,11 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * 字典Entity

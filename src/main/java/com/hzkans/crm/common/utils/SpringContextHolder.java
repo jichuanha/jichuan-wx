@@ -3,10 +3,6 @@
  */
 package com.hzkans.crm.common.utils;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Date;
-
 import com.hzkans.crm.common.config.Global;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -16,6 +12,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候取出ApplicaitonContext.

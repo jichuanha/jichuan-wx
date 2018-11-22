@@ -3,16 +3,15 @@
  */
 package com.hzkans.crm.modules.sys.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hzkans.crm.common.service.TreeService;
+import com.hzkans.crm.modules.sys.dao.OfficeDao;
 import com.hzkans.crm.modules.sys.entity.Office;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.modules.sys.dao.OfficeDao;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 机构Service

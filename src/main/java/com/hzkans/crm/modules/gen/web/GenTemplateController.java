@@ -3,9 +3,6 @@
  */
 package com.hzkans.crm.modules.gen.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.web.BaseController;
@@ -21,6 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 代码模板Controller

@@ -3,8 +3,8 @@
  */
 package com.hzkans.crm.common.supcan.freeform;
 
-import com.hzkans.crm.common.supcan.common.properties.Properties;
 import com.hzkans.crm.common.supcan.common.Common;
+import com.hzkans.crm.common.supcan.common.properties.Properties;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**

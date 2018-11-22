@@ -1,8 +1,8 @@
 package com.hzkans.crm.common.security.shiro.session;
 
-import java.util.Collection;
-
 import org.apache.shiro.session.Session;
+
+import java.util.Collection;
 
 public interface SessionDAO extends org.apache.shiro.session.mgt.eis.SessionDAO {
 

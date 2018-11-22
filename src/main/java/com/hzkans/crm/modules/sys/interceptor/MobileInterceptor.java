@@ -3,14 +3,14 @@
  */
 package com.hzkans.crm.modules.sys.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.utils.UserAgentUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 手机端视图拦截器

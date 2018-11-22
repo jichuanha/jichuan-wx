@@ -3,13 +3,13 @@
  */
 package com.hzkans.crm.common.supcan.common;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.hzkans.crm.common.supcan.common.fonts.Font;
 import com.hzkans.crm.common.supcan.common.properties.Properties;
 import com.hzkans.crm.common.utils.IdGen;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+import java.util.List;
 
 /**
  * 硕正Common

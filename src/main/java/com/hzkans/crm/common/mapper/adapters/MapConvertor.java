@@ -1,12 +1,11 @@
 package com.hzkans.crm.common.mapper.adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @XmlType(name = "MapConvertor")  
 @XmlAccessorType(XmlAccessType.FIELD)  

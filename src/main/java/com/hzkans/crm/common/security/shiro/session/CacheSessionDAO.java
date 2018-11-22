@@ -3,12 +3,7 @@
  */
 package com.hzkans.crm.common.security.shiro.session;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Sets;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.utils.DateUtils;
 import com.hzkans.crm.common.utils.StringUtils;
@@ -21,7 +16,10 @@ import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * 系统安全认证实现类

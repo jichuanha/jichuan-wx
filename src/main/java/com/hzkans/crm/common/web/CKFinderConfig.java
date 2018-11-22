@@ -3,17 +3,16 @@
  */
 package com.hzkans.crm.common.web;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
-
+import com.ckfinder.connector.configuration.Configuration;
+import com.ckfinder.connector.data.AccessControlLevel;
+import com.ckfinder.connector.utils.AccessControlUtil;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.utils.FileUtils;
 import com.hzkans.crm.modules.sys.security.SystemAuthorizingRealm;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 
-import com.ckfinder.connector.configuration.Configuration;
-import com.ckfinder.connector.data.AccessControlLevel;
-import com.ckfinder.connector.utils.AccessControlUtil;
+import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * CKFinder配置

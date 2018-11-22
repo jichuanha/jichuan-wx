@@ -1,9 +1,8 @@
 package com.hzkans.crm.common.mapper.adapters;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class MapAdapter extends XmlAdapter<MapConvertor, Map<String, Object>> {  
 	  

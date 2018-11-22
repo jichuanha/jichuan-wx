@@ -3,25 +3,20 @@
  */
 package com.hzkans.crm.modules.gen.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.utils.StringUtils;
-import com.hzkans.crm.modules.gen.entity.GenScheme;
-import com.hzkans.crm.modules.gen.entity.GenTableColumn;
 import com.hzkans.crm.modules.gen.dao.GenSchemeDao;
+import com.hzkans.crm.modules.gen.dao.GenTableColumnDao;
 import com.hzkans.crm.modules.gen.dao.GenTableDao;
+import com.hzkans.crm.modules.gen.entity.*;
 import com.hzkans.crm.modules.gen.util.GenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.modules.gen.dao.GenTableColumnDao;
-import com.hzkans.crm.modules.gen.entity.GenConfig;
-import com.hzkans.crm.modules.gen.entity.GenTable;
-import com.hzkans.crm.modules.gen.entity.GenTemplate;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 生成方案Service

@@ -1,11 +1,11 @@
 package com.hzkans.crm.common.test;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+
+import javax.sql.DataSource;
 
 /**
  * Spring 单元测试基类

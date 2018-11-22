@@ -1,10 +1,9 @@
 package com.hzkans.crm.modules.sys.listener;
 
-import javax.servlet.ServletContext;
-
+import com.hzkans.crm.modules.sys.service.SystemService;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hzkans.crm.modules.sys.service.SystemService;
+import javax.servlet.ServletContext;
 
 public class WebContextListener extends org.springframework.web.context.ContextLoaderListener {
 	
