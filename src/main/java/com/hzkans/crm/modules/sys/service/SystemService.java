@@ -23,17 +23,11 @@ import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.security.SystemAuthorizingRealm;
 import com.hzkans.crm.modules.sys.utils.LogUtils;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.identity.Group;
-import org.apache.shiro.session.Session;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -63,9 +57,6 @@ public class SystemService extends BaseService{
 	public SessionDAO getSessionDao() {
 		return sessionDao;
 	}
-
-	/*@Autowired
-	private IdentityService identityService;*/
 
 	//-- User Service --//
 	
@@ -220,14 +211,7 @@ public class SystemService extends BaseService{
 		byte[] hashPassword = Digests.sha1(plain.getBytes(), salt, HASH_INTERATIONS);
 		return password.equals(Encodes.encodeHex(salt)+Encodes.encodeHex(hashPassword));
 	}
-	
-	/**
-	 * 获得活动会话
-	 * @return
-	 */
-	public Collection<Session> getActiveSessions(){
-		return sessionDao.getActiveSessions(false);
-	}
+
 	
 	//-- Role Service --//
 	
@@ -397,16 +381,5 @@ public class SystemService extends BaseService{
 		System.out.println(sb.toString());
 		return true;
 	}
-	
-	///////////////// Synchronized to the Activiti //////////////////
-
-	// 已废弃，同步见：ActGroupEntityServiceFactory.java、ActUserEntityServiceFactory.java
-
-
-
-
-
-
-	///////////////// Synchronized to the Activiti end //////////////////
 
 }
