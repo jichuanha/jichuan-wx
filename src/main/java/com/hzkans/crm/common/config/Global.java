@@ -3,16 +3,15 @@
  */
 package com.hzkans.crm.common.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import org.springframework.core.io.DefaultResourceLoader;
-
 import com.ckfinder.connector.ServletContextFactory;
 import com.google.common.collect.Maps;
 import com.hzkans.crm.common.utils.PropertiesLoader;
 import com.hzkans.crm.common.utils.StringUtils;
+import org.springframework.core.io.DefaultResourceLoader;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * 全局配置类

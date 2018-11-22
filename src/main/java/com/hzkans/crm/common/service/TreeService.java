@@ -3,14 +3,13 @@
  */
 package com.hzkans.crm.common.service;
 
-import java.util.List;
-
 import com.hzkans.crm.common.persistence.TreeDao;
 import com.hzkans.crm.common.persistence.TreeEntity;
 import com.hzkans.crm.common.utils.Reflections;
+import com.hzkans.crm.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.common.utils.StringUtils;
+import java.util.List;
 
 /**
  * Service基类

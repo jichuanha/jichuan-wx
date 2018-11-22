@@ -3,12 +3,12 @@
  */
 package com.hzkans.crm.modules.gen.dao;
 
-import java.util.List;
-
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.gen.entity.GenTable;
 import com.hzkans.crm.modules.gen.entity.GenTableColumn;
+
+import java.util.List;
 
 /**
  * 业务表字段DAO接口

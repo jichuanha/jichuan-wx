@@ -3,12 +3,12 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import java.util.Date;
-import java.util.Map;
-
 import com.hzkans.crm.common.persistence.DataEntity;
 import com.hzkans.crm.common.utils.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 日志Entity

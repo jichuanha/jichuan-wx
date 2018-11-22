@@ -3,9 +3,9 @@
  */
 package com.hzkans.crm.common.utils.excel.fieldtype;
 
+import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.sys.entity.Office;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
-import com.hzkans.crm.common.utils.StringUtils;
 
 /**
  * 字段类型转换

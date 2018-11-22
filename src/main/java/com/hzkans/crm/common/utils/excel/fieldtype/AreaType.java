@@ -3,8 +3,8 @@
  */
 package com.hzkans.crm.common.utils.excel.fieldtype;
 
-import com.hzkans.crm.modules.sys.entity.Area;
 import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.sys.entity.Area;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 
 /**

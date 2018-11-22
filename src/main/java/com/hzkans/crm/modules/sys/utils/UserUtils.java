@@ -3,28 +3,19 @@
  */
 package com.hzkans.crm.modules.sys.utils;
 
-import java.util.List;
-
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.utils.CacheUtils;
 import com.hzkans.crm.common.utils.SpringContextHolder;
+import com.hzkans.crm.modules.sys.dao.*;
+import com.hzkans.crm.modules.sys.entity.*;
 import com.hzkans.crm.modules.sys.security.SystemAuthorizingRealm;
-import com.hzkans.crm.modules.sys.dao.AreaDao;
-import com.hzkans.crm.modules.sys.dao.OfficeDao;
-import com.hzkans.crm.modules.sys.dao.RoleDao;
-import com.hzkans.crm.modules.sys.entity.Area;
-import com.hzkans.crm.modules.sys.entity.Office;
-import com.hzkans.crm.modules.sys.entity.Role;
-import com.hzkans.crm.modules.sys.entity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
-import com.hzkans.crm.modules.sys.dao.MenuDao;
-import com.hzkans.crm.modules.sys.dao.UserDao;
-import com.hzkans.crm.modules.sys.entity.Menu;
+import java.util.List;
 
 /**
  * 用户工具类

@@ -3,12 +3,11 @@
  */
 package com.hzkans.crm.common.mapper;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.dozer.DozerBeanMapper;
 
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 简单封装Dozer, 实现深度转换Bean<->Bean的Mapper.实现:

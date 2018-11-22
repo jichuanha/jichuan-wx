@@ -1,17 +1,11 @@
 package com.hzkans.crm.common.utils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.List;
-import java.util.Properties;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+
+import java.io.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * <p>

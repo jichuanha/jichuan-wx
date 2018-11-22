@@ -3,20 +3,15 @@
  */
 package com.hzkans.crm.modules.gen.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.mapper.JaxbMapper;
 import com.hzkans.crm.common.utils.DateUtils;
 import com.hzkans.crm.common.utils.FileUtils;
 import com.hzkans.crm.common.utils.FreeMarkers;
 import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.gen.entity.*;
 import com.hzkans.crm.modules.sys.entity.Area;
 import com.hzkans.crm.modules.sys.entity.Office;
 import com.hzkans.crm.modules.sys.entity.User;
@@ -27,14 +22,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.hzkans.crm.modules.gen.entity.GenCategory;
-import com.hzkans.crm.modules.gen.entity.GenConfig;
-import com.hzkans.crm.modules.gen.entity.GenScheme;
-import com.hzkans.crm.modules.gen.entity.GenTable;
-import com.hzkans.crm.modules.gen.entity.GenTableColumn;
-import com.hzkans.crm.modules.gen.entity.GenTemplate;
+import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 代码生成工具类

@@ -5,21 +5,12 @@ package com.hzkans.crm.common.persistence.interceptor;
 
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.Page;
-import com.hzkans.crm.common.persistence.dialect.db.DB2Dialect;
-import com.hzkans.crm.common.persistence.dialect.db.DerbyDialect;
-import com.hzkans.crm.common.persistence.dialect.db.H2Dialect;
-import com.hzkans.crm.common.persistence.dialect.db.SQLServer2005Dialect;
+import com.hzkans.crm.common.persistence.dialect.Dialect;
+import com.hzkans.crm.common.persistence.dialect.db.*;
+import com.hzkans.crm.common.utils.Reflections;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.plugin.Interceptor;
-
-import com.hzkans.crm.common.persistence.dialect.Dialect;
-import com.hzkans.crm.common.persistence.dialect.db.HSQLDialect;
-import com.hzkans.crm.common.persistence.dialect.db.MySQLDialect;
-import com.hzkans.crm.common.persistence.dialect.db.OracleDialect;
-import com.hzkans.crm.common.persistence.dialect.db.PostgreSQLDialect;
-import com.hzkans.crm.common.persistence.dialect.db.SybaseDialect;
-import com.hzkans.crm.common.utils.Reflections;
 
 import java.io.Serializable;
 import java.util.Properties;

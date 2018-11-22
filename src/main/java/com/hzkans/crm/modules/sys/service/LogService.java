@@ -6,11 +6,10 @@ package com.hzkans.crm.modules.sys.service;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.utils.DateUtils;
+import com.hzkans.crm.modules.sys.dao.LogDao;
 import com.hzkans.crm.modules.sys.entity.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hzkans.crm.modules.sys.dao.LogDao;
 
 /**
  * 日志Service

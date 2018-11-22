@@ -3,15 +3,13 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 菜单Entity

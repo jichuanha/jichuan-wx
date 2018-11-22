@@ -3,10 +3,8 @@
  */
 package com.hzkans.crm.common.security;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.util.Arrays;
+import com.hzkans.crm.common.utils.Encodes;
+import com.hzkans.crm.common.utils.Exceptions;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -14,9 +12,10 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.hzkans.crm.common.utils.Encodes;
-import com.hzkans.crm.common.utils.Exceptions;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * 支持HMAC-SHA1消息签名 及 DES/AES对称加密的工具类.

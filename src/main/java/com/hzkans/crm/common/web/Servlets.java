@@ -5,18 +5,7 @@
  */
 package com.hzkans.crm.common.web;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.net.HttpHeaders;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.utils.Encodes;
 import com.hzkans.crm.common.utils.StringUtils;
@@ -26,7 +15,12 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.google.common.net.HttpHeaders;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Http与Servlet工具类.

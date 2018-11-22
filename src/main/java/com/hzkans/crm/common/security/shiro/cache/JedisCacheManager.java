@@ -3,12 +3,7 @@
  */
 package com.hzkans.crm.common.security.shiro.cache;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Sets;
 import com.hzkans.crm.common.utils.JedisUtils;
 import com.hzkans.crm.common.web.Servlets;
 import org.apache.shiro.cache.Cache;
@@ -16,10 +11,12 @@ import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 
-import com.google.common.collect.Sets;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * 自定义授权缓存管理类

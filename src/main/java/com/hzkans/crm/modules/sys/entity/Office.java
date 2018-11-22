@@ -3,12 +3,11 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import com.hzkans.crm.common.persistence.TreeEntity;
 import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 机构Entity

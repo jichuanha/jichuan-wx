@@ -3,14 +3,14 @@
  */
 package com.hzkans.crm.common.utils.excel.fieldtype;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.hzkans.crm.common.utils.Collections3;
-import com.hzkans.crm.modules.sys.entity.Role;
-import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.utils.SpringContextHolder;
+import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.sys.entity.Role;
 import com.hzkans.crm.modules.sys.service.SystemService;
+
+import java.util.List;
 
 /**
  * 字段类型转换

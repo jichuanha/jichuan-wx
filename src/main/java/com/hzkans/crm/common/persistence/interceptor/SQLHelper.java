@@ -3,6 +3,11 @@
  */
 package com.hzkans.crm.common.persistence.interceptor;
 
+import com.hzkans.crm.common.config.Global;
+import com.hzkans.crm.common.persistence.Page;
+import com.hzkans.crm.common.persistence.dialect.Dialect;
+import com.hzkans.crm.common.utils.Reflections;
+import com.hzkans.crm.common.utils.StringUtils;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.logging.Log;
@@ -16,12 +21,6 @@ import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-
-import com.hzkans.crm.common.config.Global;
-import com.hzkans.crm.common.persistence.Page;
-import com.hzkans.crm.common.persistence.dialect.Dialect;
-import com.hzkans.crm.common.utils.Reflections;
-import com.hzkans.crm.common.utils.StringUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

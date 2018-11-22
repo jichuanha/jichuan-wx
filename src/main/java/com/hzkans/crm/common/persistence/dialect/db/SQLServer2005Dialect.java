@@ -3,9 +3,8 @@
  */
 package com.hzkans.crm.common.persistence.dialect.db;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.hzkans.crm.common.persistence.dialect.Dialect;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Sql 2005的方言实现

@@ -3,11 +3,6 @@
  */
 package com.hzkans.crm.modules.sys.service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.security.Digests;
@@ -15,16 +10,17 @@ import com.hzkans.crm.common.security.shiro.session.SessionDAO;
 import com.hzkans.crm.common.service.BaseService;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.CacheUtils;
-import com.hzkans.crm.common.utils.StringUtils;
-import com.hzkans.crm.modules.sys.security.SystemAuthorizingRealm;
 import com.hzkans.crm.common.utils.Encodes;
+import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.web.Servlets;
+import com.hzkans.crm.modules.sys.dao.MenuDao;
 import com.hzkans.crm.modules.sys.dao.RoleDao;
 import com.hzkans.crm.modules.sys.dao.UserDao;
 import com.hzkans.crm.modules.sys.entity.Menu;
 import com.hzkans.crm.modules.sys.entity.Office;
 import com.hzkans.crm.modules.sys.entity.Role;
 import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.security.SystemAuthorizingRealm;
 import com.hzkans.crm.modules.sys.utils.LogUtils;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.activiti.engine.IdentityService;
@@ -35,7 +31,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.modules.sys.dao.MenuDao;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 系统管理，安全相关实体的管理类,包括用户、角色、菜单.

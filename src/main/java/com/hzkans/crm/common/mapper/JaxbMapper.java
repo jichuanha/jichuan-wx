@@ -3,26 +3,20 @@
  */
 package com.hzkans.crm.common.mapper;
 
+import com.hzkans.crm.common.utils.Exceptions;
+import com.hzkans.crm.common.utils.Reflections;
+import com.hzkans.crm.common.utils.StringUtils;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.util.Assert;
+
+import javax.xml.bind.*;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.namespace.QName;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.namespace.QName;
-
-import com.hzkans.crm.common.utils.Exceptions;
-import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.util.Assert;
-
-import com.hzkans.crm.common.utils.Reflections;
-import com.hzkans.crm.common.utils.StringUtils;
 
 /**
  * 使用Jaxb2.0实现XML<->Java Object的Mapper.

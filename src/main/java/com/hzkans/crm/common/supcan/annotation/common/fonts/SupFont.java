@@ -3,11 +3,7 @@
  */
 package com.hzkans.crm.common.supcan.annotation.common.fonts;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 硕正Font注解

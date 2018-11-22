@@ -3,14 +3,13 @@
  */
 package com.hzkans.crm.modules.gen.entity;
 
-import java.io.Serializable;
-import java.util.List;
+import com.hzkans.crm.modules.sys.entity.Dict;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import com.hzkans.crm.modules.sys.entity.Dict;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 生成方案Entity

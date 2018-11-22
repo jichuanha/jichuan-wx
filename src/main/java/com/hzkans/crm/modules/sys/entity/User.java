@@ -3,11 +3,9 @@
  */
 package com.hzkans.crm.modules.sys.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.DataEntity;
 import com.hzkans.crm.common.supcan.annotation.treelist.cols.SupCol;
@@ -17,9 +15,9 @@ import com.hzkans.crm.common.utils.excel.fieldtype.RoleListType;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 用户Entity

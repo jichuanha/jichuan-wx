@@ -3,17 +3,18 @@
  */
 package com.hzkans.crm.modules.sys.security;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.servlet.ValidateCodeServlet;
+import com.hzkans.crm.common.utils.Encodes;
+import com.hzkans.crm.common.utils.SpringContextHolder;
+import com.hzkans.crm.common.web.Servlets;
+import com.hzkans.crm.modules.sys.entity.Menu;
 import com.hzkans.crm.modules.sys.entity.Role;
 import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.service.SystemService;
 import com.hzkans.crm.modules.sys.utils.LogUtils;
+import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.sys.web.LoginController;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -31,13 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.hzkans.crm.common.utils.Encodes;
-import com.hzkans.crm.common.utils.SpringContextHolder;
-import com.hzkans.crm.common.web.Servlets;
-import com.hzkans.crm.modules.sys.entity.Menu;
-import com.hzkans.crm.modules.sys.service.SystemService;
-import com.hzkans.crm.modules.sys.utils.UserUtils;
-import com.hzkans.crm.modules.sys.web.LoginController;
+import javax.annotation.PostConstruct;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 系统安全认证实现类

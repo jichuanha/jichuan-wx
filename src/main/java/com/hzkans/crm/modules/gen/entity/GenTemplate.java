@@ -3,16 +3,14 @@
  */
 package com.hzkans.crm.modules.gen.entity;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
+import com.google.common.collect.Lists;
 import com.hzkans.crm.common.persistence.DataEntity;
 import com.hzkans.crm.common.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
-import com.google.common.collect.Lists;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.List;
 
 /**
  * 生成方案Entity

@@ -3,18 +3,16 @@
  */
 package com.hzkans.crm.common.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hzkans.crm.common.config.Global;
+import com.hzkans.crm.common.utils.CookieUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.hzkans.crm.common.config.Global;
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hzkans.crm.common.utils.CookieUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 分页类

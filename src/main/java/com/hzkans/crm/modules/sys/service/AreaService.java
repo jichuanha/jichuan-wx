@@ -3,15 +3,14 @@
  */
 package com.hzkans.crm.modules.sys.service;
 
-import java.util.List;
-
 import com.hzkans.crm.common.service.TreeService;
+import com.hzkans.crm.modules.sys.dao.AreaDao;
 import com.hzkans.crm.modules.sys.entity.Area;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.modules.sys.dao.AreaDao;
+import java.util.List;
 
 /**
  * 区域Service

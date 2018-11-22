@@ -3,11 +3,7 @@
  */
 package com.hzkans.crm.modules.sys.web;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Maps;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.security.shiro.session.SessionDAO;
 import com.hzkans.crm.common.servlet.ValidateCodeServlet;
@@ -29,7 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Maps;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * 登录Controller

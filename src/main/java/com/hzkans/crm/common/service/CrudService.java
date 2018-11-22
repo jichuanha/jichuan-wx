@@ -3,13 +3,13 @@
  */
 package com.hzkans.crm.common.service;
 
-import java.util.List;
-
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.DataEntity;
 import com.hzkans.crm.common.persistence.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Service基类
