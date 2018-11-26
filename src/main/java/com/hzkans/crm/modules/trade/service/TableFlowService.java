@@ -15,8 +15,11 @@ import com.hzkans.crm.modules.trade.dao.TableFlowDao;
  * @version 2018-11-26
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class TableFlowService extends CrudService<TableFlowDao, TableFlow> {
 
+	public void saveTableFlow(TableFlow tableFlow) {
+		save(tableFlow);
+	}
 	
 }

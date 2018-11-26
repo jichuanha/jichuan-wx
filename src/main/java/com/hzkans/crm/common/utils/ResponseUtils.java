@@ -87,6 +87,16 @@ public class ResponseUtils {
 		apiResponse.setData(module);
 		return toJsonStr(apiResponse);
 	}
+
+	/**
+	 * 处理成功的json返回
+	 * @param module
+	 * @return json字符串
+	 */
+	public static String getSuccessResponseStr(String module){
+		ApiResponse apiResponse = new ApiResponse(ResponseEnum.REQUEST_SUCESS.getCode(), module);
+		return toJsonStr(apiResponse);
+	}
 	
 	/**
 	 * 返回特定的时间格式

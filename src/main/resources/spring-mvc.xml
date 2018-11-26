@@ -114,9 +114,9 @@
 	</bean>
 	<!-- 支持Shiro对Controller的方法级AOP安全控制 end -->
 	
-	<!-- 上传文件拦截，设置最大上传文件大小   100M=10*1024*1024(B)=104857600 bytes -->
+	<!-- 上传文件拦截，设置最大上传文件大小   100M=100*1024*1024(B)=104857600 bytes -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
-		<property name="maxUploadSize" value="${web.maxUploadSize}0" />
+		<property name="maxUploadSize" value="${web.maxUploadSize}" />
 	</bean>
 	
 </beans>
