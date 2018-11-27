@@ -3,11 +3,12 @@ package com.hzkans.crm.modules.trade.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.DateUtils;
-import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
+import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,7 @@ import java.util.Date;
 @RequestMapping(value = "${adminPath}/trade/tableFlow")
 public class TableFlowController extends BaseController {
 
-	/*private static final String UPLOAD_ADDRESS = "/deploy/data/www/static/upload/";*/
-	private static final String UPLOAD_ADDRESS = "E:/youxi/";
+
 	private static final String ORDER = "订单";
 	private static final String BUYER = "顾客";
 	private static final String EVALUATE = "评价";
@@ -61,10 +61,14 @@ public class TableFlowController extends BaseController {
 		originalFilename = split[0] + DateUtils.formatNewDate(new Date())+"."+split[1];
 		logger.info("[{}] originalFilename:{}",originalFilename);
 		String substring = originalFilename.substring(0, 2);
-		logger.info("[{}] substring:{}",substring);
+
 		TableFlow tableFlow = new TableFlow();
 		tableFlow.setImportDate(new Date());
 		tableFlow.setTableName(originalFilename);
+		TableFlowTypeEnum tableFlowTypeEnum = TableFlowTypeEnum.getTableFlowTypeEnum(substring);
+		if(tableFlowTypeEnum != null) {
+			tableFlow.setType(tableFlowTypeEnum.getCode());
+		}
 		if(!substring.equals(ORDER) && !substring.equals(BUYER) && !substring.equals(EVALUATE)) {
 			logger.info("导入的订单格式有误");
 			//保存上传记录
@@ -82,7 +86,7 @@ public class TableFlowController extends BaseController {
 			tableFlowService.saveTableFlow(tableFlow);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,MAX_SIZE_ERROR);
 		}
-		File newFile = new File(UPLOAD_ADDRESS+originalFilename);
+		File newFile = new File(TradeUtil.UPLOAD_ADDRESS+originalFilename);
 		if(!newFile.exists()) {
 			newFile.mkdirs();
 		}

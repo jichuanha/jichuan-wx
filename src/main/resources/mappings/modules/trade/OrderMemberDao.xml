@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.OrderMemberDao">
+    
+	<sql id="orderMemberColumns">
+		a.id AS "id",
+		a.nick_name AS "nickName",
+		a.mobile AS "mobile",
+		a.membership_level AS "membershipLevel",
+		a.member_name AS "memberName",
+		a.email AS "email",
+		a.province_name AS "provinceName",
+		a.area_name AS "areaName",
+		a.city_name AS "cityName",
+		a.address AS "address",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderMemberJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderMember">
+		SELECT 
+			<include refid="orderMemberColumns"/>
+		FROM t_order_member a
+		<include refid="orderMemberJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderMember">
+		SELECT 
+			<include refid="orderMemberColumns"/>
+		FROM t_order_member a
+		<include refid="orderMemberJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND a.nick_name = #{nickName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="membershipLevel != null and membershipLevel != ''">
+				AND a.membership_level = #{membershipLevel}
+			</if>
+			<if test="memberName != null and memberName != ''">
+				AND a.member_name = #{memberName}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
+			</if>
+			<if test="provinceName != null and provinceName != ''">
+				AND a.province_name = #{provinceName}
+			</if>
+			<if test="areaName != null and areaName != ''">
+				AND a.area_name = #{areaName}
+			</if>
+			<if test="cityName != null and cityName != ''">
+				AND a.city_name = #{cityName}
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address = #{address}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderMember">
+		SELECT 
+			<include refid="orderMemberColumns"/>
+		FROM t_order_member a
+		<include refid="orderMemberJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_member(
+			nick_name,
+			mobile,
+			membership_level,
+			member_name,
+			email,
+			province_name,
+			area_name,
+			city_name,
+			address,
+			create_date,
+			update_date
+		) VALUES (
+			#{nickName},
+			#{mobile},
+			#{membershipLevel},
+			#{memberName},
+			#{email},
+			#{provinceName},
+			#{areaName},
+			#{cityName},
+			#{address},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_member SET 	
+			nick_name = #{nickName},
+			mobile = #{mobile},
+			membership_level = #{membershipLevel},
+			member_name = #{memberName},
+			email = #{email},
+			province_name = #{provinceName},
+			area_name = #{areaName},
+			city_name = #{cityName},
+			address = #{address},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_member
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

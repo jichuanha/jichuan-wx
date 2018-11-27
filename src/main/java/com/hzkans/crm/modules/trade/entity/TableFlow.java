@@ -17,10 +17,20 @@ public class TableFlow extends DataEntity<TableFlow> {
 	private static final long serialVersionUID = 1L;
 	private String tableName;		// 表格名称
 	private Integer status;		// 1:导入系统成功. 2:导入系统失败. 3:定时导入数据库成功. 4:定时导入数据库失败
+	private Integer type;
 	private String errorMessage;		// 失败原因
 	private Date importDate;		// 表格导入时间
 	private Date timingDate;		// 定时导入数据库时间
-	
+
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 	public TableFlow() {
 		super();
 	}

@@ -31,7 +31,7 @@
         <property name="typeAliasesPackage" value="com.hzkans.crm"/>
         <property name="typeAliasesSuperType" value="com.hzkans.crm.common.persistence.BaseEntity"/>
         <property name="mapperLocations" value="classpath:/mappings/**/*.xml"/>
-		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
     </bean>
     
     <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->
@@ -96,8 +96,8 @@
 	</bean>
 
 	<import resource="spring-dubbo-consumer.xml"/>
-
 	<import resource="biz-consumer.xml"/>
+	<import resource="spring-task.xml"/>
 
 </beans>
 
