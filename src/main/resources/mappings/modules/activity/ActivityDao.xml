@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.activity.dao.ActivityDao">
+    
+	<sql id="activityColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.effective_start_time AS "effectiveStartTime",
+		a.effective_end_time AS "effectiveEndTime",
+		a.order_aging_start_time AS "orderAgingStartTime",
+		a.order_aging_end_time AS "orderAgingEndTime",
+		a.url AS "url",
+		a.attention_type AS "attentionType",
+		a.rebate_type AS "rebateType",
+		a.rebate_channel AS "rebateChannel",
+		a.single_amount AS "singleAmount",
+		a.total_order AS "totalOrder",
+		a.total_rebate AS "totalRebate",
+		a.is_audit AS "isAudit",
+		a.shop_name AS "shopName",
+		a.shop_no AS "shopNo",
+		a.template_link AS "templateLink",
+		a.status AS "status",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="activityJoins">
+	</sql>
+    
+	<select id="get" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM t_activity a
+		<include refid="activityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM t_activity a
+		<include refid="activityJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+			<if test="effectiveStartTime != null and effectiveStartTime != ''">
+				AND a.effective_start_time = #{effectiveStartTime}
+			</if>
+            <if test="effectiveEndTime != null and effectiveEndTime != ''">
+				AND a.effective_end_time = #{effectiveEndTime}
+			</if>
+			<if test="orderAgingStartTime != null and orderAgingStartTime != ''">
+				AND a.order_aging_start_time = #{orderAgingStartTime}
+			</if>
+            <if test="orderAgingEndTime != null and orderAgingEndTime != ''">
+				AND a.order_aging_end_time = #{orderAgingEndTime}
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+			<if test="attentionType != null and attentionType != ''">
+				AND a.attention_type = #{attentionType}
+			</if>
+			<if test="rebateType != null and rebateType != ''">
+				AND a.rebate_type = #{rebateType}
+			</if>
+			<if test="rebateChannel != null and rebateChannel != ''">
+				AND a.rebate_channel = #{rebateChannel}
+			</if>
+			<if test="singleAmount != null and singleAmount != ''">
+				AND a.single_amount = #{singleAmount}
+			</if>
+			<if test="totalOrder != null and totalOrder != ''">
+				AND a.total_order = #{totalOrder}
+			</if>
+			<if test="totalRebate != null and totalRebate != ''">
+				AND a.total_rebate = #{totalRebate}
+			</if>
+			<if test="isAudit != null and isAudit != ''">
+				AND a.is_audit = #{isAudit}
+			</if>
+			<if test="shopName != null and shopName != ''">
+				AND a.shop_name = #{shopName}
+			</if>
+			<if test="shopNo != null and shopNo != ''">
+				AND a.shop_no = #{shopNo}
+			</if>
+			<if test="templateLink != null and templateLink != ''">
+				AND a.template_link = #{templateLink}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM t_activity a
+		<include refid="activityJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_activity(
+			name,
+			effective_start_time,
+			effective_end_time,
+			order_aging_start_time,
+			order_aging_end_time,
+			url,
+			attention_type,
+			rebate_type,
+			rebate_channel,
+			single_amount,
+			total_order,
+			total_rebate,
+			is_audit,
+			shop_name,
+			shop_no,
+			template_link,
+			status,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{name},
+			#{effectiveStartTime},
+			#{effectiveEndTime},
+			#{orderAgingStartTime},
+			#{orderAgingEndTime},
+			#{url},
+			#{attentionType},
+			#{rebateType},
+			#{rebateChannel},
+			#{singleAmount},
+			#{totalOrder},
+			#{totalRebate},
+			#{isAudit},
+			#{shopName},
+			#{shopNo},
+			#{templateLink},
+			#{status},
+			#{delFlag},
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			now()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_activity SET 	
+			name = #{name},
+			effective_start_time = #{effectiveStartTime},
+			effective_end_time = #{effectiveEndTime},
+			order_aging_start_time = #{orderAgingTime},
+			order_aging_end_time = #{orderAgingEndTime},
+			url = #{url},
+			attention_type = #{attentionType},
+			rebate_type = #{rebateType},
+			rebate_channel = #{rebateChannel},
+			single_amount = #{singleAmount},
+			total_order = #{totalOrder},
+			total_rebate = #{totalRebate},
+			is_audit = #{isAudit},
+			shop_name = #{shopName},
+			shop_no = #{shopNo},
+			template_link = #{templateLink},
+			status = #{status},
+			del_flag = #{delFlag},
+			create_by = #{createBy.id},
+			update_by = #{updateBy.id},
+			update_date = now()
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t_activity SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
