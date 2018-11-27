@@ -16,10 +16,12 @@ import com.hzkans.crm.modules.trade.dao.OrderAppraiseDao;
 @Transactional(readOnly = true)
 public class OrderAppraiseService extends CrudService<OrderAppraiseDao, OrderAppraise> {
 
+	@Override
 	public OrderAppraise get(String id) {
 		return super.get(id);
 	}
 
+	@Override
 	@Transactional(readOnly = false)
 	public void save(OrderAppraise orderAppraise) {
 		super.save(orderAppraise);

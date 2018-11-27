@@ -19,26 +19,25 @@ import com.hzkans.crm.modules.trade.dao.OrderDao;
 @Transactional(readOnly = true)
 public class OrderService extends CrudService<OrderDao, Order> {
 
+	@Override
 	public Order get(String id) {
 		return super.get(id);
 	}
 	
+	@Override
 	public List<Order> findList(Order tOrder) {
 		return super.findList(tOrder);
 	}
 	
+	@Override
 	public Page<Order> findPage(Page<Order> page, Order tOrder) {
 		return super.findPage(page, tOrder);
 	}
 	
+	@Override
 	@Transactional(readOnly = false)
 	public void save(Order tOrder) {
 		super.save(tOrder);
 	}
-	
-	@Transactional(readOnly = false)
-	public void delete(Order tOrder) {
-		super.delete(tOrder);
-	}
-	
+
 }
