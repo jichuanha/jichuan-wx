@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.OrderDao">
+    
+	<sql id="tOrderColumns">
+		a.id AS "id",
+		a.member_id AS "memberId",
+		a.order_sn AS "orderSn",
+		a.own_shop AS "ownShop",
+		a.shop_no AS "shopNo",
+		a.platform_type AS "platformType",
+		a.payable_ammount AS "payableAmmount",
+		a.pay_amount AS "payAmount",
+		a.status AS "status",
+		a.order_time AS "orderTime",
+		a.pay__time AS "payTime",
+		a.nick_name AS "nickName",
+		a.buyer_name AS "buyerName",
+		a.mobile AS "mobile",
+		a.item_name AS "itemName",
+		a.item_no AS "itemNo",
+		a.unit_price AS "unitPrice",
+		a.buy_count AS "buyCount",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id"
+	</sql>
+	
+	<sql id="tOrderJoins">
+	</sql>
+    
+	<select id="get" resultType="Order">
+		SELECT 
+			<include refid="tOrderColumns"/>
+		FROM t_order a
+		<include refid="tOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Order">
+		SELECT 
+			<include refid="tOrderColumns"/>
+		FROM t_order a
+		<include refid="tOrderJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Order">
+		SELECT 
+			<include refid="tOrderColumns"/>
+		FROM t_order a
+		<include refid="tOrderJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order(
+			id,
+			member_id,
+			order_sn,
+			own_shop,
+			shop_no,
+			platform_type,
+			payable_ammount,
+			pay_amount,
+			status,
+			order_time,
+			pay__time,
+			nick_name,
+			buyer_name,
+			mobile,
+			item_name,
+			item_no,
+			unit_price,
+			buy_count,
+			create_date,
+			update_date,
+			create_by,
+			update_by
+		) VALUES (
+			#{id},
+			#{memberId},
+			#{orderSn},
+			#{ownShop},
+			#{shopNo},
+			#{platformType},
+			#{payableAmmount},
+			#{payAmount},
+			#{status},
+			#{orderTime},
+			#{payTime},
+			#{nickName},
+			#{buyerName},
+			#{mobile},
+			#{itemName},
+			#{itemNo},
+			#{unitPrice},
+			#{buyCount},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id},
+			#{updateBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order SET 	
+			member_id = #{memberId},
+			order_sn = #{orderSn},
+			own_shop = #{ownShop},
+			shop_no = #{shopNo},
+			platform_type = #{platformType},
+			payable_ammount = #{payableAmmount},
+			pay_amount = #{payAmount},
+			status = #{status},
+			order_time = #{orderTime},
+			pay__time = #{payTime},
+			nick_name = #{nickName},
+			buyer_name = #{buyerName},
+			mobile = #{mobile},
+			item_name = #{itemName},
+			item_no = #{itemNo},
+			unit_price = #{unitPrice},
+			buy_count = #{buyCount},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
