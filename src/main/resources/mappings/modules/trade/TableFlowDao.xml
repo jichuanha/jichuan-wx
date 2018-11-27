@@ -6,23 +6,40 @@
 		a.id AS "id",
 		a.table_name AS "tableName",
 		a.status AS "status",
+		a.type,
 		a.error_message AS "errorMessage",
 		a.import_date AS "importDate",
 		a.timing_date AS "timingDate"
 	</sql>
-	
+
 	<sql id="tableFlowJoins">
 	</sql>
     
-	<select id="get" resultType="TableFlow">
+	<select id="get" resultType="com.hzkans.crm.modules.trade.entity.TableFlow">
 		SELECT 
-			<include refid="tableFlowColumns"/>
+		<include refid="tableFlowColumns"/>
 		FROM t_table_flow a
-		<include refid="tableFlowJoins"/>
-		WHERE a.id = #{id}
+		<where>
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+			<if test="tableName != null and tableName != ''">
+				and a.table_name = #{tableName}
+			</if>
+			<if test="type != null">
+				and a.type = #{type}
+			</if>
+			<if test="errorMessage != null and errorMessage != ''">
+				and a.error_message = #{errorMessage}
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+		</where>
+		limit 1
 	</select>
 	
-	<select id="findList" resultType="TableFlow">
+	<select id="findList" resultType="com.hzkans.crm.modules.trade.entity.TableFlow">
 		SELECT 
 			<include refid="tableFlowColumns"/>
 		FROM t_table_flow a
@@ -57,7 +74,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="TableFlow">
+	<select id="findAllList" resultType="com.hzkans.crm.modules.trade.entity.TableFlow">
 		SELECT 
 			<include refid="tableFlowColumns"/>
 		FROM t_table_flow a
@@ -78,24 +95,31 @@
 		INSERT INTO t_table_flow(
 			table_name,
 			status,
+			type,
 			error_message,
 			import_date
 		) VALUES (
 			#{tableName},
 			#{status},
+			#{type},
 			#{errorMessage},
 			#{importDate}
 		)
 	</insert>
 	
 	<update id="update">
-		UPDATE t_table_flow SET 	
-			table_name = #{tableName},
+		UPDATE t_table_flow SET
 			status = #{status},
 			error_message = #{errorMessage},
-			import_date = #{importDate},
 			timing_date = #{timingDate}
-		WHERE id = #{id}
+		<where>
+			<if test="tableName != null and tableName != ''">
+				and table_name = #{tableName}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+		</where>
 	</update>
 	
 	<update id="delete">
