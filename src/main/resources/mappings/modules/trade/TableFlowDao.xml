@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.TableFlowDao">
+    
+	<sql id="tableFlowColumns">
+		a.id AS "id",
+		a.table_name AS "tableName",
+		a.status AS "status",
+		a.error_message AS "errorMessage",
+		a.import_date AS "importDate",
+		a.timing_date AS "timingDate"
+	</sql>
+	
+	<sql id="tableFlowJoins">
+	</sql>
+    
+	<select id="get" resultType="TableFlow">
+		SELECT 
+			<include refid="tableFlowColumns"/>
+		FROM t_table_flow a
+		<include refid="tableFlowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TableFlow">
+		SELECT 
+			<include refid="tableFlowColumns"/>
+		FROM t_table_flow a
+		<include refid="tableFlowJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="tableName != null and tableName != ''">
+				AND a.table_name = #{tableName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="errorMessage != null and errorMessage != ''">
+				AND a.error_message = #{errorMessage}
+			</if>
+			<if test="importDate != null and importDate != ''">
+				AND a.import_date = #{importDate}
+			</if>
+			<if test="timingDate != null and timingDate != ''">
+				AND a.timing_date = #{timingDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TableFlow">
+		SELECT 
+			<include refid="tableFlowColumns"/>
+		FROM t_table_flow a
+		<include refid="tableFlowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_table_flow(
+			table_name,
+			status,
+			error_message,
+			import_date
+		) VALUES (
+			#{tableName},
+			#{status},
+			#{errorMessage},
+			#{importDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_table_flow SET 	
+			table_name = #{tableName},
+			status = #{status},
+			error_message = #{errorMessage},
+			import_date = #{importDate},
+			timing_date = #{timingDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_table_flow
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
