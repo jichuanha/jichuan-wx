@@ -7,7 +7,11 @@
     <c:if test="${tabmode eq '1'}"><link rel="Stylesheet" href="${ctxStatic}/jerichotab/css/jquery.jerichotab.css" />
     <script type="text/javascript" src="${ctxStatic}/jerichotab/js/jquery.jerichotab.js"></script></c:if>
 	<style type="text/css">
-		#main {padding:0;margin:0;} #main .container-fluid{padding:0 4px 0 6px;}
+		.main-bg{
+			background:url("${ctxStatic}/images/bg.jpg") no-repeat;
+			background-size: 100%;
+		}
+		#main {padding:0;margin:0;background-color: #fff} #main .container-fluid{padding:0 4px 0 6px;}
 		#header {margin:0 0 8px;position:static;} #header li {font-size:14px;_font-size:12px;}
 		#header .brand {font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:26px;padding-left:33px;}
 		#footer {margin:8px 0 0 0;padding:3px 0 0 0;font-size:11px;text-align:center;border-top:2px solid #0663A2;}
@@ -146,6 +150,7 @@
 	</script>
 </head>
 <body>
+<div class="main-bg">
 	<div id="main">
 		<div id="header" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
@@ -210,10 +215,10 @@
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>
-	    </div>
-	    <div class="container-fluid">
+		</div>
+		<div class="container-fluid">
 			<div id="content" class="row-fluid">
-				<div id="left"><%-- 
+				<div id="left"><%--
 					<iframe id="menuFrame" name="menuFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe> --%>
 				</div>
 				<div id="openClose" class="close">&nbsp;</div>
@@ -221,12 +226,14 @@
 					<iframe id="mainFrame" name="mainFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe>
 				</div>
 			</div>
-		    <div id="footer" class="row-fluid">
-	            Copyright &copy; 2012-${fns:getConfig('copyrightYear')} ${fns:getConfig('productName')} - Powered By <a href="http://m.haiyn.com/" target="_blank">JeeSite</a> ${fns:getConfig('version')}
+			<div id="footer" class="row-fluid">
+				Copyright &copy; 2012-${fns:getConfig('copyrightYear')} ${fns:getConfig('productName')} - Powered By <a href="http://m.haiyn.com/" target="_blank">JeeSite</a> ${fns:getConfig('version')}
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript"> 
+
+</div>
+	<script type="text/javascript">
 		var leftWidth = 160; // 左侧窗口大小
 		var tabTitleHeight = 33; // 页签的高度
 		var htmlObj = $("html"), mainObj = $("#main");
@@ -236,7 +243,7 @@
 			var minHeight = 500, minWidth = 980;
 			var strs = getWindowSize().toString().split(",");
 			htmlObj.css({"overflow-x":strs[1] < minWidth ? "auto" : "hidden", "overflow-y":strs[0] < minHeight ? "auto" : "hidden"});
-			mainObj.css("width",strs[1] < minWidth ? minWidth - 10 : "auto");
+			mainObj.css({"width":"90%","margin":"0 auto","min-width":"1400px"});
 			frameObj.height((strs[0] < minHeight ? minHeight : strs[0]) - headerObj.height() - footerObj.height() - (strs[1] < minWidth ? 42 : 28));
 			$("#openClose").height($("#openClose").height() - 5);// <c:if test="${tabmode eq '1'}"> 
 			$(".jericho_tab iframe").height($("#right").height() - tabTitleHeight); // </c:if>
