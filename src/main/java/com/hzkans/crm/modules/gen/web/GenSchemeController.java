@@ -65,7 +65,7 @@ public class GenSchemeController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(GenScheme genScheme, Model model) {
 		if (StringUtils.isBlank(genScheme.getPackageName())){
-			genScheme.setPackageName("com.thinkgem.jeesite.modules");
+			genScheme.setPackageName("com.hzkans.crm.modules");
 		}
 //		if (StringUtils.isBlank(genScheme.getFunctionAuthor())){
 //			genScheme.setFunctionAuthor(UserUtils.getUser().getName());
