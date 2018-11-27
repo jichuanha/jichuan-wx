@@ -6,8 +6,6 @@
 
 
 	<!--<bean id="mainWebClient" class="com.hanshu.mainweb.client.impl.MainWebClientImpl" />-->
-
-
-
+	<bean id="changePasswordService" class="com.hzkans.crm.modules.login.service.ChangePasswordImpl.ChangePasswordImpl"/>
 
 </beans>

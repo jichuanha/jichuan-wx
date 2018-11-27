@@ -21,40 +21,20 @@ import java.util.regex.Pattern;
 public class SendMailUtil {
 
 	// private static final String smtphost = "192.168.1.70";
-	private static final String from = "thinkgem@163.com";
-	private static final String fromName = "测试公司";
+	private static final String from = "crm_admin@coseast.com";
+	private static final String fromName = "CRM";
 	private static final String charSet = "utf-8";
-	private static final String username = "thinkgem@163.com";
-	private static final String password = "123456";
+	private static final String username = "crm_admin@coseast.com";
+	private static final String password = "mail@123";
 
 	private static Map<String, String> hostMap = new HashMap<String, String>();
 	static {
-		// 126
-		hostMap.put("smtp.126", "smtp.126.com");
+		// coseast
+		hostMap.put("smtp.coseast", "mail.coseast.com");
 		// qq
 		hostMap.put("smtp.qq", "smtp.qq.com");
-
 		// 163
 		hostMap.put("smtp.163", "smtp.163.com");
-
-		// sina
-		hostMap.put("smtp.sina", "smtp.sina.com.cn");
-
-		// tom
-		hostMap.put("smtp.tom", "smtp.tom.com");
-
-		// 263
-		hostMap.put("smtp.263", "smtp.263.net");
-
-		// yahoo
-		hostMap.put("smtp.yahoo", "smtp.mail.yahoo.com");
-
-		// hotmail
-		hostMap.put("smtp.hotmail", "smtp.live.com");
-
-		// gmail
-		hostMap.put("smtp.gmail", "smtp.gmail.com");
-		hostMap.put("smtp.port.gmail", "465");
 	}
 
 	public static String getHost(String email) throws Exception {
@@ -159,7 +139,6 @@ public class SendMailUtil {
 		}
 
 	}
-
 	public static String getHtmlText(String templatePath,
 			Map<String, Object> map) {
 		Template template = null;
