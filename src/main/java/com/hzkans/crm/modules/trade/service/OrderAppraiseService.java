@@ -1,6 +1,4 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
+
 package com.hzkans.crm.modules.trade.service;
 
 import com.hzkans.crm.common.service.CrudService;
