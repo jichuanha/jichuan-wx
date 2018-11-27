@@ -4,6 +4,8 @@
 package com.hzkans.crm.modules.login.web;
 
 import com.google.common.base.Strings;
+import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.servlet.ValidateCodeServlet;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
@@ -51,35 +53,38 @@ public class ChangePassWordController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "sendMail")
-    public String updateResetPwd(HttpServletRequest request, Model model) throws Exception {
+    public String sendMail(HttpServletRequest request, Model model) throws Exception {
         try {
             String loginName = RequestUtils.getString(request, false, "login_name", "");
 
-            String verifyCode = RequestUtils.getString(request, false, "verifyc_code", "");
+            String verifyCode = RequestUtils.getString(request, false, "verify_code", "");
 
             String code = (String) request.getSession().getAttribute("validateCode");
             // 获得验证码对象
             if (StringUtils.isEmpty(verifyCode)) {
-                model.addAttribute("message", "请输入验证码");
+                String message = "请输入验证码";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
             }
             // 判断验证码输入是否正确
             if (!verifyCode.equals(code)) {
-                model.addAttribute("message", "验证码错误，请重新输入！");
+                String message = "验证码错误，请重新输入！";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
             }
             User user = UserUtils.getByLoginName(loginName);
             logger.info("[{}]user+++", JsonUtil.toJson(user));
             if (user != null) {
                 //传入要发送的邮箱，用户id用户名
                 sendEmil(user.getLoginName(), user.getId(), user.getName());
-                model.addAttribute("message", "发送成功");
-
+                return ResponseUtils.getSuccessApiResponseStr(true);
             } else {
-                model.addAttribute("message", "没有该用户");
+                String message = "没有该用户";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("sendMail is error");
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
         }
-        return "modules/sys/userModifyPwd";
+
     }
 
 
@@ -88,7 +93,7 @@ public class ChangePassWordController extends BaseController {
      *
      * @throws MessagingException
      */
-    public void sendEmil(String Femail, String id, String userName) throws Exception {
+    public String sendEmil(String Femail, String id, String userName) throws Exception {
 
         String validataCode = UUID.randomUUID().toString();  //密钥
         Date outDate = new Date((System.currentTimeMillis() + 30 * 60 * 1000) / 1000 * 1000);//30分钟后过期
@@ -114,8 +119,11 @@ public class ChangePassWordController extends BaseController {
 
             SendMailUtil.sendCommonMail(Femail, "修改密码",
                     msgContent);
+            return "";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("sendMail is error");
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
+
         }
 
     }
@@ -123,34 +131,39 @@ public class ChangePassWordController extends BaseController {
 
     @RequestMapping(value = "/verification")
     public String test1(HttpServletRequest request, Model model) throws Exception {
-        Integer cid = RequestUtils.getInt(request, "cid", false, "id is null", "");
+        try {
+            Integer cid = RequestUtils.getInt(request, "cid", false, "id is null", "");
 
-        String id = RequestUtils.getString(request, false, "id", "id is null");
+            String id = RequestUtils.getString(request, false, "id", "id is null");
 
-        String userName = RequestUtils.getString(request, false, "user_name", "user_name is null");
+            String userName = RequestUtils.getString(request, false, "user_name", "user_name is null");
 
-        String sid = RequestUtils.getString(request, false, "sid", "sid is null");
+            String sid = RequestUtils.getString(request, false, "sid", "sid is null");
 
-        if (Strings.isNullOrEmpty(sid) || Strings.isNullOrEmpty(id)) {
-            model.addAttribute("mesg", "链接不完整,请重新生成");
-            return "error";
-        }
-        ChangePasswordDO changePasswordDO = changePasswordService.selectChangePassword(cid);
-        if (changePasswordDO.getRegisterDate().getTime() <= System.currentTimeMillis()) { //表示已经过期
-            model.addAttribute("mesg", "链接已经过期,请重新申请找回密码.");
-            return "error";
-        }
-        String key = userName + "$" + changePasswordDO.getRegisterDate().getTime() / 1000 * 1000 + "$" + changePasswordDO.getValidataCode();//数字签名
+            if (Strings.isNullOrEmpty(sid) || Strings.isNullOrEmpty(id)) {
+                String message = "链接不完整,请重新生成";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+            }
+            ChangePasswordDO changePasswordDO = changePasswordService.selectChangePassword(cid);
+            if (changePasswordDO.getRegisterDate().getTime() <= System.currentTimeMillis()) { //表示已经过期
 
-        String digitalSignature = MD5Util.getMD5(key);                 //数字签名
-        if (!digitalSignature.equals(sid)) {
-            model.addAttribute("mesg", "链接不正确,是否已经过期了?重新申请吧.");
-            return "error";
-        } else {
-            //链接验证通过 转到修改密码页面
-            User user = UserUtils.get(id);
-            model.addAttribute("user", user);
-            return "modules/sys/test";
+                String message = "链接已经过期,请重新申请找回密码.";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+            }
+            String key = userName + "$" + changePasswordDO.getRegisterDate().getTime() / 1000 * 1000 + "$" + changePasswordDO.getValidataCode();//数字签名
+
+            String digitalSignature = MD5Util.getMD5(key);                 //数字签名
+            if (!digitalSignature.equals(sid)) {
+                String message = "链接不正确,是否已经过期了?重新申请吧.";
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+            } else {
+                //链接验证通过 转到修改密码页面
+                User user = UserUtils.get(id);
+                return ResponseUtils.getSuccessApiResponseStr(user);
+            }
+        } catch (Exception e) {
+            logger.info("verification is error");
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
         }
     }
     /**
@@ -159,15 +172,22 @@ public class ChangePassWordController extends BaseController {
      */
     @RequestMapping(value = "modifyPwd")
     public String modifyPwd(HttpServletRequest request, Model model) {
-        String id = RequestUtils.getString(request, false, "id", "id is null");
+        try {
+            String id = RequestUtils.getString(request, false, "id", "id is null");
 
-        String newPassword = RequestUtils.getString(request, false, "new_password", "user_name is null");
+            String newPassword = RequestUtils.getString(request, false, "new_password", "user_name is null");
 
-        User user = UserUtils.get(id);
-        if (StringUtils.isNotBlank(newPassword)){
-            systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
+            User user = UserUtils.get(id);
+            if (StringUtils.isNotBlank(newPassword) && newPassword.length() > 5){
+                systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
+            }else {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "新密码为空");
+            }
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (ServiceException e) {
+            logger.info("modifyPwd is error");
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
+
         }
-        model.addAttribute("user", user);
-        return "modules/sys/sysLogin";
     }
 }
