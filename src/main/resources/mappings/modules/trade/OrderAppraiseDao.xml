@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.OrderAppraiseDao">
+    
+	<sql id="orderAppraiseColumns">
+		a.id AS "id",
+		a.order_sn AS "orderSn",
+		a.type AS "type",
+		a.remarks AS "remarks",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="tOrderAppraiseJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderAppraise">
+		SELECT 
+			<include refid="orderAppraiseColumns"/>
+		FROM t_order_appraise a
+		<include refid="tOrderAppraiseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderAppraise">
+		SELECT 
+			<include refid="orderAppraiseColumns"/>
+		FROM t_order_appraise a
+		<include refid="tOrderAppraiseJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderAppraise">
+		SELECT 
+			<include refid="orderAppraiseColumns"/>
+		FROM t_order_appraise a
+		<include refid="tOrderAppraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_appraise(
+			id,
+			order_sn,
+			type,
+			remarks,
+			create_date
+		) VALUES (
+			#{id},
+			#{orderSn},
+			#{type},
+			#{remarks},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_appraise SET 	
+			order_sn = #{orderSn},
+			type = #{type},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_appraise
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
