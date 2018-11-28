@@ -174,8 +174,8 @@ public class ChangePassWordController extends BaseController {
      * 修改个人用户密码
      * @return
      */
-    @RequestMapping(value = "modifyPwd")
-    public String modifyPwd(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/modifyPwd")
+    public String modifyPwd(HttpServletRequest request) {
         try {
             String id = RequestUtils.getString(request, false, "id", "id is null");
 
