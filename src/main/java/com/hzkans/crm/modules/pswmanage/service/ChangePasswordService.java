@@ -1,6 +1,6 @@
-package com.hzkans.crm.modules.login.service;
+package com.hzkans.crm.modules.pswmanage.service;
 
-import com.hzkans.crm.modules.login.entity.ChangePasswordDO;
+import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 
 /**
  * Created with IDEA

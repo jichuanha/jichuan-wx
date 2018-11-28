@@ -1,10 +1,8 @@
-package com.hzkans.crm.modules.login.service.ChangePasswordImpl;
+package com.hzkans.crm.modules.pswmanage.service.ChangePasswordImpl;
 
-import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.utils.ResponseUtils;
-import com.hzkans.crm.modules.login.dao.ChangePasswordADO;
-import com.hzkans.crm.modules.login.entity.ChangePasswordDO;
-import com.hzkans.crm.modules.login.service.ChangePasswordService;
+import com.hzkans.crm.modules.pswmanage.dao.ChangePasswordADO;
+import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
+import com.hzkans.crm.modules.pswmanage.service.ChangePasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.login.utils;
+package com.hzkans.crm.modules.pswmanage.utils;
 
 import java.security.MessageDigest;
 

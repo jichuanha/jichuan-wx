@@ -1,12 +1,10 @@
 /**
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
-package com.hzkans.crm.modules.login.dao;
+package com.hzkans.crm.modules.pswmanage.dao;
 
-import com.hzkans.crm.common.persistence.TreeDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
-import com.hzkans.crm.modules.login.entity.ChangePasswordDO;
-import com.hzkans.crm.modules.sys.entity.Office;
+import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 
 /**
  * 修改密码验证

@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
-package com.hzkans.crm.modules.login.web;
+package com.hzkans.crm.modules.pswmanage.web;
 
 import com.google.common.base.Strings;
 import com.hzkans.crm.common.constant.ResponseEnum;
@@ -9,9 +9,9 @@ import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.servlet.ValidateCodeServlet;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.login.entity.ChangePasswordDO;
-import com.hzkans.crm.modules.login.service.ChangePasswordService;
-import com.hzkans.crm.modules.login.utils.MD5Util;
+import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
+import com.hzkans.crm.modules.pswmanage.service.ChangePasswordService;
+import com.hzkans.crm.modules.pswmanage.utils.MD5Util;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.SystemService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
@@ -50,7 +50,10 @@ public class ChangePassWordController extends BaseController {
             e.printStackTrace();
         }
     }
-
+    @RequestMapping(value = "/gotoSendMail")
+    public String gotoSendMail()  {
+        return "modules/pswmanage/sendEmail";
+    }
     @ResponseBody
     @RequestMapping(value = "sendMail")
     public String sendMail(HttpServletRequest request, Model model) throws Exception {
@@ -141,25 +144,26 @@ public class ChangePassWordController extends BaseController {
             String sid = RequestUtils.getString(request, false, "sid", "sid is null");
 
             if (Strings.isNullOrEmpty(sid) || Strings.isNullOrEmpty(id)) {
-                String message = "链接不完整,请重新生成";
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+                model.addAttribute("mesg", "链接不完整,请重新生成");
+                return "modules/pswmanage/linkError";
             }
             ChangePasswordDO changePasswordDO = changePasswordService.selectChangePassword(cid);
             if (changePasswordDO.getRegisterDate().getTime() <= System.currentTimeMillis()) { //表示已经过期
-
-                String message = "链接已经过期,请重新申请找回密码.";
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+                model.addAttribute("mesg", "链接已经过期,请重新申请找回密码.");
+                return "modules/pswmanage/linkError";
             }
             String key = userName + "$" + changePasswordDO.getRegisterDate().getTime() / 1000 * 1000 + "$" + changePasswordDO.getValidataCode();//数字签名
 
             String digitalSignature = MD5Util.getMD5(key);                 //数字签名
             if (!digitalSignature.equals(sid)) {
-                String message = "链接不正确,是否已经过期了?重新申请吧.";
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
+                model.addAttribute("mesg", "链接不正确,是否已经过期了?重新申请吧.");
+                return "modules/pswmanage/linkError";
             } else {
                 //链接验证通过 转到修改密码页面
                 User user = UserUtils.get(id);
-                return ResponseUtils.getSuccessApiResponseStr(user);
+                model.addAttribute("id", user.getId());
+                model.addAttribute("loginName", user.getLoginName());
+                return "modules/pswmanage/foundPsw";
             }
         } catch (Exception e) {
             logger.info("verification is error");
