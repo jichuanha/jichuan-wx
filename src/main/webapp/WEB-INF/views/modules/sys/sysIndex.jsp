@@ -233,7 +233,7 @@
 					</div>
 				</div>
 				<div id="footer" class="row-fluid">
-					Copyright &copy; 2012-${fns:getConfig('copyrightYear')} ${fns:getConfig('productName')} - Powered By <a href="http://m.haiyn.com/" target="_blank">JeeSite</a> ${fns:getConfig('version')}
+					Copyright &copy; 2018-${fns:getConfig('copyrightYear')} ${fns:getConfig('productName')} - Powered By <a href="http://m.haiyn.com/" target="_blank">DONGYIN</a> ${fns:getConfig('version')}
 				</div>
 			</div>
 
