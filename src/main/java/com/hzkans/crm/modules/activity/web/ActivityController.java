@@ -96,8 +96,16 @@ public class ActivityController extends BaseController {
 		activity.setDelFlag("0");
 		List<Activity> activityList;
 
+
+        if ((null != activeDate && null == inactiveDate) || (null == activeDate && null != inactiveDate)) {
+            return ResponseUtils.getFailApiResponseStr(100, "活动生效时间和活动失效时间必须同时填写");
+        }
+
+        if ((null != orderActiveDate && null == orderInactiveDate) || (null == orderActiveDate && null != orderInactiveDate)) {
+            return ResponseUtils.getFailApiResponseStr(100, "订单生效时间和订单失效时间必须同时填写");
+        }
 		//必填不能为空
-		if (null == name || null == activityType ||null == isFollow || null == rebateChannel
+		if (null == name || null == activityType || null == isFollow || null == rebateChannel
 				|| null == rebateType || null == perAmount || null == isAudit){
 			return ResponseUtils.getFailApiResponseStr(100,"有必填选项未填");
 		}
@@ -111,16 +119,19 @@ public class ActivityController extends BaseController {
 		if (CollectionUtils.isNotEmpty(activityList)){
 			return ResponseUtils.getFailApiResponseStr(100,"活动已存在");
         }
-
+        if (null != activeDate) {
+            activity.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
+            activity.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+        }
+        if (null != orderActiveDate) {
+            activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+            activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+        }
         //添加活动
 		try {
 			//获取user
 			User user = UserUtils.getUser();
 			activity.setActivityType(activityType);
-			activity.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
-			activity.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
-			activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
-			activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setUrl(url);
 			activity.setIsFollow(isFollow);
 			activity.setRebateType(rebateType);
