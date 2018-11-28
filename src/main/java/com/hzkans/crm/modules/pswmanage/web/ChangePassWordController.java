@@ -175,6 +175,7 @@ public class ChangePassWordController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/modifyPwd")
+    @ResponseBody
     public String modifyPwd(HttpServletRequest request) {
         try {
             String id = RequestUtils.getString(request, false, "id", "id is null");
@@ -191,7 +192,6 @@ public class ChangePassWordController extends BaseController {
         } catch (ServiceException e) {
             logger.info("modifyPwd is error");
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
-
         }
     }
 }
