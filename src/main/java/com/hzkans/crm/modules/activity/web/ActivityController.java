@@ -3,12 +3,16 @@
  */
 package com.hzkans.crm.modules.activity.web;
 
+import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.PriceUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
+import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.service.ActivityService;
+import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,19 +39,29 @@ public class ActivityController extends BaseController {
 	 *
 	 * @return
 	 */
-	@RequestMapping("/activityForm")
-	public String teamMember(){
-		return "modules/activity/activityForm";
+	@RequestMapping("/activity-new")
+	public String saveActivity(){
+		return "modules/activity/activity-new";
 	}
 
 	/**
-	 * 修改活动
+	 * 活动列表
 	 *
 	 * @return
 	 */
-	@RequestMapping("/activityList")
-	public String newAgentState(){
-		return "modules/activity/activityList";
+	@RequestMapping("/activity-list")
+	public String activityList(){
+		return "modules/activity/activity-list";
+	}
+
+	/**
+	 * 活动详情
+	 *
+	 * @return
+	 */
+	@RequestMapping("/activity-detail")
+	public String deleteActivity(){
+		return "modules/activity/activity-detail";
 	}
 
 	/**
@@ -60,17 +74,18 @@ public class ActivityController extends BaseController {
 	public String saveActivity(HttpServletRequest request) {
 
 		String name = RequestUtils.getString(request, false, "name", "");
-		String effectiveStartTime = RequestUtils.getString(request, false, "effective_start_time", "");
-		String effectiveEndTime = RequestUtils.getString(request, false, "effective_end_time", "");
-		String orderAgingStartTime = RequestUtils.getString(request, false, "order_aging_start_time", "");
-		String orderAgingEndTime = RequestUtils.getString(request, false, "order_aging_end_time", "");
+		Integer activityType = RequestUtils.getInt(request,"activity_type","");
+		String activeDate = RequestUtils.getString(request, false, "active_date", "");
+		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "");
+		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "");
+		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "");
 		String url = RequestUtils.getString(request, false, "url", "");
-		Integer attentionType = RequestUtils.getInt(request,"attention_type","");
+		Integer isFollow = RequestUtils.getInt(request,"is_follow","");
 		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
 		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel","");
-		Long singleAmount = RequestUtils.getLong(request,"single_amount","");
-		Integer totalOrder = RequestUtils.getInt(request,"total_order","");
-		Long totalRebate = RequestUtils.getLong(request,"total_rebate","");
+		Long perAmount = RequestUtils.getLong(request,"per_amount","");
+		Integer maxOrderLimit = RequestUtils.getInt(request,"max_order_limit","");
+		Long totalAmount = RequestUtils.getLong(request,"total_amount","");
         Integer isAudit = RequestUtils.getInt(request,"is_audit","");
 		String shopName = RequestUtils.getString(request, false, "shop_name", "");
 		String shopNo = RequestUtils.getString(request, false, "shop_no", "");
@@ -79,40 +94,154 @@ public class ActivityController extends BaseController {
 		Activity activity = new Activity();
 		activity.setName(name);
 		activity.setDelFlag("0");
-        List<Activity> activityList = activityService.findList(activity);
-        if (CollectionUtils.isNotEmpty(activityList)){
+		List<Activity> activityList;
 
+
+        if ((null != activeDate && null == inactiveDate) || (null == activeDate && null != inactiveDate)) {
+            return ResponseUtils.getFailApiResponseStr(100, "活动生效时间和活动失效时间必须同时填写");
         }
-		activity.setEffectiveStartTime(DateUtil.parse(effectiveStartTime, DateUtil.NORMAL_DATETIME_PATTERN));
-		activity.setEffectiveEndTime(DateUtil.parse(effectiveEndTime, DateUtil.NORMAL_DATETIME_PATTERN));
-		activity.setOrderAgingStartTime(DateUtil.parse(orderAgingStartTime, DateUtil.NORMAL_DATETIME_PATTERN));
-		activity.setOrderAgingEndTime(DateUtil.parse(orderAgingEndTime, DateUtil.NORMAL_DATETIME_PATTERN));
-		activity.setUrl(url);
-		activity.setAttentionType(attentionType);
-		activity.setRebateType(rebateType);
-		activity.setRebateChannel(rebateChannel);
-		activity.setSingleAmount(singleAmount);
-		activity.setSingleAmountStr(PriceUtil.parseFen2YuanStr(singleAmount));
-		activity.setTotalOrder(totalOrder);
-        activity.setTotalRebate(totalRebate);
-        activity.setTotalRebateStr(PriceUtil.parseFen2YuanStr(totalRebate));
-        activity.setIsAudit(isAudit);
-        activity.setShopName(shopName);
-        activity.setShopNo(shopNo);
-        activity.setTemplateLink(templateLink);
-        activity.setStatus(status);
-		activityService.save(activity);
-		return null;
+
+        if ((null != orderActiveDate && null == orderInactiveDate) || (null == orderActiveDate && null != orderInactiveDate)) {
+            return ResponseUtils.getFailApiResponseStr(100, "订单生效时间和订单失效时间必须同时填写");
+        }
+		//必填不能为空
+		if (null == name || null == activityType || null == isFollow || null == rebateChannel
+				|| null == rebateType || null == perAmount || null == isAudit){
+			return ResponseUtils.getFailApiResponseStr(100,"有必填选项未填");
+		}
+		//不能添加已存在的活动
+		try {
+			activityList = activityService.findList(activity);
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,e.getMessage());
+		}
+		if (CollectionUtils.isNotEmpty(activityList)){
+			return ResponseUtils.getFailApiResponseStr(100,"活动已存在");
+        }
+        if (null != activeDate) {
+            activity.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
+            activity.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+        }
+        if (null != orderActiveDate) {
+            activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+            activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+        }
+        //添加活动
+		try {
+			//获取user
+			User user = UserUtils.getUser();
+			activity.setActivityType(activityType);
+			activity.setUrl(url);
+			activity.setIsFollow(isFollow);
+			activity.setRebateType(rebateType);
+			activity.setRebateChannel(rebateChannel);
+			activity.setPerAmount(PriceUtil.parseYuan2Fen(perAmount * 1.0));
+			activity.setPerAmountStr(PriceUtil.parseFen2YuanStr(perAmount));
+			activity.setMaxOrderLimit(maxOrderLimit);
+			if (null != totalAmount){
+				activity.setTotalAmount(PriceUtil.parseYuan2Fen(totalAmount * 1.0));
+			}
+			activity.setTotalAmountStr(PriceUtil.parseFen2YuanStr(totalAmount));
+			activity.setIsAudit(isAudit);
+			activity.setShopName(shopName);
+			activity.setShopNo(shopNo);
+			activity.setTemplateLink(templateLink);
+			activity.setStatus(status);
+			activity.setCreateBy(user.getCreateBy());
+			activity.setUpdateBy(user.getUpdateBy());
+			activityService.save(activity);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (Exception e) {
+			logger.error("save activity is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"创建活动失败");
+		}
 	}
 
 	/**
-	 * 修改活动
+	 * 获取活动列表
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/updateActivity")
+	@RequestMapping("/activityList")
 	@ResponseBody
-	public String updateActivity(HttpServletRequest request) {
-		return null;
+	public String activityList(HttpServletRequest request) {
+
+		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
+		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+		if (start == null || start == 0) {
+			start = 1;
+		}
+		if (count == null || count == 0) {
+			count = 20;
+		}
+		try {
+			Page activityPage = new Page<Activity>();
+			activityPage.setPageNo(start);
+			activityPage.setPageSize(count);
+			Activity activity = new Activity();
+			activity.setDelFlag("0");
+			Page<Activity> page = activityService.findPage(activityPage,activity);
+			if (null != page){
+				List<Activity> activityList = page.getList();
+				if (CollectionUtils.isNotEmpty(activityList)){
+					for (Activity activity1 : activityList){
+						activity1.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity1.getPerAmount()));
+						if (null != activity1.getTotalAmount()){
+							activity1.setTotalAmountStr(PriceUtil.parseFen2YuanStr(activity1.getTotalAmount()));
+						}
+					}
+				}
+			}
+			return ResponseUtils.getSuccessApiResponseStr(page);
+		} catch (Exception e) {
+			logger.error("findPage is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"获取活动列表失败");
+		}
+	}
+
+	/**
+	 * 获取活动详情
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/activityDetail")
+	@ResponseBody
+	public String activityDetail(HttpServletRequest request) {
+
+		String id = RequestUtils.getString(request,false,"id","");
+		try {
+			Activity activity = activityService.get(id);
+			//将金额分转化为元
+			if (null != activity.getTotalAmount()){
+				activity.setTotalAmountStr(PriceUtil.parseFen2YuanStr(activity.getTotalAmount()));
+			}
+			activity.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity.getPerAmount()));
+			return ResponseUtils.getSuccessApiResponseStr(activity);
+		} catch (Exception e) {
+			logger.error("get activity detail is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"获取活动详情失败");
+		}
+	}
+
+	/**
+	 * 删除活动
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/deleteActivity")
+	@ResponseBody
+	public String deleteActivity(HttpServletRequest request) {
+
+		String id = RequestUtils.getString(request,false,"id","");
+		try {
+			Activity activity = new Activity();
+			activity.setId(id);
+			activityService.delete(activity);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (Exception e) {
+			logger.error("delete activity is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"删除活动失败");
+		}
 	}
 }

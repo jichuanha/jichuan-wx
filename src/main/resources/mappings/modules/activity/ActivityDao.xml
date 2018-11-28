@@ -4,18 +4,19 @@
     
 	<sql id="activityColumns">
 		a.id AS "id",
+		a.activity_type AS "activityType",
 		a.name AS "name",
-		a.effective_start_time AS "effectiveStartTime",
-		a.effective_end_time AS "effectiveEndTime",
-		a.order_aging_start_time AS "orderAgingStartTime",
-		a.order_aging_end_time AS "orderAgingEndTime",
+		a.active_date AS "activeDate",
+		a.inactive_date AS "inactiveDate",
+		a.order_active_date AS "orderActiveDate",
+		a.order_inactive_date AS "orderInactiveDate",
 		a.url AS "url",
-		a.attention_type AS "attentionType",
+		a.is_follow AS "isFollow",
 		a.rebate_type AS "rebateType",
 		a.rebate_channel AS "rebateChannel",
-		a.single_amount AS "singleAmount",
-		a.total_order AS "totalOrder",
-		a.total_rebate AS "totalRebate",
+		a.per_amount AS "perAmount",
+		a.max_order_limit AS "maxOrderLimit",
+		a.total_amount AS "totalAmount",
 		a.is_audit AS "isAudit",
 		a.shop_name AS "shopName",
 		a.shop_no AS "shopNo",
@@ -52,69 +53,6 @@
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
-			<if test="effectiveStartTime != null and effectiveStartTime != ''">
-				AND a.effective_start_time = #{effectiveStartTime}
-			</if>
-            <if test="effectiveEndTime != null and effectiveEndTime != ''">
-				AND a.effective_end_time = #{effectiveEndTime}
-			</if>
-			<if test="orderAgingStartTime != null and orderAgingStartTime != ''">
-				AND a.order_aging_start_time = #{orderAgingStartTime}
-			</if>
-            <if test="orderAgingEndTime != null and orderAgingEndTime != ''">
-				AND a.order_aging_end_time = #{orderAgingEndTime}
-			</if>
-			<if test="url != null and url != ''">
-				AND a.url = #{url}
-			</if>
-			<if test="attentionType != null and attentionType != ''">
-				AND a.attention_type = #{attentionType}
-			</if>
-			<if test="rebateType != null and rebateType != ''">
-				AND a.rebate_type = #{rebateType}
-			</if>
-			<if test="rebateChannel != null and rebateChannel != ''">
-				AND a.rebate_channel = #{rebateChannel}
-			</if>
-			<if test="singleAmount != null and singleAmount != ''">
-				AND a.single_amount = #{singleAmount}
-			</if>
-			<if test="totalOrder != null and totalOrder != ''">
-				AND a.total_order = #{totalOrder}
-			</if>
-			<if test="totalRebate != null and totalRebate != ''">
-				AND a.total_rebate = #{totalRebate}
-			</if>
-			<if test="isAudit != null and isAudit != ''">
-				AND a.is_audit = #{isAudit}
-			</if>
-			<if test="shopName != null and shopName != ''">
-				AND a.shop_name = #{shopName}
-			</if>
-			<if test="shopNo != null and shopNo != ''">
-				AND a.shop_no = #{shopNo}
-			</if>
-			<if test="templateLink != null and templateLink != ''">
-				AND a.template_link = #{templateLink}
-			</if>
-			<if test="status != null and status != ''">
-				AND a.status = #{status}
-			</if>
-			<if test="delFlag != null and delFlag != ''">
-				AND a.del_flag = #{delFlag}
-			</if>
-			<if test="createBy != null and createBy.id != null and createBy.id != ''">
-				AND a.create_by = #{createBy.id}
-			</if>
-			<if test="createDate != null and createDate != ''">
-				AND a.create_date = #{createDate}
-			</if>
-			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
-				AND a.update_by = #{updateBy.id}
-			</if>
-			<if test="updateDate != null and updateDate != ''">
-				AND a.update_date = #{updateDate}
-			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -146,18 +84,19 @@
 	
 	<insert id="insert">
 		INSERT INTO t_activity(
+			activity_type,
 			name,
-			effective_start_time,
-			effective_end_time,
-			order_aging_start_time,
-			order_aging_end_time,
+			active_date,
+			inactive_date,
+			order_active_date,
+			order_inactive_date,
 			url,
-			attention_type,
+			is_follow,
 			rebate_type,
 			rebate_channel,
-			single_amount,
-			total_order,
-			total_rebate,
+			per_amount,
+			max_order_limit,
+			total_amount,
 			is_audit,
 			shop_name,
 			shop_no,
@@ -169,18 +108,19 @@
 			update_by,
 			update_date
 		) VALUES (
+			#{activityType},
 			#{name},
-			#{effectiveStartTime},
-			#{effectiveEndTime},
-			#{orderAgingStartTime},
-			#{orderAgingEndTime},
+			#{activeDate},
+			#{inactiveDate},
+			#{orderActiveDate},
+			#{orderInactiveDate},
 			#{url},
-			#{attentionType},
+			#{isFollow},
 			#{rebateType},
 			#{rebateChannel},
-			#{singleAmount},
-			#{totalOrder},
-			#{totalRebate},
+			#{perAmount},
+			#{maxOrderLimit},
+			#{totalAmount},
 			#{isAudit},
 			#{shopName},
 			#{shopNo},
@@ -197,24 +137,23 @@
 	<update id="update">
 		UPDATE t_activity SET 	
 			name = #{name},
-			effective_start_time = #{effectiveStartTime},
-			effective_end_time = #{effectiveEndTime},
-			order_aging_start_time = #{orderAgingTime},
-			order_aging_end_time = #{orderAgingEndTime},
+			active_date = #{activeDate},
+			inactive_date = #{inactiveDate},
+			order_active_date = #{orderActiveDate},
+			order_inactive_date = #{orderInactiveDate},
 			url = #{url},
-			attention_type = #{attentionType},
+			is_follow = #{isFollow},
 			rebate_type = #{rebateType},
 			rebate_channel = #{rebateChannel},
-			single_amount = #{singleAmount},
-			total_order = #{totalOrder},
-			total_rebate = #{totalRebate},
+			per_amount = #{perAmount},
+			max_order_limit = #{maxOrderLimit},
+			total_amount = #{totalAmount},
 			is_audit = #{isAudit},
 			shop_name = #{shopName},
 			shop_no = #{shopNo},
 			template_link = #{templateLink},
 			status = #{status},
 			del_flag = #{delFlag},
-			create_by = #{createBy.id},
 			update_by = #{updateBy.id},
 			update_date = now()
 		WHERE id = #{id}
