@@ -92,8 +92,13 @@ jQuery.validator.addMethod("qq", function(value, element) {
 jQuery.validator.addMethod("card",function(value, element) {
 	return this.optional(element) || checkIdcard(value);
 },"请输入正确的身份证号码(15-18位)")
-
 //验证身份证函数
+
+jQuery.validator.addMethod("doingEmail",function(value, element) {
+    var tel = /^[a-z0-9]+([._\\-]*[a-z0-9])*@coseast\.com$/;
+    return this.optional(element) ||(tel.test(value));
+},"请输入正确的东印邮箱")
+
 function checkIdcard(idcard){
 	idcard = idcard.toString();
 	//var Errors=new Array("验证通过!","身份证号码位数不对!","身份证号码出生日期超出范围或含有非法字符!","身份证号码校验错误!","身份证地区非法!");

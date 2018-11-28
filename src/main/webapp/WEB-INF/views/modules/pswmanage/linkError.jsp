@@ -11,7 +11,7 @@
       width: 500px;
       margin: 0 auto;
       position: relative;
-      top: 150px;
+      margin-top: 150px;
       background: #fff;
       padding: 50px;
       border-radius: 10px;
@@ -63,6 +63,7 @@
   <div id="found-block">
     链接已过期，请重新发起邮件
   </div>
+  <p style="text-align: center;color: #fff;margin-top:20px;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
 </body>
 <script>
 

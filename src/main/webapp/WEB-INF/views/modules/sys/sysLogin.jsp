@@ -58,7 +58,14 @@
 	  .footer{
 		  color: #ffffff;
 	  }
-		#foundPsw{float: right;}
+	  #login-btn{
+		  display: block;
+		  margin: 10px auto;
+		  font-size: 16px;
+		  width: 240px;
+		  height: 40px;
+	  }
+		#foundPsw{float: right;color:#555;text-decoration: underline;}
     </style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -73,7 +80,7 @@
 				errorLabelContainer: "#messageBox",
 				errorPlacement: function(error, element) {
 					error.appendTo($("#loginError").parent());
-				} 
+				}
 			});
 		});
 		// 如果在框架或在对话框中，则弹出提示并跳转到首页
@@ -112,7 +119,7 @@
 			<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
 			<a id="foundPsw" href="${fns:getConfig('service.url')}/dongyin-CRM/changePassword/gotoSendMail" target="_blank">找回密码</a>
 		</div>
-		<input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
+		<input class="btn btn-large btn-primary" type="submit" value="登 录" id="login-btn"/>&nbsp;&nbsp;
 		<div id="themeSwitch" class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
 			<ul class="dropdown-menu">
