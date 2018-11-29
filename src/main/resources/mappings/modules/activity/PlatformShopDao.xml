@@ -8,7 +8,7 @@
 		a.platform_name AS "platformName",
 		a.shop AS "shop",
 		a.shop_name AS "shopName",
-		a.del_flag AS "delFlag",
+		a.del_flag AS "delFlag"
 	</sql>
 	<sql id="activityJoins">
 	</sql>
@@ -18,7 +18,7 @@
 		FROM t_platform_shop a
 		<include refid="activityJoins"/>
 		WHERE
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = "0"
 	</select>
 	
 </mapper>
