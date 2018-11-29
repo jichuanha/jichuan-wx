@@ -55,15 +55,17 @@ public class TimingUpdateActivityStatusService {
                         if ((!status.equals(ActivityStatusEnum.ACTIVING.getCode())
                                 && !status.equals(ActivityStatusEnum.PAUSE.getCode()))){
                             activity1.setStatus(ActivityStatusEnum.ACTIVING.getCode());
+                            activityService.update(activity1);
+                            logger.info("已更改活动"+_activity.getName()+"的状态");
                         }
 
                         //已过活动时间，且状态不为已结束的才做状态更新
                     }else if (now.getTime() > inactiveDate.getTime()
                             && !status.equals(ActivityStatusEnum.ENDED.getCode())){
                         activity1.setStatus(ActivityStatusEnum.ENDED.getCode());
+                        activityService.update(activity1);
+                        logger.info("已更改活动"+_activity.getName()+"的状态");
                     }
-                    activityService.update(activity1);
-                    logger.info("已更改活动"+_activity.getName()+"的状态");
                 }
             }
         } catch (Exception e) {

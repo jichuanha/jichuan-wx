@@ -15,8 +15,8 @@
         <task:scheduled ref="timingDateImportService" method="import2DataBase"
                         cron="0 0/1 * * * ?" />
 
-        <task:scheduled ref="timingUpdateActivityStatusService" method="updateStatus"
-                        cron="0 0/5 * * * ?" />
+        <!--<task:scheduled ref="timingUpdateActivityStatusService" method="updateStatus"-->
+                        <!--cron="0 0/5 * * * ?" />-->
 
         <!-- * 0/30 * * * ?-->
         <!--<task:scheduled ref="timingDateImportService" method="deleteHasImportTable"
