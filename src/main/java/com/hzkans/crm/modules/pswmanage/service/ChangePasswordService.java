@@ -2,6 +2,8 @@ package com.hzkans.crm.modules.pswmanage.service;
 
 import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 
+import java.util.List;
+
 /**
  * Created with IDEA
  * author:dengtm
@@ -11,5 +13,7 @@ import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 public interface ChangePasswordService {
     int insterChangePassword(ChangePasswordDO changePasswordDO) throws Exception;
 
-    ChangePasswordDO selectChangePassword(Integer id) throws Exception;
+    List<ChangePasswordDO> selectChangePassword(ChangePasswordDO changePasswordDO) throws Exception;
+
+    ChangePasswordDO selectNewChangePassword(String userId) throws Exception;
 }

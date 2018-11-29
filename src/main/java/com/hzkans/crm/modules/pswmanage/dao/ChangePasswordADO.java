@@ -6,6 +6,8 @@ package com.hzkans.crm.modules.pswmanage.dao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 
+import java.util.List;
+
 /**
  * 修改密码验证
  * @author dtm
@@ -13,7 +15,7 @@ import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
  */
 @MyBatisDao
 public interface ChangePasswordADO {
-    ChangePasswordDO selectChangePassword(Integer id);
+    List<ChangePasswordDO> selectChangePassword(ChangePasswordDO changePasswordDO);
 
     int inster(ChangePasswordDO changePasswordDO);
 

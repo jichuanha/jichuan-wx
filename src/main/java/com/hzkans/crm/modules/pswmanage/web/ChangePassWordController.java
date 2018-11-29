@@ -28,13 +28,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/changePassword")
 public class ChangePassWordController extends BaseController {
     //发送链接的地址
-    private static String url = "http://localhost:8181/dongyin-CRM/changePassword/verification";
+    private static String url = "http://10.1.35.118:8181/dongyin-CRM/changePassword/verification";
 
     @Autowired
     private ChangePasswordService changePasswordService;
@@ -63,13 +64,17 @@ public class ChangePassWordController extends BaseController {
             String verifyCode = RequestUtils.getString(request, false, "verify_code", "");
 
             String code = (String) request.getSession().getAttribute("validateCode");
+
+
+            logger.info("[{}]code",JsonUtil.toJson(code.toLowerCase()));
+            logger.info("[{}]verifyCode",JsonUtil.toJson(verifyCode.toLowerCase()));
             // 获得验证码对象
             if (StringUtils.isEmpty(verifyCode)) {
                 String message = "请输入验证码";
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
             }
             // 判断验证码输入是否正确
-            if (!verifyCode.equals(code)) {
+            if (!verifyCode.toLowerCase().equals(code.toLowerCase())) {
                 String message = "验证码错误，请重新输入！";
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,message);
             }
@@ -78,6 +83,7 @@ public class ChangePassWordController extends BaseController {
             if (user != null) {
                 //传入要发送的邮箱，用户id用户名
                 sendEmil(user.getLoginName(), user.getId(), user.getName());
+                UserUtils.clearCache();
                 return ResponseUtils.getSuccessApiResponseStr(true);
             } else {
                 String message = "没有该用户";
@@ -113,12 +119,17 @@ public class ChangePassWordController extends BaseController {
             String resetPassHref = "?cid=" + changePasswordId +
                     "&id=" + id + "&sid=" + digitalSignature+ "&user_name=" + userName;
             // 设置邮件内容
-            String msgContent = "亲爱的用户 " + userName + " ，您好，<br/><br/>"
-                    + "您在" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + "提交重置密码的请求。<br/><br/>"
-                    + "请打开以下链接重置密码：<br/><br/>"
-                    + "<a href=" + url + resetPassHref + ">" + "请点击这里进入修改密码" + "</a><br/><br/>"
-                    + "感谢使用本系统。" + "<br/><br/>"
-                    + "此为自动发送邮件，请勿直接回复！";
+            String msgContent = "<h1 style='color:blue' align='center'>欢迎使用CRM系统！<h1><hr style='color:blue' align='center' width ='50%'>"
+                    +"<div style='margin:0 auto;width:600px;height:1000px'>"+
+                    "尊敬的 " + Femail + ":  </br>"
+                    +"&nbsp;&nbsp;&nbsp;&nbsp;您好!  </br></br>"
+                    +"&nbsp;&nbsp;&nbsp;&nbsp;系统收到了您发出的“修改密码”的请求，请点  </br></br>"
+                    +"击下面按钮进行修改！  </br></br>"
+                    +"&nbsp;&nbsp;&nbsp;&nbsp;若这封邮件并非应您要求寄发，请您忽略不须  </br></br>"
+                    +"予以理会，这不会对您的账户安全造成任何影响。  </br></br>"
+                    +"&nbsp;&nbsp;&nbsp;&nbsp;此为自动发送邮件，请勿直接回复！ </br></br></br></br></br> "
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=" + url + resetPassHref + ">" + "修改密码" + "</a></br>"
+                    +"</div>";
 
             SendMailUtil.sendCommonMail(Femail, "修改密码",
                     msgContent);
@@ -147,12 +158,25 @@ public class ChangePassWordController extends BaseController {
                 model.addAttribute("mesg", "链接不完整,请重新生成");
                 return "modules/pswmanage/linkError";
             }
-            ChangePasswordDO changePasswordDO = changePasswordService.selectChangePassword(cid);
-            if (changePasswordDO.getRegisterDate().getTime() <= System.currentTimeMillis()) { //表示已经过期
+            ChangePasswordDO changePasswordDOtemp1 = new ChangePasswordDO();
+            changePasswordDOtemp1.setId(cid);
+            List<ChangePasswordDO> changePasswordDOsc = changePasswordService.selectChangePassword(changePasswordDOtemp1);
+
+            //获取最新的验证信息
+            ChangePasswordDO changePasswordDOtemp2 = new ChangePasswordDO();
+            changePasswordDOtemp2.setUserId(id);
+            List<ChangePasswordDO> changePasswordDOnew = changePasswordService.selectChangePassword(changePasswordDOtemp2);
+
+            //判断该链接是不是最新的验证的信息
+            if (!changePasswordDOsc.get(0).getValidataCode().equals(changePasswordDOnew.get(0).getValidataCode())){
+                model.addAttribute("mesg", "不是最新的验证链接");
+                return "modules/pswmanage/linkError";
+            }
+            if (changePasswordDOsc.get(0).getRegisterDate().getTime() <= System.currentTimeMillis()) { //表示已经过期
                 model.addAttribute("mesg", "链接已经过期,请重新申请找回密码.");
                 return "modules/pswmanage/linkError";
             }
-            String key = userName + "$" + changePasswordDO.getRegisterDate().getTime() / 1000 * 1000 + "$" + changePasswordDO.getValidataCode();//数字签名
+            String key = userName + "$" + changePasswordDOsc.get(0).getRegisterDate().getTime() / 1000 * 1000 + "$" + changePasswordDOsc.get(0).getValidataCode();//数字签名
 
             String digitalSignature = MD5Util.getMD5(key);                 //数字签名
             if (!digitalSignature.equals(sid)) {
@@ -163,6 +187,7 @@ public class ChangePassWordController extends BaseController {
                 User user = UserUtils.get(id);
                 model.addAttribute("id", user.getId());
                 model.addAttribute("loginName", user.getLoginName());
+                UserUtils.clearCache();
                 return "modules/pswmanage/foundPsw";
             }
         } catch (Exception e) {
@@ -186,8 +211,10 @@ public class ChangePassWordController extends BaseController {
             if (StringUtils.isNotBlank(newPassword) && newPassword.length() > 5){
                 systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
             }else {
+                UserUtils.clearCache();
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "新密码为空");
             }
+            UserUtils.clearCache();
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (ServiceException e) {
             logger.info("modifyPwd is error");

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * Created with IDEA
  * author:dengtm
@@ -36,17 +38,22 @@ public class ChangePasswordImpl implements ChangePasswordService {
     }
 
     @Override
-    public ChangePasswordDO selectChangePassword(Integer id) throws Exception {
+    public List<ChangePasswordDO> selectChangePassword(ChangePasswordDO changePasswordDO) throws Exception {
         try {
-            if (null == id) {
+            if (null == changePasswordDO) {
                 log.error("ChangePasswordImpl.selectChangePassword error : id is null ");
                 throw new Exception("selectChangePassword.id is null ");
             }
-            ChangePasswordDO changePasswordDO = changePasswordADO.selectChangePassword(id);
-            return changePasswordDO;
+            List<ChangePasswordDO> changePasswordDOtemp = changePasswordADO.selectChangePassword(changePasswordDO);
+            return changePasswordDOtemp;
         } catch (Exception e) {
             log.error("memberAccount error", e);
             throw  new Exception("changePasswordADO.inster is error");
         }
+    }
+
+    @Override
+    public ChangePasswordDO selectNewChangePassword(String userId) throws Exception {
+        return null;
     }
 }
