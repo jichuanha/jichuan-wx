@@ -79,7 +79,6 @@ public class ActivityController extends BaseController {
 		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "");
 		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "");
 		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "");
-		String url = RequestUtils.getString(request, false, "url", "");
 		Integer isFollow = RequestUtils.getInt(request,"is_follow","");
 		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
 		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel","");
@@ -90,20 +89,11 @@ public class ActivityController extends BaseController {
 		String shopName = RequestUtils.getString(request, false, "shop_name", "");
 		String shopNo = RequestUtils.getString(request, false, "shop_no", "");
 		String templateLink = RequestUtils.getString(request, false, "template_link", "");
-        Integer status = RequestUtils.getInt(request,"status","");
 		Activity activity = new Activity();
 		activity.setName(name);
 		activity.setDelFlag("0");
 		List<Activity> activityList;
 
-
-        if ((null != activeDate && null == inactiveDate) || (null == activeDate && null != inactiveDate)) {
-            return ResponseUtils.getFailApiResponseStr(100, "活动生效时间和活动失效时间必须同时填写");
-        }
-
-        if ((null != orderActiveDate && null == orderInactiveDate) || (null == orderActiveDate && null != orderInactiveDate)) {
-            return ResponseUtils.getFailApiResponseStr(100, "订单生效时间和订单失效时间必须同时填写");
-        }
 		//必填不能为空
 		if (null == name || null == activityType || null == isFollow || null == rebateChannel
 				|| null == rebateType || null == perAmount || null == isAudit){
@@ -119,20 +109,16 @@ public class ActivityController extends BaseController {
 		if (CollectionUtils.isNotEmpty(activityList)){
 			return ResponseUtils.getFailApiResponseStr(100,"活动已存在");
         }
-        if (null != activeDate) {
-            activity.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
-            activity.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
-        }
-        if (null != orderActiveDate) {
-            activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
-            activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
-        }
+
         //添加活动
 		try {
 			//获取user
 			User user = UserUtils.getUser();
 			activity.setActivityType(activityType);
-			activity.setUrl(url);
+			activity.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			activity.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setIsFollow(isFollow);
 			activity.setRebateType(rebateType);
 			activity.setRebateChannel(rebateChannel);
@@ -147,7 +133,7 @@ public class ActivityController extends BaseController {
 			activity.setShopName(shopName);
 			activity.setShopNo(shopNo);
 			activity.setTemplateLink(templateLink);
-			activity.setStatus(status);
+			activity.setStatus(0);
 			activity.setCreateBy(user.getCreateBy());
 			activity.setUpdateBy(user.getUpdateBy());
 			activityService.save(activity);
@@ -169,6 +155,12 @@ public class ActivityController extends BaseController {
 
 		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+		String name = RequestUtils.getString(request, true, "name", "");
+		String shopName = RequestUtils.getString(request, true, "shop_name", "");
+		Integer status = RequestUtils.getInt(request,"status","");
+		Integer activityType = RequestUtils.getInt(request,"activity_type","");
+		String startDate = RequestUtils.getString(request, true,"start_date", "");
+		String endDate = RequestUtils.getString(request,true, "end_date", "");
 		if (start == null || start == 0) {
 			start = 1;
 		}
@@ -181,11 +173,24 @@ public class ActivityController extends BaseController {
 			activityPage.setPageSize(count);
 			Activity activity = new Activity();
 			activity.setDelFlag("0");
+			activity.setStatus(status);
+			activity.setName(name);
+			activity.setShopName(shopName);
+			activity.setActivityType(activityType);
+
+			//搜索开始时间和结束时间非空判断
+			if (startDate != null) {
+				activity.setActiveDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			}
+			if (endDate != null) {
+				activity.setInactiveDate(DateUtil.parse(endDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			}
 			Page<Activity> page = activityService.findPage(activityPage,activity);
 			if (null != page){
 				List<Activity> activityList = page.getList();
 				if (CollectionUtils.isNotEmpty(activityList)){
 					for (Activity activity1 : activityList){
+						//将金额分转化为元
 						activity1.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity1.getPerAmount()));
 						if (null != activity1.getTotalAmount()){
 							activity1.setTotalAmountStr(PriceUtil.parseFen2YuanStr(activity1.getTotalAmount()));
