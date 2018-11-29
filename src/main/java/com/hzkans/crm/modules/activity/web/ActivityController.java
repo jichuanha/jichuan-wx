@@ -10,7 +10,9 @@ import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.Activity;
+import com.hzkans.crm.modules.activity.entity.PlatformShop;
 import com.hzkans.crm.modules.activity.service.ActivityService;
+import com.hzkans.crm.modules.activity.service.PlatformShopService;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,6 +35,9 @@ public class ActivityController extends BaseController {
 
 	@Autowired
 	private ActivityService activityService;
+
+	@Autowired
+	private PlatformShopService platformShopService;
 
 	/**
 	 * 创建活动
@@ -247,6 +252,24 @@ public class ActivityController extends BaseController {
 		} catch (Exception e) {
 			logger.error("delete activity is error",e);
 			return ResponseUtils.getFailApiResponseStr(100,"删除活动失败");
+		}
+	}
+
+	/**
+	 * 获取平台店铺列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/platformShopList")
+	@ResponseBody
+	public String shopList(HttpServletRequest request) {
+		try {
+			PlatformShop platformShop = new PlatformShop();
+			List<PlatformShop> platformShopList = platformShopService.findList(platformShop);
+			return ResponseUtils.getSuccessApiResponseStr(platformShopList);
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"获取平台店铺失败");
 		}
 	}
 }

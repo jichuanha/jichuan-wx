@@ -23,6 +23,7 @@
 		#footer {margin:8px 0 0 0;padding:3px 0 0 0;font-size:11px;text-align:center;border-top:2px solid #0663A2;}
 		#footer, #footer a {color:#999;} #left{overflow-x:hidden;overflow-y:auto;} #left .collapse{position:static;}
 		#userControl>li>a{/*color:#fff;*/text-shadow:none;} #userControl>li>a:hover, #user #userControl>li.open>a{background:transparent;}
+		#productName{height: 20px;display: block;margin-left: 100px;}
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -159,26 +160,28 @@
 	<div id="main">
 		<div id="header" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="brand"><span id="productName">${fns:getConfig('productName')}</span></div>
+				<div class="brand"><image id="productName" src="${ctxStatic}/images/login/logo.png" /></div>
 				<ul id="userControl" class="nav pull-right">
 					<%--<li><a href="${pageContext.request.contextPath}${fns:getFrontPath()}/index-${fnc:getCurrentSiteId()}.html" target="_blank" title="访问网站主页"><i class="icon-home"></i></a></li>--%>
-					<li id="themeSwitch" class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="主题切换"><i class="icon-th-large"></i></a>
-						<ul class="dropdown-menu">
-							<c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>
-							<li><a href="javascript:cookie('tabmode','${tabmode eq '1' ? '0' : '1'}');location=location.href">${tabmode eq '1' ? '关闭' : '开启'}页签模式</a></li>
-						</ul>
-						<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->
-					</li>
+					<%--<li id="themeSwitch" class="dropdown">--%>
+						<%--<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="主题切换"><i class="icon-th-large"></i></a>--%>
+						<%--<ul class="dropdown-menu">--%>
+							<%--<c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>--%>
+							<%--<li><a href="javascript:cookie('tabmode','${tabmode eq '1' ? '0' : '1'}');location=location.href">${tabmode eq '1' ? '关闭' : '开启'}页签模式</a></li>--%>
+						<%--</ul>--%>
+						<%--<!--[if lte IE 6]><script type="text/javascript">$('#themeSwitch').hide();</script><![endif]-->--%>
+					<%--</li>--%>
+					<li style="padding: 10px 0;"><image src="${ctxStatic}/images/useravatar.png" style="height: 20px;" /></li>
+					<li><a class="" data-toggle="" href="#" title="个人信息">您好, ${fns:getUser().name}&nbsp;<span id="notifyNum" class="label label-info hide"></span></a></li>
 					<li id="userInfo" class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息">您好, ${fns:getUser().name}&nbsp;<span id="notifyNum" class="label label-info hide"></span></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息"><image src="${ctxStatic}/images/top_more.png" style="height: 20px;" /></a>
 						<ul class="dropdown-menu">
 							<li><a href="${ctx}/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a></li>
 							<li><a href="${ctx}/sys/user/modifyPwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
 							<li><a href="${ctx}/oa/oaNotify/self" target="mainFrame"><i class="icon-bell"></i>&nbsp;  我的通知 <span id="notifyNum2" class="label label-info hide"></span></a></li>
+							<li><a href="${ctx}/logout" title="退出登录">退出</a></li>
 						</ul>
 					</li>
-					<li><a href="${ctx}/logout" title="退出登录">退出</a></li>
 					<li>&nbsp;</li>
 				</ul>
 				<%-- <c:if test="${cookie.theme.value eq 'cerulean'}">
