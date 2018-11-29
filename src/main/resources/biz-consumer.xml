@@ -6,4 +6,7 @@
 
 
 	<!--<bean id="mainWebClient" class="com.hanshu.mainweb.client.impl.MainWebClientImpl" />-->
+	<bean id="changePasswordService" class="com.hzkans.crm.modules.pswmanage.service.ChangePasswordImpl.ChangePasswordImpl"/>
+	<bean id="wechatPlatfromService" class="com.hzkans.crm.modules.wechat.service.impl.WechatPlatfromImpl"/>
+
 </beans>
