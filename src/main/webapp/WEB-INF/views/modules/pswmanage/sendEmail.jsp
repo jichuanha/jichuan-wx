@@ -14,13 +14,13 @@
   <script src="${ctxStatic}/layer/layer.js"></script>
   <title>找回密码</title>
   <style>
-    #found-block{
-      width: 500px;
+    #found-block,.success{
+      width: 350px;
       margin: 0 auto;
       position: relative;
-      margin-top: 150px;
+      margin-top: 180px;
       background: #fff;
-      padding: 50px;
+      padding: 30px;
       border-radius: 10px;
     }
     body{
@@ -42,7 +42,8 @@
       position: relative;
       margin: 0 auto;
       display: block;
-      margin-bottom: 50px;
+      margin-bottom: 30px;
+        width: 200px;
     }
     #found-block .doingEmail{
       padding-left: 40px;
@@ -102,7 +103,7 @@
       }
     },
     submitHandler:function(){
-        var url = "${fns:getConfig('service.url')}/dongyin-CRM/changePassword/sendMail";
+        var url = "sendMail";
         $.ajax({
             url:url,
             type:'POST',
@@ -117,6 +118,9 @@
                         content:'系统已发送确认邮件到'+$('#doingEmail').val() +',请及时查收邮件',
                     })
                 }else{
+                    if(data.code == '30001'){
+                        $('.verify_codeRefresh').click();
+                    }
                     layer.open({
                         content:data.msg,
                     })
