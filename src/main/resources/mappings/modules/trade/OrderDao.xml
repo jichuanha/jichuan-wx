@@ -13,8 +13,7 @@
 		a.pay_amount AS "payAmount",
 		a.status AS "status",
 		a.order_time AS "orderTime",
-		a.pay__time AS "payTime",
-		a.nick_name AS "nickName",
+		a.pay_time AS "payTime",
 		a.buyer_name AS "buyerName",
 		a.mobile AS "mobile",
 		a.item_name AS "itemName",
@@ -35,7 +34,7 @@
 			<include refid="tOrderColumns"/>
 		FROM t_order a
 		<include refid="tOrderJoins"/>
-		WHERE a.id = #{id}
+		WHERE a.order_sn = #{orderSn}
 	</select>
 	
 	<select id="findList" resultType="Order">
@@ -76,51 +75,47 @@
 	
 	<insert id="insert">
 		INSERT INTO t_order(
-			id,
-			member_id,
 			order_sn,
 			own_shop,
 			shop_no,
 			platform_type,
 			payable_ammount,
 			pay_amount,
-			status,
 			order_time,
-			pay__time,
-			nick_name,
+			pay_time,
 			buyer_name,
 			mobile,
 			item_name,
 			item_no,
 			unit_price,
-			buy_count,
+			province_name,
+			city_name,
+			area_name,
+			address,
+			consignee,
 			create_date,
-			update_date,
-			create_by,
-			update_by
+			update_date
 		) VALUES (
-			#{id},
-			#{memberId},
 			#{orderSn},
 			#{ownShop},
 			#{shopNo},
 			#{platformType},
 			#{payableAmmount},
 			#{payAmount},
-			#{status},
 			#{orderTime},
 			#{payTime},
-			#{nickName},
 			#{buyerName},
 			#{mobile},
 			#{itemName},
 			#{itemNo},
 			#{unitPrice},
-			#{buyCount},
-			#{createDate},
-			#{updateDate},
-			#{createBy.id},
-			#{updateBy.id}
+			#{provinceName},
+			#{cityName},
+			#{areaName},
+			#{address},
+			#{consignee},
+			now(),
+			now()
 		)
 	</insert>
 	
@@ -135,7 +130,7 @@
 			pay_amount = #{payAmount},
 			status = #{status},
 			order_time = #{orderTime},
-			pay__time = #{payTime},
+			pay_time = #{payTime},
 			nick_name = #{nickName},
 			buyer_name = #{buyerName},
 			mobile = #{mobile},
