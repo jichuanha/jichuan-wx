@@ -43,5 +43,10 @@ public class ActivityService extends CrudService<ActivityDao, Activity> {
 	public void delete(Activity activity) {
 		super.delete(activity);
 	}
+
+	@Transactional(readOnly = false)
+	public void update(Activity activity) {
+		super.update(activity);
+	}
 	
 }
