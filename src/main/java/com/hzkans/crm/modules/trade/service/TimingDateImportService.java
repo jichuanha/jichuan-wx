@@ -1,18 +1,19 @@
 package com.hzkans.crm.modules.trade.service;
 
+import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.JedisUtils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
+import com.hzkans.crm.modules.trade.dao.OrderDao;
 import com.hzkans.crm.modules.trade.dao.OrderMemberDao;
 import com.hzkans.crm.modules.trade.dao.TableFlowDao;
+import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,7 @@ import java.util.List;
 public class TimingDateImportService {
 
     Logger logger = LoggerFactory.getLogger(TimingDateImportService.class);
+    private static final Integer TRANSFORM_AMOUNT = Integer.valueOf(100);
 
     @Autowired
     private TableFlowService tableFlowService;
@@ -46,6 +49,8 @@ public class TimingDateImportService {
     private OrderMemberDao orderMemberDao;
     @Autowired
     private TableFlowDao tableFlowDao;
+    @Autowired
+    private OrderDao orderDao;
 
     /**
      * 将保存到系统中表格的数据同步到数据库
@@ -55,15 +60,28 @@ public class TimingDateImportService {
         logger.info("定时任务开启");
         //先读取顾客表(先做单线程,后面添加多线程分配)
         try {
+            //先获取顾客信息表将数据导入数据库
             TableFlow tableFlow = new TableFlow();
             tableFlow.setType(TableFlowTypeEnum.CUSTOMER.getCode());
             tableFlow.setStatus(TableFlowStatusEnum.IMPORT_SYSTEM_SUCCESS.getCode());
             TableFlow table = tableFlowService.getTable(tableFlow);
+            //如果顾客信息表全部导入完成,继续导入订单表
             if(table == null) {
-                return;
+                tableFlow.setType(TableFlowTypeEnum.ORDER_INFO.getCode());
+                table = tableFlowService.getTable(tableFlow);
+                //如果订单表格全部导入完成,继续导入用户评价表
+                if(table == null) {
+                    tableFlow.setType(TableFlowTypeEnum.EVALUATE.getCode());
+                    table = tableFlowService.getTable(tableFlow);
+                }
+                //如果订单评价表全部导入完成,就结束此次任务
+                if(table == null) {
+                    return;
+                }
             }
             logger.info("[{}] table:{}", JsonUtil.toJson(table));
             String tableName = table.getTableName();
+            Integer type = table.getType();
             //读取表格
             String name = TradeUtil.UPLOAD_ADDRESS+tableName;
             File file = new File(name);
@@ -74,8 +92,18 @@ public class TimingDateImportService {
             FileInputStream fis = new FileInputStream(file);
             Workbook workBook = getWorkBook(name, fis);
             //保存表格数据到数据库
+            int result = 0;
             Sheet sheetAt = workBook.getSheetAt(0);
-            int result = saveMessage(sheetAt);
+            if(type.equals(TableFlowTypeEnum.CUSTOMER.getCode())) {
+                //保存顾客信息表
+                result  = saveCustomerMessage(sheetAt);
+            }else if(type.equals(TableFlowTypeEnum.ORDER_INFO.getCode())) {
+                //保存订单信息
+                result = saveOrderMessage(sheetAt);
+            }else if(type.equals(TableFlowTypeEnum.EVALUATE.getCode())) {
+                //保存评价信息
+            }
+
             tableFlow.setTableName(tableName);
             tableFlow.setTimingDate(new Date());
             if(result > 0) {
@@ -127,7 +155,7 @@ public class TimingDateImportService {
         return workbook;
     }
 
-    private int saveMessage(Sheet sheetAt){
+    private int saveCustomerMessage(Sheet sheetAt){
         try {
             //获取总行数
             int lastRowNum = sheetAt.getLastRowNum();
@@ -136,10 +164,12 @@ public class TimingDateImportService {
             //遍历数据
             for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
                 Row row = sheetAt.getRow(rowNum);
-                //判断该
                 String memberName = row.getCell(1).getStringCellValue();
                 //加入缓存
                 String bizCode = JedisUtils.get(memberName);
+                if(!StringUtils.isEmpty(bizCode)) {
+                    continue;
+                }
                 logger.info("[{}] bizCode :{}", bizCode);
                 OrderMember orderMember = new OrderMember();
                 orderMember.setNickName(row.getCell(0).getStringCellValue());
@@ -177,6 +207,73 @@ public class TimingDateImportService {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    private int saveOrderMessage(Sheet sheetAt) {
+        try {
+            //获取总行数
+            int lastRowNum = sheetAt.getLastRowNum();
+            int result = 1;
+            logger.info("[{}]lastRowNum :{}",lastRowNum);
+            //遍历数据
+            for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
+                Row row = sheetAt.getRow(rowNum);
+                String payTime = row.getCell(5).getStringCellValue();
+                if(payTime.equals("-")) {
+                    continue;
+                }
+                Order order = new Order();
+                order.setOrderSn(row.getCell(0).getStringCellValue());
+                //查询该订单是否已经导入
+                Order order1 = orderDao.get(order);
+                if(order1 != null) {
+                    continue;
+                }
+                order.setBuyerName(row.getCell(1).getStringCellValue());
+                order.setMobile(row.getCell(2).getStringCellValue());
+                order.setOrderTime(DateUtil.parse(row.getCell(4).
+                        getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
+                order.setPayTime(DateUtil.parse(row.getCell(5).
+                        getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
+                order.setItemName(row.getCell(7).getStringCellValue());
+                order.setItemNo(row.getCell(8).getStringCellValue());
+                order.setUnitPrice(priceY2F(row.getCell(9).getStringCellValue()));
+                order.setPayableAmmount(priceY2F(row.getCell(10).getStringCellValue()));
+                order.setPayAmount(priceY2F(row.getCell(11).getStringCellValue()));
+                order.setProvinceName(row.getCell(17).getStringCellValue());
+                order.setCityName(row.getCell(18).getStringCellValue());
+                order.setAreaName(row.getCell(19).getStringCellValue());
+                order.setAddress(row.getCell(20).getStringCellValue());
+                order.setConsignee(row.getCell(21).getStringCellValue());
+                //TODO  一下三个数据没有给出,现在先写死
+                order.setShopNo("1");
+                order.setOwnShop("1");
+                order.setPlatformType(1);
+                int insert = orderDao.insert(order);
+                if(insert < 0) {
+                    result = -1;
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    private static Long parseYuan2Fen(Double amount) {
+        if (amount == null) {
+            return null;
+        } else {
+            BigDecimal bd = new BigDecimal(amount);
+            return  bd.multiply(new BigDecimal(TRANSFORM_AMOUNT)).setScale(2, 4).longValue();
+        }
+    }
+
+    private Long priceY2F(String price) {
+        double v = Double.parseDouble(price);
+        return parseYuan2Fen(v);
     }
 
 }
