@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO">
+
+    <sql id="tWechatPlatformColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.main_part AS "mainPart",
+		a.del_flag AS "delFlag",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy",
+		a.update_by AS "updateBy",
+		a.update_date AS "updateDate"
+	</sql>
+
+    <sql id="tWechatPlatformJoins">
+    </sql>
+
+    <select id="selectWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
+            parameterType="java.lang.Integer">
+        SELECT
+        <include refid="tWechatPlatformColumns"/>
+        FROM t_wechat_platform a
+        <include refid="tWechatPlatformJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+
+    <select id="selectAllWechatPlatform" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+        SELECT
+        <include refid="tWechatPlatformColumns"/>
+        FROM t_wechat_platform a
+        <include refid="tWechatPlatformJoins"/>
+        where a.del_flag = 0
+    </select>
+
+    <insert id="insertWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+		INSERT INTO t_wechat_platform(
+			name,
+			main_part,
+			del_flag,
+			create_date,
+			create_by,
+			update_by,
+			update_date
+		) VALUES (
+			#{name},
+			#{mainPart},
+			0,
+			now(),
+			#{createBy},
+			#{updateBy},
+			now()
+		)
+	</insert>
+
+    <update id="updateWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+        UPDATE t_wechat_platform SET
+        <set>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+            <if test="mainPart != null and mainPart != ''">
+                AND main_part = #{mainPart}
+            </if>
+            <if test="mainPart != null and mainPart != ''">
+                AND updateBy = #{updateBy}
+            </if>
+        </set>
+        update_date = now()
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteWechatPlatform" parameterType="java.lang.Integer">
+		UPDATE t_wechat_platform SET 
+			del_flag = 1
+		WHERE id = #{id}
+	</update>
+
+</mapper>
