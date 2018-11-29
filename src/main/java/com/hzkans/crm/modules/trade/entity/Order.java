@@ -33,13 +33,59 @@ public class Order extends DataEntity<Order> {
 	private String itemNo;		// 商品编码
 	private Long unitPrice;		// 商品单价
 	private String buyCount;		// 购买数量
-	
+	private String provinceName;
+	private String cityName;
+	private String areaName;
+	private String address;
+	private String consignee;   //收件人
+
+
 	public Order() {
 		super();
 	}
 
 	public Order(String id){
 		super(id);
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getConsignee() {
+		return consignee;
+	}
+
+	public void setConsignee(String consignee) {
+		this.consignee = consignee;
 	}
 
 	@NotNull(message="member_id不能为空")
