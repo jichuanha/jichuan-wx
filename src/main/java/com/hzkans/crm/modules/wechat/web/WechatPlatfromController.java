@@ -50,25 +50,21 @@ public class WechatPlatfromController extends BaseController {
         return "modules/wechatmanage/selectShop";
     }
     @RequestMapping(value = "/gotoUpdate")
-    public String gotoUpdate(HttpServletRequest request, Model model)  {
-        Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
-        model.addAttribute("id",id);
-        return "modules/wechatmanage/editShop";
-    }
-
-    @RequestMapping(value = "/selectById")
-    @ResponseBody
-    public String selectWechatPlatformById(HttpServletRequest request) throws Exception {
+    public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
 
             WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.selectWechatPlatformById(id);
-            return ResponseUtils.getSuccessApiResponseStr(wechatPlatfromDO);
+            model.addAttribute("id",wechatPlatfromDO.getId());
+            model.addAttribute("name",wechatPlatfromDO.getName());
+            model.addAttribute("mainPart",wechatPlatfromDO.getMainPart());
+            return "modules/wechatmanage/editShop";
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
         }
     }
+
 
     @RequestMapping(value = "/insert")
     @ResponseBody
