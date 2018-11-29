@@ -47,13 +47,13 @@ public class WechatPlatfromController extends BaseController {
     }
     @RequestMapping(value = "/gotoSelectAll")
     public String gotoSelectAll()  {
-        return "modules/wechatmanage/editShop";
+        return "modules/wechatmanage/selectShop";
     }
     @RequestMapping(value = "/gotoUpdate")
     public String gotoUpdate(HttpServletRequest request, Model model)  {
         Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
         model.addAttribute("id",id);
-        return "modules/pswmanage/sendEmail";
+        return "modules/wechatmanage/editShop";
     }
 
     @RequestMapping(value = "/selectById")
