@@ -11,6 +11,20 @@
     <script src="${ctxStatic}/clipboard.js"></script>
     <script src="${ctxStatic}/layer/layer.js"></script>
 	<style>
+		.activity-title{
+			font-size: 17px;
+			padding: 10px 20px;
+			border-bottom: 1px solid #F2F2F2;
+		}
+		.activity-title i{
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			margin-right: 30px;
+		}
+		.activity-title i img{
+			width: 100%;
+		}
 		a:hover{
 			text-decoration: none;
 		}
@@ -242,6 +256,7 @@
 </head>
 <body>
 <div class="nav">
+	<p class="activity-title"><i><img src="${ctxStatic}/images/prev-btn.png" alt=""></i>新建活动(活动类型2)</p>
 	<form id="searchForm"  class="form-search">
 		<h3>基本信息</h3>
 		<div class="base-info">
@@ -466,6 +481,13 @@
 </div>
 <script>
     $(function () {
+        $.ajax({
+            url:"platformShopList",
+            type:"post",
+            success:function (msg) {
+                
+            }
+        })
 		$('#chooseAll').click(function () {
             var flag = $('#chooseAll')[0].checked;
             var shopValue = $('.shop-list input[type="checkbox"]');
@@ -486,7 +508,7 @@
                 $.each(dataSer,function(i,item){
                     dataObject[item.name] = item.value;
                 });
-                dataObject.per_amount = dataObject.per_amount*100;
+                // dataObject.per_amount = dataObject.per_amount*100;
                 var shopValue = $('.shop-list input[type="checkbox"]');
                 var shopNameArr = [];
                 var shopNoArr = [];
@@ -517,11 +539,25 @@
                     // async:false,
                     data:dataObject,
                     success:function (msg) {
-
+						var msg = strToJson(msg);
+						if(msg.code == 1000){
+                            // menuHref();
+						}
+						else{
+						    layer.msg(msg.msg);
+						}
                     }
                 })
             }
         })
+        //获取接口数据 如果是字符串转json
+        function strToJson(msg) {
+            if(typeof msg == 'string'){
+                var json = eval('(' + msg + ')');
+                return json;
+            }
+            return msg;
+        }
 		function checkInput() {
             if(checkCon()) {
                 $('#btnRelease').addClass('active');
@@ -568,7 +604,29 @@
                 return false;
             }
         }
+        function menuHref(url,menuFlag,para,level) {
+            var as = $("#left li a" , parent.document);
+            as.each(function () {
+                if($(this).attr('href') == url){
+                    if(menuFlag){
+                        $(this).parents('.accordion-group').find('.accordion-heading a')[0].click();
+                    }
+                    if(para){
+                        $(this).attr('href',url+'?order_status='+para);
+                    }
+                    if(level == 'three'){
+                        if($(this).parent().css('display') == 'none'){
+                            $(this).parent().parent().siblings('a')[0].click();
+                        }
+                        $(this)[0].click();
+                    }
+                    else{
+                        $(this)[0].click();
+                    }
 
+                }
+            })
+        }
 
 
         var swiper = new Swiper('.swiper-container', {
