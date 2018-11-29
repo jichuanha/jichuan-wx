@@ -4,9 +4,6 @@
 package com.hzkans.crm.modules.activity.entity;
 
 import com.hzkans.crm.common.persistence.DataEntity;
-import org.hibernate.validator.constraints.Length;
-
-import java.util.Date;
 
 
 /**
