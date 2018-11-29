@@ -95,7 +95,7 @@
 	    <property name="filters" value="stat" /> 
 	</bean>
 
-	<import resource="spring-dubbo-consumer.xml"/>
+	<!--<import resource="spring-dubbo-consumer.xml"/>-->
 	<import resource="biz-consumer.xml"/>
 	<import resource="spring-task.xml"/>
 
