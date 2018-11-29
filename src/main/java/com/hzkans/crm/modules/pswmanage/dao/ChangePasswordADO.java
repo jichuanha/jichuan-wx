@@ -5,7 +5,9 @@ package com.hzkans.crm.modules.pswmanage.dao;
 
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,6 +21,5 @@ public interface ChangePasswordADO {
 
     int inster(ChangePasswordDO changePasswordDO);
 
-    void update(ChangePasswordDO changePasswordDO);
 
 }

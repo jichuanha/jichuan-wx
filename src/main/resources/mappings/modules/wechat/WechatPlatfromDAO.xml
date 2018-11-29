@@ -55,19 +55,17 @@
 	</insert>
 
     <update id="updateWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
-        UPDATE t_wechat_platform SET
+        UPDATE t_wechat_platform
         <set>
-            <if test="name != null and name != ''">
-                AND name = #{name}
-            </if>
             <if test="mainPart != null and mainPart != ''">
-                AND main_part = #{mainPart}
+                 main_part = #{mainPart},
             </if>
-            <if test="mainPart != null and mainPart != ''">
-                AND updateBy = #{updateBy}
+            <if test="updateBy != null and updateBy != ''">
+                 update_by = #{updateBy},
             </if>
+            update_date = now()
         </set>
-        update_date = now()
+
         WHERE id = #{id}
     </update>
 

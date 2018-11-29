@@ -13,11 +13,13 @@ import com.hzkans.crm.common.web.BaseController;
 
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,19 +37,22 @@ import java.util.List;
 @RequestMapping(value = "${adminPath}/wechat/")
 public class WechatPlatfromController extends BaseController {
 
+
     @Autowired
-    private WechatPlatfromService wechatService;
+    private WechatPlatfromDAO wechatPlatfromDAO;
 
     @RequestMapping(value = "/gotoInsert")
     public String gotoInsert()  {
-        return "modules/pswmanage/sendEmail";
+        return "modules/wechatmanage/creatShop";
     }
     @RequestMapping(value = "/gotoSelectAll")
     public String gotoSelectAll()  {
-        return "modules/pswmanage/sendEmail";
+        return "modules/wechatmanage/editShop";
     }
     @RequestMapping(value = "/gotoUpdate")
-    public String gotoUpdate()  {
+    public String gotoUpdate(HttpServletRequest request, Model model)  {
+        Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+        model.addAttribute("id",id);
         return "modules/pswmanage/sendEmail";
     }
 
@@ -57,7 +62,7 @@ public class WechatPlatfromController extends BaseController {
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
 
-            WechatPlatfromDO wechatPlatfromDO = wechatService.selectWechatPlatformById(id);
+            WechatPlatfromDO wechatPlatfromDO = wechatPlatfromDAO.selectWechatPlatformById(id);
             return ResponseUtils.getSuccessApiResponseStr(wechatPlatfromDO);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
@@ -81,7 +86,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setUpdateBy(user.getName());
             wechatPlatfromDO.setName(name);
             wechatPlatfromDO.setMainPart(mainPart);
-             wechatService.insertWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
@@ -104,7 +109,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setMainPart(newMainPart);
             wechatPlatfromDO.setId(id);
             wechatPlatfromDO.setUpdateBy(user.getName());
-            wechatService.updateWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromDAO.updateWechatPlatform(wechatPlatfromDO);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.info("selectWechatPlatformById is error");
@@ -117,7 +122,7 @@ public class WechatPlatfromController extends BaseController {
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
 
-            wechatService.deleteWechatPlatform(id);
+            wechatPlatfromDAO.deleteWechatPlatform(id);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
@@ -129,7 +134,7 @@ public class WechatPlatfromController extends BaseController {
     public String selectAllWechatPlatform() throws Exception {
         try {
             List<WechatPlatfromDO> allWechatPlatform;
-            allWechatPlatform = wechatService.selectAllWechatPlatform();
+            allWechatPlatform = wechatPlatfromDAO.selectAllWechatPlatform();
             return ResponseUtils.getSuccessApiResponseStr(allWechatPlatform);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
