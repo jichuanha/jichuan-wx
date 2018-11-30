@@ -1,14 +1,14 @@
 package com.hzkans.crm.modules.wechat.service.impl;
-
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
+
 
 /**
  * Created with IDEA
@@ -32,19 +32,34 @@ public class WechatPlatfromImpl implements WechatPlatfromService {
     }
 
     /**
+     * 添加微信公众号
+     *
      * @param wechatPlatfromDO
      * @return
      * @throws Exception
      */
     @Override
     public void addWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
-        try {
 
-            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
+        WechatPlatfromDO wechatPlatfromDO1 = new WechatPlatfromDO();
+        wechatPlatfromDO1.setName(wechatPlatfromDO.getName());
+        List<WechatPlatfromDO> wechatPlatfromDOS = null;
+        try {
+            wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO1);
         } catch (Exception e) {
-            log.error("insertWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
         }
+        log.info("[{}]wechatPlatfromDOS",JsonUtil.toJson(wechatPlatfromDOS));
+        if (wechatPlatfromDOS.size() > 0) {
+            throw new Exception(ResponseEnum.B_E_ALERADY_EXIST.getMsg());
+        }
+        try {
+            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
+
+        } catch (Exception e) {
+            throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
+        }
+
     }
 
 
