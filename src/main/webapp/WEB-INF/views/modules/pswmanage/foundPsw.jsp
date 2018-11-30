@@ -94,7 +94,7 @@
       <p style="color: #3f5185;font-size: 20px;margin: 50px 0;">修改密码成功!</p>
       <a href="${ctx}"><button type="submit" class="btn btn-primary" id="back">返回</button></a>
   </div>
-  <p style="text-align: center;color: #fff;margin-top:20px;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
+  <p style="text-align: center;color: #fff;position: absolute;bottom: 20px;width: 100%;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
 </body>
 <script>
       // 在键盘按下并释放及提交后验证提交表单

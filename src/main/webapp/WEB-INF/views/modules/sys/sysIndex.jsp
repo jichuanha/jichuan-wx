@@ -48,6 +48,7 @@
 					return true;
 				}
 				// 左侧区域显示
+
 				$("#left,#openClose").show();
 				if(!$("#openClose").hasClass("close")){
 					$("#openClose").click();
@@ -120,11 +121,11 @@
 				return addTab($(this), true);
 			});// </c:if>
 			// 鼠标移动到边界自动弹出左侧菜单
-			$("#openClose").mouseover(function(){
-				if($(this).hasClass("open")){
-					$(this).click();
-				}
-			});
+			// $("#openClose").mouseover(function(){
+			// 	if($(this).hasClass("open")){
+			// 		$(this).click();
+			// 	}
+			// });
 			// 获取通知数目  <c:set var="oaNotifyRemindInterval" value="${fns:getConfig('oa.notify.remind.interval')}"/>
 			function getNotifyNum(){
 				$.get("${ctx}/oa/oaNotify/self/count?updateSession=0&t="+new Date().getTime(),function(data){
@@ -193,40 +194,64 @@
 						$("#productName").hide();$("#user").html($("#userControl"));$("#header").prepend($("#user, #logo"));
 					</script>
 				</c:if> --%>
-				<div class="nav-collapse">
-					<ul id="menu" class="nav" style="*white-space:nowrap;float:none;">
-						<c:set var="firstMenu" value="true"/>
-						<c:forEach items="${fns:getMenuList()}" var="menu" varStatus="idxStatus">
-							<c:if test="${menu.parent.id eq '1'&&menu.isShow eq '1'}">
-								<li class="menu ${not empty firstMenu && firstMenu ? ' active' : ''}">
-									<c:if test="${empty menu.href}">
-										<a class="menu" href="javascript:" data-href="${ctx}/sys/menu/tree?parentId=${menu.id}" data-id="${menu.id}"><span>${menu.name}</span></a>
-									</c:if>
-									<c:if test="${not empty menu.href}">
-										<a class="menu" href="${fn:indexOf(menu.href, '://') eq -1 ? ctx : ''}${menu.href}" data-id="${menu.id}" target="mainFrame"><span>${menu.name}</span></a>
-									</c:if>
-								</li>
-								<c:if test="${firstMenu}">
-									<c:set var="firstMenuId" value="${menu.id}"/>
-								</c:if>
-								<c:set var="firstMenu" value="false"/>
-							</c:if>
-						</c:forEach><%--
-						<shiro:hasPermission name="cms:site:select">
-						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fnc:getSite(fnc:getCurrentSiteId()).name}<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<c:forEach items="${fnc:getSiteList()}" var="site"><li><a href="${ctx}/cms/site/select?id=${site.id}&flag=1">${site.name}</a></li></c:forEach>
-							</ul>
-						</li>
-						</shiro:hasPermission> --%>
-					</ul>
-				</div><!--/.nav-collapse -->
+				<%--<div class="nav-collapse">--%>
+					<%--<ul id="menu" class="nav" style="*white-space:nowrap;float:none;">--%>
+						<%--<c:set var="firstMenu" value="true"/>--%>
+						<%--<c:forEach items="${fns:getMenuList()}" var="menu" varStatus="idxStatus">--%>
+							<%--<c:if test="${menu.parent.id eq '1'&&menu.isShow eq '1'}">--%>
+								<%--<li class="menu ${not empty firstMenu && firstMenu ? ' active' : ''}">--%>
+									<%--<c:if test="${empty menu.href}">--%>
+										<%--<a class="menu" href="javascript:" data-href="${ctx}/sys/menu/tree?parentId=${menu.id}" data-id="${menu.id}"><span>${menu.name}</span></a>--%>
+									<%--</c:if>--%>
+									<%--<c:if test="${not empty menu.href}">--%>
+										<%--<a class="menu" href="${fn:indexOf(menu.href, '://') eq -1 ? ctx : ''}${menu.href}" data-id="${menu.id}" target="mainFrame"><span>${menu.name}</span></a>--%>
+									<%--</c:if>--%>
+								<%--</li>--%>
+								<%--<c:if test="${firstMenu}">--%>
+									<%--<c:set var="firstMenuId" value="${menu.id}"/>--%>
+								<%--</c:if>--%>
+								<%--<c:set var="firstMenu" value="false"/>--%>
+							<%--</c:if>--%>
+						<%--</c:forEach>&lt;%&ndash;--%>
+						<%--<shiro:hasPermission name="cms:site:select">--%>
+						<%--<li class="dropdown">--%>
+							<%--<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fnc:getSite(fnc:getCurrentSiteId()).name}<b class="caret"></b></a>--%>
+							<%--<ul class="dropdown-menu">--%>
+								<%--<c:forEach items="${fnc:getSiteList()}" var="site"><li><a href="${ctx}/cms/site/select?id=${site.id}&flag=1">${site.name}</a></li></c:forEach>--%>
+							<%--</ul>--%>
+						<%--</li>--%>
+						<%--</shiro:hasPermission> &ndash;%&gt;--%>
+					<%--</ul>--%>
+				<%--</div><!--/.nav-collapse -->--%>
 			</div>
 	    </div>
 		<div class="container-bg">
 			<div class="container-fluid">
 				<div id="content" class="row-fluid">
+                    <div id="left1" class="navbar">
+                        <div class="nav-collapse">
+                            <ul id="menu" class="nav" style="*white-space:nowrap;float:none;">
+                                <c:set var="firstMenu" value="true"/>
+                                <c:forEach items="${fns:getMenuList()}" var="menu" varStatus="idxStatus">
+                                    <c:if test="${menu.parent.id eq '1'&&menu.isShow eq '1'}">
+                                        <li class="menu ${not empty firstMenu && firstMenu ? ' active' : ''}">
+                                            <c:if test="${empty menu.href}">
+                                                <a class="menu" href="javascript:" data-href="${ctx}/sys/menu/tree?parentId=${menu.id}" data-id="${menu.id}"><span>${menu.name}</span></a>
+                                            </c:if>
+                                            <c:if test="${not empty menu.href}">
+                                                <a class="menu" href="${fn:indexOf(menu.href, '://') eq -1 ? ctx : ''}${menu.href}" data-id="${menu.id}" target="mainFrame"><span>${menu.name}</span></a>
+                                            </c:if>
+                                        </li>
+                                        <c:if test="${firstMenu}">
+                                            <c:set var="firstMenuId" value="${menu.id}"/>
+                                        </c:if>
+                                        <c:set var="firstMenu" value="false"/>
+                                    </c:if>
+                                </c:forEach>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                    <div id="openClose1" class="close">&nbsp;</div>
 					<div id="left"><%--
 					<iframe id="menuFrame" name="menuFrame" src="" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe> --%>
 					</div>
@@ -247,7 +272,7 @@
 		var tabTitleHeight = 33; // 页签的高度
 		var htmlObj = $("html"), mainObj = $("#main");
 		var headerObj = $("#header"), footerObj = $("#footer");
-		var frameObj = $("#left, #openClose, #right, #right iframe");
+		var frameObj = $("#left, #openClose, #right, #right iframe,#openClose1,#left1");
 		function wSize(){
 			var minHeight = 500, minWidth = 980;
 			var strs = getWindowSize().toString().split(",");
@@ -255,17 +280,15 @@
 			mainObj.css("width",strs[1] < minWidth ? minWidth - 10 : "auto");
 			// frameObj.height((strs[0] < minHeight ? minHeight : strs[0]) - headerObj.height() - footerObj.height() - (strs[1] < minWidth ? 42 : 28));
 			frameObj.height((strs[0] < minHeight ? minHeight : strs[0]) - headerObj.height() - footerObj.height() - (strs[1] < minWidth ? 42 : 28)-40);
-			$("#openClose").height($("#openClose").height() - 5);// <c:if test="${tabmode eq '1'}">
+			$("#openClose,#openClose1").height($("#openClose").height() - 5);// <c:if test="${tabmode eq '1'}">
 			$(".jericho_tab iframe").height($("#right").height() - tabTitleHeight); // </c:if>
 			wSizeWidth();
 		}
 		function wSizeWidth(){
-			if (!$("#openClose").is(":hidden")){
-				var leftWidth = ($("#left").width() < 0 ? 0 : $("#left").width());
-				$("#right").width($("#content").width()- leftWidth - $("#openClose").width() -5);
-			}else{
-				$("#right").width("100%");
-			}
+		    var total = 0;
+            !$("#openClose").is(".open") && total++;
+            !$("#openClose1").is(".open") && total++;
+            $("#right").width($("#content").width()- leftWidth*total - $("#openClose").width()*2 -5);
 		}// <c:if test="${tabmode eq '1'}"> 
 		function openCloseClickCallBack(b){
 			$.fn.jerichoTab.resize();
