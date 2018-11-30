@@ -18,7 +18,7 @@
 			width: 5px;
 			height: 20px;
 			background-color: #3F51B5;
-			vertical-align: bottom;
+			vertical-align: middle;
 			margin-right: 20px;
 			margin-left: 20px;
 		}
@@ -134,9 +134,17 @@
 		}
 		.list-prompt,.activity-pause,.activity-cancel{
 			color: #EA4343;
+			cursor: pointer;
 		}
 		.activity-detail,
 		.activity-contin{
+			color: #5B6ABF;
+		}
+		.activity-detail{
+			font-style: normal;
+		}
+		.activity-detail:hover{
+			text-decoration: none;
 			color: #5B6ABF;
 		}
 		.list-right{
@@ -146,6 +154,26 @@
 		.list-right span{
 			margin-right: 10px;
 			font-style: normal;
+		}
+		.search-cond{
+			display: inline-block;
+			font-size: 14px;
+			border: 1px solid #F1F1F1;
+			color: #7C7C7C;
+			border-radius: 3px;
+			padding: 3px 5px;
+		}
+		.search-close{
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+			vertical-align: top;
+		}
+		.search-close img{
+			width: 100%;
+			height: 100%;
+			vertical-align: text-top;
+			margin-left: 2px;
 		}
 	</style>
 
@@ -159,21 +187,22 @@
 	<div class="wrap-header">
 		<form id="searchForm"  class="form-search">
 			<input id="current_page" name="current_page" type="hidden" value="1"/>
-			<input id="page_size" name="page_size" type="hidden" value="1"/>
+			<input id="page_size" name="page_size" type="hidden" value="10"/>
 			<ul class="ul-form">
 				<li><label>活动名称：</label>
-					<input type="text" name="real_name" class="mid-input" id="real_name">
+					<input type="text" name="name" class="mid-input" id="name">
 				</li>
 				<li><label>活动状态：</label>
 					<select name="status" id="status" class="mid-input">
 						<option value="">全部</option>
-						<option value="0">待审核</option>
-						<option value="1">已审核</option>
-						<option value="2">已取消</option>
+						<option value="0">未开始</option>
+						<option value="1">进行中</option>
+						<option value="2">暂停</option>
+						<option value="3">已结束</option>
 					</select>
 				</li>
-				<li><label>返利类型：</label>
-					<select name="status" id="type" class="mid-input">
+				<li><label>活动类型：</label>
+					<select name="activity_type" id="activity_type" class="mid-input">
 						<option value="">全部</option>
 						<option value="0">待审核</option>
 						<option value="1">已审核</option>
@@ -182,19 +211,16 @@
 				</li>
 				<li>
 					<label>开始时间：</label>
-					<input id="start_time" name="start_time" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
+					<input id="active_date" name="active_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
 				</li>
 				<li>
 					<label>结束时间：</label>
-					<input id="end_time" name="end_time" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
+					<input id="inactive_date" name="inactive_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
 				</li>
 				<li><label>所属店铺：</label>
-					<select name="status" id="shop" class="mid-input">
-						<option value="">全部</option>
-						<option value="0">待审核</option>
-						<option value="1">已审核</option>
-						<option value="2">已取消</option>
+					<select name="shop_no" id="shop_no" class="mid-input">
+						<option value="">请选择</option>
 					</select>
 				</li>
 				<li class="clearfix"></li>
@@ -207,7 +233,7 @@
 		</form>
 	</div>
 	<input id="pageCount" type="hidden" value=""/>
-	<p class="h3-title"><i class="h3-deco"></i>活动类型</p>
+	<p class="h3-title search-box"><i class="h3-deco"></i>活动列表 </p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">活动状态</li>
@@ -219,43 +245,7 @@
 			<li class="mycol-15">活动金额</li>
 		</ul>
 		<div class="lists-show">
-			<p>
-				<span class="list-time">2018-11-05 00:00:00 - 2018-11-05 00:00:00</span>
-				<span class="list-prompt">(列表根据创建时间"倒序"排列)</span>
-				<i class="list-right">
-					<span class="activity-cancel">取消</span>
-					<span class="activity-detail">查看详情</span>
-				</i>
-			</p>
-			<ul class="activity-list clearfix">
-				<li class="mycol-10">正常</li>
-				<li class="mycol-10">否</li>
-				<li class="mycol-10">好评返现</li>
-				<li class="mycol-15">微信/即时到账</li>
-				<li class="mycol-25">函数官方专卖店,韩束卡卡专卖店</li>
-				<li class="mycol-15">100/50</li>
-				<li class="mycol-15">¥100/¥50</li>
-			</ul>
-			<p><span>2018-11-05 00:00:00 - 2018-11-05 00:00:00</span> <span>暂停-URL</span></p>
-			<ul class="activity-list clearfix">
-				<li class="mycol-10">正常</li>
-				<li class="mycol-10">否</li>
-				<li class="mycol-10">好评返现</li>
-				<li class="mycol-15">微信/即时到账</li>
-				<li class="mycol-25">函数官方专卖店,韩束卡卡专卖店</li>
-				<li class="mycol-15">100/50</li>
-				<li class="mycol-15">¥100/¥50</li>
-			</ul>
-			<p><span>2018-11-05 00:00:00 - 2018-11-05 00:00:00</span> <span>暂停-URL</span></p>
-			<ul class="activity-list clearfix">
-				<li class="mycol-10">正常</li>
-				<li class="mycol-10">否</li>
-				<li class="mycol-10">好评返现</li>
-				<li class="mycol-15">微信/即时到账</li>
-				<li class="mycol-25">函数官方专卖店</li>
-				<li class="mycol-15">100/50</li>
-				<li class="mycol-15">¥100/¥50</li>
-			</ul>
+
 		</div>
 
 	</div>
@@ -266,11 +256,41 @@
 </div>
 <script>
     $(function () {
+        $.ajax({
+            url:'platformShopList',
+            type:'POST',
+            success:function (msg) {
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
+                    $.each(data,function (index,value) {
+                        value.forEach(function (el,indexshop) {
+                            $('#shop_no').append('<option value="'+el.shop+'">'+el.shop_name+'</option>');
+                        })
+
+                    })
+				}
+            }
+        })
         ajaxFuc();
         function ajaxFuc(nextPage){
+            var dataObject = {};
+            dataSer = ($("#searchForm").serializeArray());
+            $.each(dataSer,function(i,item){
+                dataObject[item.name] = item.value;
+            });
+            if(nextPage != null){
+                dataObject.current_page = nextPage;
+                nextPageSec = nextPage;
+            }
+            else{
+                dataObject.current_page = 1;
+                nextPageSec = 1;
+            }
             $.ajax({
                 url:"activityList",
                 type:"post",
+				data:dataObject,
                 success:function (msg) {
                     var msg = strToJson(msg);
                     var data = msg.data;
@@ -291,8 +311,8 @@
                         if(el.status != 3){
                             listShowEach += '<span class="activity-cancel">取消</span>';
 						}
-                        listShowEach += '<span class="activity-detail">查看详情</span>' +
-							'<input type="hidden" value="el.id"></i></p>';
+                        listShowEach += '<a href="activity-detail?id='+el.id+'" class="activity-detail">活动详情</a>' +
+							'<input type="hidden" value="'+el.id+'"></i></p>';
                         listShowEach += '<ul class="activity-list clearfix">';
                         if(el.status == 0){
                             listShowEach += '<li class="mycol-10">未开始</li>'
@@ -326,15 +346,89 @@
                         listShowEach += '<li class="mycol-15">100/50</li><li class="mycol-15">¥100/¥50</li></ul>';
 						$('.lists-show').append(listShowEach);
                     })
+                    $('#current_page').val(nextPageSec);
                     $('#pageCount').val(data.count);
-                    // pageList(10,1);
+                    pageList(10,nextPage);
                 }
             })
 		}
-
+        //搜索
         $('#btnSubmit').click(function () {
-                console.log($('#searchForm').serialize());
+            //	<p class="h3-title search-box"> </p>
+            $('.search-box').html('<i class="h3-deco"></i>活动列表 ');
+            var dataObject = {};
+            dataSer = ($("#searchForm").serializeArray());
+            $.each(dataSer,function(i,item){
+                dataObject[item.name] = item.value;
+            });
+            if(dataObject.name != ""){
+				$('.search-box').append('<span class="search-cond">活动名称:'+dataObject.name+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="name"></span>')
+			}
+            if(dataObject.status != ""){
+                if(dataObject.status == 0){
+                    $('.search-box').append('<span class="search-cond">活动状态:未开始 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
+                }
+                else if(dataObject.status == 1){
+                    $('.search-box').append('<span class="search-cond">活动状态:进行中 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
+                }
+                else if(dataObject.status == 2){
+                    $('.search-box').append('<span class="search-cond">活动状态:暂停 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
+                }
+                else if(dataObject.status == 3){
+                    $('.search-box').append('<span class="search-cond">活动状态:已结束 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
+                }
+            }
+            if(dataObject.active_date != ""){
+                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="active_date"></span>')
+            }
+            if(dataObject.inactive_date != ""){
+                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="inactive_date"></span>')
+            }
+            if(dataObject.shop_no != ""){
+                $('.search-box').append('<span class="search-cond">平台店铺:'+$('#shop_no').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="shop_no"></span>')
+            }
         })
+		$('.search-close').live('click',function () {
+			$(this).parent().css('display','none');
+        })
+		//新建活动
+		$('#btnNew').click(function () {
+			location.href = 'activity-new'
+        })
+        //继续活动
+		$('.activity-contin').live('click',function () {
+		    var activityId = $(this).nextAll('input').val();
+            activityHandle(activityId,2);
+        })
+        //暂停活动
+        $('.activity-pause').live('click',function () {
+            var activityId = $(this).nextAll('input').val();
+            activityHandle(activityId,1);
+        })
+        //取消活动
+        $('.activity-cancel').live('click',function () {
+            var activityId = $(this).nextAll('input').val();
+            activityHandle(activityId,3);
+        })
+		function activityHandle(activityId,type){
+            $.ajax({
+                url:'updateStatus',
+                type:'POST',
+                data:{
+                    id:activityId,
+                    type:type
+                },
+                success:function (msg) {
+                    var msg = strToJson(msg);
+                    if(msg.code == 10000){
+                        ajaxFuc();
+                    }
+                    else{
+                        layer.msg(msg.msg);
+                    }
+                }
+            })
+		}
         // 选择开始时间方法
         $('#start_time').live('click',function () {
             var end_time=$dp.$('end_time');

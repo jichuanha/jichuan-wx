@@ -16,7 +16,7 @@
 			padding: 10px 20px;
 			border-bottom: 1px solid #F2F2F2;
 		}
-		.activity-title i{
+		.activity-title a{
 			display: inline-block;
 			width: 20px;
 			height: 20px;
@@ -256,7 +256,7 @@
 </head>
 <body>
 <div class="nav">
-	<p class="activity-title"><i><img src="${ctxStatic}/images/prev-btn.png" alt=""></i>新建活动(活动类型2)</p>
+	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>新建活动(活动类型2)</p>
 	<form id="searchForm"  class="form-search">
 		<h3>基本信息</h3>
 		<div class="base-info">
@@ -342,59 +342,20 @@
 					<td></td>
 					<td style="padding-left: 25px"><input type="checkbox" id="chooseAll" /><label for="chooseAll">全选</label></td>
 				</tr>
-				<tr>
+				<tr class="tb-shop">
 					<td>淘宝:</td>
-					<td>
+					<td class="tb-shop-per">
 						<ul class="shop-list">
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb1" value="1"/><label for="choosetb1">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb2" value="2"/><label for="choosetb2">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb3" value="3"/><label for="choosetb3">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb4" value="4"/><label for="choosetb4">店铺名称1</label>
 
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb5" value="5"/><label for="choosetb5">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb6" value="6"/><label for="choosetb6">店铺名称1</label>
-
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb7" value="7"/><label for="choosetb7">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb8" value="8"/><label for="choosetb8">店铺名称1</label>
-
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb9" value="9"/><label for="choosetb9">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" class="choose-shop-name" id="choosetb10" value="10"/><label for="choosetb10">店铺名称1</label>
-
-							</li>
 
 						</ul>
 					</td>
 				</tr>
-				<tr>
+				<tr class="jd-shop">
 					<td>京东:</td>
-					<td>
+					<td class="jd-shop-per">
 						<ul class="shop-list">
-							<li>
-								<input type="checkbox" id="choosejd1" value="11"/><label for="choosejd1">店铺名称1</label>
-							</li>
-							<li>
-								<input type="checkbox" id="choosejd2" value="12"/><label for="choosejd2">店铺名称1</label>
 
-							</li>
 						</ul>
 					</td>
 				</tr>
@@ -485,10 +446,31 @@
             url:"platformShopList",
             type:"post",
             success:function (msg) {
-                
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
+                    $('.choose-shop table').html('');
+                    var shopStr = '';
+                    shopStr += '<tr><td></td><td style="padding-left: 25px"><input type="checkbox" id="chooseAll" />' +
+						'<label for="chooseAll">全选</label></td></tr>';
+                    $.each(data,function (index,value) {
+                        value.forEach(function (el,indexshop) {
+							if(indexshop == 0){
+                                shopStr += '<tr><td>'+el.platform_name+':</td><td><ul class="shop-list">';
+                            }
+                            shopStr += '<li>' +
+                                '<input type="checkbox" id="choose'+el.id+'" value="'+el.id+'" data-name="'+el.platform_name+'"/><label for="choose'+el.id+'">'+el.shop_name+'</label>' +
+                                '</li>';
+                        })
+                        shopStr += '</ul></td></tr>';
+
+                    })
+                    $('.choose-shop table').html(shopStr);
+
+				}
             }
         })
-		$('#chooseAll').click(function () {
+		$('#chooseAll').live('click',function () {
             var flag = $('#chooseAll')[0].checked;
             var shopValue = $('.shop-list input[type="checkbox"]');
             for (var i = 0; i < shopValue.length; i++) {
@@ -508,18 +490,31 @@
                 $.each(dataSer,function(i,item){
                     dataObject[item.name] = item.value;
                 });
-                // dataObject.per_amount = dataObject.per_amount*100;
+
                 var shopValue = $('.shop-list input[type="checkbox"]');
-                var shopNameArr = [];
+                var shopNameArr = {};
+                var shopplatArr = [];
                 var shopNoArr = [];
                 for (var i = 0; i < shopValue.length; i++) {
                     if(shopValue[i].checked){
-                        shopNameArr.push($(shopValue[i]).next().html());
-                        shopNoArr.push($(shopValue[i]).val());
+                        var platId = $(shopValue[i]).attr('data-name');
+                        if(shopplatArr.indexOf(platId) == '-1'){
+                            shopplatArr.push(platId);
+                        }
                     }
                 }
-                var shopName = shopNameArr.join(',');
-                var shopNo = shopNoArr.join(',');
+                shopplatArr.forEach(function (el, index) {
+                    shopNameArr[el] = [];
+                    $.each(shopValue,function (index2,selector) {
+                        if($(selector).attr('data-name') == el){
+                            // console.log($(selector).next().html());
+                            shopNameArr[el].push($(selector).next().html());
+                            shopNoArr.push($(selector).val());
+                        }
+                    })
+                    shopNameArr[el] = shopNameArr[el].join(',');
+                })
+				var shopNo = shopNoArr.join(',');
                 var tempValue = $('input[name="template_link"]');
                 var templateLinkArr;
                 for (var i = 0; i < tempValue.length; i++) {
@@ -528,7 +523,7 @@
                     }
                 }
                 var templateLink = templateLinkArr;
-                dataObject.shop_name = shopName;
+                dataObject.shop_name = JSON.stringify(shopNameArr);
                 dataObject.shop_no = shopNo;
                 dataObject.template_link = templateLink;
                 dataObject.rebate_type = '1';
@@ -541,7 +536,7 @@
                     success:function (msg) {
 						var msg = strToJson(msg);
 						if(msg.code == 1000){
-                            // menuHref();
+                            location.href = 'activity-list';
 						}
 						else{
 						    layer.msg(msg.msg);
@@ -642,15 +637,7 @@
             },
         });
 
-        var clipboard = new ClipboardJS('.copy-btn');
 
-        clipboard.on('success', function(e) {
-            layer.msg('已复制到粘贴板上');
-        });
-
-        clipboard.on('error', function(e) {
-            console.log(e);
-        });
 
         function currentDate(interval){
             var myDate = new Date();
