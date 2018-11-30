@@ -269,24 +269,24 @@ public class ActivityController extends BaseController {
 			PlatformShop platformShop = new PlatformShop();
 			List<PlatformShop> platformShopList = platformShopService.findList(platformShop);
 
-			Set<String> set = new HashSet();
+			Set<Integer> set = new HashSet();
 			List<PlatformShop> platformShopDTOS;
 			Map<String,Object> map = new HashMap<>();
 			if (CollectionUtils.isNotEmpty(platformShopList)){
 				for (PlatformShop platformShop1 : platformShopList){
-					String platformName = platformShop1.getPlatformName();
-					set.add(platformName);
+					Integer platform = platformShop1.getPlatform();
+					set.add(platform);
 				}
-				Iterator<String> iterator = set.iterator();
+				Iterator<Integer> iterator = set.iterator();
 				while (iterator.hasNext()) {
 					platformShopDTOS = new ArrayList<>();
-					String platformName = iterator.next();
+					Integer platform = iterator.next();
 					for (PlatformShop platformShop1 : platformShopList){
-						if (platformName.equals(platformShop1.getPlatformName())){
+						if (platform.equals(platformShop1.getPlatform())){
 							platformShopDTOS.add(platformShop1);
 						}
 					}
-					map.put("platform",platformShopDTOS);
+					map.put("platform" + platform,platformShopDTOS);
 				}
 			}
 			return ResponseUtils.getSuccessApiResponseStr(map);
