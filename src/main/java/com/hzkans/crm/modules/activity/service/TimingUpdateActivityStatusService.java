@@ -26,11 +26,9 @@ import java.util.List;
 public class TimingUpdateActivityStatusService {
 
     Logger logger = LoggerFactory.getLogger(TimingUpdateActivityStatusService.class);
-    private static final Integer TRANSFORM_AMOUNT = Integer.valueOf(100);
 
     @Autowired
     private  ActivityService activityService;
-
 
     /**
      * 根据活动时间更新活动状态
@@ -47,7 +45,6 @@ public class TimingUpdateActivityStatusService {
                     Activity activity1 = new Activity();
                     Date now = new Date();
                     Integer status = _activity.getStatus();
-                    logger.info("[{}]status:{}",status);
                     Date activeDate = _activity.getActiveDate();
                     Date inactiveDate = _activity.getInactiveDate();
                     activity1.setId(_activity.getId());

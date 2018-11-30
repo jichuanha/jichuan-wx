@@ -26,7 +26,8 @@
     </select>
 
 
-    <select id="getWechatPlatforms" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+    <select id="getWechatPlatforms" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
+            parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
         SELECT
         <include refid="tWechatPlatformColumns"/>
         FROM t_wechat_platform a

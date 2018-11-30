@@ -62,8 +62,13 @@
     #password{
       background: url('${ctxStatic}/images/login/psw.png')  20px 50%  no-repeat;
     }
-    #code{
-      background: url('${ctxStatic}/images/login/code.png')  20px 50%  no-repeat;
+    .code_icon{
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      left: 10px;
+      transform: translateY(30%);
+      background: url('${ctxStatic}/images/login/code.png') no-repeat;
     }
   </style>
 </head>
@@ -80,14 +85,12 @@
     </div>
     <div class="form-group">
       <label for="verify_code">验证码</label>
-      <div style="position:relative;">
-          <sys:validateCode name="verify_code" inputCssStyle="margin-bottom:0;"/>
-      </div>
+          <sys:validateCode name="verify_code" inputCssStyle="margin-bottom:0;padding-left:40px;"/>
     </div>
     <button type="submit" class="btn btn-primary" id="sendEmail">发送邮件</button>
     <p style="color: darkred;margin-top: 20px;">请确认您的邮箱名是否正确，系统会自动发送修改密码的邮件到您的公司邮箱账户！如果有问题，请及时联系系统管理员！</p>
   </form>
-  <p style="text-align: center;color: #fff;margin-top:20px;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
+  <p style="text-align: center;color: #fff;position: absolute;bottom: 20px;width: 100%;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
 </body>
 <script>
   // 在键盘按下并释放及提交后验证提交表单

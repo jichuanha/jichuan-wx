@@ -8,3 +8,15 @@
 #left .active a{
     color: #1a1a1a;
 }
+#left1 #menu li{
+    float: none;
+    text-align: center;
+}
+#left1{
+    margin-bottom: 0;
+}
+.footer{
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
