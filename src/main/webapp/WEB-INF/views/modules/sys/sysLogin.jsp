@@ -52,10 +52,14 @@
 		  transform: translateY(50%);
 		  background: url('${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/psw.png') no-repeat;
 	  }
-	  #code{
-		  background: url('${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/code.png')  10px 50%  no-repeat;
-		  padding-left: 50px;
-	  }
+      .code_icon{
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          left: 10px;
+          transform: translateY(30%);
+          background: url('${ctxStatic}/images/login/code.png') no-repeat;
+      }
 	  .footer{
 		  color: #ffffff;
 	  }
@@ -113,12 +117,12 @@
 		</div>
 		<c:if test="${isValidateCodeLogin}"><div class="validateCode">
 			<label class="input-label mid" for="validateCode">验证码</label>
-			<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
+			<sys:validateCode name="validateCode" inputCssStyle="margin-bottom:0;padding-left:40px;"/>
 		</div></c:if><%--
 		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
 		<div>
 			<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
-			<a id="foundPsw" href="${fns:getConfig('service.url')}/dongyin-CRM/changePassword/gotoSendMail" target="_blank">找回密码</a>
+			<a id="foundPsw" href="${ctx}/changePassword/gotoSendMail" target="_blank">找回密码</a>
 		</div>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录" id="login-btn"/>&nbsp;&nbsp;
 		<div id="themeSwitch" class="dropdown">
