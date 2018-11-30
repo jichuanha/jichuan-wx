@@ -62,7 +62,13 @@ public enum ResponseEnum {
     B_E_APP_INFO_NOT_EXISTS(40022, 0, "AppInfo 不能存在"),
     B_E_UPOLAD_FILE_ERROR(40023,0,"文件上传失败"),
     B_E_RESULT_IS_NULL(40024,0,"结果集为空"),
-    B_E_PLATFORM_TYPE_ERROR(40025,0,"没有找到对应的店铺"),
+    B_E_VERYFY_CODE_IS_NULL(40025,0,"请输入验证码"),
+    B_E_USER_AUTH_INFO_NOT_EXIST(40026,0,"该登录名还没有注册"),
+    B_E_VERIFY_LINK_NOT_NEW(40027,0,"不是最新的验证链接"),
+    B_E_VERIFY_LINK_EXPIRES(40028,0,"链接已经过期,请重新申请找回密码"),
+    B_E_VERIFY_LINK_IS_ERROE(40029,0,"链接不正确"),
+    B_E_PASSWORD_IS_NULL(40030,0,"密码为空"),
+
 
     /**
      * 添加失败
@@ -73,6 +79,8 @@ public enum ResponseEnum {
     B_E_THE_GRANT_RULE_DOES_NOT_EXIST(41004, 32004, "财富发放规则不存在"),
     B_E_EXCHANGE_RATE_CANNOT_BE_ZERO(41005, 0, "兑换比率不能为0"),
     COMPONENT_NOT_EXIST(41006, 0,"component not exist"),
+    B_E_MODIFY_ERROR(41005, 0, "修改失败"),
+    B_E_ALERADY_EXIST(41006, 0, "微信公众号名称已存在"),
     DATE_ALREADY_EXIST(41007, 0,"数据已经存在,请勿重复提交!"),
     DATEBASE_SAVE_ERROR(41008,0,"数据库保存失败"),
 

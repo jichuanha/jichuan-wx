@@ -13,7 +13,7 @@ import com.hzkans.crm.common.web.BaseController;
 
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
-import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
+
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -39,7 +40,7 @@ public class WechatPlatfromController extends BaseController {
 
 
     @Autowired
-    private WechatPlatfromDAO wechatPlatfromDAO;
+    private WechatPlatfromService wechatPlatfromService;
 
     @RequestMapping(value = "/gotoInsert")
     public String gotoInsert()  {
@@ -47,28 +48,28 @@ public class WechatPlatfromController extends BaseController {
     }
     @RequestMapping(value = "/gotoSelectAll")
     public String gotoSelectAll()  {
-        return "modules/wechatmanage/editShop";
+        return "modules/wechatmanage/selectShop";
+    }
+    @RequestMapping(value = "/gotoIndex")
+    public String gotoIndex()  {
+        return "modules/wechatmanage/shopIndex";
     }
     @RequestMapping(value = "/gotoUpdate")
-    public String gotoUpdate(HttpServletRequest request, Model model)  {
-        Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
-        model.addAttribute("id",id);
-        return "modules/pswmanage/sendEmail";
-    }
-
-    @RequestMapping(value = "/selectById")
-    @ResponseBody
-    public String selectWechatPlatformById(HttpServletRequest request) throws Exception {
+    public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
 
-            WechatPlatfromDO wechatPlatfromDO = wechatPlatfromDAO.selectWechatPlatformById(id);
-            return ResponseUtils.getSuccessApiResponseStr(wechatPlatfromDO);
+            WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(id);
+            model.addAttribute("id",wechatPlatfromDO.getId());
+            model.addAttribute("name",wechatPlatfromDO.getName());
+            model.addAttribute("mainPart",wechatPlatfromDO.getMainPart());
+            return "modules/wechatmanage/editShop";
         } catch (Exception e) {
-            logger.info("selectWechatPlatformById is error");
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
+            logger.info("selectWechatPlatformById is error",e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RESULT_IS_NULL, ResponseEnum.B_E_RESULT_IS_NULL.getMsg());
         }
     }
+
 
     @RequestMapping(value = "/insert")
     @ResponseBody
@@ -79,18 +80,23 @@ public class WechatPlatfromController extends BaseController {
 
             User user = UserUtils.getUser();
             if (null == user){
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "user is null");
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT, ResponseEnum.B_E_SESSION_TIMEOUT.getMsg());
             }
             WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
-            wechatPlatfromDO.setCreateBy(user.getName());
-            wechatPlatfromDO.setUpdateBy(user.getName());
             wechatPlatfromDO.setName(name);
-            wechatPlatfromDO.setMainPart(mainPart);
-            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
-            return ResponseUtils.getSuccessApiResponseStr(true);
+            List<WechatPlatfromDO> wechatPlatfromDOS = wechatPlatfromService.getWechatPlatforms(wechatPlatfromDO);
+            if (null == wechatPlatfromDOS || wechatPlatfromDOS.isEmpty()){
+                wechatPlatfromDO.setCreateBy(user.getName());
+                wechatPlatfromDO.setUpdateBy(user.getName());
+                wechatPlatfromDO.setMainPart(mainPart);
+                wechatPlatfromService.addWechatPlatform(wechatPlatfromDO);
+                return ResponseUtils.getSuccessApiResponseStr(true);
+            }else {
+                throw new Exception(ResponseEnum.B_E_ALERADY_EXIST.getMsg());
+            }
         } catch (Exception e) {
-            logger.info("selectWechatPlatformById is error");
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
+            logger.info("selectWechatPlatformById is error",e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_ADD, e.getMessage());
         }
     }
 	@RequestMapping(value = "/update")
@@ -102,18 +108,18 @@ public class WechatPlatfromController extends BaseController {
 
             User user = UserUtils.getUser();
             if (null == user){
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "user is null");
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT, ResponseEnum.B_E_SESSION_TIMEOUT.getMsg());
             }
 
             WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
             wechatPlatfromDO.setMainPart(newMainPart);
             wechatPlatfromDO.setId(id);
             wechatPlatfromDO.setUpdateBy(user.getName());
-            wechatPlatfromDAO.updateWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
-			logger.info("selectWechatPlatformById is error");
-			return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
+			logger.info("selectWechatPlatformById is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MODIFY_ERROR,ResponseEnum.B_E_MODIFY_ERROR.getMsg());
 		}
 	}
     @RequestMapping(value = "/delete")
@@ -122,11 +128,11 @@ public class WechatPlatfromController extends BaseController {
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
 
-            wechatPlatfromDAO.deleteWechatPlatform(id);
+            wechatPlatfromService.removeWechatPlatform(id);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_DELETE,ResponseEnum.B_E_FAILED_TO_DELETE.getMsg());
         }
     }
     @RequestMapping(value = "/selectAll")
@@ -134,11 +140,11 @@ public class WechatPlatfromController extends BaseController {
     public String selectAllWechatPlatform() throws Exception {
         try {
             List<WechatPlatfromDO> allWechatPlatform;
-            allWechatPlatform = wechatPlatfromDAO.selectAllWechatPlatform();
+            allWechatPlatform = wechatPlatfromService.getWechatPlatforms(new WechatPlatfromDO());
             return ResponseUtils.getSuccessApiResponseStr(allWechatPlatform);
         } catch (Exception e) {
             logger.info("selectWechatPlatformById is error");
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RESULT_IS_NULL,ResponseEnum.B_E_RESULT_IS_NULL.getMsg());
         }
     }
 }

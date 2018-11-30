@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.activity.dao.PlatformShopDao">
+    
+	<sql id="activityColumns">
+		a.id AS "id",
+		a.platform AS "platform",
+		a.platform_name AS "platformName",
+		a.shop AS "shop",
+		a.shop_name AS "shopName",
+		a.del_flag AS "delFlag"
+	</sql>
+	<sql id="activityJoins">
+	</sql>
+	<select id="findList" resultType="platformShop">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM t_platform_shop a
+		<include refid="activityJoins"/>
+		WHERE
+			a.del_flag = "0"
+	</select>
+	
+</mapper>

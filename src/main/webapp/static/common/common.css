@@ -1,0 +1,10 @@
+#userControl{
+	margin-right: 100px;
+}
+#left a{
+    color: #808080;
+    background: inherit;
+}
+#left .active a{
+    color: #1a1a1a;
+}
