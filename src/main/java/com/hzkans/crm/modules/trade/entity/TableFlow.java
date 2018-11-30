@@ -21,7 +21,25 @@ public class TableFlow extends DataEntity<TableFlow> {
 	private String errorMessage;		// 失败原因
 	private Date importDate;		// 表格导入时间
 	private Date timingDate;		// 定时导入数据库时间
+	private Integer shopNo;
+	private Integer platformType;
 
+
+	public Integer getShopNo() {
+		return shopNo;
+	}
+
+	public void setShopNo(Integer shopNo) {
+		this.shopNo = shopNo;
+	}
+
+	public Integer getPlatformType() {
+		return platformType;
+	}
+
+	public void setPlatformType(Integer platformType) {
+		this.platformType = platformType;
+	}
 
 	public Integer getType() {
 		return type;

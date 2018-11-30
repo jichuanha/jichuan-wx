@@ -62,6 +62,8 @@ public enum ResponseEnum {
     B_E_APP_INFO_NOT_EXISTS(40022, 0, "AppInfo 不能存在"),
     B_E_UPOLAD_FILE_ERROR(40023,0,"文件上传失败"),
     B_E_RESULT_IS_NULL(40024,0,"结果集为空"),
+    B_E_PLATFORM_TYPE_ERROR(40025,0,"没有找到对应的店铺"),
+
     /**
      * 添加失败
      */
@@ -71,6 +73,8 @@ public enum ResponseEnum {
     B_E_THE_GRANT_RULE_DOES_NOT_EXIST(41004, 32004, "财富发放规则不存在"),
     B_E_EXCHANGE_RATE_CANNOT_BE_ZERO(41005, 0, "兑换比率不能为0"),
     COMPONENT_NOT_EXIST(41006, 0,"component not exist"),
+    DATE_ALREADY_EXIST(41007, 0,"数据已经存在,请勿重复提交!"),
+    DATEBASE_SAVE_ERROR(41008,0,"数据库保存失败"),
 
     /**
      * 商品模板文件类异常

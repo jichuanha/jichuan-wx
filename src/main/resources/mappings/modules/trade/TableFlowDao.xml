@@ -9,7 +9,9 @@
 		a.type,
 		a.error_message AS "errorMessage",
 		a.import_date AS "importDate",
-		a.timing_date AS "timingDate"
+		a.timing_date AS "timingDate",
+		a.platform_type AS "platformType",
+		a.shop_no AS "shopNo"
 	</sql>
 
 	<sql id="tableFlowJoins">
@@ -97,13 +99,17 @@
 			status,
 			type,
 			error_message,
-			import_date
+			import_date,
+			platform_type,
+			shop_no
 		) VALUES (
 			#{tableName},
 			#{status},
 			#{type},
 			#{errorMessage},
-			#{importDate}
+			#{importDate},
+			#{platformType},
+			#{shopNo}
 		)
 	</insert>
 	

@@ -37,10 +37,10 @@ import java.util.List;
  * @create 2018/11/26
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class TimingDateImportService {
 
-    Logger logger = LoggerFactory.getLogger(TimingDateImportService.class);
+    private Logger logger = LoggerFactory.getLogger(TimingDateImportService.class);
     private static final Integer TRANSFORM_AMOUNT = Integer.valueOf(100);
 
     @Autowired
@@ -116,7 +116,7 @@ public class TimingDateImportService {
                 tableFlowDao.update(tableFlow);
             }
             long end = System.currentTimeMillis();
-            logger.info("定时导入"+tableName+"到数据库,共耗时"+(end - start)/1000);
+            logger.info("定时导入"+tableName+"到数据库,共耗时"+(end - start)+"毫秒");
         } catch (Exception e) {
             e.printStackTrace();
         }
