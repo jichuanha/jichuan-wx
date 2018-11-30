@@ -286,7 +286,7 @@ public class ActivityController extends BaseController {
 							platformShopDTOS.add(platformShop1);
 						}
 					}
-					map.put(platformName,platformShopDTOS);
+					map.put("platform",platformShopDTOS);
 				}
 			}
 			return ResponseUtils.getSuccessApiResponseStr(map);

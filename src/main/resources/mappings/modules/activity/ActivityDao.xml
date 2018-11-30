@@ -164,7 +164,7 @@
 	
 	<update id="delete">
 		UPDATE t_activity SET 
-			del_flag = #{DEL_FLAG_DELETE}
+			del_flag = "0"
 		WHERE id = #{id}
 	</update>
 	
