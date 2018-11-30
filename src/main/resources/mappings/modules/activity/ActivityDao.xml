@@ -50,8 +50,11 @@
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
-			<if test="shopName != null and shopName != ''">
-				AND a.shop_name LIKE concat('%',#{shopName},'%')
+			<if test="status != null">
+				AND a.status = #{status}
+			</if>
+			<if test="shopNo != null and shopNo != ''">
+				AND a.shop_no LIKE concat('%',#{shopNo},'%')
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name = #{name}

@@ -9,6 +9,8 @@ import com.hzkans.crm.common.utils.PriceUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
+import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
+import com.hzkans.crm.modules.activity.constants.ActivityStatusTypeEnum;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
 import com.hzkans.crm.modules.activity.service.ActivityService;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.*;
 
 /**
  * 活动管理Controller
@@ -161,7 +163,7 @@ public class ActivityController extends BaseController {
 		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 		String name = RequestUtils.getString(request, true, "name", "");
-		String shopName = RequestUtils.getString(request, true, "shop_name", "");
+		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status","");
 		Integer activityType = RequestUtils.getInt(request,"activity_type","");
 		String startDate = RequestUtils.getString(request, true,"start_date", "");
@@ -180,7 +182,7 @@ public class ActivityController extends BaseController {
 			activity.setDelFlag("0");
 			activity.setStatus(status);
 			activity.setName(name);
-			activity.setShopName(shopName);
+			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
 
 			//搜索开始时间和结束时间非空判断
@@ -266,10 +268,59 @@ public class ActivityController extends BaseController {
 		try {
 			PlatformShop platformShop = new PlatformShop();
 			List<PlatformShop> platformShopList = platformShopService.findList(platformShop);
-			return ResponseUtils.getSuccessApiResponseStr(platformShopList);
+
+			Set<String> set = new HashSet();
+			List<PlatformShop> platformShopDTOS;
+			Map<String,Object> map = new HashMap<>();
+			if (CollectionUtils.isNotEmpty(platformShopList)){
+				for (PlatformShop platformShop1 : platformShopList){
+					String platformName = platformShop1.getPlatformName();
+					set.add(platformName);
+				}
+				Iterator<String> iterator = set.iterator();
+				while (iterator.hasNext()) {
+					platformShopDTOS = new ArrayList<>();
+					String platformName = iterator.next();
+					for (PlatformShop platformShop1 : platformShopList){
+						if (platformName.equals(platformShop1.getPlatformName())){
+							platformShopDTOS.add(platformShop1);
+						}
+					}
+					map.put(platformName,platformShopDTOS);
+				}
+			}
+			return ResponseUtils.getSuccessApiResponseStr(map);
 		} catch (Exception e) {
 			logger.error("findList is error",e);
 			return ResponseUtils.getFailApiResponseStr(100,"获取平台店铺失败");
+		}
+	}
+
+	/**
+	 * 暂停、继续、取消活动
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updateStatus")
+	@ResponseBody
+	public String updateStatus(HttpServletRequest request) {
+		try {
+			String id = RequestUtils.getString(request,false,"id","");
+			Integer type = RequestUtils.getInt(request,"type","");
+			Activity activity = new Activity();
+			activity.setId(id);
+			if (type.equals(ActivityStatusTypeEnum.PAUSE.getCode())){
+				activity.setStatus(ActivityStatusEnum.PAUSE.getCode());
+			}else if (type.equals(ActivityStatusTypeEnum.GO_ON.getCode())){
+				activity.setStatus(ActivityStatusEnum.ACTIVING.getCode());
+			}else {
+				activity.setStatus(ActivityStatusEnum.ENDED.getCode());
+			}
+			activityService.update(activity);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (Exception e) {
+			logger.error("update status is error",e);
+			return ResponseUtils.getFailApiResponseStr(100,"更改状态失败");
 		}
 	}
 }
