@@ -16,7 +16,7 @@ import java.util.List;
  * @version 2018/11/23
  */
 @MyBatisDao
-public interface ChangePasswordADO {
+public interface ChangePasswordDAO {
     List<ChangePasswordDO> selectChangePassword(ChangePasswordDO changePasswordDO);
 
     int inster(ChangePasswordDO changePasswordDO);

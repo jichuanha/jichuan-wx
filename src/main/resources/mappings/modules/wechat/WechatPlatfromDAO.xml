@@ -16,7 +16,7 @@
     <sql id="tWechatPlatformJoins">
     </sql>
 
-    <select id="selectWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
+    <select id="getWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
             parameterType="java.lang.Integer">
         SELECT
         <include refid="tWechatPlatformColumns"/>
@@ -26,12 +26,20 @@
     </select>
 
 
-    <select id="selectAllWechatPlatform" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+    <select id="getWechatPlatforms" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
         SELECT
         <include refid="tWechatPlatformColumns"/>
         FROM t_wechat_platform a
-        <include refid="tWechatPlatformJoins"/>
-        where a.del_flag = 0
+        <where>
+            <if test=" name != null and mainPart != ''">
+                and a.name = #{name}
+            </if>
+            <if test=" mainPart != null and mainPart != ''">
+                and a.main_part = #{mainPart}
+            </if>
+            and a.del_flag = 0
+        </where>
+
     </select>
 
     <insert id="insertWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
@@ -69,7 +77,7 @@
         WHERE id = #{id}
     </update>
 
-    <update id="deleteWechatPlatform" parameterType="java.lang.Integer">
+    <update id="removeWechatPlatform" parameterType="java.lang.Integer">
 		UPDATE t_wechat_platform SET 
 			del_flag = 1
 		WHERE id = #{id}
