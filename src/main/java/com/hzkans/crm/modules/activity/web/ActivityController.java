@@ -163,7 +163,7 @@ public class ActivityController extends BaseController {
 		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 		String name = RequestUtils.getString(request, true, "name", "");
-		String shopName = RequestUtils.getString(request, true, "shop_name", "");
+		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status","");
 		Integer activityType = RequestUtils.getInt(request,"activity_type","");
 		String startDate = RequestUtils.getString(request, true,"start_date", "");
@@ -182,7 +182,7 @@ public class ActivityController extends BaseController {
 			activity.setDelFlag("0");
 			activity.setStatus(status);
 			activity.setName(name);
-			activity.setShopName(shopName);
+			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
 
 			//搜索开始时间和结束时间非空判断

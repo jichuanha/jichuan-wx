@@ -47,22 +47,28 @@ public class TimingUpdateActivityStatusService {
                     Activity activity1 = new Activity();
                     Date now = new Date();
                     Integer status = _activity.getStatus();
+                    logger.info("[{}]status:{}",status);
                     Date activeDate = _activity.getActiveDate();
                     Date inactiveDate = _activity.getInactiveDate();
                     activity1.setId(_activity.getId());
-                    //现在时间在活动时间内，且状态不为暂停和进行中的才做状态更新
+                    //现在时间在活动时间内，且状态不为暂停、进行中和已结束的才做状态更新
                     if (now.getTime() > activeDate.getTime() && now.getTime() < inactiveDate.getTime()){
-                        if ((!status.equals(ActivityStatusEnum.ACTIVING.getCode())
-                                && !status.equals(ActivityStatusEnum.PAUSE.getCode()))){
+                        if (!status.equals(ActivityStatusEnum.ACTIVING.getCode())
+                                && !status.equals(ActivityStatusEnum.PAUSE.getCode())
+                                && !status.equals(ActivityStatusEnum.ENDED.getCode())){
                             activity1.setStatus(ActivityStatusEnum.ACTIVING.getCode());
                             activityService.update(activity1);
                             logger.info("已更改活动"+_activity.getName()+"的状态");
                         }
-
                         //已过活动时间，且状态不为已结束的才做状态更新
                     }else if (now.getTime() > inactiveDate.getTime()
                             && !status.equals(ActivityStatusEnum.ENDED.getCode())){
                         activity1.setStatus(ActivityStatusEnum.ENDED.getCode());
+                        activityService.update(activity1);
+                        logger.info("已更改活动"+_activity.getName()+"的状态");
+                    }else if (now.getTime() < activeDate.getTime()
+                            && !status.equals(ActivityStatusEnum.NOT_START.getCode())){
+                        activity1.setStatus(ActivityStatusEnum.NOT_START.getCode());
                         activityService.update(activity1);
                         logger.info("已更改活动"+_activity.getName()+"的状态");
                     }
