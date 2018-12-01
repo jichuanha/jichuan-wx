@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.JoinActivityDao">
+    
+	<sql id="joinActivityColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.act_id AS "actId",
+		a.act_type AS "actType",
+		a.act_name AS "actName",
+		a.status AS "status",
+		a.message AS "message",
+		a.picture_url AS "pictureUrl",
+		a.auditor AS "auditor",
+		a.pay_data AS "payData",
+		a.update_date AS "updateDate",
+		a.platform_type AS "platformType",
+		a.shop_no AS "shopNo"
+	</sql>
+
+
+	<sql id="joinActivity">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.act_id AS "actId",
+		a.act_type AS "actType",
+		a.act_name AS "actName",
+		a.status AS "status",
+		a.message AS "message",
+		a.picture_url AS "pictureUrl",
+		a.auditor AS "auditor",
+		a.pay_data AS "payData",
+		a.update_date AS "updateDate",
+		a.platform_type AS "platformType",
+		a.shop_no AS "shopNo",
+		b.per_amount AS "actMoney"
+	</sql>
+	
+	<sql id="joinActivityJoins">
+	</sql>
+    
+	<select id="get" resultType="JoinActivity">
+		SELECT 
+			<include refid="joinActivityColumns"/>
+		FROM t_join_activity a
+		<include refid="joinActivityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JoinActivity">
+		SELECT 
+			<include refid="joinActivityColumns"/>
+		FROM t_join_activity a
+		<include refid="joinActivityJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="orderSn != null and orderSn != ''">
+				AND a.order_sn = #{orderSn}
+			</if>
+			<if test="actId != null and actId != ''">
+				AND a.act_id = #{actId}
+			</if>
+			<if test="actType != null and actType != ''">
+				AND a.act_type = #{actType}
+			</if>
+			<if test="actName != null and actName != ''">
+				AND a.act_name = #{actName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="message != null and message != ''">
+				AND a.message = #{message}
+			</if>
+			<if test="pictureUrl != null and pictureUrl != ''">
+				AND a.picture_url = #{pictureUrl}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="payData != null and payData != ''">
+				AND a.pay_data = #{payData}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JoinActivity">
+		SELECT 
+			<include refid="joinActivityColumns"/>
+		FROM t_join_activity a
+		<include refid="joinActivityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_join_activity(
+			id,
+			order_id,
+			order_sn,
+			act_id,
+			act_type,
+			act_name,
+			status,
+			message,
+			picture_url,
+			auditor,
+			pay_data,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{orderSn},
+			#{actId},
+			#{actType},
+			#{actName},
+			#{status},
+			#{message},
+			#{pictureUrl},
+			#{auditor},
+			#{payData},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_join_activity SET 	
+			order_id = #{orderId},
+			order_sn = #{orderSn},
+			act_id = #{actId},
+			act_type = #{actType},
+			act_name = #{actName},
+			status = #{status},
+			message = #{message},
+			picture_url = #{pictureUrl},
+			auditor = #{auditor},
+			pay_data = #{payData},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="selectJoinActivityPage" resultType="com.hzkans.crm.modules.trade.entity.JoinActivity"
+			parameterType="com.hzkans.crm.common.persistence.PagePara">
+		SELECT <include refid="joinActivity"/>
+		FROM t_join_activity a, t_activity b
+		<where>
+			a.act_id = b.id
+			<if test="data.orderSn != null and data.orderSn != ''">
+				AND a.order_sn = #{data.orderSn}
+			</if>
+			<if test="data.actType != null">
+				AND a.act_type = #{data.actType}
+			</if>
+			<if test="data.actName != null and data.actName != ''">
+				AND b.name = #{data.actName}
+			</if>
+			<if test="data.status != null">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.pictureUrl != null and data.pictureUrl != ''">
+				AND a.picture_url = #{data.pictureUrl}
+			</if>
+			<if test="data.auditor != null">
+				AND a.auditor = #{data.auditor}
+			</if>
+			<if test="data.startDate != null and data.endDate != null">
+				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+		</where>
+		<if test="currentPage != null and pageSize != null">
+			limit #{currentPage},#{pageSize}
+		</if>
+	</select>
+
+	<select id="selectJoinActivityPageCount" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
+		SELECT count(*)
+		FROM t_join_activity a, t_activity b
+		<where>
+			a.act_id = b.id
+			<if test="data.orderSn != null and data.orderSn != ''">
+				AND a.order_sn = #{data.orderSn}
+			</if>
+			<if test="data.actType != null">
+				AND a.act_type = #{data.actType}
+			</if>
+			<if test="data.actName != null and data.actName != ''">
+				AND b.name = #{data.actName}
+			</if>
+			<if test="data.status != null">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.pictureUrl != null and data.pictureUrl != ''">
+				AND a.picture_url = #{data.pictureUrl}
+			</if>
+			<if test="data.auditor != null">
+				AND a.auditor = #{data.auditor}
+			</if>
+			<if test="data.startDate != null and data.endDate != null">
+				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+		</where>
+	</select>
+	
+	<update id="delete">
+		DELETE FROM t_join_activity
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

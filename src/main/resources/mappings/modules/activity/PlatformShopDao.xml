@@ -20,5 +20,20 @@
 		WHERE
 			a.del_flag = "0"
 	</select>
+
+	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.PlatformShop"
+			parameterType="com.hzkans.crm.modules.activity.entity.PlatformShop">
+		SELECT
+		<include refid="activityColumns"/>
+		FROM t_platform_shop a
+		<where>
+			<if test="platform != null">
+				and a.platform = #{platform}
+			</if>
+			<if test="shop != null">
+				and a.shop = #{shop}
+			</if>
+		</where>
+	</select>
 	
 </mapper>

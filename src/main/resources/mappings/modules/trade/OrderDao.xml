@@ -33,8 +33,14 @@
 		SELECT 
 			<include refid="tOrderColumns"/>
 		FROM t_order a
-		<include refid="tOrderJoins"/>
-		WHERE a.order_sn = #{orderSn}
+		<where>
+			<if test="id != null">
+				a.id = #{id}
+			</if>
+			<if test="orderSn != null">
+				a.order_sn = #{orderSn}
+			</if>
+		</where>
 	</select>
 	
 	<select id="findList" resultType="Order">
