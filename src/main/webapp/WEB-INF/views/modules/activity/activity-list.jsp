@@ -24,12 +24,12 @@
 		}
 		.wrap{
 			width: 100%;
-
 			background-color: #fff;
 		}
 		.form-search{
 			background-color: #F7F7F7;
 			margin: 0 20px 20px;
+			padding: 20px 0;
 		}
 		#searchForm li{
 			width: 33%;
@@ -48,6 +48,7 @@
 		#searchForm .btns{
 			width: 100%;
 			text-align: center;
+			margin-top: 10px;
 		}
 		.btns input{
 			width: 200px;
@@ -255,7 +256,7 @@
 		</form>
 	</div>
 	<input id="pageCount" type="hidden" value=""/>
-	<p class="h3-title search-box"><i class="h3-deco"></i>活动列表2 </p>
+	<p class="h3-title search-box"><i class="h3-deco"></i><span class="activity-type">活动类型2</span></p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">活动状态</li>
@@ -279,6 +280,7 @@
 <script>
     $(function () {
         var para = GetRequest();
+        $('.activity-type').html('活动类型'+para.activity_type);
         var paraStr = '?activity_type='+para.activity_type;
         $.each($('.my-nav-tabs li a'),function (index,selector) {
             var oldHref = $(selector).attr('href');
@@ -321,7 +323,6 @@
                 type:"post",
 				data:dataObject,
                 success:function (msg) {
-                    console.log(typeof msg);
                     var msg = strToJson(msg);
                     var data = msg.data;
                     $('.lists-show').html('');
@@ -396,50 +397,61 @@
                 }
             })
 		}
+		var searchCon = [{
+            name:'活动名称',
+			type:'input',
+			id:'name'
+		},{
+            name:'活动状态',
+            type:'select',
+            id:'status'
+        },{
+            name:'返利类型',
+            type:'select',
+            id:'rebate_type'
+        },{
+            name:'开始时间',
+            type:'input',
+            id:'active_date'
+        },{
+            name:'结束时间',
+            type:'input',
+            id:'inactive_date'
+        },{
+            name:'所属店铺',
+            type:'select',
+            id:'shop_no'
+        }];
         //搜索
         $('#btnSubmit').click(function () {
-            //	<p class="h3-title search-box"> </p>
-            $('.search-box').html('<i class="h3-deco"></i>活动列表 ');
+            $('.search-box').html('<i class="h3-deco"></i>活动类型 '+para.activity_type);
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
                 dataObject[item.name] = item.value;
             });
-            if(dataObject.name != ""){
-				$('.search-box').append('<span class="search-cond">活动名称:'+dataObject.name+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="name"></span>')
-			}
-            if(dataObject.status != ""){
-                if(dataObject.status == 0){
-                    $('.search-box').append('<span class="search-cond">活动状态:未开始 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 1){
-                    $('.search-box').append('<span class="search-cond">活动状态:进行中 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 2){
-                    $('.search-box').append('<span class="search-cond">活动状态:暂停 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 3){
-                    $('.search-box').append('<span class="search-cond">活动状态:已结束 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-            }
-            if(dataObject.rebate_type != ""){
-                $('.search-box').append('<span class="search-cond">返利类型:'+$('#rebate_type').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="rebate_type"></span>')
-            }
-            if(dataObject.active_date != ""){
-                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="active_date"></span>')
-            }
-            if(dataObject.inactive_date != ""){
-                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="inactive_date"></span>')
-            }
-            if(dataObject.shop_no != ""){
-                $('.search-box').append('<span class="search-cond">平台店铺:'+$('#shop_no').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="shop_no"></span>')
-            }
+            addSearch(dataObject);
             ajaxFuc();
         })
+		var searchVal;
+		function addSearch(dataObject){
+            searchCon.forEach(function (el) {
+                var id = el.id;
+                searchVal = '';
+                if(dataObject[id] != ''){
+                    if(el.type == 'input'){
+                        searchVal = $('#'+el.id).val();
+					}
+					else{
+                        searchVal = $('#'+el.id).find("option:selected").text();
+					}
+                    $('.search-box').append('<span class="search-cond">'+el.name+':'+searchVal+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="'+el.id+'"></span>')
+                }
+			})
+		}
 		$('.search-close').live('click',function () {
 			$(this).parent().css('display','none');
 			var para = $(this).next().attr('data-pram');
-			console.log($('#'+para))
 			$('#'+para).val('').trigger("change");
 			ajaxFuc();
         })

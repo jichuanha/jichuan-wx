@@ -52,6 +52,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
         try {
             wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO1);
         } catch (Exception e) {
+            log.error("getWechatPlatforms error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
         }
         log.info("[{}]wechatPlatfromDOS",JsonUtil.toJson(wechatPlatfromDOS));
@@ -62,6 +63,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
             wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
 
         } catch (Exception e) {
+            log.error("insertWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
         }
 

@@ -189,11 +189,11 @@
 				<li class="mycol-10"><a class="img_ifram" href="#" data-src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg">查看详情</a></li>
 			</ul>
 		</div>
-		<div class="pagination">
-			<ul>
-			</ul>
-		</div>
 	</div>
+    <div class="pagination">
+        <ul>
+        </ul>
+    </div>
 </div>
 
 <script>
