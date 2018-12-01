@@ -165,6 +165,7 @@ public class ActivityController extends BaseController {
 		String name = RequestUtils.getString(request, true, "name", "");
 		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status","");
+		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
 		Integer activityType = RequestUtils.getInt(request,"activity_type","");
 		String startDate = RequestUtils.getString(request, true,"start_date", "");
 		String endDate = RequestUtils.getString(request,true, "end_date", "");
@@ -181,6 +182,7 @@ public class ActivityController extends BaseController {
 			Activity activity = new Activity();
 			activity.setDelFlag("0");
 			activity.setStatus(status);
+			activity.setRebateType(rebateType);
 			activity.setName(name);
 			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
@@ -309,12 +311,19 @@ public class ActivityController extends BaseController {
 			Integer type = RequestUtils.getInt(request,"type","");
 			Activity activity = new Activity();
 			activity.setId(id);
-			if (type.equals(ActivityStatusTypeEnum.PAUSE.getCode())){
-				activity.setStatus(ActivityStatusEnum.PAUSE.getCode());
-			}else if (type.equals(ActivityStatusTypeEnum.GO_ON.getCode())){
-				activity.setStatus(ActivityStatusEnum.ACTIVING.getCode());
-			}else {
-				activity.setStatus(ActivityStatusEnum.ENDED.getCode());
+
+			//type:1为暂停；2为继续（进行中）；3为取消（结束）
+			switch (type){
+				case 1:
+					activity.setStatus(ActivityStatusEnum.PAUSE.getCode());
+					break;
+				case 2:
+					activity.setStatus(ActivityStatusEnum.ACTIVING.getCode());
+					break;
+				case 3:
+					activity.setStatus(ActivityStatusEnum.ENDED.getCode());
+					break;
+					default:
 			}
 			activityService.update(activity);
 			return ResponseUtils.getSuccessApiResponseStr(true);
