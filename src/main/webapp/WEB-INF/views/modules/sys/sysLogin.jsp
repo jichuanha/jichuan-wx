@@ -122,7 +122,7 @@
 		<label for="mobile" title="手机登录"><input type="checkbox" id="mobileLogin" name="mobileLogin" ${mobileLogin ? 'checked' : ''}/></label> --%>
 		<div>
 			<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe" ${rememberMe ? 'checked' : ''}/> 记住我（公共场所慎用）</label>
-			<a id="foundPsw" href="${ctx}/changePassword/gotoSendMail" target="_blank">找回密码</a>
+			<a id="foundPsw" href="${ctx}/changePassword/link_send_mail" target="_blank">找回密码</a>
 		</div>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录" id="login-btn"/>&nbsp;&nbsp;
 		<div id="themeSwitch" class="dropdown">

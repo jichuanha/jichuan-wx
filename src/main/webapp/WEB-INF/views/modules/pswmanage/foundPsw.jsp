@@ -122,7 +122,7 @@
           },
         },
           submitHandler:function(form){
-              var url = "modifyPwd";
+              var url = "modify_pwd";
               $.ajax({
                   url:url,
                   type:'GET',
