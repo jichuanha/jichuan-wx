@@ -47,8 +47,6 @@
             font-size: 15px;
             line-height: 2.5;
             position: relative;
-            /*vertical-align: top;*/
-
         }
         .order-info li img{
             width: 30%;

@@ -522,11 +522,9 @@
                 dataObject.template_link = templateLink;
                 dataObject.rebate_type = '1';
                 dataObject.activity_type = para.activity_type;
-                console.log(dataObject);
                 $.ajax({
                     url: "saveActivity",
                     type:"post",
-                    // async:false,
                     data:dataObject,
                     success:function (msg) {
 						var msg = strToJson(msg);

@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="${ctxStatic}/page.my.css">
     <script src="${ctxStatic}/page.my.js"></script>
     <style>
+        a{
+            color: #3E55BD;
+        }
+        a:hover{
+            text-decoration: none;
+        }
         .my-nav-tabs{
             background-color: #F7F7F7;
             /*padding-left: 20px;*/
@@ -91,13 +97,21 @@
             display: inline-block;
             height: 30px;
             width: 50px;
-            background-color: #F2F2F2;
             text-align: center;
             vertical-align: middle;
+            background-color: #fff;
+            color: #3E55BD;
+            padding: 0 4px;
+            border-radius: 5px;
             border: 1px solid transparent;
+            margin-right: 15px;
+        }
+        .current-data:hover{
+            text-decoration: none;
+            background-color: #F2F2F2;
         }
         .current-data.active{
-            border: 1px solid #08c;
+            border: 1px solid #3E55BD;
         }
         .order-lists{
             width: 96%;
@@ -198,10 +212,10 @@
             <input id="page_size" name="page_size" type="hidden" value="10"/>
             <ul class="ul-form">
                 <li><label>活动名称：</label>
-                    <input type="text" name="name" class="mid-input" id="name">
+                    <input type="text" name="act_name" class="mid-input" id="act_name">
                 </li>
                 <li><label>活动状态：</label>
-                    <select name="status" id="status" class="mid-input">
+                    <select name="act_status" id="act_status" class="mid-input">
                         <option value="">请选择</option>
                         <option value="0">未开始</option>
                         <option value="1">进行中</option>
@@ -218,11 +232,11 @@
                 <li class="clearfix"></li>
                 <li>
                     <label>下单时间：</label>
-                    <input id="active_date" name="active_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
+                    <input id="start_data" name="start_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
                 </li>
                 <li>
                     <label>结束时间：</label>
-                    <input id="inactive_date" name="inactive_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
+                    <input id="end_data" name="end_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
                 </li>
                 <li>
@@ -230,7 +244,7 @@
                     <a href="#" class="current-data current60">近60天</a>
                 </li>
                 <li><label>店铺平台：</label>
-                    <select name="shop_plat" id="shop_plat" class="mid-input">
+                    <select name="platform_type" id="platform_type" class="mid-input">
                         <option value="">请选择</option>
                     </select>
                 </li>
@@ -240,7 +254,7 @@
                     </select>
                 </li>
                 <li><label>订单编号：</label>
-                    <input type="text" name="no" class="mid-input" id="no">
+                    <input type="text" name="order_sn" class="mid-input" id="order_sn">
                 </li>
                 <li class="clearfix"></li>
                 <li class="btns">
@@ -256,35 +270,16 @@
         <ul class="lists-title clearfix">
             <li class="mycol-10">订单状态</li>
             <li class="mycol-10">绑定状态</li>
-            <li class="mycol-5">店铺平台</li>
+            <li class="mycol-10">店铺平台</li>
             <li class="mycol-15">所属店铺</li>
-            <li class="mycol-20">订单编号</li>
+            <li class="mycol-15">订单编号</li>
             <li class="mycol-10">买家姓名</li>
             <li class="mycol-10">收货手机号</li>
             <li class="mycol-10">活动金额</li>
             <li class="mycol-10">评价截图</li>
         </ul>
         <div class="lists-show">
-            <p>
-                <span class="status-name">进行中_活动名称1</span>
-                <span class="start-time">下单时间:2018-11-30 13:17:11 </span>
-                <span class="receive-time">领取时间:2018-11-30 13:17:11</span>
-                <i class="list-right">
-                    <a href="${ctx}/trade/order/order_detail" class="order-detail">订单详情</a>
-                    <input type="hidden" value="el.id">
-                </i>
-            </p>
-            <ul class="order-list clearfix">
-                <li class="mycol-10">已结束</li>
-                <li class="mycol-10">是</li>
-                <li class="mycol-5">lu</li>
-                <li class="mycol-15">店铺名称1</li>
-                <li class="mycol-20" >20181201015489</li>
-                <li class="mycol-10">姓名1</li>
-                <li class="mycol-10">17606549036</li>
-                <li class="mycol-10">200</li>
-                <li class="mycol-10"><a class="img_ifram" href="#" data-src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg">点击查看</a></li>
-            </ul>
+
         </div>
     </div>
     <div class="pagination">
@@ -319,10 +314,10 @@
                             shopStr[el.platform].push({name:el.shop_name,id:el.id});
                         })
                     })
-                    // console.log(shopStr)
                 }
             }
         })
+        ajaxFuc();
         $('#shop_plat').change(function () {
             $('#shop_no').html('');
             var shopValue =  $(this).val();
@@ -339,11 +334,11 @@
         var searchCon = [{
             name:'活动名称',
             type:'input',
-            id:'name'
+            id:'act_name'
         },{
             name:'活动状态',
             type:'select',
-            id:'status'
+            id:'act_status'
         },{
             name:'返利类型',
             type:'select',
@@ -351,15 +346,15 @@
         },{
             name:'下单时间',
             type:'input',
-            id:'active_date'
+            id:'start_data'
         },{
             name:'结束时间',
             type:'input',
-            id:'inactive_date'
+            id:'end_data'
         },{
             name:'店铺平台',
             type:'select',
-            id:'shop_no'
+            id:'platform_type'
         },{
             name:'所属店铺',
             type:'select',
@@ -367,7 +362,7 @@
         },{
             name:'订单编号',
             type:'input',
-            id:'shop_no'
+            id:'order_sn'
         }];
         //搜索
         $('#btnSubmit').click(function () {
@@ -377,8 +372,9 @@
             $.each(dataSer,function(i,item){
                 dataObject[item.name] = item.value;
             });
+            console.log(dataObject);
             addSearch(dataObject);
-            // ajaxFuc();
+            ajaxFuc();
         })
         var searchVal;
         function addSearch(dataObject){
@@ -403,39 +399,39 @@
             // ajaxFuc();
         })
         $('.current30').click(function () {
-            $('#active_date').val(currentDate(30).active_date);
-            $('#inactive_date').val(currentDate(30).inactive_date);
+            $('#start_data').val(currentDate(30).active_date);
+            $('#end_data').val(currentDate(30).inactive_date);
             $('.current-data').removeClass('active');
             $(this).addClass('active');
 
         })
         $('.current60').click(function () {
-            $('#active_date').val(currentDate(60).active_date);
-            $('#inactive_date').val(currentDate(60).inactive_date);
+            $('#start_data').val(currentDate(60).active_date);
+            $('#end_data').val(currentDate(60).inactive_date);
             $('.current-data').removeClass('active');
             $(this).addClass('active');
 
         })
         // 选择开始时间方法
-        $('#active_date').live('click',function () {
-            var inactive_date=$dp.$('inactive_date');
+        $('#start_data').live('click',function () {
+            var inactive_date=$dp.$('end_data');
             WdatePicker({
                 onpicked:function(){
-                    if($dp.$('inactive_date').value == ''){
-                        $dp.$('inactive_date').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
+                    if($dp.$('end_data').value == ''){
+                        $dp.$('end_data').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
                         inactive_date.click();
                     }
 
                 },
                 isShowClear:false,
                 dateFmt:'yyyy-MM-dd HH:mm:ss',
-                maxDate:'#F{$dp.$D(\'inactive_date\')}'
+                maxDate:'#F{$dp.$D(\'end_data\')}'
             })
         })
         //选择结束时间方法
-        $('#inactive_date').live('click',function () {
+        $('#end_data').live('click',function () {
             WdatePicker({
-                minDate:'#F{$dp.$D(\'active_date\')}',
+                minDate:'#F{$dp.$D(\'start_data\')}',
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
@@ -453,6 +449,69 @@
                 content: $('#preview-layer')
             });
         })
+        function ajaxFuc(nextPage) {
+            var dataObject = {};
+            dataSer = ($("#searchForm").serializeArray());
+            $.each(dataSer,function(i,item){
+                dataObject[item.name] = item.value;
+            });
+            if(nextPage != null){
+                dataObject.current_page = nextPage;
+                nextPageSec = nextPage;
+            }
+            else{
+                dataObject.current_page = 1;
+                nextPageSec = 1;
+            }
+            dataObject.act_type = para.activity_type;
+            $.ajax({
+                url:'orderListDate',
+                type:'post',
+                data:dataObject,
+                success:function (msg) {
+                    var msg = strToJson(msg);
+                    if(msg.code == 10000){
+                        var data = msg.data;
+                        $('.lists-show').html('');
+                        var listStr = '';
+                        data.list.forEach(function (el,index) {
+                            listStr += '<p><span class="status-name">';
+                            if(el.status == 0){
+                                listStr += '未开始';
+                            }
+                            else if(el.status == 1){
+                                listStr += '进行中';
+                            }
+                            else if(el.status == 2){
+                                listStr += '暂停';
+                            }
+                            else if(el.status == 3){
+                                listStr += '已结束';
+                            }
+                            listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';
+                            listStr += ' <i class="list-right">' +
+                                '<a href="${ctx}/trade/order/order_detail?id="+el.id class="order-detail">订单详情</a>' +
+                                '<input type="hidden" value="el.id">' +
+                                '</i>';
+                            listStr += ' <ul class="order-list clearfix">';
+                            listStr += '<li class="mycol-10">待审核</li>';
+                            listStr += '<li class="mycol-10">已绑定</li>';
+                            listStr += '<li class="mycol-10">'+el.platform_name+'</li>';
+                            listStr += '<li class="mycol-15">'+el.shop_name+'</li>';
+                            listStr += '<li class="mycol-15">'+el.order_sn+'</li>';
+                            listStr += '<li class="mycol-10">姓名1</li>';
+                            listStr += '<li class="mycol-10">'+el.mobile+'</li>';
+                            listStr += '<li class="mycol-10">¥ '+el.act_money+'</li>';
+                            listStr += '<li class="mycol-10"><a class="img_ifram" href="#" data-src="'+el.picture_url+'">点击查看</a></li>';
+                        })
+                        $('.lists-show').html(listStr);
+                        $('#current_page').val(nextPageSec);
+                        $('#pageCount').val(data.count);
+                        pageList(10,nextPageSec);
+                    }
+                }
+            })
+        }
         function currentDate(count){
             var time1 = new Date()
             time1.setTime(time1.getTime() - (24 * 60 * 60 * 1000))

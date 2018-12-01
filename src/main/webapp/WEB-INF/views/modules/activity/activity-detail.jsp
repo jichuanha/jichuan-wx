@@ -160,9 +160,9 @@
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">订单状态</li>
 			<li class="mycol-10">绑定状态</li>
-			<li class="mycol-5">店铺平台</li>
+			<li class="mycol-10">店铺平台</li>
 			<li class="mycol-15">所属店铺</li>
-			<li class="mycol-20">订单编号</li>
+			<li class="mycol-15">订单编号</li>
 			<li class="mycol-10">买家姓名</li>
 			<li class="mycol-10">收货手机号</li>
 			<li class="mycol-10">活动金额</li>
@@ -180,9 +180,9 @@
 			<ul class="order-list clearfix">
 				<li class="mycol-10">已结束</li>
 				<li class="mycol-10">是</li>
-				<li class="mycol-5">lu</li>
+				<li class="mycol-10">lu</li>
 				<li class="mycol-15">店铺名称1</li>
-				<li class="mycol-20" >20181201015489</li>
+				<li class="mycol-15" >20181201015489</li>
 				<li class="mycol-10">姓名1</li>
 				<li class="mycol-10">17606549036</li>
 				<li class="mycol-10">200</li>

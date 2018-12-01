@@ -393,7 +393,7 @@
                     })
                     $('#current_page').val(nextPageSec);
                     $('#pageCount').val(data.count);
-                    pageList(10,nextPage);
+                    pageList(10,nextPageSec);
                 }
             })
 		}
@@ -576,7 +576,7 @@
                 return;
             }
         })
-        pageList(10,1);
+        // pageList(10,1);
 
     })
     function GetRequest() {
