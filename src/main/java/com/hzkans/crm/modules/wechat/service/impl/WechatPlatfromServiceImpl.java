@@ -12,15 +12,21 @@ import java.util.List;
 
 /**
  * Created with IDEA
- * author:dengtm
+ * @author:dengtm
  * Date:2018/11/28
  * Time:11:13
  */
-public class WechatPlatfromImpl implements WechatPlatfromService {
-    Logger log = LoggerFactory.getLogger(WechatPlatfromImpl.class);
+public class WechatPlatfromServiceImpl implements WechatPlatfromService {
+    Logger log = LoggerFactory.getLogger(WechatPlatfromServiceImpl.class);
     @Autowired
     WechatPlatfromDAO wechatPlatfromDAO;
 
+    /**
+     * 通过id 获取微信公众号
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @Override
     public WechatPlatfromDO getWechatPlatformById(Integer id) throws Exception {
         try {
@@ -33,7 +39,6 @@ public class WechatPlatfromImpl implements WechatPlatfromService {
 
     /**
      * 添加微信公众号
-     *
      * @param wechatPlatfromDO
      * @return
      * @throws Exception
@@ -62,7 +67,11 @@ public class WechatPlatfromImpl implements WechatPlatfromService {
 
     }
 
-
+    /**
+     * 修改微信公众号
+     * @param wechatPlatfromDO
+     * @throws Exception
+     */
     @Override
     public void updateWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
         try {
@@ -73,6 +82,11 @@ public class WechatPlatfromImpl implements WechatPlatfromService {
         }
     }
 
+    /**
+     * 删除公众号
+     * @param id
+     * @throws Exception
+     */
     @Override
     public void removeWechatPlatform(Integer id) throws Exception {
         try {
@@ -83,8 +97,14 @@ public class WechatPlatfromImpl implements WechatPlatfromService {
         }
     }
 
+    /**
+     * 获取所有的公众号
+     * @param wechatPlatfromDO
+     * @return
+     * @throws Exception
+     */
     @Override
-    public List<WechatPlatfromDO> getWechatPlatforms(WechatPlatfromDO wechatPlatfromDO) throws Exception {
+    public List<WechatPlatfromDO> listWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
         try {
             List<WechatPlatfromDO> wechatPlatfromDOS;
             wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO);
