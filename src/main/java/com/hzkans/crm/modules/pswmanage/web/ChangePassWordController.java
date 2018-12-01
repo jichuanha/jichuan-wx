@@ -6,12 +6,9 @@ package com.hzkans.crm.modules.pswmanage.web;
 import com.google.common.base.Strings;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
-import com.hzkans.crm.common.servlet.ValidateCodeServlet;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
 import com.hzkans.crm.modules.pswmanage.service.ChangePasswordService;
-import com.hzkans.crm.modules.pswmanage.utils.MD5Util;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.SystemService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
@@ -21,30 +18,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-
+/**
+ * 忘记密码Controller
+ *
+ * @author dtm
+ * @version 2018-11-26
+ */
 @Controller
-@RequestMapping("/changePassword")
+@RequestMapping("${adminPath}/changePassword")
 public class ChangePassWordController extends BaseController {
+    private static int LENGTH = 6;
     @Autowired
     private SystemService systemService;
 
     @Autowired
     private ChangePasswordService changePasswordService;
 
-
-    @RequestMapping(value = "/validateCode")
-    @ResponseBody
-    public void imagecode(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
-            ValidateCodeServlet v = new ValidateCodeServlet();
-            v.doPost(request, response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @RequestMapping(value = "/gotoSendMail")
     public String gotoSendMail() {
@@ -99,7 +88,8 @@ public class ChangePassWordController extends BaseController {
                 return "modules/pswmanage/linkError";
             }
             String result = changePasswordService.verification(cid,userId,userName,sid);
-            if ("true".equals(result)){
+            String isTrue = "true";
+            if (isTrue.equals(result)){
                 User user = UserUtils.get(userId);
                 model.addAttribute("id", user.getId());
                 model.addAttribute("loginName", user.getLoginName());
@@ -131,7 +121,7 @@ public class ChangePassWordController extends BaseController {
             logger.info("[{}]",JsonUtil.toJson(newPassword));
             if (StringUtils.isBlank(newPassword)){
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_IS_NULL,ResponseEnum.B_E_PASSWORD_IS_NULL.getMsg());
-            }else if(newPassword.length() < 6) {
+            }else if(newPassword.length() < LENGTH) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_LENGTH_ERROR, ResponseEnum.B_E_PASSWORD_LENGTH_ERROR.getMsg());
             } else {
                 User user = UserUtils.get(id);

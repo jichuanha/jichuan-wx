@@ -63,7 +63,7 @@
   <div id="found-block">
     链接已过期，请重新发起邮件
   </div>
-  <p style="text-align: center;color: #fff;margin-top:20px;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
+  <p style="text-align: center;color: #fff;position: absolute;bottom: 20px;width: 100%;">Copyright © 2018-2018东印CRM管理后台 - Powered By DONGYIN V1.0.0</p>
 </body>
 <script>
 
