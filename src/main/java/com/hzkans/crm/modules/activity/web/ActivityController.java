@@ -3,6 +3,7 @@
  */
 package com.hzkans.crm.modules.activity.web;
 
+import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.PriceUtil;
@@ -104,17 +105,17 @@ public class ActivityController extends BaseController {
 		//必填不能为空
 		if (null == name || null == activityType || null == isFollow || null == rebateChannel
 				|| null == rebateType || null == perAmount || null == isAudit){
-			return ResponseUtils.getFailApiResponseStr(100,"有必填选项未填");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_REQUIRED_NOT_FILLED);
 		}
 		//不能添加已存在的活动
 		try {
 			activityList = activityService.findList(activity);
 		} catch (Exception e) {
 			logger.error("findList is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,e.getMessage());
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
 		}
 		if (CollectionUtils.isNotEmpty(activityList)){
-			return ResponseUtils.getFailApiResponseStr(100,"活动已存在");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_ACTIVITY_EXIST);
         }
 
         //添加活动
@@ -147,7 +148,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.error("save activity is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"创建活动失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_ADD);
 		}
 	}
 
@@ -186,7 +187,6 @@ public class ActivityController extends BaseController {
 			activity.setName(name);
 			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
-
 			//搜索开始时间和结束时间非空判断
 			if (startDate != null) {
 				activity.setActiveDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));
@@ -194,6 +194,8 @@ public class ActivityController extends BaseController {
 			if (endDate != null) {
 				activity.setInactiveDate(DateUtil.parse(endDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			}
+
+			//分页获取活动列表
 			Page<Activity> page = activityService.findPage(activityPage,activity);
 			if (null != page){
 				List<Activity> activityList = page.getList();
@@ -210,7 +212,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(page);
 		} catch (Exception e) {
 			logger.error("findPage is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"获取活动列表失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
 		}
 	}
 
@@ -234,7 +236,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(activity);
 		} catch (Exception e) {
 			logger.error("get activity detail is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"获取活动详情失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
 		}
 	}
 
@@ -255,7 +257,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.error("delete activity is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"删除活动失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_DELETE);
 		}
 	}
 
@@ -294,7 +296,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(map);
 		} catch (Exception e) {
 			logger.error("findList is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"获取平台店铺失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
 		}
 	}
 
@@ -329,7 +331,7 @@ public class ActivityController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.error("update status is error",e);
-			return ResponseUtils.getFailApiResponseStr(100,"更改状态失败");
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_UPDATE_STATUS_FAIL);
 		}
 	}
 }
