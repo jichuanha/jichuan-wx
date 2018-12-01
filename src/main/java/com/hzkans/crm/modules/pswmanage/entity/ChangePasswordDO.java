@@ -1,7 +1,6 @@
 package com.hzkans.crm.modules.pswmanage.entity;
 
 import java.util.Date;
-
 /**
  * Created with IDEA
  * author:dengtm

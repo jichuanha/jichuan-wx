@@ -26,4 +26,5 @@ public interface WechatPlatfromDAO extends CrudDao<WechatPlatfromDO> {
     void removeWechatPlatform(Integer id);
 
     List<WechatPlatfromDO> getWechatPlatforms(WechatPlatfromDO wechatPlatfromDO);
+
 }

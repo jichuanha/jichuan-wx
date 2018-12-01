@@ -4,6 +4,7 @@
 package com.hzkans.crm.modules.pswmanage.web;
 
 import com.google.common.base.Strings;
+import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
@@ -18,31 +19,30 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
-/**
- * 忘记密码Controller
- *
- * @author dtm
- * @version 2018-11-26
- */
+
 @Controller
 @RequestMapping("${adminPath}/changePassword")
 public class ChangePassWordController extends BaseController {
     private static int LENGTH = 6;
+
     @Autowired
     private SystemService systemService;
-
     @Autowired
     private ChangePasswordService changePasswordService;
-
-
-    @RequestMapping(value = "/gotoSendMail")
+    @RequestMapping(value = "/link_send_mail")
     public String gotoSendMail() {
         return "modules/pswmanage/sendEmail";
     }
 
+    /**
+     * 发送邮件
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
-    @RequestMapping(value = "sendMail")
-    public String sendMail(HttpServletRequest request, Model model) throws Exception {
+    @RequestMapping(value = "send_mail")
+    public String sendMail(HttpServletRequest request) throws Exception {
         try {
             String loginName = RequestUtils.getString(request, false, "login_name", "");
             String verifyCode = RequestUtils.getString(request, false, "verify_code", "");
@@ -62,16 +62,22 @@ public class ChangePassWordController extends BaseController {
             if (null != user) {
                 changePasswordService.sendMail(user);
             }else {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_USER_AUTH_INFO_NOT_EXIST, ResponseEnum.B_E_USER_AUTH_INFO_NOT_EXIST.getMsg());
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_USER_AUTH_INFO_NOT_EXIST);
             }
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.info("sendMail is error");
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, ResponseEnum.S_E_SERVICE_ERROR.getMsg());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
 
-
+    /**
+     * 校验链接的正确性
+     * @param request
+     * @param model
+     * @return String
+     * @throws Exception
+     */
     @RequestMapping(value = "/verification")
     public String verification(HttpServletRequest request, Model model) throws Exception {
         try {
@@ -88,8 +94,7 @@ public class ChangePassWordController extends BaseController {
                 return "modules/pswmanage/linkError";
             }
             String result = changePasswordService.verification(cid,userId,userName,sid);
-            String isTrue = "true";
-            if (isTrue.equals(result)){
+            if (Global.TRUE.equals(result)){
                 User user = UserUtils.get(userId);
                 model.addAttribute("id", user.getId());
                 model.addAttribute("loginName", user.getLoginName());
@@ -101,28 +106,27 @@ public class ChangePassWordController extends BaseController {
             }
         } catch (Exception e) {
             logger.info("verification is error",e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, ResponseEnum.S_E_SERVICE_ERROR.getMsg());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
 
     /**
      * 修改个人用户密码
      *
-     * @return
+     * @return String
      */
-    @RequestMapping(value = "/modifyPwd")
+    @RequestMapping(value = "/modify_pwd")
     @ResponseBody
     public String modifyPwd(HttpServletRequest request) {
         try {
             String id = RequestUtils.getString(request, false, "id", "id is null");
-
             String newPassword = RequestUtils.getString(request, false, "new_password", "user_name is null");
 
             logger.info("[{}]",JsonUtil.toJson(newPassword));
             if (StringUtils.isBlank(newPassword)){
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_IS_NULL,ResponseEnum.B_E_PASSWORD_IS_NULL.getMsg());
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_IS_NULL);
             }else if(newPassword.length() < LENGTH) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_LENGTH_ERROR, ResponseEnum.B_E_PASSWORD_LENGTH_ERROR.getMsg());
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PASSWORD_LENGTH_ERROR);
             } else {
                 User user = UserUtils.get(id);
                 systemService.updatePasswordById(user.getId(), user.getLoginName(), newPassword);
@@ -131,7 +135,7 @@ public class ChangePassWordController extends BaseController {
             }
         } catch (ServiceException e) {
             logger.info("modifyPwd is error",e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
 }
