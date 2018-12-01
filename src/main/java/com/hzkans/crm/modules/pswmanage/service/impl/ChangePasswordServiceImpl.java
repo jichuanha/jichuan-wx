@@ -73,7 +73,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
             UserUtils.clearCache();
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
-            logger.info("sendMail msg:", e);
+            logger.error("sendMail msg:", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
@@ -113,6 +113,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
                 return Global.TRUE;
             }
         } catch (Exception e) {
+            logger.error("verification msg:", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
 

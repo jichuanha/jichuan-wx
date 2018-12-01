@@ -66,7 +66,7 @@ public class ChangePassWordController extends BaseController {
             }
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
-            logger.info("sendMail is error");
+            logger.error("sendMail is error");
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
@@ -105,7 +105,7 @@ public class ChangePassWordController extends BaseController {
                 return "modules/pswmanage/linkError";
             }
         } catch (Exception e) {
-            logger.info("verification is error",e);
+            logger.error("verification is error",e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
@@ -134,7 +134,7 @@ public class ChangePassWordController extends BaseController {
                 return ResponseUtils.getSuccessApiResponseStr(true);
             }
         } catch (ServiceException e) {
-            logger.info("modifyPwd is error",e);
+            logger.error("modifyPwd is error",e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
