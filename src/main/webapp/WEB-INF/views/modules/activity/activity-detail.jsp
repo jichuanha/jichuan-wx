@@ -17,7 +17,7 @@
 			padding: 10px 20px;
 			border-bottom: 1px solid #F2F2F2;
 		}
-		.activity-title i{
+		.activity-title a{
 			display: inline-block;
 			width: 20px;
 			height: 20px;
@@ -138,7 +138,7 @@
 </head>
 <body>
 <div class="wrap">
-	<p class="activity-title"><i><img src="${ctxStatic}/images/prev-btn.png" alt=""></i>活动详情</p>
+	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>活动详情</p>
 	<h3>基本类型</h3>
 	<ul class="base-info">
 
@@ -181,12 +181,12 @@
 				<li class="mycol-10">已结束</li>
 				<li class="mycol-10">是</li>
 				<li class="mycol-5">lu</li>
-				<li class="mycol-15">红包领取</li>
-				<li class="mycol-20" title="淘宝店铺1,淘宝店铺2,京东店铺2,京东店铺4">淘宝店铺1,淘宝店铺2,京东店铺2,京东店铺4</li>
-				<li class="mycol-10">100/50</li>
-				<li class="mycol-10">¥100/¥50</li>
-				<li class="mycol-10">¥100/¥50</li>
-				<li class="mycol-10">¥100/¥50</li>
+				<li class="mycol-15">店铺名称1</li>
+				<li class="mycol-20" >20181201015489</li>
+				<li class="mycol-10">姓名1</li>
+				<li class="mycol-10">17606549036</li>
+				<li class="mycol-10">200</li>
+				<li class="mycol-10"><a class="img_ifram" href="#" data-src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg">查看详情</a></li>
 			</ul>
 		</div>
 		<div class="pagination">
@@ -267,6 +267,20 @@ $(function () {
     });
 
     pageList(10,1)
+    $(".wrap").on("click",".img_ifram", function(){
+        var src = $(this).attr("data-src");
+        $('#preview-layer').remove();
+        $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
+        layer.open({
+            type: 1,
+            closeBtn: 1,
+            title: "信息",
+            area: '640px',
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: $('#preview-layer')
+        });
+    })
     //对url的处理
     function GetRequest() {
         var url = location.search; //获取url中"?"符后的字串

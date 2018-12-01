@@ -256,7 +256,7 @@
 </head>
 <body>
 <div class="nav">
-	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>新建活动(活动类型2)</p>
+	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>新建活动(<span class="activity-type">活动类型2</span>)</p>
 	<form id="searchForm"  class="form-search">
 		<h3>基本信息</h3>
 		<div class="base-info">
@@ -264,15 +264,6 @@
 				<li>
 					<label><span class="requ-span">*</span>活动名称：</label>
 					<input type="text" name="name" id="name" style="width: 422px">
-				</li>
-				<li>
-					<label><span class="requ-span">*</span>活动类型：</label>
-					<select name="activity_type" id="activity_type" class="mid-input">
-						<option value="">请选择</option>
-						<option value="0">待审核</option>
-						<option value="1">已审核</option>
-						<option value="2">已取消</option>
-					</select>
 				</li>
 				<li>
 					<label><span class="requ-span">*</span>有效时间：</label>
@@ -442,6 +433,8 @@
 </div>
 <script>
     $(function () {
+        var para = GetRequest();
+        $('.activity-type').html('活动类型'+para.activity_type);
         $.ajax({
             url:"platformShopList",
             type:"post",
@@ -505,12 +498,13 @@
                 }
                 shopplatArr.forEach(function (el, index) {
                     shopNameArr[el] = [];
-                    $.each(shopValue,function (index2,selector) {
-                        if($(selector).attr('data-name') == el){
-                            // console.log($(selector).next().html());
-                            shopNameArr[el].push($(selector).next().html());
-                            shopNoArr.push($(selector).val());
-                        }
+                    $.each(shopValue,function (index2) {
+                        if(shopValue[index2].checked){
+                            if($(shopValue[index2]).attr('data-name') == el){
+                                shopNameArr[el].push($(shopValue[index2]).next().html());
+                                shopNoArr.push($(shopValue[index2]).val());
+                            }
+						}
                     })
                     shopNameArr[el] = shopNameArr[el].join(',');
                 })
@@ -527,6 +521,7 @@
                 dataObject.shop_no = shopNo;
                 dataObject.template_link = templateLink;
                 dataObject.rebate_type = '1';
+                dataObject.activity_type = para.activity_type;
                 console.log(dataObject);
                 $.ajax({
                     url: "saveActivity",
@@ -535,8 +530,8 @@
                     data:dataObject,
                     success:function (msg) {
 						var msg = strToJson(msg);
-						if(msg.code == 1000){
-                            location.href = 'activity-list';
+						if(msg.code == 10000){
+                            location.href = 'activity-list?activity_type='+para.activity_type;
 						}
 						else{
 						    layer.msg(msg.msg);
@@ -711,6 +706,18 @@
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for(var i = 0; i < strs.length; i ++) {
+                    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
 
 
     })

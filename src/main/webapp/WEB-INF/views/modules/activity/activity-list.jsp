@@ -175,13 +175,37 @@
 			vertical-align: text-top;
 			margin-left: 2px;
 		}
+		.my-nav-tabs{
+			background-color: #F7F7F7;
+			/*padding-left: 20px;*/
+			margin-left: 10px;
+		}
+		.my-nav-tabs li{
+			float: left;
+			font-size: 16px;
+			line-height: 3;
+			margin: 0 30px;
+			padding: 0 20px;
+			text-align: center;
+			color: #000;
+		}
+		.my-nav-tabs li a{
+			color: #000;
+		}
+		.my-nav-tabs li.active a{
+			border-bottom: 5px solid #3F51B5;
+		}
+		.my-nav-tabs li a:hover{
+			background-color: #F7F7F7;
+		}
 	</style>
 
 </head>
 <body>
-<ul class="nav nav-tabs">
-	<li><a href="${ctx}/activity/activity/activity-new">新建活动</a></li>
+<ul class="nav my-nav-tabs clearfix">
 	<li class="active"><a href="${ctx}/activity/activity/activity-list">活动列表</a></li>
+	<li><a href="${ctx}/trade/order/order_list">订单列表</a></li>
+	<li><a href="${ctx}/trade/order/order_review">订单审核</a></li>
 </ul><br/>
 <div class="wrap">
 	<div class="wrap-header">
@@ -254,6 +278,12 @@
 </div>
 <script>
     $(function () {
+        var para = GetRequest();
+        var paraStr = '?activity_type='+para.activity_type;
+        $.each($('.my-nav-tabs li a'),function (index,selector) {
+            var oldHref = $(selector).attr('href');
+			$(selector).attr('href',oldHref+paraStr);
+        })
         $.ajax({
             url:'platformShopList',
             type:'POST',
@@ -285,6 +315,7 @@
                 dataObject.current_page = 1;
                 nextPageSec = 1;
             }
+            dataObject.activity_type = para.activity_type;
             $.ajax({
                 url:"activityList",
                 type:"post",
@@ -414,7 +445,7 @@
         })
 		//新建活动
 		$('#btnNew').click(function () {
-			location.href = 'activity-new';
+			location.href = 'activity-new?activity_type='+para.activity_type;
         })
         //继续活动
 		$('.activity-contin').live('click',function () {
@@ -536,7 +567,18 @@
         pageList(10,1);
 
     })
-
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
 </script>
 </body>
 </html>
