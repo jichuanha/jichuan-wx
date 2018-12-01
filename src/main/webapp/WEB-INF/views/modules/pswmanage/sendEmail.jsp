@@ -106,7 +106,7 @@
       }
     },
     submitHandler:function(){
-        var url = "sendMail";
+        var url = "send_mail";
         $.ajax({
             url:url,
             type:'POST',

@@ -95,7 +95,7 @@
 </body>
     <script>
         $.ajax({
-            url:'${ctx}/wechat/selectAll',
+            url:'${ctx}/wechat/wechat_latform_list',
             type:'POST',
             success:function (data) {
                 typeof data != 'Object'&& (data = JSON.parse(data));
@@ -115,7 +115,7 @@
                     $('.shop-wrap').html(_html.join(''));
                     $('.item').click(function (e) {
                         if(e.target.className == 'set') {
-                            window.location = '${ctx}/wechat/gotoUpdate?id='+$(this).data('id');
+                            window.location = '${ctx}/wechat/link_update?id='+$(this).data('id');
                         }else{
                             window.parent.location = '${ctx}';
                         }
@@ -124,7 +124,7 @@
             }
         });
         $('#creat_shop').click(function(){
-            window.location = '${ctx}/wechat/gotoInsert';
+            window.location = '${ctx}/wechat/link_add';
         })
     </script>
 </html>
