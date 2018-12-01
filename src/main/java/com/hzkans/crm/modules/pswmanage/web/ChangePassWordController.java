@@ -66,7 +66,7 @@ public class ChangePassWordController extends BaseController {
             }
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
-            logger.error("sendMail is error");
+            logger.error("sendMail is error",e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }

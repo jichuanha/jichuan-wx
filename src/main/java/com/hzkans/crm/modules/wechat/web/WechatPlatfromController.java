@@ -139,7 +139,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromService.removeWechatPlatform(id);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
-            logger.info("selectWechatPlatformById is error");
+            logger.info("selectWechatPlatformById is error",e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_DELETE);
         }
     }
@@ -157,7 +157,7 @@ public class WechatPlatfromController extends BaseController {
             allWechatPlatform = wechatPlatfromService.listWechatPlatform(new WechatPlatfromDO());
             return ResponseUtils.getSuccessApiResponseStr(allWechatPlatform);
         } catch (Exception e) {
-            logger.error("selectWechatPlatformById is error");
+            logger.error("selectWechatPlatformById is error",e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RESULT_IS_NULL);
         }
     }
