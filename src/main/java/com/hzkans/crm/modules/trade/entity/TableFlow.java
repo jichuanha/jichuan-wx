@@ -23,7 +23,16 @@ public class TableFlow extends DataEntity<TableFlow> {
 	private Date timingDate;		// 定时导入数据库时间
 	private Integer shopNo;
 	private Integer platformType;
+	private String statusStr;
 
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
 
 	public Integer getShopNo() {
 		return shopNo;

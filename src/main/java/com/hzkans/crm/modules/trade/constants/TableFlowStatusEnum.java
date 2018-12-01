@@ -10,8 +10,8 @@ public enum  TableFlowStatusEnum {
 
     IMPORT_SYSTEM_SUCCESS(1,"导入系统成功"),
     IMPORT_SYSTEM_FAIL(2,"导入系统失败"),
-    TIMING_SUCCESS(3,"定时导入数据库成功"),
-    TIMING_FAIL(4,"定时导入数据库失败");
+    TIMING_SUCCESS(3,"定时插入数据库成功"),
+    TIMING_FAIL(4,"定时插入数据库失败");
 
     private Integer code;
     private String desc;
@@ -36,4 +36,18 @@ public enum  TableFlowStatusEnum {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    public static TableFlowStatusEnum getTableFlowStatusEnum(Integer code) throws Exception{
+        if(null == code) {
+            throw new Exception("desc is null");
+        }
+        for (TableFlowStatusEnum typeEnum : values()) {
+            if(code.equals(typeEnum.code)) {
+                return typeEnum;
+            }
+        }
+        return null;
+    }
+
+
 }

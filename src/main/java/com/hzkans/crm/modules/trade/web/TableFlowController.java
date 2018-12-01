@@ -2,6 +2,8 @@
 package com.hzkans.crm.modules.trade.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.persistence.Page;
+import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.DateUtils;
 import com.hzkans.crm.common.utils.RequestUtils;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hzkans.crm.modules.trade.service.TableFlowService;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -47,7 +50,15 @@ public class TableFlowController extends BaseController {
 	}
 
 
+	/**
+	 * 表格导入
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/tableImport")
+	@ResponseBody
 	public String tableImport(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -100,5 +111,33 @@ public class TableFlowController extends BaseController {
 		return ResponseUtils.getSuccessResponseStr("上传成功");
 	}
 
+	/**
+	 *	表格信息展示
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/tableShow")
+	@ResponseBody
+	public String tableShow(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
+		String tableName = RequestUtils.getString(request, "table_name");
+		Integer currentPage = RequestUtils.getInt(request, "current_page", "current_page is null");
+		Integer pageSize = RequestUtils.getInt(request, "page_size", "page_size is null");;
+
+		try {
+			PagePara<TableFlow> tableFlowPage = new PagePara<>();
+			TableFlow tableFlow = new TableFlow();
+			tableFlow.setTableName(tableName);
+			tableFlowPage.setCurrentPage((currentPage - 1)*pageSize);
+			tableFlowPage.setPageSize(pageSize);
+			tableFlowPage.setData(tableFlow);
+			PagePara<TableFlow> tablePages = tableFlowService.getTablePages(tableFlowPage);
+
+			return ResponseUtils.getSuccessApiResponseStr(tablePages);
+		} catch (ServiceException e) {
+			logger.error("tableShow error",e);
+			throw new ServiceException(e.getCode(), e.getServiceMessage());
+		}
+	}
 }

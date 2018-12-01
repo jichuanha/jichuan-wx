@@ -79,10 +79,11 @@ public enum ResponseEnum {
     B_E_THE_GRANT_RULE_DOES_NOT_EXIST(41004, 32004, "财富发放规则不存在"),
     B_E_EXCHANGE_RATE_CANNOT_BE_ZERO(41005, 0, "兑换比率不能为0"),
     COMPONENT_NOT_EXIST(41006, 0,"component not exist"),
-    B_E_MODIFY_ERROR(41005, 0, "修改失败"),
-    B_E_ALERADY_EXIST(41006, 0, "微信公众号名称已存在"),
+    B_E_MODIFY_ERROR(41009, 0, "修改失败"),
+    B_E_ALERADY_EXIST(41010, 0, "微信公众号名称已存在"),
     DATE_ALREADY_EXIST(41007, 0,"数据已经存在,请勿重复提交!"),
     DATEBASE_SAVE_ERROR(41008,0,"数据库保存失败"),
+    DATEBASE_QUERY_ERROR(41011,0,"数据库保存失败"),
 
     /**
      * 商品模板文件类异常
