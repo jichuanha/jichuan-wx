@@ -90,6 +90,14 @@ public class OrderController extends BaseController {
 		Integer platformType = RequestUtils.getInt(request, "platform_type", "");
 		Integer shopNo = RequestUtils.getInt(request, "shop_no", "");
 		String orderSn = RequestUtils.getString(request, "order_sn");
+		//防止程序报错
+		if(currentPage == null || pageSize == null) {
+			currentPage = 1;
+			pageSize = 10;
+		}
+		if(null == actType) {
+			actType = 1;
+		}
 
 		try {
 			PagePara<JoinActivity> pagePara = new PagePara<>();
