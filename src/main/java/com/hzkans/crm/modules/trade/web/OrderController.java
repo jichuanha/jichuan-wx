@@ -28,7 +28,17 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private OrderService orderService;
-	
+
+	@RequestMapping(value = "/link_order_list")
+	public String gotoSelectAll() {
+		return "modules/ordermanage/orderList";
+	}
+
+	@RequestMapping(value = "/link_index")
+	public String gotoIndex() {
+		return "modules/ordermanage/orderIndex";
+	}
+
 	@ModelAttribute
 	public Order get(@RequestParam(required=false) String id) {
 		Order entity = null;

@@ -68,7 +68,7 @@ public enum ResponseEnum {
     B_E_VERIFY_LINK_EXPIRES(40028,0,"链接已经过期,请重新申请找回密码"),
     B_E_VERIFY_LINK_IS_ERROE(40029,0,"链接不正确"),
     B_E_PASSWORD_IS_NULL(40030,0,"密码为空"),
-
+    B_E_SEND_MAIL_ERROR(40031,0,"发送邮件失败"),
 
     /**
      * 添加失败

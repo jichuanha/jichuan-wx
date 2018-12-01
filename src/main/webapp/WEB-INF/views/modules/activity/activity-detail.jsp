@@ -149,8 +149,7 @@
 	</ul>
 	<h3>参与店铺</h3>
 	<ul class="join-shop">
-		<li>淘宝： 店铺1,店铺2,店铺3</li>
-		<li>京东： 店铺1,店铺2,店铺3</li>
+
 	</ul>
 	<input id="current_page" name="current_page" type="hidden" value="1"/>
 	<input id="page_size" name="page_size" type="hidden" value="1"/>
@@ -231,13 +230,6 @@ $(function () {
                     '</li>';
 
 			    $('.base-info').html(baseStr);
-			    //<li><i class="import-deco">*</i>强制关注： 是</li>
-            // <li><i class="import-deco">*</i>返利渠道： 现金发放</li>
-            //     <li><i class="import-deco">*</i>返利类型： 固定金额</li>
-            //     <li><i class="import-deco">*</i>单笔金额： ¥ 123.00</li>
-            //     <li>活动订单： 1000/50</li>
-            //     <li>活动金额： 1000/50</li>
-            //     <li><i class="import-deco">*</i>人工审核： 是</li>
                 var marketStr = '';
                 if(data.is_follow == 0){
                     marketStr += '<li><i class="import-deco">*</i>强制关注： 是</li>';
@@ -257,6 +249,11 @@ $(function () {
                     marketStr += '<li><i class="import-deco">*</i>人工审核： 是</li>'
                 }
 			    $('.market-type').html(marketStr);
+                var shopName = strToJson(data.shop_name);
+                $.each(shopName,function (key,value) {
+                    $('.join-shop').append('<li>'+key+'： '+value+'</li>');
+                })
+
                 // $('.lists-show')
 			}
         }

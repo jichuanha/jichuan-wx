@@ -194,19 +194,17 @@
 				</li>
 				<li><label>活动状态：</label>
 					<select name="status" id="status" class="mid-input">
-						<option value="">全部</option>
+						<option value="">请选择</option>
 						<option value="0">未开始</option>
 						<option value="1">进行中</option>
 						<option value="2">暂停</option>
 						<option value="3">已结束</option>
 					</select>
 				</li>
-				<li><label>活动类型：</label>
-					<select name="activity_type" id="activity_type" class="mid-input">
-						<option value="">全部</option>
-						<option value="0">待审核</option>
-						<option value="1">已审核</option>
-						<option value="2">已取消</option>
+				<li><label>返利类型：</label>
+					<select name="rebate_type" id="rebate_type" class="mid-input">
+						<option value="">请选择</option>
+						<option value="1">固定金额</option>
 					</select>
 				</li>
 				<li>
@@ -233,7 +231,7 @@
 		</form>
 	</div>
 	<input id="pageCount" type="hidden" value=""/>
-	<p class="h3-title search-box"><i class="h3-deco"></i>活动列表 </p>
+	<p class="h3-title search-box"><i class="h3-deco"></i>活动列表2 </p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">活动状态</li>
@@ -292,9 +290,14 @@
                 type:"post",
 				data:dataObject,
                 success:function (msg) {
+                    console.log(typeof msg);
                     var msg = strToJson(msg);
                     var data = msg.data;
                     $('.lists-show').html('');
+                    var shopName;
+                    var shopNameArr = [];
+                    var values = [];
+                    var shopNameStr = '';
 					data.list.forEach(function (el,index) {
 					    var listShowEach = '';
                         listShowEach += '<p><span class="list-time">'+el.active_date+' - '+el.inactive_date+'</span>';
@@ -342,7 +345,17 @@
 						else{
                             listShowEach += '<li class="mycol-15"></li>';
 						}
-                        listShowEach += '<li class="mycol-25" title="'+el.shop_name+'">'+el.shop_name+'</li>';
+
+                        shopNameArr = [];
+						shopName  = strToJson(el.shop_name);
+                        $.each(shopName,function (key,value) {
+							values = value.split(',');
+							values.forEach(function (el) {
+                                shopNameArr.push(key+el);
+							})
+                        })
+                        shopNameStr = shopNameArr.join(',');
+                        listShowEach += '<li class="mycol-25" title="'+shopNameStr+'">'+shopNameStr+'</li>';
                         listShowEach += '<li class="mycol-15">100/50</li><li class="mycol-15">¥100/¥50</li></ul>';
 						$('.lists-show').append(listShowEach);
                     })
@@ -378,6 +391,9 @@
                     $('.search-box').append('<span class="search-cond">活动状态:已结束 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
                 }
             }
+            if(dataObject.rebate_type != ""){
+                $('.search-box').append('<span class="search-cond">返利类型:'+$('#rebate_type').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="rebate_type"></span>')
+            }
             if(dataObject.active_date != ""){
                 $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="active_date"></span>')
             }
@@ -387,13 +403,18 @@
             if(dataObject.shop_no != ""){
                 $('.search-box').append('<span class="search-cond">平台店铺:'+$('#shop_no').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="shop_no"></span>')
             }
+            ajaxFuc();
         })
 		$('.search-close').live('click',function () {
 			$(this).parent().css('display','none');
+			var para = $(this).next().attr('data-pram');
+			console.log($('#'+para))
+			$('#'+para).val('').trigger("change");
+			ajaxFuc();
         })
 		//新建活动
 		$('#btnNew').click(function () {
-			location.href = 'activity-new'
+			location.href = 'activity-new';
         })
         //继续活动
 		$('.activity-contin').live('click',function () {
@@ -430,25 +451,25 @@
             })
 		}
         // 选择开始时间方法
-        $('#start_time').live('click',function () {
-            var end_time=$dp.$('end_time');
+        $('#active_date').live('click',function () {
+            var inactive_date=$dp.$('inactive_date');
             WdatePicker({
                 onpicked:function(){
-                    if($dp.$('end_time').value == ''){
-                        $dp.$('end_time').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
-                        end_time.click();
+                    if($dp.$('inactive_date').value == ''){
+                        $dp.$('inactive_date').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
+                        inactive_date.click();
                     }
 
                 },
                 isShowClear:false,
                 dateFmt:'yyyy-MM-dd HH:mm:ss',
-                maxDate:'#F{$dp.$D(\'end_time\')}'
+                maxDate:'#F{$dp.$D(\'inactive_date\')}'
             })
         })
         //选择结束时间方法
-        $('#end_time').live('click',function () {
+        $('#inactive_date').live('click',function () {
             WdatePicker({
-                minDate:'#F{$dp.$D(\'start_time\')}',
+                minDate:'#F{$dp.$D(\'active_date\')}',
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })

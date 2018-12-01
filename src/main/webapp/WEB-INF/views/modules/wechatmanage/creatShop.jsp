@@ -69,7 +69,7 @@
 </body>
 <script>
     $('#creat_shop').click(function(){
-        window.location.href="${ctx}/wechat/gotoSelectAll";
+        window.location.href="${ctx}/wechat/link_get_list";
     });
     $(".form-horizontal").validate({
         rules: {
@@ -89,7 +89,7 @@
             },
         },
         submitHandler:function(form){
-            var url = "insert";
+            var url = "add_wechat_latform";
             $.ajax({
                 url:url,
                 type:'GET',
@@ -104,7 +104,7 @@
                             content:'创建公众号成功!',
                             closeBtn:0,
                             yes:function(){
-                                window.location.href="${ctx}/wechat/gotoSelectAll";
+                                window.location.href="${ctx}/wechat/link_get_list";
                             }
                         })
                     }else{

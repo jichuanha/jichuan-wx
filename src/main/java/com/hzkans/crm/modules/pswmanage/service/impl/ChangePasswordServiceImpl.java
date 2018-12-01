@@ -1,5 +1,6 @@
-package com.hzkans.crm.modules.pswmanage.service.ChangePasswordImpl;
+package com.hzkans.crm.modules.pswmanage.service.impl;
 
+import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.ResponseUtils;
@@ -20,18 +21,18 @@ import java.util.UUID;
 
 /**
  * Created with IDEA
- * author:dengtm
+ * @author:dengtm
  * Date:2018/11/23
  * Time:21:59
  */
-public class ChangePasswordImpl implements ChangePasswordService {
-    Logger logger = LoggerFactory.getLogger(ChangePasswordImpl.class);
+public class ChangePasswordServiceImpl implements ChangePasswordService {
+    Logger logger = LoggerFactory.getLogger(ChangePasswordServiceImpl.class);
     /**
      * 链接的地址
      */
     private final static String URL = "http://10.1.35.118:8181/dongyin-CRM/a/changePassword/verification";
-    private static String tokenSeprator = "$";
-    private static String emailSubject = "修改密码";
+    private final static String TOKEN_SEPRATOR= "$";
+    private final static String EMAIL_SUBJECT= "修改密码";
     @Autowired
     public ChangePasswordDAO changePasswordADO;
 
@@ -60,20 +61,20 @@ public class ChangePasswordImpl implements ChangePasswordService {
             //保存到数据库
             changePasswordADO.inster(changePasswordDO);
             //组合信息
-            String key = new StringBuilder().append(userName).append(tokenSeprator).append(date)
-                    .append(tokenSeprator).append(validataCode).toString();
+            String key = new StringBuilder().append(userName).append(TOKEN_SEPRATOR).append(date)
+                    .append(TOKEN_SEPRATOR).append(validataCode).toString();
             //数字签名
             String digitalSignature = MD5Util.getMD5(key);
             String resetPassHref = "?cid=" + changePasswordDO.getId() +
                     "&user_id=" + id + "&sid=" + digitalSignature + "&user_name=" + userName;
             // 设置邮件内容
-            SendMailUtil.sendCommonMail(mailBox, emailSubject, this.mailContent(mailBox, resetPassHref));
+            SendMailUtil.sendCommonMail(mailBox, EMAIL_SUBJECT, this.mailContent(mailBox, resetPassHref));
             // 清楚缓存
             UserUtils.clearCache();
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.info("sendMail msg:", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, ResponseEnum.S_E_SERVICE_ERROR.getMsg());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
     }
 
@@ -101,18 +102,18 @@ public class ChangePasswordImpl implements ChangePasswordService {
                 return ResponseEnum.B_E_VERIFY_LINK_EXPIRES.getMsg();
             }
             long date = currentResult.get(0).getRegisterDate().getTime() / 1000 * 1000;
-            String key = new StringBuilder().append(userName).append(tokenSeprator).append(date)
-                    .append(tokenSeprator).append(currentResult.get(0).getValidataCode()).toString();
+            String key = new StringBuilder().append(userName).append(TOKEN_SEPRATOR).append(date)
+                    .append(TOKEN_SEPRATOR).append(currentResult.get(0).getValidataCode()).toString();
             //数字签名
             String digitalSignature = MD5Util.getMD5(key);
             if (!digitalSignature.equals(sid)) {
                 return ResponseEnum.B_E_VERIFY_LINK_IS_ERROE.getMsg();
             } else {
                 //链接验证通过 转到修改密码页面
-                return "true";
+                return Global.TRUE;
             }
         } catch (Exception e) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, ResponseEnum.S_E_SERVICE_ERROR.getMsg());
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SEND_MAIL_ERROR);
         }
 
     }

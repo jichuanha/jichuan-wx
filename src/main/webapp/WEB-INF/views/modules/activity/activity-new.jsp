@@ -548,7 +548,7 @@
         //获取接口数据 如果是字符串转json
         function strToJson(msg) {
             if(typeof msg == 'string'){
-                var json = eval('(' + msg + ')');
+                var json = JSON.parse(msg);
                 return json;
             }
             return msg;

@@ -53,6 +53,9 @@
 			<if test="status != null">
 				AND a.status = #{status}
 			</if>
+			<if test="rebateType != null">
+				AND a.rebate_type = #{rebateType}
+			</if>
 			<if test="shopNo != null and shopNo != ''">
 				AND a.shop_no LIKE concat('%',#{shopNo},'%')
 			</if>

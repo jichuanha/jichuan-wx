@@ -14,8 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public interface ChangePasswordService {
+    /**
+     * 发送邮件
+     * @param user
+     * @return
+     */
     String sendMail(User user);
 
+    /**
+     * 验证链接
+     * @param cid
+     * @param userId
+     * @param userName
+     * @param sid
+     * @return
+     */
     String verification(Integer cid,String userId,String userName,String sid);
 
 

@@ -19,6 +19,6 @@ public interface WechatPlatfromService {
 
     void removeWechatPlatform(Integer id) throws Exception;
 
-    List<WechatPlatfromDO> getWechatPlatforms(WechatPlatfromDO wechatPlatfromDO) throws Exception;
+    List<WechatPlatfromDO> listWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception;
 
 }
