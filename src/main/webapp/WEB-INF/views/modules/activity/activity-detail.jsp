@@ -17,7 +17,7 @@
 			padding: 10px 20px;
 			border-bottom: 1px solid #F2F2F2;
 		}
-		.activity-title i{
+		.activity-title a{
 			display: inline-block;
 			width: 20px;
 			height: 20px;
@@ -138,7 +138,7 @@
 </head>
 <body>
 <div class="wrap">
-	<p class="activity-title"><i><img src="${ctxStatic}/images/prev-btn.png" alt=""></i>活动详情</p>
+	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>活动详情</p>
 	<h3>基本类型</h3>
 	<ul class="base-info">
 
@@ -149,8 +149,7 @@
 	</ul>
 	<h3>参与店铺</h3>
 	<ul class="join-shop">
-		<li>淘宝： 店铺1,店铺2,店铺3</li>
-		<li>京东： 店铺1,店铺2,店铺3</li>
+
 	</ul>
 	<input id="current_page" name="current_page" type="hidden" value="1"/>
 	<input id="page_size" name="page_size" type="hidden" value="1"/>
@@ -182,19 +181,19 @@
 				<li class="mycol-10">已结束</li>
 				<li class="mycol-10">是</li>
 				<li class="mycol-5">lu</li>
-				<li class="mycol-15">红包领取</li>
-				<li class="mycol-20" title="淘宝店铺1,淘宝店铺2,京东店铺2,京东店铺4">淘宝店铺1,淘宝店铺2,京东店铺2,京东店铺4</li>
-				<li class="mycol-10">100/50</li>
-				<li class="mycol-10">¥100/¥50</li>
-				<li class="mycol-10">¥100/¥50</li>
-				<li class="mycol-10">¥100/¥50</li>
-			</ul>
-		</div>
-		<div class="pagination">
-			<ul>
+				<li class="mycol-15">店铺名称1</li>
+				<li class="mycol-20" >20181201015489</li>
+				<li class="mycol-10">姓名1</li>
+				<li class="mycol-10">17606549036</li>
+				<li class="mycol-10">200</li>
+				<li class="mycol-10"><a class="img_ifram" href="#" data-src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg">查看详情</a></li>
 			</ul>
 		</div>
 	</div>
+    <div class="pagination">
+        <ul>
+        </ul>
+    </div>
 </div>
 
 <script>
@@ -231,13 +230,6 @@ $(function () {
                     '</li>';
 
 			    $('.base-info').html(baseStr);
-			    //<li><i class="import-deco">*</i>强制关注： 是</li>
-            // <li><i class="import-deco">*</i>返利渠道： 现金发放</li>
-            //     <li><i class="import-deco">*</i>返利类型： 固定金额</li>
-            //     <li><i class="import-deco">*</i>单笔金额： ¥ 123.00</li>
-            //     <li>活动订单： 1000/50</li>
-            //     <li>活动金额： 1000/50</li>
-            //     <li><i class="import-deco">*</i>人工审核： 是</li>
                 var marketStr = '';
                 if(data.is_follow == 0){
                     marketStr += '<li><i class="import-deco">*</i>强制关注： 是</li>';
@@ -257,6 +249,11 @@ $(function () {
                     marketStr += '<li><i class="import-deco">*</i>人工审核： 是</li>'
                 }
 			    $('.market-type').html(marketStr);
+                var shopName = strToJson(data.shop_name);
+                $.each(shopName,function (key,value) {
+                    $('.join-shop').append('<li>'+key+'： '+value+'</li>');
+                })
+
                 // $('.lists-show')
 			}
         }
@@ -270,6 +267,20 @@ $(function () {
     });
 
     pageList(10,1)
+    $(".wrap").on("click",".img_ifram", function(){
+        var src = $(this).attr("data-src");
+        $('#preview-layer').remove();
+        $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
+        layer.open({
+            type: 1,
+            closeBtn: 1,
+            title: "信息",
+            area: '640px',
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: $('#preview-layer')
+        });
+    })
     //对url的处理
     function GetRequest() {
         var url = location.search; //获取url中"?"符后的字串

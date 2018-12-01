@@ -24,12 +24,12 @@
 		}
 		.wrap{
 			width: 100%;
-
 			background-color: #fff;
 		}
 		.form-search{
 			background-color: #F7F7F7;
 			margin: 0 20px 20px;
+			padding: 20px 0;
 		}
 		#searchForm li{
 			width: 33%;
@@ -48,6 +48,7 @@
 		#searchForm .btns{
 			width: 100%;
 			text-align: center;
+			margin-top: 10px;
 		}
 		.btns input{
 			width: 200px;
@@ -175,13 +176,37 @@
 			vertical-align: text-top;
 			margin-left: 2px;
 		}
+		.my-nav-tabs{
+			background-color: #F7F7F7;
+			/*padding-left: 20px;*/
+			margin-left: 10px;
+		}
+		.my-nav-tabs li{
+			float: left;
+			font-size: 16px;
+			line-height: 3;
+			margin: 0 30px;
+			padding: 0 20px;
+			text-align: center;
+			color: #000;
+		}
+		.my-nav-tabs li a{
+			color: #000;
+		}
+		.my-nav-tabs li.active a{
+			border-bottom: 5px solid #3F51B5;
+		}
+		.my-nav-tabs li a:hover{
+			background-color: #F7F7F7;
+		}
 	</style>
 
 </head>
 <body>
-<ul class="nav nav-tabs">
-	<li><a href="${ctx}/activity/activity/activity-new">新建活动</a></li>
+<ul class="nav my-nav-tabs clearfix">
 	<li class="active"><a href="${ctx}/activity/activity/activity-list">活动列表</a></li>
+	<li><a href="${ctx}/trade/order/order_list">订单列表</a></li>
+	<li><a href="${ctx}/trade/order/order_review">订单审核</a></li>
 </ul><br/>
 <div class="wrap">
 	<div class="wrap-header">
@@ -194,19 +219,17 @@
 				</li>
 				<li><label>活动状态：</label>
 					<select name="status" id="status" class="mid-input">
-						<option value="">全部</option>
+						<option value="">请选择</option>
 						<option value="0">未开始</option>
 						<option value="1">进行中</option>
 						<option value="2">暂停</option>
 						<option value="3">已结束</option>
 					</select>
 				</li>
-				<li><label>活动类型：</label>
-					<select name="activity_type" id="activity_type" class="mid-input">
-						<option value="">全部</option>
-						<option value="0">待审核</option>
-						<option value="1">已审核</option>
-						<option value="2">已取消</option>
+				<li><label>返利类型：</label>
+					<select name="rebate_type" id="rebate_type" class="mid-input">
+						<option value="">请选择</option>
+						<option value="1">固定金额</option>
 					</select>
 				</li>
 				<li>
@@ -233,7 +256,7 @@
 		</form>
 	</div>
 	<input id="pageCount" type="hidden" value=""/>
-	<p class="h3-title search-box"><i class="h3-deco"></i>活动列表 </p>
+	<p class="h3-title search-box"><i class="h3-deco"></i><span class="activity-type">活动类型2</span></p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">活动状态</li>
@@ -256,6 +279,13 @@
 </div>
 <script>
     $(function () {
+        var para = GetRequest();
+        $('.activity-type').html('活动类型'+para.activity_type);
+        var paraStr = '?activity_type='+para.activity_type;
+        $.each($('.my-nav-tabs li a'),function (index,selector) {
+            var oldHref = $(selector).attr('href');
+			$(selector).attr('href',oldHref+paraStr);
+        })
         $.ajax({
             url:'platformShopList',
             type:'POST',
@@ -287,6 +317,7 @@
                 dataObject.current_page = 1;
                 nextPageSec = 1;
             }
+            dataObject.activity_type = para.activity_type;
             $.ajax({
                 url:"activityList",
                 type:"post",
@@ -295,6 +326,10 @@
                     var msg = strToJson(msg);
                     var data = msg.data;
                     $('.lists-show').html('');
+                    var shopName;
+                    var shopNameArr = [];
+                    var values = [];
+                    var shopNameStr = '';
 					data.list.forEach(function (el,index) {
 					    var listShowEach = '';
                         listShowEach += '<p><span class="list-time">'+el.active_date+' - '+el.inactive_date+'</span>';
@@ -342,7 +377,17 @@
 						else{
                             listShowEach += '<li class="mycol-15"></li>';
 						}
-                        listShowEach += '<li class="mycol-25" title="'+el.shop_name+'">'+el.shop_name+'</li>';
+
+                        shopNameArr = [];
+						shopName  = strToJson(el.shop_name);
+                        $.each(shopName,function (key,value) {
+							values = value.split(',');
+							values.forEach(function (el) {
+                                shopNameArr.push(key+el);
+							})
+                        })
+                        shopNameStr = shopNameArr.join(',');
+                        listShowEach += '<li class="mycol-25" title="'+shopNameStr+'">'+shopNameStr+'</li>';
                         listShowEach += '<li class="mycol-15">100/50</li><li class="mycol-15">¥100/¥50</li></ul>';
 						$('.lists-show').append(listShowEach);
                     })
@@ -352,48 +397,67 @@
                 }
             })
 		}
+		var searchCon = [{
+            name:'活动名称',
+			type:'input',
+			id:'name'
+		},{
+            name:'活动状态',
+            type:'select',
+            id:'status'
+        },{
+            name:'返利类型',
+            type:'select',
+            id:'rebate_type'
+        },{
+            name:'开始时间',
+            type:'input',
+            id:'active_date'
+        },{
+            name:'结束时间',
+            type:'input',
+            id:'inactive_date'
+        },{
+            name:'所属店铺',
+            type:'select',
+            id:'shop_no'
+        }];
         //搜索
         $('#btnSubmit').click(function () {
-            //	<p class="h3-title search-box"> </p>
-            $('.search-box').html('<i class="h3-deco"></i>活动列表 ');
+            $('.search-box').html('<i class="h3-deco"></i>活动类型 '+para.activity_type);
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
                 dataObject[item.name] = item.value;
             });
-            if(dataObject.name != ""){
-				$('.search-box').append('<span class="search-cond">活动名称:'+dataObject.name+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="name"></span>')
-			}
-            if(dataObject.status != ""){
-                if(dataObject.status == 0){
-                    $('.search-box').append('<span class="search-cond">活动状态:未开始 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 1){
-                    $('.search-box').append('<span class="search-cond">活动状态:进行中 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 2){
-                    $('.search-box').append('<span class="search-cond">活动状态:暂停 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-                else if(dataObject.status == 3){
-                    $('.search-box').append('<span class="search-cond">活动状态:已结束 <i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="status"></span>')
-                }
-            }
-            if(dataObject.active_date != ""){
-                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="active_date"></span>')
-            }
-            if(dataObject.inactive_date != ""){
-                $('.search-box').append('<span class="search-cond">开始时间:'+dataObject.active_date+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="inactive_date"></span>')
-            }
-            if(dataObject.shop_no != ""){
-                $('.search-box').append('<span class="search-cond">平台店铺:'+$('#shop_no').find("option:selected").text()+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="shop_no"></span>')
-            }
+            addSearch(dataObject);
+            ajaxFuc();
         })
+		var searchVal;
+		function addSearch(dataObject){
+            searchCon.forEach(function (el) {
+                var id = el.id;
+                searchVal = '';
+                if(dataObject[id] != ''){
+                    if(el.type == 'input'){
+                        searchVal = $('#'+el.id).val();
+					}
+					else{
+                        searchVal = $('#'+el.id).find("option:selected").text();
+					}
+                    $('.search-box').append('<span class="search-cond">'+el.name+':'+searchVal+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="'+el.id+'"></span>')
+                }
+			})
+		}
 		$('.search-close').live('click',function () {
 			$(this).parent().css('display','none');
+			var para = $(this).next().attr('data-pram');
+			$('#'+para).val('').trigger("change");
+			ajaxFuc();
         })
 		//新建活动
 		$('#btnNew').click(function () {
-			location.href = 'activity-new'
+			location.href = 'activity-new?activity_type='+para.activity_type;
         })
         //继续活动
 		$('.activity-contin').live('click',function () {
@@ -430,25 +494,25 @@
             })
 		}
         // 选择开始时间方法
-        $('#start_time').live('click',function () {
-            var end_time=$dp.$('end_time');
+        $('#active_date').live('click',function () {
+            var inactive_date=$dp.$('inactive_date');
             WdatePicker({
                 onpicked:function(){
-                    if($dp.$('end_time').value == ''){
-                        $dp.$('end_time').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
-                        end_time.click();
+                    if($dp.$('inactive_date').value == ''){
+                        $dp.$('inactive_date').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
+                        inactive_date.click();
                     }
 
                 },
                 isShowClear:false,
                 dateFmt:'yyyy-MM-dd HH:mm:ss',
-                maxDate:'#F{$dp.$D(\'end_time\')}'
+                maxDate:'#F{$dp.$D(\'inactive_date\')}'
             })
         })
         //选择结束时间方法
-        $('#end_time').live('click',function () {
+        $('#inactive_date').live('click',function () {
             WdatePicker({
-                minDate:'#F{$dp.$D(\'start_time\')}',
+                minDate:'#F{$dp.$D(\'active_date\')}',
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
@@ -515,7 +579,18 @@
         pageList(10,1);
 
     })
-
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
 </script>
 </body>
 </html>

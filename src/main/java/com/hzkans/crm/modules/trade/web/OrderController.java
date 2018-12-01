@@ -39,6 +39,36 @@ public class OrderController extends BaseController {
 		return "modules/ordermanage/orderIndex";
 	}
 
+	/**
+	 * 订单列表
+	 * @return
+	 */
+	@RequestMapping("/order_list")
+	public String orderListPage() {
+		return "modules/order/order-list";
+	}
+
+	/**
+	 * 订单详情
+	 * @return
+	 */
+	@RequestMapping("/order_detail")
+	public String orderDetailPage() {
+		return "modules/order/order-detail";
+	}
+
+	/**
+	 * 订单审核
+	 * @return
+	 */
+	@RequestMapping("/order_review")
+	public String ordeUpdatePage() {
+		return "modules/order/order-review";
+	}
+
+
+
+
 	@ModelAttribute
 	public Order get(@RequestParam(required=false) String id) {
 		Order entity = null;

@@ -9,7 +9,9 @@
 		a.type,
 		a.error_message AS "errorMessage",
 		a.import_date AS "importDate",
-		a.timing_date AS "timingDate"
+		a.timing_date AS "timingDate",
+		a.platform_type AS "platformType",
+		a.shop_no AS "shopNo"
 	</sql>
 
 	<sql id="tableFlowJoins">
@@ -97,13 +99,17 @@
 			status,
 			type,
 			error_message,
-			import_date
+			import_date,
+			platform_type,
+			shop_no
 		) VALUES (
 			#{tableName},
 			#{status},
 			#{type},
 			#{errorMessage},
-			#{importDate}
+			#{importDate},
+			#{platformType},
+			#{shopNo}
 		)
 	</insert>
 	
@@ -121,6 +127,52 @@
 			</if>
 		</where>
 	</update>
+
+	<select id="listTableFlowPage" parameterType="com.hzkans.crm.common.persistence.PagePara"
+			resultType="com.hzkans.crm.modules.trade.entity.TableFlow">
+		SELECT <include refid="tableFlowColumns"/>
+		FROM t_table_flow a
+		<where>
+			<if test="data.tableName != null and data.tableName != ''">
+				AND a.table_name = #{data.tableName}
+			</if>
+			<if test="data.status != null and data.status != ''">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.importDate != null and data.importDate != ''">
+				AND a.import_date = #{data.importDate}
+			</if>
+			<if test="data.timingDate != null and data.timingDate != ''">
+				AND a.timing_date = #{data.timingDate}
+			</if>
+		</where>
+		<if test="currentPage != null and pageSize != null">
+			limit #{currentPage},#{pageSize}
+		</if>
+
+	</select>
+
+
+	<select id="countTableFlowPage" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
+		SELECT count(*)
+		FROM t_table_flow a
+
+		<where>
+			<if test="data.tableName != null and data.tableName != ''">
+				AND a.table_name = #{data.tableName}
+			</if>
+			<if test="data.status != null and data.status != ''">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.importDate != null and data.importDate != ''">
+				AND a.import_date = #{data.importDate}
+			</if>
+			<if test="data.timingDate != null and data.timingDate != ''">
+				AND a.timing_date = #{data.timingDate}
+			</if>
+		</where>
+	</select>
+
 	
 	<update id="delete">
 		DELETE FROM t_table_flow

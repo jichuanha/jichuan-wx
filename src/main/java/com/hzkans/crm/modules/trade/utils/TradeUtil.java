@@ -1,5 +1,8 @@
 package com.hzkans.crm.modules.trade.utils;
 
+import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.service.ServiceException;
+
 /**
  * @author jc
  * @description
@@ -12,5 +15,23 @@ public class TradeUtil {
 
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
+
+
+    /**
+     * 非空判断
+     * @param objects
+     * @throws ServiceException
+     */
+    public static void isAllNull(Object... objects) throws ServiceException {
+        for (Object obj : objects) {
+            isNull(obj);
+        }
+    }
+
+    private static void isNull(Object obj) throws ServiceException{
+        if(null == obj) {
+            throw new ServiceException(ResponseEnum.P_E_PARAM_INVALID);
+        }
+    }
 
 }
