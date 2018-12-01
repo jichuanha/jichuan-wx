@@ -3,7 +3,6 @@ package com.hzkans.crm.modules.trade.entity;
 import javax.validation.constraints.NotNull;
 
 import com.hzkans.crm.common.persistence.DataEntity;
-import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -22,6 +21,7 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private Integer actType;		// 活动类型
 	private String actName;		// 活动名称
 	private Integer status;		// status
+	private String statusStr;
 	private String message;		// 原因
 	private String pictureUrl;		// 图片地址
 	private Long auditor;		// auditor
@@ -38,6 +38,15 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private String actMoneyStr;
 	private Long actMoney;
 	private String mobile;
+
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
 
 	public String getActMoneyStr() {
 		return actMoneyStr;
