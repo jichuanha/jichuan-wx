@@ -31,7 +31,7 @@ public class OrderController extends BaseController {
 
 	@RequestMapping(value = "/link_order_list")
 	public String gotoSelectAll() {
-		return "modules/ordermagage/orderList";
+		return "modules/ordermanage/orderList";
 	}
 
 	@RequestMapping(value = "/link_index")
