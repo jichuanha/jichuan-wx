@@ -15,7 +15,8 @@
 		a.address AS "address",
 		a.create_date AS "createDate",
 		a.update_date AS "updateDate",
-		a.attention_wechat AS "attentionWechat"
+		a.attention_wechat AS "attentionWechat",
+		a.wechat_no AS "wechatNo"
 	</sql>
 	
 	<sql id="orderMemberJoins">

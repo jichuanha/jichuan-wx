@@ -62,6 +62,9 @@
 			<if test="data.auditor != null">
 				AND a.auditor = #{data.auditor}
 			</if>
+			<if test="data.rebateType != null">
+				AND b.rebate_type = #{data.rebateType}
+			</if>
 			<if test="data.startDate != null and data.endDate != null">
 				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
 			</if>

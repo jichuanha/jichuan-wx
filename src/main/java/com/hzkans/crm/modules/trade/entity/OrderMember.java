@@ -21,7 +21,16 @@ public class OrderMember extends DataEntity<OrderMember> {
 	private String cityName;		// 乡镇行政编号
 	private String address;		// 详细地址
 	private  String attention_wechat; // 关注的微信号, 1,2,3 格式
+	private String wechatNo;
 
+
+	public String getWechatNo() {
+		return wechatNo;
+	}
+
+	public void setWechatNo(String wechatNo) {
+		this.wechatNo = wechatNo;
+	}
 
 	public String getAttention_wechat() {
 		return attention_wechat;

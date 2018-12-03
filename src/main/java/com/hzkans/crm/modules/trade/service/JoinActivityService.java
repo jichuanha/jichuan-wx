@@ -140,7 +140,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	public Map<String, Object> getOrderDetail(Integer id, Integer wechatId) {
 		TradeUtil.isAllNull(id);
 		Map<String, Object> resultMap = new HashMap<>(2);
-
+		//根据id查找到申请记录
 		JoinActivity joinActivity = new JoinActivity();
 		joinActivity.setId(id.toString());
 		JoinActivity activity = getJoinActivity(joinActivity);
@@ -177,7 +177,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 
 	}
 
-	public JoinActivity initParameter(String wechatId, JoinActivity ja) throws ServiceException{
+	private JoinActivity initParameter(String wechatId, JoinActivity ja) throws ServiceException{
 		try {
 			//获取店铺和平台名称
 			PlatformShop platformShop = new PlatformShop();
@@ -203,6 +203,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
                 ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
             }
 			if(null != member) {
+				ja.setWechatNo(member.getWechatNo());
                 String attentionWechat = member.getAttention_wechat();
                 if(StringUtils.isEmpty(attentionWechat)) {
                     ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());

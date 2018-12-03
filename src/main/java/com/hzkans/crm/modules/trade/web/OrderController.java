@@ -102,6 +102,8 @@ public class OrderController extends BaseController {
 		Integer platformType = RequestUtils.getInt(request, "platform_type", "");
 		Integer shopNo = RequestUtils.getInt(request, "shop_no", "");
 		String orderSn = RequestUtils.getString(request, "order_sn");
+		//返利类型
+		Integer rebateType = RequestUtils.getInt(request, "rebate_type", "");
 		//防止程序报错
 		if(currentPage == null || pageSize == null) {
 			currentPage = 1;
@@ -117,6 +119,7 @@ public class OrderController extends BaseController {
 			joinActivity.setActType(actType);
 			joinActivity.setActName(actName);
 			joinActivity.setActStatus(actStatus);
+			joinActivity.setRebateType(rebateType);
 			//如果是订单审核页面,只需要查询为审核状态的订单
 			if(PageTypeEnum.ORDER_AUDIT.getCode().equals(pageType)) {
 				joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());

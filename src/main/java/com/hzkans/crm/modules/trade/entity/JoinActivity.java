@@ -46,7 +46,25 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private List<String> ids = new ArrayList<>();
 	private String award;
 	private Integer awardGrantStatus;
+	private String wechatNo;
+	private Integer rebateType; //返利类型
 
+
+	public Integer getRebateType() {
+		return rebateType;
+	}
+
+	public void setRebateType(Integer rebateType) {
+		this.rebateType = rebateType;
+	}
+
+	public String getWechatNo() {
+		return wechatNo;
+	}
+
+	public void setWechatNo(String wechatNo) {
+		this.wechatNo = wechatNo;
+	}
 
 	public String getAward() {
 		return award;
