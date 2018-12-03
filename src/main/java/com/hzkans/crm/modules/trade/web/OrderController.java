@@ -9,6 +9,8 @@ import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
+import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
+import com.hzkans.crm.modules.trade.constants.PageTypeEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.service.JoinActivityService;
 import com.hzkans.crm.modules.trade.service.OrderService;
@@ -81,6 +83,8 @@ public class OrderController extends BaseController {
 		Integer actType = RequestUtils.getInt(request, "act_type", "act_type is null");
 		Integer currentPage = RequestUtils.getInt(request, "current_page", "");
 		Integer pageSize = RequestUtils.getInt(request, "page_size", "");
+		//页面类型 1:订单列表  2:订单审核
+		Integer pageType = RequestUtils.getInt(request, "page_type", "");
 
 		//非必传参数
 		String actName = RequestUtils.getString(request, "act_name");
@@ -105,6 +109,11 @@ public class OrderController extends BaseController {
 			joinActivity.setActType(actType);
 			joinActivity.setActName(actName);
 			joinActivity.setActStatus(actStatus);
+			//如果是订单审核页面,只需要查询为审核状态的订单
+			if(PageTypeEnum.ORDER_AUDIT.getCode().equals(pageType)) {
+				joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());
+			}
+
 			if(!Strings.isNullOrEmpty(startData)) {
                 joinActivity.setStartDate(DateUtil.parse(startData, DateUtil.NORMAL_DATETIME_PATTERN));
             }

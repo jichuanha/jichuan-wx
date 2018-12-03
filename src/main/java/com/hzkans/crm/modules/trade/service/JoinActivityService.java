@@ -60,6 +60,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 					ja.setMobile(order1.getMobile());
 					ja.setActMoneyStr(PriceUtil.parseFen2YuanStr(ja.getActMoney()));
 					ja.setStatusStr(JoinActivityStatusEnum.getJoinActivityStatusEnum(ja.getStatus()).getDesc());
+					//查询会员是否绑定公众号
+
 				}
 			}
 			int totalCount = joinActivityDao.selectJoinActivityPageCount(pagePara);
