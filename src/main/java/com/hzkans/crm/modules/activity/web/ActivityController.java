@@ -11,7 +11,6 @@ import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
-import com.hzkans.crm.modules.activity.constants.ActivityStatusTypeEnum;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
 import com.hzkans.crm.modules.activity.service.ActivityService;
@@ -131,12 +130,18 @@ public class ActivityController extends BaseController {
 			activity.setRebateType(rebateType);
 			activity.setRebateChannel(rebateChannel);
 			activity.setPerAmount(PriceUtil.parseYuan2Fen(perAmount * 1.0));
-			activity.setPerAmountStr(PriceUtil.parseFen2YuanStr(perAmount));
 			activity.setMaxOrderLimit(maxOrderLimit);
+			//如果没填订单总数，则默认为0
+			if (null == maxOrderLimit){
+				activity.setMaxOrderLimit(0);
+			}
 			if (null != totalAmount){
 				activity.setTotalAmount(PriceUtil.parseYuan2Fen(totalAmount * 1.0));
+				//如果没填返利金额，则默认为0
+			}else {
+				activity.setTotalAmount(0L);
 			}
-			activity.setTotalAmountStr(PriceUtil.parseFen2YuanStr(totalAmount));
+
 			activity.setIsAudit(isAudit);
 			activity.setShopName(shopName);
 			activity.setShopNo(shopNo);
@@ -315,17 +320,19 @@ public class ActivityController extends BaseController {
 			activity.setId(id);
 
 			//type:1为暂停；2为继续（进行中）；3为取消（结束）
-			switch (type){
-				case 1:
-					activity.setStatus(ActivityStatusEnum.PAUSE.getCode());
-					break;
-				case 2:
-					activity.setStatus(ActivityStatusEnum.ACTIVING.getCode());
-					break;
-				case 3:
-					activity.setStatus(ActivityStatusEnum.ENDED.getCode());
-					break;
+			if (null != type) {
+				switch (type) {
+					case 1:
+						activity.setStatus(ActivityStatusEnum.PAUSE.getCode());
+						break;
+					case 2:
+						activity.setStatus(ActivityStatusEnum.ACTIVING.getCode());
+						break;
+					case 3:
+						activity.setStatus(ActivityStatusEnum.ENDED.getCode());
+						break;
 					default:
+				}
 			}
 			activityService.update(activity);
 			return ResponseUtils.getSuccessApiResponseStr(true);
