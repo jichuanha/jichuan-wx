@@ -20,6 +20,7 @@
             background-color: #F7F7F7;
             /*padding-left: 20px;*/
             margin-left: 10px;
+            /*position: fixed;*/
         }
         .my-nav-tabs li{
             float: left;
@@ -131,6 +132,9 @@
         }
         .mycol-10{
             width: 10%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .mycol-15{
             width: 15%;
@@ -308,7 +312,7 @@
                     $.each(data,function (index,value) {
                         value.forEach(function (el,indexshop) {
                             if(indexshop == 0){
-                                $('#shop_plat').append('<option value="'+el.platform+'">'+el.platform_name+'</option>')
+                                $('#platform_type').append('<option value="'+el.platform+'">'+el.platform_name+'</option>')
                                 shopStr[el.platform] = [];
                             }
                             shopStr[el.platform].push({name:el.shop_name,id:el.id});
@@ -318,8 +322,8 @@
             }
         })
         ajaxFuc();
-        $('#shop_plat').change(function () {
-            $('#shop_no').html('');
+        $('#platform_type').change(function () {
+            $('#shop_no').html('<option value="">请选择</option>');
             var shopValue =  $(this).val();
             $.each(shopStr,function (key,value) {
                 if(key == shopValue){
@@ -396,7 +400,6 @@
             $(this).parent().css('display','none');
             var para = $(this).next().attr('data-pram');
             $('#'+para).val('').trigger("change");
-            // ajaxFuc();
         })
         $('.current30').click(function () {
             $('#start_data').val(currentDate(30).active_date);
@@ -455,6 +458,7 @@
             $.each(dataSer,function(i,item){
                 dataObject[item.name] = item.value;
             });
+            dataObject.page_type = 1;
             if(nextPage != null){
                 dataObject.current_page = nextPage;
                 nextPageSec = nextPage;
@@ -464,6 +468,8 @@
                 nextPageSec = 1;
             }
             dataObject.act_type = para.activity_type;
+            //待改 公众号
+            dataObject.wechat_id = 1;
             $.ajax({
                 url:'orderListDate',
                 type:'post',
@@ -475,7 +481,7 @@
                         $('.lists-show').html('');
                         var listStr = '';
                         data.list.forEach(function (el,index) {
-                            listStr += '<p><span class="status-name">';
+                            listStr += '<p class="clearfix"><span class="status-name">';
                             if(el.status == 0){
                                 listStr += '未开始';
                             }
@@ -489,20 +495,24 @@
                                 listStr += '已结束';
                             }
                             listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';
+                            if(el.draw_date){
+                                listStr += '<span class="receive-time">领取时间:'+el.draw_date+'</span>';
+                            }
                             listStr += ' <i class="list-right">' +
-                                '<a href="${ctx}/trade/order/order_detail?id="+el.id class="order-detail">订单详情</a>' +
-                                '<input type="hidden" value="el.id">' +
+                                '<a href="${ctx}/trade/order/order_detail?id='+el.id+'&activity_type='+para.activity_type+'" class="order-detail">订单详情</a>' +
+                                '<input type="hidden" value="'+el.id+'">' +
                                 '</i>';
                             listStr += ' <ul class="order-list clearfix">';
-                            listStr += '<li class="mycol-10">待审核</li>';
-                            listStr += '<li class="mycol-10">已绑定</li>';
+                            listStr += '<li class="mycol-10">'+el.status_str+'</li>';
+                            listStr += '<li class="mycol-10">'+el.attention_str+'</li>';
                             listStr += '<li class="mycol-10">'+el.platform_name+'</li>';
                             listStr += '<li class="mycol-15">'+el.shop_name+'</li>';
                             listStr += '<li class="mycol-15">'+el.order_sn+'</li>';
-                            listStr += '<li class="mycol-10">姓名1</li>';
+                            listStr += '<li class="mycol-10" title="'+el.member_name+'">'+el.member_name+'</li>';
                             listStr += '<li class="mycol-10">'+el.mobile+'</li>';
                             listStr += '<li class="mycol-10">¥ '+el.act_money+'</li>';
                             listStr += '<li class="mycol-10"><a class="img_ifram" href="#" data-src="'+el.picture_url+'">点击查看</a></li>';
+                            listStr += '</ul>';
                         })
                         $('.lists-show').html(listStr);
                         $('#current_page').val(nextPageSec);

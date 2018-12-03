@@ -62,35 +62,84 @@
 </head>
 <body>
 <div class="wrap">
+
     <p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>订单详情</p>
     <h3>活动信息</h3>
     <ul class="activity-info">
-        <li><i class="import-deco">*</i>活动名称：活动名称1</li>
-        <li>活动状态：进行中</li>
-        <li><i class="import-deco">*</i>活动类型：活动类型1</li>
-        <li>有效时间：2018-11-11 11:11:11 至 2018-11-11 11:11:11</li>
+        <%--<li><i class="import-deco">*</i>活动名称：活动名称1</li>--%>
+        <%--<li>活动状态：进行中</li>--%>
+        <%--<li><i class="import-deco">*</i>活动类型：活动类型1</li>--%>
+        <%--<li>有效时间：2018-11-11 11:11:11 至 2018-11-11 11:11:11</li>--%>
     </ul>
     <h3>订单信息</h3>
     <ul class="order-info clearfix">
-        <li>订单编号：1234567891547</li>
-        <li>买家姓名：买家姓名</li>
-        <li>收货手机号：17606549036</li>
-        <li>买家微信号：12365987</li>
-        <li>所属店铺：店铺名称1</li>
-        <li>店铺平台：淘宝</li>
-        <li>活动金额：¥ 123.00</li>
-        <li>订单状态：已审核</li>
-        <li>审核时间：2018-11-11 11:11:11</li>
-        <li>绑定状态：是</li>
-        <li><span style="vertical-align: top">评价截图：</span><img class="img_ifram" src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg" alt=""></li>
+        <%--<li>订单编号：1234567891547</li>--%>
+        <%--<li>买家姓名：买家姓名</li>--%>
+        <%--<li>收货手机号：17606549036</li>--%>
+        <%--<li>买家微信号：12365987</li>--%>
+        <%--<li>所属店铺：店铺名称1</li>--%>
+        <%--<li>店铺平台：淘宝</li>--%>
+        <%--<li>活动金额：¥ 123.00</li>--%>
+        <%--<li>订单状态：已审核</li>--%>
+        <%--<li>审核时间：2018-11-11 11:11:11</li>--%>
+        <%--<li>绑定状态：是</li>--%>
+        <%--<li><span style="vertical-align: top">评价截图：</span><img class="img_ifram" src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg" alt=""></li>--%>
 
     </ul>
+    <div class="pagination">
+        <ul>
+        </ul>
+    </div>
 </div>
 
 <script>
     $(function () {
         var para = GetRequest();
+        /*
+        *
 
+
+
+
+
+
+
+
+
+
+
+
+        */
+        $.ajax({
+            url:'orderDetail',
+            type:'post',
+            data:{
+                id:para.id,
+                wechat_id:1
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    var act = msg.data.act;
+                    var order = msg.data.order;
+                    $('.activity-info').html('<li><i class="import-deco">*</i>活动名称：'+act.name+'</li>' +
+                        '<li>活动状态：'+act.status_str+'</li>' +
+                        '<li><i class="import-deco">*</i>活动类型：活动类型'+para.activity_type+'</li>' +
+                        '<li>有效时间：'+act.active_date+' 至 '+act.inactive_date+'</li>');
+                    $('.order-info').html('<li>订单编号：'+order.order_sn+'</li>' +
+                        ' <li>买家姓名：'+order.member_name+'</li>' +
+                        '<li>收货手机号：'+order.mobile+'</li>' +
+                        '<li>买家微信号：'+order.wechat_no+'</li>' +
+                        '<li>所属店铺：'+order.shop_name+'</li>' +
+                        '<li>店铺平台：'+order.platform_name+'</li>' +
+                        '<li>活动金额：¥ '+order.act_money_str+'</li>' +
+                        '<li>订单状态：'+order.status_str+'</li>' +
+                        '<li>审核时间：'+order.update_date+'</li>' +
+                        '<li>绑定状态：'+order.attention_str+'</li>' +
+                        '<li><span style="vertical-align: top">评价截图：</span><img class="img_ifram" src="'+order.picture_url+'" alt=""></li>');
+                }
+            }
+        })
         $(".wrap").on("click",".img_ifram", function(){
             var src = $(this).attr("src");
             $('#preview-layer').remove();

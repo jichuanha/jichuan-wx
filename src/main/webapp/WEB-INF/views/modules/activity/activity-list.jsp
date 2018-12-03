@@ -388,7 +388,7 @@
                         })
                         shopNameStr = shopNameArr.join(',');
                         listShowEach += '<li class="mycol-25" title="'+shopNameStr+'">'+shopNameStr+'</li>';
-                        listShowEach += '<li class="mycol-15">100/50</li><li class="mycol-15">¥100/¥50</li></ul>';
+                        listShowEach += '<li class="mycol-15">'+(el.max_order_limit == 0?"-":el.max_order_limit)+' / '+el.order_count+'</li><li class="mycol-15">'+(el.max_order_limit == 0?"-":"¥ "+(el.max_order_limit*el.per_amount/100))+' / ¥ '+(el.order_count*el.per_amount/100)+'</li></ul>';
 						$('.lists-show').append(listShowEach);
                     })
                     $('#current_page').val(nextPageSec);
