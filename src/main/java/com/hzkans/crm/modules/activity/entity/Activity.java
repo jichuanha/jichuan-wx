@@ -234,4 +234,32 @@ public class Activity extends DataEntity<Activity> {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "Activity{" +
+				"activityType=" + activityType +
+				", name='" + name + '\'' +
+				", activeDate=" + activeDate +
+				", inactiveDate=" + inactiveDate +
+				", orderActiveDate=" + orderActiveDate +
+				", orderInactiveDate=" + orderInactiveDate +
+				", url='" + url + '\'' +
+				", isFollow=" + isFollow +
+				", rebateType=" + rebateType +
+				", rebateChannel=" + rebateChannel +
+				", perAmount=" + perAmount +
+				", perAmountStr='" + perAmountStr + '\'' +
+				", maxOrderLimit=" + maxOrderLimit +
+				", orderCount=" + orderCount +
+				", version=" + version +
+				", totalAmount=" + totalAmount +
+				", totalAmountStr='" + totalAmountStr + '\'' +
+				", isAudit=" + isAudit +
+				", shopName='" + shopName + '\'' +
+				", shopNo='" + shopNo + '\'' +
+				", templateLink='" + templateLink + '\'' +
+				", status=" + status +
+				'}';
+	}
 }

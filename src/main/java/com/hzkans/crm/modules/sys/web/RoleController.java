@@ -56,8 +56,12 @@ public class RoleController extends BaseController {
 	
 	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value = {"list", ""})
-	public String list(Role role, Model model) {
+	public String list(Role role, Model model) throws Exception {
 		List<Role> list = systemService.findAllRole();
+		for (Role role1:list) {
+			Integer number= systemService.getRoleNumber(role1.getId());
+			role1.setNumber(number);
+		}
 		model.addAttribute("list", list);
 		return "modules/sys/roleList";
 	}

@@ -37,4 +37,11 @@ public interface RoleDao extends CrudDao<Role> {
 
 	public int insertRoleOffice(Role role);
 
+	/**
+	 * 获取改角色下的人数
+	 * @param id
+	 * @return
+	 */
+	Integer getNumber(String id);
+
 }
