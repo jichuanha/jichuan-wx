@@ -24,6 +24,9 @@
 		#footer, #footer a {color:#999;} #left{overflow-x:hidden;overflow-y:auto;} #left .collapse{position:static;}
 		#userControl>li>a{/*color:#fff;*/text-shadow:none;} #userControl>li>a:hover, #user #userControl>li.open>a{background:transparent;}
 		#productName{height: 20px;display: block;margin-left: 100px;}
+		.checked-public{text-align: center;margin-top: 10px}
+		.checked-public img{width: 50%;}
+		.checked-public p{font-size: 15px;margin-top: 10px}
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -229,6 +232,11 @@
 			<div class="container-fluid">
 				<div id="content" class="row-fluid">
                     <div id="left1" class="navbar">
+						<div class="checked-public">
+							<img src="${ctxStatic}/images/login/logo.png" alt="">
+							<p>公众号名称</p>
+							<input type="hidden" value="1">
+						</div>
                         <div class="nav-collapse">
                             <ul id="menu" class="nav" style="*white-space:nowrap;float:none;">
                                 <c:set var="firstMenu" value="true"/>
