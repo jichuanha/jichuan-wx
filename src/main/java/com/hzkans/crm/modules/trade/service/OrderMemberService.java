@@ -2,8 +2,12 @@ package com.hzkans.crm.modules.trade.service;
 
 import java.util.List;
 
+import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
+import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.modules.trade.entity.Order;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,29 +21,25 @@ import com.hzkans.crm.modules.trade.dao.OrderMemberDao;
  * @version 2018-11-27
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional(rollbackFor = Exception.class)
 public class OrderMemberService extends CrudService<OrderMemberDao, OrderMember> {
 
-	public OrderMember get(String id) {
-		return super.get(id);
-	}
-	
-	public List<OrderMember> findList(OrderMember orderMember) {
-		return super.findList(orderMember);
-	}
-	
-	public Page<OrderMember> findPage(Page<OrderMember> page, OrderMember orderMember) {
-		return super.findPage(page, orderMember);
-	}
-	
-	@Transactional(readOnly = false)
-	public void save(OrderMember orderMember) {
-		super.save(orderMember);
-	}
-	
-	@Transactional(readOnly = false)
-	public void delete(OrderMember orderMember) {
-		super.delete(orderMember);
+	/**
+	 * 查询单个店铺信息(通用查)
+	 * @param orderMember
+	 * @return
+	 * @throws ServiceException
+	 */
+	public OrderMember getOrderMember(OrderMember orderMember) throws ServiceException{
+		TradeUtil.isAllNull(orderMember);
+		OrderMember member = null;
+		try {
+			member = get(orderMember);
+		} catch (Exception e) {
+			logger.error("getPlatformShop service error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+		return member;
 	}
 	
 }

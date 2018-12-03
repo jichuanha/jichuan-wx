@@ -32,6 +32,7 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private Date startDate;
 	private Date endDate;
 	private Integer attentionType; //绑定状态
+	private String attentionStr;
 	private String platformName;
 	private String shopName;
 	private String memberName;
@@ -39,6 +40,13 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private Long actMoney;
 	private String mobile;
 
+	public String getAttentionStr() {
+		return attentionStr;
+	}
+
+	public void setAttentionStr(String attentionStr) {
+		this.attentionStr = attentionStr;
+	}
 
 	public String getStatusStr() {
 		return statusStr;

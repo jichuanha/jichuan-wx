@@ -20,7 +20,17 @@ public class OrderMember extends DataEntity<OrderMember> {
 	private String areaName;		// area_name
 	private String cityName;		// 乡镇行政编号
 	private String address;		// 详细地址
-	
+	private  String attention_wechat; // 关注的微信号, 1,2,3 格式
+
+
+	public String getAttention_wechat() {
+		return attention_wechat;
+	}
+
+	public void setAttention_wechat(String attention_wechat) {
+		this.attention_wechat = attention_wechat;
+	}
+
 	public OrderMember() {
 		super();
 	}

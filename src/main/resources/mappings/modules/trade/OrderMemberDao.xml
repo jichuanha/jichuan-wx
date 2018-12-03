@@ -14,18 +14,29 @@
 		a.city_name AS "cityName",
 		a.address AS "address",
 		a.create_date AS "createDate",
-		a.update_date AS "updateDate"
+		a.update_date AS "updateDate",
+		a.attention_wechat AS "attentionWechat"
 	</sql>
 	
 	<sql id="orderMemberJoins">
 	</sql>
     
-	<select id="get" resultType="OrderMember">
+	<select id="get" parameterType="com.hzkans.crm.modules.trade.entity.OrderMember"
+			resultType="com.hzkans.crm.modules.trade.entity.OrderMember">
 		SELECT 
 			<include refid="orderMemberColumns"/>
 		FROM t_order_member a
-		<include refid="orderMemberJoins"/>
-		WHERE a.id = #{id}
+		<where>
+			<if test="id != null">
+				AND a.id = #{id}
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND a.nick_name = #{nickName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+		</where>
 	</select>
 	
 	<select id="findList" resultType="OrderMember">

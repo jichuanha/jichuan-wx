@@ -85,6 +85,8 @@ public class OrderController extends BaseController {
 		Integer pageSize = RequestUtils.getInt(request, "page_size", "");
 		//页面类型 1:订单列表  2:订单审核
 		Integer pageType = RequestUtils.getInt(request, "page_type", "");
+		//这个字段是
+		Integer wechatId = RequestUtils.getInt(request, "wechat_id", "");
 
 		//非必传参数
 		String actName = RequestUtils.getString(request, "act_name");
@@ -127,7 +129,7 @@ public class OrderController extends BaseController {
 			pagePara.setCount((currentPage-1)*pageSize);
 			pagePara.setPageSize(pageSize);
 
-			PagePara<JoinActivity> page = joinActivityService.listJoinActivityPage(pagePara);
+			PagePara<JoinActivity> page = joinActivityService.listJoinActivityPage(pagePara, wechatId);
 			return ResponseUtils.getSuccessApiResponseStr(page);
 		} catch (ServiceException e) {
 			logger.error("getOrderList error",e);
