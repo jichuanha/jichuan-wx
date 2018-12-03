@@ -4,6 +4,7 @@
 package com.hzkans.crm.modules.sys.service;
 
 import com.hzkans.crm.common.config.Global;
+import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.security.Digests;
 import com.hzkans.crm.common.security.shiro.session.SessionDAO;
@@ -382,4 +383,16 @@ public class SystemService extends BaseService{
 		return true;
 	}
 
+	/**
+	 * 获取改角色下的人数
+	 * @param id
+	 * @return
+	 */
+	public Integer getRoleNumber(String id) throws Exception {
+		try {
+			return  roleDao.getNumber(id);
+		} catch (Exception e) {
+			throw new Exception(ResponseEnum.S_E_SERVICE_ERROR.getMsg());
+		}
+	}
 }

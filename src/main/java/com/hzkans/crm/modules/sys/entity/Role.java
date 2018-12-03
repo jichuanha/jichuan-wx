@@ -24,6 +24,7 @@ public class Role extends DataEntity<Role> {
 	private String enname;	// 英文名称
 	private String roleType;// 权限类型
 	private String dataScope;// 数据范围
+	private Integer number;  //人数
 	
 	private String oldName; 	// 原角色名称
 	private String oldEnname;	// 原英文名称
@@ -58,6 +59,14 @@ public class Role extends DataEntity<Role> {
 	public Role(User user) {
 		this();
 		this.user = user;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 
 	public String getUseable() {
