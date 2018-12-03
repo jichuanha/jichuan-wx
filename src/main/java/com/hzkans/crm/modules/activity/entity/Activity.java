@@ -5,9 +5,8 @@ package com.hzkans.crm.modules.activity.entity;
 
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
+
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.validation.constraints.NotNull;
 
 
 /**
@@ -31,6 +30,8 @@ public class Activity extends DataEntity<Activity> {
 	private Long perAmount;		// 单笔金额 单位：分
 	private String perAmountStr;		// 单笔金额 单位：分
 	private Integer maxOrderLimit;		// 订单总数
+	private Integer orderCount;
+	private Long version;
 	private Long totalAmount;		// 返利总额 单位分
 	private String totalAmountStr;		// 返利总额 单位分
 	private Integer isAudit;		// 是否需要人工审核 ： 0 -不需要 1-需要
@@ -150,6 +151,22 @@ public class Activity extends DataEntity<Activity> {
 
 	public void setMaxOrderLimit(Integer maxOrderLimit) {
 		this.maxOrderLimit = maxOrderLimit;
+	}
+
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public Long getTotalAmount() {
