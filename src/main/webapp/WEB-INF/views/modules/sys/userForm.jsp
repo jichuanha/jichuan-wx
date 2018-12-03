@@ -4,6 +4,30 @@
 <head>
 	<title>用户管理</title>
 	<meta name="decorator" content="default"/>
+	<style>
+		.my-nav-tabs{
+			background-color: #F7F7F7;
+			margin-bottom: 20px;
+		}
+		.my-nav-tabs li{
+			float: left;
+			font-size: 16px;
+			line-height: 3;
+			margin: 0 30px;
+			padding: 0 20px;
+			text-align: center;
+			color: #000;
+		}
+		.my-nav-tabs li a{
+			color: #000;
+		}
+		.my-nav-tabs li.active a{
+			border-bottom: 5px solid #3F51B5;
+		}
+		.my-nav-tabs li a:hover{
+			background-color: #F7F7F7;
+		}
+	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#no").focus();
@@ -33,7 +57,7 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
+	<ul class="nav my-nav-tabs clearfix">
 		<li><a href="${ctx}/sys/user/list">用户列表</a></li>
 		<li class="active"><a href="${ctx}/sys/user/form?id=${user.id}">用户<shiro:hasPermission name="sys:user:edit">${not empty user.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="sys:user:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>

@@ -5,6 +5,30 @@
 	<title>角色管理</title>
 	<meta name="decorator" content="default"/>
 	<%@include file="/WEB-INF/views/include/treeview.jsp" %>
+	<style>
+		.my-nav-tabs{
+			background-color: #F7F7F7;
+			margin-bottom: 10px;
+		}
+		.my-nav-tabs li{
+			float: left;
+			font-size: 16px;
+			line-height: 3;
+			margin: 0 30px;
+			padding: 0 20px;
+			text-align: center;
+			color: #000;
+		}
+		.my-nav-tabs li a{
+			color: #000;
+		}
+		.my-nav-tabs li.active a{
+			border-bottom: 5px solid #3F51B5;
+		}
+		.my-nav-tabs li a:hover{
+			background-color: #F7F7F7;
+		}
+	</style>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#name").focus();
@@ -97,7 +121,7 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
+	<ul class="nav my-nav-tabs clearfix">
 		<li><a href="${ctx}/sys/role/">角色列表</a></li>
 		<li class="active"><a href="${ctx}/sys/role/form?id=${role.id}">角色<shiro:hasPermission name="sys:role:edit">${not empty role.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="sys:role:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
