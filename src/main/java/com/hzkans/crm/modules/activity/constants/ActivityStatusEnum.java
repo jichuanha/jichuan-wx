@@ -1,5 +1,6 @@
 package com.hzkans.crm.modules.activity.constants;
 
+
 /**
  * 活动状态枚举类
  * @author wsh
@@ -36,5 +37,17 @@ public enum ActivityStatusEnum {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public static ActivityStatusEnum getActivityStatusEnum(Integer code) throws Exception{
+        if(null == code) {
+            throw new Exception("desc is null");
+        }
+        for (ActivityStatusEnum typeEnum : values()) {
+            if(code.equals(typeEnum.code)) {
+                return typeEnum;
+            }
+        }
+        return null;
     }
 }

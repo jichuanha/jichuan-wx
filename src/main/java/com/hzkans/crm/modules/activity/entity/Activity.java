@@ -39,7 +39,17 @@ public class Activity extends DataEntity<Activity> {
 	private String shopNo;		// 店铺编号
 	private String templateLink;		// 模板url
 	private Integer status;		// 活动状态 ：0- 未开始  1-进行中 2-已结束
-	
+	private String statusStr;
+
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
+
 	public Activity() {
 		super();
 	}

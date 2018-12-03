@@ -18,7 +18,8 @@
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
 		a.award AS "award",
-		a.award_grant_status AS "awardGrantStatus"
+		a.award_grant_status AS "awardGrantStatus",
+		a.create_date AS "createDate"
 	</sql>
 
 

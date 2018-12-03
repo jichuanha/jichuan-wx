@@ -4,9 +4,13 @@ import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.PriceUtil;
 import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
+import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
+import com.hzkans.crm.modules.activity.service.ActivityService;
 import com.hzkans.crm.modules.activity.service.PlatformShopService;
 import com.hzkans.crm.modules.trade.constants.AttentionEnum;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
@@ -23,7 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.dao.JoinActivityDao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 活动订单管理Service
@@ -42,6 +49,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	private OrderService orderService;
 	@Autowired
     private OrderMemberService orderMemberService;
+	@Autowired
+	private ActivityService activityService;
 
 	/**
 	 * 获取参加活动订单信息集合
@@ -55,46 +64,17 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		try {
 			para = new PagePara<>();
 			List<JoinActivity> joinActivities = joinActivityDao.selectJoinActivityPage(pagePara);
+			List<JoinActivity> newJoinAct = new ArrayList<>();
 			if(CollectionUtils.isNotEmpty(joinActivities)) {
 				for (JoinActivity ja : joinActivities) {
-					//获取店铺和平台名称
-					PlatformShop platformShop = new PlatformShop();
-					platformShop.setPlatform(ja.getPlatformType());
-					platformShop.setShop(ja.getShopNo());
-					PlatformShop shop = platformShopService.getPlatformShop(platformShop);
-					ja.setPlatformName(shop.getPlatformName());
-					ja.setShopName(shop.getShopName());
-					//订单信息
-					Order order = new Order();
-					order.setId(ja.getOrderId().toString());
-					Order order1 = orderService.getPlatformShop(order);
-					ja.setMemberName(order1.getBuyerName());
-					ja.setMobile(order1.getMobile());
-					ja.setActMoneyStr(PriceUtil.parseFen2YuanStr(ja.getActMoney()));
-					ja.setStatusStr(JoinActivityStatusEnum.getJoinActivityStatusEnum(ja.getStatus()).getDesc());
-					//查询会员是否绑定公众号
-                    OrderMember orderMember = new OrderMember();
-                    orderMember.setNickName(order1.getBuyerName());
-                    OrderMember member = orderMemberService.getOrderMember(orderMember);
-                    if(null == member) {
-                        logger.info("未找到对应的顾客信息",order1.getNickName());
-                        ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
-                    }
-                    if(null != member) {
-						String attentionWechat = member.getAttention_wechat();
-						if(StringUtils.isEmpty(attentionWechat)) {
-							ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
-						}else if(attentionWechat.contains(wechatId.toString())) {
-                            ja.setAttentionStr(AttentionEnum.ORDER_BIND.getDesc());
-                        }else {
-                            ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
-                        }
-                    }
+					JoinActivity joinActivity = initParameter(wechatId.toString(), ja);
+					logger.info("joinActivity {}", JsonUtil.toJson(joinActivity));
+					newJoinAct.add(joinActivity);
                 }
 			}
 			int totalCount = joinActivityDao.selectJoinActivityPageCount(pagePara);
 			para.setCount(totalCount);
-			para.setList(joinActivities);
+			para.setList(newJoinAct);
 		} catch (Exception e) {
 			logger.error("JoinActivityService error",e);
 			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
@@ -105,10 +85,28 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	}
 
 	/**
+	 *	获取参加活动订单信息
+	 * @param joinActivity
+	 * @return
+	 * @throws ServiceException
+	 */
+	public JoinActivity getJoinActivity(JoinActivity joinActivity) throws ServiceException {
+		TradeUtil.isAllNull(joinActivity);
+		JoinActivity joinActivity1 = null;
+		try {
+			joinActivity1 = get(joinActivity);
+		} catch (Exception e) {
+			logger.error("getJoinActivity error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+		return joinActivity1;
+	}
+
+	/**
 	 * 订单审核(同意和拒绝)
 	 * @param joinActivity
 	 */
-	public void auditOrder(JoinActivity joinActivity) throws ServiceException{
+	public void auditOrder(JoinActivity joinActivity) throws ServiceException {
 		TradeUtil.isAllNull(joinActivity);
 		Integer status = joinActivity.getStatus();
 		//审核同意
@@ -124,6 +122,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 
 		}
 		try {
+			//修改表的状态
 			joinActivityDao.updateJoinActivityStatus(joinActivity);
 		} catch (Exception e) {
 			logger.error("auditOrder error",e);
@@ -131,4 +130,93 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		}
 
 	}
+
+	/**
+	 * 获取参加活动订单详情
+	 * @param id
+	 * @param wechatId
+	 * @return
+	 */
+	public Map<String, Object> getOrderDetail(Integer id, Integer wechatId) {
+		TradeUtil.isAllNull(id);
+		Map<String, Object> resultMap = new HashMap<>(2);
+
+		JoinActivity joinActivity = new JoinActivity();
+		joinActivity.setId(id.toString());
+		JoinActivity activity = getJoinActivity(joinActivity);
+		if(null == activity) {
+			logger.error(ResponseEnum.B_E_NOT_FIND_JOIN.getMsg());
+			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_JOIN);
+		}
+		Activity act = null;
+		try {
+			act = activityService.get(activity.getActId().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Activity newAct = new Activity();
+		if(null == act) {
+			logger.error(ResponseEnum.B_E_NOT_FIND_ACT.getMsg());
+			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_ACT);
+		}
+		try {
+			activity.setActMoney(act.getPerAmount());
+			newAct.setName(act.getName());
+			newAct.setStatusStr(ActivityStatusEnum.getActivityStatusEnum(act.getStatus()).getDesc());
+			newAct.setActiveDate(act.getActiveDate());
+			newAct.setInactiveDate(act.getInactiveDate());
+			JoinActivity newJoin = initParameter(wechatId.toString(), activity);
+
+			resultMap.put("act", newAct);
+			resultMap.put("order", newJoin);
+			return resultMap;
+		} catch (Exception e) {
+			logger.error("getOrderDetail error",e);
+			throw new ServiceException(ResponseEnum.S_E_SERVICE_ERROR);
+		}
+
+	}
+
+	public JoinActivity initParameter(String wechatId, JoinActivity ja) throws ServiceException{
+		try {
+			//获取店铺和平台名称
+			PlatformShop platformShop = new PlatformShop();
+			platformShop.setPlatform(ja.getPlatformType());
+			platformShop.setShop(ja.getShopNo());
+			PlatformShop shop = platformShopService.getPlatformShop(platformShop);
+			ja.setPlatformName(shop.getPlatformName());
+			ja.setShopName(shop.getShopName());
+			//订单信息
+			Order order = new Order();
+			order.setId(ja.getOrderId().toString());
+			Order order1 = orderService.getOrder(order);
+			ja.setMemberName(order1.getBuyerName());
+			ja.setMobile(order1.getMobile());
+			ja.setActMoneyStr(PriceUtil.parseFen2YuanStr(ja.getActMoney()));
+			ja.setStatusStr(JoinActivityStatusEnum.getJoinActivityStatusEnum(ja.getStatus()).getDesc());
+			//查询会员是否绑定公众号
+			OrderMember orderMember = new OrderMember();
+			orderMember.setNickName(order1.getBuyerName());
+			OrderMember member = orderMemberService.getOrderMember(orderMember);
+			if(null == member) {
+                logger.info("未找到对应的顾客信息",order1.getNickName());
+                ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
+            }
+			if(null != member) {
+                String attentionWechat = member.getAttention_wechat();
+                if(StringUtils.isEmpty(attentionWechat)) {
+                    ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
+                }else if(attentionWechat.contains(wechatId)) {
+                    ja.setAttentionStr(AttentionEnum.ORDER_BIND.getDesc());
+                }else {
+                    ja.setAttentionStr(AttentionEnum.ORDER_NOT_BIND.getDesc());
+                }
+            }
+            return ja;
+		} catch (Exception e) {
+			logger.error("initParameter error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+	}
+
 }
