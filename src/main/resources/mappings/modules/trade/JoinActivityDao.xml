@@ -60,6 +60,12 @@
 			<if test="data.auditor != null">
 				AND a.auditor = #{data.auditor}
 			</if>
+			<if test="data.platformType != null">
+				AND a.platform_type = #{data.platformType}
+			</if>
+			<if test="data.shopNo != null">
+				AND a.shop_no = #{data.shopNo}
+			</if>
 			<if test="data.rebateType != null">
 				AND b.rebate_type = #{data.rebateType}
 			</if>

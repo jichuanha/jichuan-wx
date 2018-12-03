@@ -68,7 +68,6 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			if(CollectionUtils.isNotEmpty(joinActivities)) {
 				for (JoinActivity ja : joinActivities) {
 					JoinActivity joinActivity = initParameter(wechatId.toString(), ja);
-					logger.info("joinActivity {}", JsonUtil.toJson(joinActivity));
 					newJoinAct.add(joinActivity);
                 }
 			}

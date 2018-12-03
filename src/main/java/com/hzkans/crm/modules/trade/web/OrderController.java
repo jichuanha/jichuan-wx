@@ -1,16 +1,10 @@
 
 package com.hzkans.crm.modules.trade.web;
 
-
-import com.google.common.base.Strings;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
-import com.hzkans.crm.common.utils.DateUtil;
-import com.hzkans.crm.common.utils.JsonUtil;
-import com.hzkans.crm.common.utils.RequestUtils;
-import com.hzkans.crm.common.utils.ResponseUtils;
+import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.constants.PageTypeEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
@@ -125,11 +119,11 @@ public class OrderController extends BaseController {
 				joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());
 			}
 
-			if(!Strings.isNullOrEmpty(startData)) {
+			if(!StringUtils.isEmpty(startData)) {
                 joinActivity.setStartDate(DateUtil.parse(startData, DateUtil.NORMAL_DATETIME_PATTERN));
             }
-			if(!Strings.isNullOrEmpty(endData)) {
-                joinActivity.setStartDate(DateUtil.parse(endData, DateUtil.NORMAL_DATETIME_PATTERN));
+			if(!StringUtils.isEmpty(endData)) {
+                joinActivity.setEndDate(DateUtil.parse(endData, DateUtil.NORMAL_DATETIME_PATTERN));
             }
 			joinActivity.setPlatformType(platformType);
 			joinActivity.setShopNo(shopNo);
