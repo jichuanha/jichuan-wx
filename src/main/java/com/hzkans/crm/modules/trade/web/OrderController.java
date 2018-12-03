@@ -129,7 +129,7 @@ public class OrderController extends BaseController {
 			joinActivity.setShopNo(shopNo);
 			joinActivity.setOrderSn(orderSn);
 			pagePara.setData(joinActivity);
-			pagePara.setCount((currentPage-1)*pageSize);
+			pagePara.setCurrentPage((currentPage-1)*pageSize);
 			pagePara.setPageSize(pageSize);
 
 			PagePara<JoinActivity> page = joinActivityService.listJoinActivityPage(pagePara, wechatId);
