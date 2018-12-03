@@ -173,8 +173,8 @@ public class ActivityController extends BaseController {
 		Integer status = RequestUtils.getInt(request,"status","");
 		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
 		Integer activityType = RequestUtils.getInt(request,"activity_type","");
-		String startDate = RequestUtils.getString(request, true,"start_date", "");
-		String endDate = RequestUtils.getString(request,true, "end_date", "");
+		String startDate = RequestUtils.getString(request, true,"active_date", "");
+		String endDate = RequestUtils.getString(request,true, "inactive_date", "");
 		if (start == null || start == 0) {
 			start = 1;
 		}
