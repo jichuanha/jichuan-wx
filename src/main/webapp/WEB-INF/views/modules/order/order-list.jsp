@@ -213,7 +213,7 @@
     <div class="wrap-header">
         <form id="searchForm"  class="form-search">
             <input id="current_page" name="current_page" type="hidden" value="1"/>
-            <input id="page_size" name="page_size" type="hidden" value="10"/>
+            <input id="page_size" name="page_size" type="hidden" value="1"/>
             <ul class="ul-form">
                 <li><label>活动名称：</label>
                     <input type="text" name="act_name" class="mid-input" id="act_name">
@@ -400,6 +400,7 @@
             $(this).parent().css('display','none');
             var para = $(this).next().attr('data-pram');
             $('#'+para).val('').trigger("change");
+            ajaxFuc();
         })
         $('.current30').click(function () {
             $('#start_data').val(currentDate(30).active_date);
@@ -452,6 +453,66 @@
                 content: $('#preview-layer')
             });
         })
+        // /分页跳转方法
+//         下一页点击事件
+        $('.nextli').live('click',function () {
+            currPage = $('#current_page').val();
+            nextPage = parseInt(currPage) + 1;
+            pageCount  = $('#pageCount').val();
+            pageNum = $('#page_size').val();
+            //当前页码 小于 总数/一页数
+            if(currPage >= Math.ceil(pageCount/pageNum)){
+                return;
+            }
+            else{
+                ajaxFuc(nextPage);
+            }
+        })
+// //    上一页点击事件
+        $('.prevli').live('click',function () {
+            currPage = $('#current_page').val();
+            if(currPage < 2){
+                return;
+            }
+            else{
+                nextPage = currPage - 1;
+                ajaxFuc(nextPage);
+            }
+        })
+//    某一页点击事件
+        $('.page-lis').live('click',function () {
+            nextPage = $(this).children().html();
+            ajaxFuc(nextPage);
+        })
+//    input回车跳转事件
+        $('.curr-page').live('keyup',function (event) {
+            if(event.keyCode == 13){
+                nextPage = $(this).val();
+                if (nextPage != '' && !isNaN(nextPage)) {
+                    ajaxFuc(nextPage);
+                }
+                else{
+                    $.alert({
+                        title: '提示',
+                        content: '请检查后重新输入!'
+                    });
+                    return;
+                }
+            }
+        })
+        $('.btn-link').live('click',function () {
+            nextPage = $('.curr-page').val();
+            if (nextPage != '' && !isNaN(nextPage)) {
+                ajaxFuc(nextPage);
+            }
+            else{
+                $.alert({
+                    title: '提示',
+                    content: '请检查后重新输入!'
+                });
+                return;
+            }
+        })
         function ajaxFuc(nextPage) {
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
@@ -482,16 +543,16 @@
                         var listStr = '';
                         data.list.forEach(function (el,index) {
                             listStr += '<p class="clearfix"><span class="status-name">';
-                            if(el.status == 0){
+                            if(el.act_status == 0){
                                 listStr += '未开始';
                             }
-                            else if(el.status == 1){
+                            else if(el.act_status == 1){
                                 listStr += '进行中';
                             }
-                            else if(el.status == 2){
+                            else if(el.act_status == 2){
                                 listStr += '暂停';
                             }
-                            else if(el.status == 3){
+                            else if(el.act_status == 3){
                                 listStr += '已结束';
                             }
                             listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';

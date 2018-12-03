@@ -40,6 +40,28 @@
 			margin-right: 20px;
 			margin-left: 20px;
 		}
+        .my-table{
+            width: 95%;
+            margin: 0 auto;
+            font-size: 15px;
+        }
+        .my-table th,.my-table td{
+            font-size: 15px;
+            line-height: 2.2;
+            border: 1px solid #F7F7F7;
+            text-align: center;
+        }
+        .my-table th{
+            background-color: #F7F7F7;
+            font-weight: 400;
+        }
+        .my-table td{
+            border: 1px solid rgb(228, 228, 228);
+            font-size: 14px;
+        }
+        .my-table td a{
+            color: #000;
+        }
 	</style>
 </head>
 <body>
@@ -49,7 +71,7 @@
 	</ul>
 	<p class="h3-title"><i class="h3-deco"></i>角色列表</p>
 	<sys:message content="${message}"/>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+	<table id="contentTable" class="my-table">
 		<tr><th>角色名称</th><th>角色描述</th><th>角色人数</th><shiro:hasPermission name="sys:role:edit"><th>操作</th></shiro:hasPermission></tr>
 		<c:forEach items="${list}" var="role">
 			<tr>

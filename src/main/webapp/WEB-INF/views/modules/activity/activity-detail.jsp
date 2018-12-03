@@ -152,7 +152,7 @@
 
 	</ul>
 	<input id="current_page" name="current_page" type="hidden" value="1"/>
-	<input id="page_size" name="page_size" type="hidden" value="1"/>
+	<input id="page_size" name="page_size" type="hidden" value="10"/>
 	<input id="pageCount" type="hidden" value=""/>
 
 	<h3>订单列表</h3>
@@ -169,25 +169,7 @@
 			<li class="mycol-10">评价截图</li>
 		</ul>
 		<div class="lists-show">
-			<p>
-				<span class="start-time">下单时间:2018-11-30 13:17:11 </span>
-				<span class="receive-time">领取时间:2018-11-30 13:17:11</span>
-				<i class="list-right">
-					<a href="order-detail?id=9" class="order-detail">订单详情</a>
-					<input type="hidden" value="el.id">
-				</i>
-			</p>
-			<ul class="order-list clearfix">
-				<li class="mycol-10">已结束</li>
-				<li class="mycol-10">是</li>
-				<li class="mycol-10">lu</li>
-				<li class="mycol-15">店铺名称1</li>
-				<li class="mycol-15" >20181201015489</li>
-				<li class="mycol-10">姓名1</li>
-				<li class="mycol-10">17606549036</li>
-				<li class="mycol-10">200</li>
-				<li class="mycol-10"><a class="img_ifram" href="#" data-src="http://localhost:8181/dongyin-CRM/static/images/bg.jpg">查看详情</a></li>
-			</ul>
+
 		</div>
 	</div>
     <div class="pagination">
@@ -222,7 +204,7 @@ $(function () {
                 else if(data.status == 3){
                     baseStr += '<li>活动状态： 已结束</li>'
                 }
-                baseStr += '<li><i class="import-deco">*</i>活动类型： '+data.activity_type+'</li>'
+                baseStr += '<li><i class="import-deco">*</i>活动类型： 活动类型'+data.activity_type+'</li>'
                 baseStr += '<li>有效时间： '+data.active_date+' 至 '+data.inactive_date+'</li>';
                 baseStr += '<li>订单时效： '+data.order_active_date+' 至 '+data.order_inactive_date+'</li>';
                 baseStr += '<li>URL链接： <input type="text" name="real_name" id="url" style="width: 422px" readonly="readonly" value="'+data.url+'">' +
@@ -253,11 +235,72 @@ $(function () {
                 $.each(shopName,function (key,value) {
                     $('.join-shop').append('<li>'+key+'： '+value+'</li>');
                 })
-
-                // $('.lists-show')
 			}
         }
 	})
+    ajaxFuc();
+    function ajaxFuc() {
+        var dataObject = {};
+        dataObject.act_type = para.activity_type;
+        dataObject.current_page = $('#current_page').val();
+        dataObject.page_size = $('#page_size').val();
+        dataObject.page_type = 1;
+        dataObject.act_name = para.act_name;
+        //待改 公众号
+        dataObject.wechat_id = 1;
+        $.ajax({
+            url:'${ctx}/trade/order/orderListDate',
+            type:'post',
+            data:dataObject,
+            success:function (msg) {
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
+                    $('.lists-show').html('');
+                    var listStr = '';
+                    data.list.forEach(function (el,index) {
+                        listStr += '<p class="clearfix"><span class="status-name">';
+                        if(el.act_status == 0){
+                            listStr += '未开始';
+                        }
+                        else if(el.act_status == 1){
+                            listStr += '进行中';
+                        }
+                        else if(el.act_status == 2){
+                            listStr += '暂停';
+                        }
+                        else if(el.act_status == 3){
+                            listStr += '已结束';
+                        }
+                        listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';
+                        if(el.draw_date){
+                            listStr += '<span class="receive-time">领取时间:'+el.draw_date+'</span>';
+                        }
+                        listStr += ' <i class="list-right">' +
+                            '<a href="${ctx}/trade/order/order_detail?id='+el.id+'&activity_type='+para.activity_type+'" class="order-detail">订单详情</a>' +
+                            '<input type="hidden" value="'+el.id+'">' +
+                            '</i>';
+                        listStr += ' <ul class="order-list clearfix">';
+                        listStr += '<li class="mycol-10">'+el.status_str+'</li>';
+                        listStr += '<li class="mycol-10">'+el.attention_str+'</li>';
+                        listStr += '<li class="mycol-10">'+el.platform_name+'</li>';
+                        listStr += '<li class="mycol-15">'+el.shop_name+'</li>';
+                        listStr += '<li class="mycol-15">'+el.order_sn+'</li>';
+                        listStr += '<li class="mycol-10" title="'+el.member_name+'">'+el.member_name+'</li>';
+                        listStr += '<li class="mycol-10">'+el.mobile+'</li>';
+                        listStr += '<li class="mycol-10">¥ '+el.act_money+'</li>';
+                        listStr += '<li class="mycol-10"><a class="img_ifram" href="#" data-src="'+el.picture_url+'">点击查看</a></li>';
+                        listStr += '</ul>';
+                    })
+                    $('.lists-show').html(listStr);
+                    $('#current_page').val(nextPageSec);
+                    $('#pageCount').val(data.count);
+                    pageList(10,nextPageSec);
+                }
+            }
+        })
+    }
+
     var clipboard = new ClipboardJS('.copy-btn');
     clipboard.on('success', function(e) {
         layer.msg('已复制到粘贴板上');
@@ -289,7 +332,7 @@ $(function () {
             var str = url.substr(1);
             strs = str.split("&");
             for(var i = 0; i < strs.length; i ++) {
-                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
             }
         }
         return theRequest;

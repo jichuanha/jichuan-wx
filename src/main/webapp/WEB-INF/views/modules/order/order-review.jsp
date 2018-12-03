@@ -274,7 +274,7 @@
     <div class="wrap-header">
         <form id="searchForm"  class="form-search">
             <input id="current_page" name="current_page" type="hidden" value="1"/>
-            <input id="page_size" name="page_size" type="hidden" value="10"/>
+            <input id="page_size" name="page_size" type="hidden" value="1"/>
             <ul class="ul-form">
                 <li><label>活动名称：</label>
                     <input type="text" name="act_name" class="mid-input" id="act_name">
@@ -348,14 +348,15 @@
 
         </div>
     </div>
-    <p class="btns-p">
-        <a href="#" id="btnPassAll" class="review-btn">通过</a>
-        <a href="#" id="btnRefuseAll" class="review-btn">拒绝</a>
-    </p>
     <div class="pagination">
         <ul>
         </ul>
     </div>
+    <p class="btns-p">
+        <a href="#" id="btnPassAll" class="review-btn">通过</a>
+        <a href="#" id="btnRefuseAll" class="review-btn">拒绝</a>
+    </p>
+
 </div>
 
 <script>
@@ -451,7 +452,7 @@
             $(this).parent().css('display','none');
             var para = $(this).next().attr('data-pram');
             $('#'+para).val('').trigger("change");
-            // ajaxFuc();
+            ajaxFuc();
         })
         $('.current30').click(function () {
             $('#start_data').val(currentDate(30).active_date);
@@ -492,36 +493,43 @@
             });
         })
         $('#btnPassAll').live('click',function () {
-            var _this = $(this);
-            layer.open({
-                title: '提示'
-                ,area: ['400px', '150px']
-                ,shade: 0
-                ,maxmin: true
-                ,content: '确定通过吗?'
-                ,btn: ['确定', '取消'] //只是为了演示
-                ,yes: function(){
-                    // $('.lists-show .choose-input input')
-                    var tempValue = $('.lists-show .choose-input input');
-                    var ids = [];
-                    for (var i = 0; i < tempValue.length; i++) {
-                        if(tempValue[i].checked){
-                            ids.push($(tempValue[i]).attr('data-id'));
-                        }
-                    }
-                    ids = ids.join(',');
-                    orderHandle(ids,1);
-                    layer.closeAll();
+            var tempValue = $('.lists-show .choose-input input');
+            var ids = [];
+            for (var i = 0; i < tempValue.length; i++) {
+                if(tempValue[i].checked){
+                    ids.push($(tempValue[i]).attr('data-id'));
                 }
-                ,btn2: function(){
-                    layer.closeAll();
-                }
+            }
+            if(ids.length > 0){
+                var _this = $(this);
+                layer.open({
+                    title: '提示'
+                    ,area: ['400px', '150px']
+                    ,shade: 0
+                    ,maxmin: true
+                    ,content: '确定通过吗?'
+                    ,btn: ['确定', '取消'] //只是为了演示
+                    ,yes: function(){
+                        // $('.lists-show .choose-input input')
 
-                ,zIndex: layer.zIndex //重点1
-                ,success: function(layero){
-                    layer.setTop(layero); //重点2
-                }
-            });
+                        ids = ids.join(',');
+                        orderHandle(ids,1);
+                        layer.closeAll();
+                    }
+                    ,btn2: function(){
+                        layer.closeAll();
+                    }
+
+                    ,zIndex: layer.zIndex //重点1
+                    ,success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            }
+            else{
+                layer.msg('请先选择要通过的订单');
+            }
+
         })
         $('.refuse-btn').live('click',function () {
             var _this = $(this);
@@ -553,40 +561,106 @@
             });
         })
         $('#btnRefuseAll').live('click',function () {
-            var _this = $(this);
-            layer.open({
-                title: '提示'
-                ,area: ['400px', '250px']
-                ,shade: 0
-                ,maxmin: true
-                ,content: '<p>确定拒绝吗?<span class="prompt-info"></span></p><textarea class="refuse-reason" placeholder="请输入拒绝理由"></textarea>'
-                ,btn: ['确定', '取消'] //只是为了演示
-                ,yes: function(){
-                    var remark = $('.refuse-reason').val();
-                    if(!remark){
-                        $('.prompt-info').html('*请输入拒绝理由');
-                        return;
-                    }
-                    var tempValue = $('.lists-show .choose-input input');
-                    var ids = [];
-                    for (var i = 0; i < tempValue.length; i++) {
-                        if(tempValue[i].checked){
-                            ids.push($(tempValue[i]).attr('data-id'));
+            var tempValue = $('.lists-show .choose-input input');
+            var ids = [];
+            for (var i = 0; i < tempValue.length; i++) {
+                if(tempValue[i].checked){
+                    ids.push($(tempValue[i]).attr('data-id'));
+                }
+            }
+            if(ids.length > 0){
+                layer.open({
+                    title: '提示'
+                    ,area: ['400px', '250px']
+                    ,shade: 0
+                    ,maxmin: true
+                    ,content: '<p>确定拒绝吗?<span class="prompt-info"></span></p><textarea class="refuse-reason" placeholder="请输入拒绝理由"></textarea>'
+                    ,btn: ['确定', '取消'] //只是为了演示
+                    ,yes: function(){
+                        var remark = $('.refuse-reason').val();
+                        if(!remark){
+                            $('.prompt-info').html('*请输入拒绝理由');
+                            return;
                         }
-                    }
-                    ids = ids.join(',');
-                    orderHandle(ids,2,remark);
-                    layer.closeAll();
-                }
-                ,btn2: function(){
-                    layer.closeAll();
-                }
 
-                ,zIndex: layer.zIndex //重点1
-                ,success: function(layero){
-                    layer.setTop(layero); //重点2
+                        ids = ids.join(',');
+                        orderHandle(ids,2,remark);
+                        layer.closeAll();
+                    }
+                    ,btn2: function(){
+                        layer.closeAll();
+                    }
+
+                    ,zIndex: layer.zIndex //重点1
+                    ,success: function(layero){
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            }
+            else{
+                layer.msg("请先选择要拒绝的订单");
+            }
+
+        })
+        // /分页跳转方法
+//         下一页点击事件
+        $('.nextli').live('click',function () {
+            currPage = $('#current_page').val();
+            nextPage = parseInt(currPage) + 1;
+            pageCount  = $('#pageCount').val();
+            pageNum = $('#page_size').val();
+            //当前页码 小于 总数/一页数
+            if(currPage >= Math.ceil(pageCount/pageNum)){
+                return;
+            }
+            else{
+                ajaxFuc(nextPage);
+            }
+        })
+// //    上一页点击事件
+        $('.prevli').live('click',function () {
+            currPage = $('#current_page').val();
+            if(currPage < 2){
+                return;
+            }
+            else{
+                nextPage = currPage - 1;
+                ajaxFuc(nextPage);
+            }
+        })
+//    某一页点击事件
+        $('.page-lis').live('click',function () {
+            nextPage = $(this).children().html();
+            ajaxFuc(nextPage);
+        })
+//    input回车跳转事件
+        $('.curr-page').live('keyup',function (event) {
+            if(event.keyCode == 13){
+                nextPage = $(this).val();
+                if (nextPage != '' && !isNaN(nextPage)) {
+                    ajaxFuc(nextPage);
                 }
-            });
+                else{
+                    $.alert({
+                        title: '提示',
+                        content: '请检查后重新输入!'
+                    });
+                    return;
+                }
+            }
+        })
+        $('.btn-link').live('click',function () {
+            nextPage = $('.curr-page').val();
+            if (nextPage != '' && !isNaN(nextPage)) {
+                ajaxFuc(nextPage);
+            }
+            else{
+                $.alert({
+                    title: '提示',
+                    content: '请检查后重新输入!'
+                });
+                return;
+            }
         })
         function orderHandle(id,status,message){
             $.ajax({
@@ -684,23 +758,26 @@
                         var listStr = '';
                         data.list.forEach(function (el,index) {
                             listStr += '<p class="clearfix"><span class="status-name">';
-                            if(el.status == 0){
+                            if(el.act_status == 0){
                                 listStr += '未开始';
                             }
-                            else if(el.status == 1){
+                            else if(el.act_status == 1){
                                 listStr += '进行中';
                             }
-                            else if(el.status == 2){
+                            else if(el.act_status == 2){
                                 listStr += '暂停';
                             }
-                            else if(el.status == 3){
+                            else if(el.act_status == 3){
                                 listStr += '已结束';
                             }
                             listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';
+                            if(el.draw_date){
+                                listStr += '<span class="receive-time">领取时间:'+el.draw_date+'</span>';
+                            }
                             listStr += ' <i class="list-right">' +
                                 '<span class="pass-btn">通过</span>' +
                                 '<span class="refuse-btn">拒绝</span>' +
-                                '<a href="${ctx}/trade/order/order_detail?id='+el.id+'" class="order-detail">订单详情</a>' +
+                                '<a href="${ctx}/trade/order/order_detail?id='+el.id+'&activity_type='+para.activity_type+'" class="order-detail">订单详情</a>' +
                                 '<input type="hidden" value="'+el.id+'" class="order-id">' +
                                 '</i>';
                             listStr += ' <ul class="order-list clearfix">';

@@ -132,6 +132,7 @@
 		}
 		.list-time{
 			color: #989898;
+            margin-left: 20px;
 		}
 		.list-prompt,.activity-pause,.activity-cancel{
 			color: #EA4343;
@@ -140,6 +141,8 @@
 		.activity-detail,
 		.activity-contin{
 			color: #5B6ABF;
+            cursor: pointer;
+            margin-right: 10px;
 		}
 		.activity-detail{
 			font-style: normal;
@@ -212,7 +215,7 @@
 	<div class="wrap-header">
 		<form id="searchForm"  class="form-search">
 			<input id="current_page" name="current_page" type="hidden" value="1"/>
-			<input id="page_size" name="page_size" type="hidden" value="10"/>
+			<input id="page_size" name="page_size" type="hidden" value="2"/>
 			<ul class="ul-form">
 				<li><label>活动名称：</label>
 					<input type="text" name="name" class="mid-input" id="name">
@@ -346,7 +349,7 @@
                         if(el.status != 3){
                             listShowEach += '<span class="activity-cancel">取消</span>';
 						}
-                        listShowEach += '<a href="activity-detail?id='+el.id+'" class="activity-detail">活动详情</a>' +
+                        listShowEach += '<a href="activity-detail?id='+el.id+'&activity_type='+para.activity_type+'&act_name='+el.name+'" class="activity-detail">活动详情</a>' +
 							'<input type="hidden" value="'+el.id+'"></i></p>';
                         listShowEach += '<ul class="activity-list clearfix">';
                         if(el.status == 0){

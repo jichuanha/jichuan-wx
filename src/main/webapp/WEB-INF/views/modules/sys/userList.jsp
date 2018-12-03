@@ -40,6 +40,29 @@
 			margin-right: 20px;
 			margin-left: 20px;
 		}
+        .my-table{
+            width: 95%;
+            margin: 0 auto;
+            font-size: 15px;
+        }
+        .my-table th,.my-table td{
+            font-size: 15px;
+            line-height: 2.2;
+            border: 1px solid #F7F7F7;
+            text-align: center;
+        }
+        .my-table th{
+            background-color: #F7F7F7;
+            font-weight: 400;
+        }
+        .my-table td{
+            border: 1px solid rgb(228, 228, 228);
+            font-size: 14px;
+        }
+        .my-table th a,
+        .my-table td a{
+            color: #000;
+        }
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -93,8 +116,8 @@
 	</form:form>
 	<p class="h3-title"><i class="h3-deco"></i>用户列表</p>
 	<sys:message content="${message}"/>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th class="sort-column name">用户姓名</th><th class="sort-column login_name">登录邮箱</th><th>创建时间</th><th>状态</th><%--<th>角色</th> --%><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+	<table id="contentTable" class="my-table">
+		<thead><tr><th class="name">用户姓名</th><th class="login_name">登录邮箱</th><th>创建时间</th><th>状态</th><%--<th>角色</th> --%><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="user">
 			<tr>
