@@ -38,7 +38,8 @@
 		a.update_date AS "updateDate",
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
-		b.per_amount AS "actMoney"
+		b.per_amount AS "actMoney",
+		b.status AS "actStatus"
 	</sql>
 
 	<sql id="base_where">
@@ -49,9 +50,6 @@
 			</if>
 			<if test="data.actType != null">
 				AND a.act_type = #{data.actType}
-			</if>
-			<if test="data.actName != null and data.actName != ''">
-				AND b.name = #{data.actName}
 			</if>
 			<if test="data.status != null">
 				AND a.status = #{data.status}
@@ -64,6 +62,12 @@
 			</if>
 			<if test="data.rebateType != null">
 				AND b.rebate_type = #{data.rebateType}
+			</if>
+			<if test="data.actName != null and data.actName != ''">
+				AND b.name = #{data.actName}
+			</if>
+			<if test="data.actStatus != null">
+				AND b.status = #{data.actStatus}
 			</if>
 			<if test="data.startDate != null and data.endDate != null">
 				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
