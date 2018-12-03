@@ -39,7 +39,17 @@ public class Activity extends DataEntity<Activity> {
 	private String shopNo;		// 店铺编号
 	private String templateLink;		// 模板url
 	private Integer status;		// 活动状态 ：0- 未开始  1-进行中 2-已结束
-	
+	private String statusStr;
+
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
+
 	public Activity() {
 		super();
 	}
@@ -223,5 +233,33 @@ public class Activity extends DataEntity<Activity> {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Activity{" +
+				"activityType=" + activityType +
+				", name='" + name + '\'' +
+				", activeDate=" + activeDate +
+				", inactiveDate=" + inactiveDate +
+				", orderActiveDate=" + orderActiveDate +
+				", orderInactiveDate=" + orderInactiveDate +
+				", url='" + url + '\'' +
+				", isFollow=" + isFollow +
+				", rebateType=" + rebateType +
+				", rebateChannel=" + rebateChannel +
+				", perAmount=" + perAmount +
+				", perAmountStr='" + perAmountStr + '\'' +
+				", maxOrderLimit=" + maxOrderLimit +
+				", orderCount=" + orderCount +
+				", version=" + version +
+				", totalAmount=" + totalAmount +
+				", totalAmountStr='" + totalAmountStr + '\'' +
+				", isAudit=" + isAudit +
+				", shopName='" + shopName + '\'' +
+				", shopNo='" + shopNo + '\'' +
+				", templateLink='" + templateLink + '\'' +
+				", status=" + status +
+				'}';
 	}
 }

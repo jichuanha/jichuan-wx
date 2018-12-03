@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单主表Controller
@@ -178,4 +179,25 @@ public class OrderController extends BaseController {
 	}
 
 
+	/**
+	 * 获取参加活动订单详情
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/orderDetail")
+	@ResponseBody
+	public String orderDetail(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = RequestUtils.getInt(request, "id", "id is null", "");
+        Integer wechatId = RequestUtils.getInt(request, "wechat_id",
+				"wechat_id is null", "");
+
+		try {
+			Map<String, Object> orderDetail = joinActivityService.getOrderDetail(id, wechatId);
+			return ResponseUtils.getSuccessApiResponseStr(orderDetail);
+		} catch (ServiceException e) {
+			logger.error("orderDetail error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
+	}
 }

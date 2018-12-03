@@ -18,7 +18,8 @@
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
 		a.award AS "award",
-		a.award_grant_status AS "awardGrantStatus"
+		a.award_grant_status AS "awardGrantStatus",
+		a.create_date AS "createDate"
 	</sql>
 
 
@@ -37,7 +38,7 @@
 		a.update_date AS "updateDate",
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
-		b.per_amount AS "actMoney",
+		b.per_amount AS "actMoney"
 	</sql>
 
 	<sql id="base_where">
@@ -74,8 +75,11 @@
 		SELECT 
 			<include refid="joinActivityColumns"/>
 		FROM t_join_activity a
-		<include refid="joinActivityJoins"/>
-		WHERE a.id = #{id}
+		<where>
+			<if test="id != null">
+				a.id = #{id}
+			</if>
+		</where>
 	</select>
 	
 	<select id="findList" resultType="JoinActivity">
@@ -246,10 +250,5 @@
 			</if>
 		</where>
 	</update>
-	
-	<update id="delete">
-		DELETE FROM t_join_activity
-		WHERE id = #{id}
-	</update>
-	
+
 </mapper>

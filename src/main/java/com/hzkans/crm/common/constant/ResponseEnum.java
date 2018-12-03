@@ -70,6 +70,8 @@ public enum ResponseEnum {
     B_E_PASSWORD_IS_NULL(40030,0,"密码为空"),
     B_E_SEND_MAIL_ERROR(40031,0,"发送邮件失败"),
     B_E_MESSAGE_IS_NULL(40032,0,"审核信息不能为空"),
+    B_E_NOT_FIND_ACT(40032,0,"未找到对应的活动"),
+    B_E_NOT_FIND_JOIN(40032,0,"未找到对应的参加信息"),
     /**
      * 添加失败
      */
