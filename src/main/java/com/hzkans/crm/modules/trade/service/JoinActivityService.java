@@ -43,6 +43,12 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	@Autowired
     private OrderMemberService orderMemberService;
 
+	/**
+	 * 获取参加活动订单信息集合
+	 * @param pagePara
+	 * @param wechatId
+	 * @return
+	 */
 	public PagePara<JoinActivity> listJoinActivityPage(PagePara<JoinActivity> pagePara, Integer wechatId) {
 		TradeUtil.isAllNull(pagePara);
 		PagePara<JoinActivity> para = null;
@@ -98,4 +104,31 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 
 	}
 
+	/**
+	 * 订单审核(同意和拒绝)
+	 * @param joinActivity
+	 */
+	public void auditOrder(JoinActivity joinActivity) throws ServiceException{
+		TradeUtil.isAllNull(joinActivity);
+		Integer status = joinActivity.getStatus();
+		//审核同意
+		if(JoinActivityStatusEnum.PERSONAL_AGREE.getCode().equals(status)) {
+			//TODO 同意后的逻辑处理还没有明确,稍后完成
+		}
+		//审核拒接 必须有拒绝原因
+		if(JoinActivityStatusEnum.PERSONAL_DISAGREE.getCode().equals(status)) {
+			if(StringUtils.isEmpty(joinActivity.getMessage())) {
+				logger.error("message is null");
+				throw new ServiceException(ResponseEnum.B_E_MESSAGE_IS_NULL);
+			}
+
+		}
+		try {
+			joinActivityDao.updateJoinActivityStatus(joinActivity);
+		} catch (Exception e) {
+			logger.error("auditOrder error",e);
+			throw new ServiceException(ResponseEnum.B_E_UPDATE_STATUS_FAIL);
+		}
+
+	}
 }

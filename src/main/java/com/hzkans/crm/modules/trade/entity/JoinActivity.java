@@ -3,7 +3,11 @@ package com.hzkans.crm.modules.trade.entity;
 import javax.validation.constraints.NotNull;
 
 import com.hzkans.crm.common.persistence.DataEntity;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
@@ -39,6 +43,34 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private String actMoneyStr;
 	private Long actMoney;
 	private String mobile;
+	private List<String> ids = new ArrayList<>();
+	private String award;
+	private Integer awardGrantStatus;
+
+
+	public String getAward() {
+		return award;
+	}
+
+	public void setAward(String award) {
+		this.award = award;
+	}
+
+	public Integer getAwardGrantStatus() {
+		return awardGrantStatus;
+	}
+
+	public void setAwardGrantStatus(Integer awardGrantStatus) {
+		this.awardGrantStatus = awardGrantStatus;
+	}
+
+	public List<String> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<String> ids) {
+		this.ids = ids;
+	}
 
 	public String getAttentionStr() {
 		return attentionStr;

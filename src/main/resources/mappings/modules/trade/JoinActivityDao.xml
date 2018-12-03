@@ -16,7 +16,9 @@
 		a.pay_data AS "payData",
 		a.update_date AS "updateDate",
 		a.platform_type AS "platformType",
-		a.shop_no AS "shopNo"
+		a.shop_no AS "shopNo",
+		a.award AS "award",
+		a.award_grant_status AS "awardGrantStatus"
 	</sql>
 
 
@@ -35,7 +37,34 @@
 		a.update_date AS "updateDate",
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
-		b.per_amount AS "actMoney"
+		b.per_amount AS "actMoney",
+	</sql>
+
+	<sql id="base_where">
+		<where>
+			a.act_id = b.id
+			<if test="data.orderSn != null and data.orderSn != ''">
+				AND a.order_sn = #{data.orderSn}
+			</if>
+			<if test="data.actType != null">
+				AND a.act_type = #{data.actType}
+			</if>
+			<if test="data.actName != null and data.actName != ''">
+				AND b.name = #{data.actName}
+			</if>
+			<if test="data.status != null">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.pictureUrl != null and data.pictureUrl != ''">
+				AND a.picture_url = #{data.pictureUrl}
+			</if>
+			<if test="data.auditor != null">
+				AND a.auditor = #{data.auditor}
+			</if>
+			<if test="data.startDate != null and data.endDate != null">
+				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+		</where>
 	</sql>
 	
 	<sql id="joinActivityJoins">
@@ -177,30 +206,7 @@
 			parameterType="com.hzkans.crm.common.persistence.PagePara">
 		SELECT <include refid="joinActivity"/>
 		FROM t_join_activity a, t_activity b
-		<where>
-			a.act_id = b.id
-			<if test="data.orderSn != null and data.orderSn != ''">
-				AND a.order_sn = #{data.orderSn}
-			</if>
-			<if test="data.actType != null">
-				AND a.act_type = #{data.actType}
-			</if>
-			<if test="data.actName != null and data.actName != ''">
-				AND b.name = #{data.actName}
-			</if>
-			<if test="data.status != null">
-				AND a.status = #{data.status}
-			</if>
-			<if test="data.pictureUrl != null and data.pictureUrl != ''">
-				AND a.picture_url = #{data.pictureUrl}
-			</if>
-			<if test="data.auditor != null">
-				AND a.auditor = #{data.auditor}
-			</if>
-			<if test="data.startDate != null and data.endDate != null">
-				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
-			</if>
-		</where>
+		<include refid="base_where" />
 		<if test="currentPage != null and pageSize != null">
 			limit #{currentPage},#{pageSize}
 		</if>
@@ -209,31 +215,37 @@
 	<select id="selectJoinActivityPageCount" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
 		SELECT count(*)
 		FROM t_join_activity a, t_activity b
+		<include refid="base_where" />
+	</select>
+
+	<update id="updateJoinActivityStatus" parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity">
+		UPDATE t_join_activity
+		<set>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="message != null and message != ''">
+				message = #{message},
+			</if>
+			<if test="updateDate != null">
+				update_date = now(),
+			</if>
+			<if test="award != null">
+				award = #{award},
+			</if>
+			<if test="awardGrantStatus != null">
+				award_grant_status = #{awardGrantStatus},
+			</if>
+		</set>
 		<where>
-			a.act_id = b.id
-			<if test="data.orderSn != null and data.orderSn != ''">
-				AND a.order_sn = #{data.orderSn}
-			</if>
-			<if test="data.actType != null">
-				AND a.act_type = #{data.actType}
-			</if>
-			<if test="data.actName != null and data.actName != ''">
-				AND b.name = #{data.actName}
-			</if>
-			<if test="data.status != null">
-				AND a.status = #{data.status}
-			</if>
-			<if test="data.pictureUrl != null and data.pictureUrl != ''">
-				AND a.picture_url = #{data.pictureUrl}
-			</if>
-			<if test="data.auditor != null">
-				AND a.auditor = #{data.auditor}
-			</if>
-			<if test="data.startDate != null and data.endDate != null">
-				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
+			<if test="ids != null and ids.size > 0">
+				and id in
+				<foreach collection="ids" open="(" close=")" separator="," item="item" index="index">
+					#{item}
+				</foreach>
 			</if>
 		</where>
-	</select>
+	</update>
 	
 	<update id="delete">
 		DELETE FROM t_join_activity

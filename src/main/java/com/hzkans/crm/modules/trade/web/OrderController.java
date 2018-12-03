@@ -6,9 +6,11 @@ import com.google.common.base.Strings;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.DateUtil;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
+import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.constants.PageTypeEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 订单主表Controller
@@ -137,6 +142,40 @@ public class OrderController extends BaseController {
 		}
 	}
 
+
+	/**
+	 * 订单审核
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("/orderAudit")
+	@ResponseBody
+	public String orderAudit(HttpServletRequest request, HttpServletResponse response) {
+		/*Long memberId = Long.parseLong(UserUtils.getUser().getNo());
+		logger.info("memberId {}", memberId);*/
+		Long memberId = 17L;
+		logger.info("memberId {}", memberId);
+		//必传参数 ids:格式  1,2,3
+		String ids = RequestUtils.getString(request, "id", "id is null");
+		Integer status = RequestUtils.getInt(request, "status", "");
+		//非必传参数
+		String message = RequestUtils.getString(request, "message");
+		try {
+			String[] split = ids.split(",");
+			List<String> strings = Arrays.asList(split);
+			logger.info("stings {}", JsonUtil.toJson(strings));
+			JoinActivity joinActivity = new JoinActivity();
+			joinActivity.setStatus(status);
+			joinActivity.setIds(strings);
+			joinActivity.setMessage(message);
+			joinActivity.setUpdateDate(new Date());
+			joinActivityService.auditOrder(joinActivity);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (ServiceException e) {
+			logger.error("orderAudit error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode() ,e.getServiceMessage());
+		}
+	}
 
 
 }

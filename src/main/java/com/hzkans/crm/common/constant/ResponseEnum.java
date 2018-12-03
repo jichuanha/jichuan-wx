@@ -69,7 +69,7 @@ public enum ResponseEnum {
     B_E_VERIFY_LINK_IS_ERROE(40029,0,"链接不正确"),
     B_E_PASSWORD_IS_NULL(40030,0,"密码为空"),
     B_E_SEND_MAIL_ERROR(40031,0,"发送邮件失败"),
-
+    B_E_MESSAGE_IS_NULL(40032,0,"审核信息不能为空"),
     /**
      * 添加失败
      */
@@ -83,7 +83,7 @@ public enum ResponseEnum {
     DATEBASE_SAVE_ERROR(41008,0,"数据库保存失败"),
     B_E_MODIFY_ERROR(41009, 0, "修改失败"),
     B_E_ALERADY_EXIST(41010, 0, "微信公众号名称已存在"),
-    DATEBASE_QUERY_ERROR(41011,0,"数据库保存失败"),
+    DATEBASE_QUERY_ERROR(41011,0,"数据库查询失败"),
     B_E_FAILED_TO_GET(41012, 0, "活动查询失败"),
     B_E_REQUIRED_NOT_FILLED(41013, 0, "有必填选项未填"),
     B_E_ACTIVITY_EXIST(41014, 0, "活动已存在"),
