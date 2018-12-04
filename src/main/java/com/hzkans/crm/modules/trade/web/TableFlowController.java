@@ -6,9 +6,12 @@ import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
+import com.hzkans.crm.modules.trade.constants.OrderStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
+import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
+import com.hzkans.crm.modules.trade.service.OrderService;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -44,6 +47,8 @@ public class TableFlowController extends BaseController {
 
 	@Autowired
 	private TableFlowService tableFlowService;
+	@Autowired
+	private OrderService orderService;
 
 
 	@RequestMapping("/tablePage")
@@ -185,7 +190,43 @@ public class TableFlowController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(tablePages);
 		} catch (ServiceException e) {
 			logger.error("tableShow error",e);
-			throw new ServiceException(e.getCode(), e.getServiceMessage());
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
 		}
 	}
+
+
+	/**
+	 * 订单管理中的订单发布
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/orderIssue")
+	@ResponseBody
+	public String orderIssue(HttpServletRequest request, HttpServletResponse response) {
+
+		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
+		TableFlow tableFlow = new TableFlow();
+		tableFlow.setId(tableId.toString());
+		TableFlow table = tableFlowService.getTable(tableFlow);
+
+		if(null == table) {
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
+		}
+		Integer status = table.getStatus();
+		if(!TableFlowStatusEnum.TIMING_SUCCESS.getCode().equals(status)) {
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_STATUS_ERROR);
+		}
+		//更新这个表所有订单的状态为审核成功
+		try {
+			Order order = new Order();
+			order.setTableId(tableId);
+			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
+			orderService.update(order);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (ServiceException e) {
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
+	}
+
 }

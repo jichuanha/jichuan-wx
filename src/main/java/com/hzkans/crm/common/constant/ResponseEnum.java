@@ -74,6 +74,8 @@ public enum ResponseEnum {
     B_E_NOT_FIND_JOIN(40032,0,"未找到对应的参加信息"),
     B_E_TYPE_ERROR(40033,0,"只能导入 xls,xlsx 结尾的表格"),
     B_E_TYPE_DATA_ERROR(40034,0,"导入内容格式有误"),
+    B_E_TABLE_NOT_EXIST(40034,0,"表格不存在"),
+    B_E_TABLE_STATUS_ERROR(40035,0,"表格不在待发布状态"),
     /**
      * 添加失败
      */
