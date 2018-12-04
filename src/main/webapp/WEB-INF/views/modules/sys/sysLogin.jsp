@@ -126,7 +126,7 @@
 		</div>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录" id="login-btn"/>&nbsp;&nbsp;
 		<div id="themeSwitch" class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>
+			<%--<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>--%>
 			<ul class="dropdown-menu">
 			  <c:forEach items="${fns:getDictList('theme')}" var="dict"><li><a href="#" onclick="location='${pageContext.request.contextPath}/theme/${dict.value}?url='+location.href">${dict.label}</a></li></c:forEach>
 			</ul>

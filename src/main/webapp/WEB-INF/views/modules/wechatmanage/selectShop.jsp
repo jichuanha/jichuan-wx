@@ -111,13 +111,12 @@
                             '        <span class="set" data-id='+ item.id +'></span>' +
                             '      </div>')
                     })
-                    console.log(_html);
                     $('.shop-wrap').html(_html.join(''));
                     $('.item').click(function (e) {
                         if(e.target.className == 'set') {
                             window.location = '${ctx}/wechat/link_update?id='+$(this).data('id');
                         }else{
-                            window.parent.location = '${ctx}';
+                            window.parent.location = '${ctx}/wechat/link_home_page?id='+$(this).data('id');
                         }
                     })
                 }
