@@ -315,7 +315,7 @@
                                 $('#platform_type').append('<option value="'+el.platform+'">'+el.platform_name+'</option>')
                                 shopStr[el.platform] = [];
                             }
-                            shopStr[el.platform].push({name:el.shop_name,id:el.id});
+                            shopStr[el.platform].push({name:el.shop_name,id:el.shop});
                         })
                     })
                 }
@@ -325,20 +325,14 @@
         $('#platform_type').change(function () {
             $('#shop_no').html('<option value="">请选择</option>');
             var shopValue =  $(this).val();
-            if(shopValue == ""){
-                $('#shop_no').val('').trigger("change");
-            }
-            else{
-                $.each(shopStr,function (key,value) {
-                    if(key == shopValue){
-                        value.forEach(function (el) {
-                            $('#shop_no').append('<option value="'+el.id+'">'+el.name+'</option>')
-
-                        })
-                    }
-                })
-            }
-            // console.log($(this).val())
+            $.each(shopStr,function (key,value) {
+                if(key == shopValue){
+                    value.forEach(function (el) {
+                        $('#shop_no').append('<option value="'+el.id+'">'+el.name+'</option>')
+                    })
+                }
+            })
+            $('#shop_no').val('').trigger("change");
         })
         var searchCon = [{
             name:'活动名称',
