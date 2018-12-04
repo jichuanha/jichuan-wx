@@ -1,7 +1,5 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
-package com.hzkans.crm.modules.pswmanage.web;
+
+package com.hzkans.crm.modules.sys.web;
 
 import com.google.common.base.Strings;
 import com.hzkans.crm.common.config.Global;
@@ -9,7 +7,7 @@ import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.pswmanage.service.ChangePasswordService;
+import com.hzkans.crm.modules.sys.service.ChangePasswordService;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.SystemService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;

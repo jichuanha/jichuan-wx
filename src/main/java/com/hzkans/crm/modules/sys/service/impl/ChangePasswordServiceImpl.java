@@ -1,16 +1,16 @@
-package com.hzkans.crm.modules.pswmanage.service.impl;
+package com.hzkans.crm.modules.sys.service.impl;
 
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.utils.SendMailUtil;
-import com.hzkans.crm.modules.pswmanage.dao.ChangePasswordDAO;
-import com.hzkans.crm.modules.pswmanage.entity.ChangePasswordDO;
-import com.hzkans.crm.modules.pswmanage.service.ChangePasswordService;
-import com.hzkans.crm.modules.pswmanage.utils.MD5Util;
+import com.hzkans.crm.modules.sys.dao.ChangePasswordDAO;
+import com.hzkans.crm.modules.sys.entity.ChangePasswordDO;
 import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.service.ChangePasswordService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
             String key = new StringBuilder().append(userName).append(TOKEN_SEPRATOR).append(date)
                     .append(TOKEN_SEPRATOR).append(validataCode).toString();
             //数字签名
-            String digitalSignature = MD5Util.getMD5(key);
+            String digitalSignature = DigestUtils.md5Hex(key);
             String resetPassHref = "?cid=" + changePasswordDO.getId() +
                     "&user_id=" + id + "&sid=" + digitalSignature + "&user_name=" + userName;
             // 设置邮件内容
@@ -105,7 +105,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
             String key = new StringBuilder().append(userName).append(TOKEN_SEPRATOR).append(date)
                     .append(TOKEN_SEPRATOR).append(currentResult.get(0).getValidataCode()).toString();
             //数字签名
-            String digitalSignature = MD5Util.getMD5(key);
+            String digitalSignature = DigestUtils.md5Hex(key);
             if (!digitalSignature.equals(sid)) {
                 return ResponseEnum.B_E_VERIFY_LINK_IS_ERROE.getMsg();
             } else {

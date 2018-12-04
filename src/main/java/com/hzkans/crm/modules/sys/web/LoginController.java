@@ -178,7 +178,7 @@ public class LoginController extends BaseController {
 ////			request.getSession().setAttribute("aaa", "aa");
 ////		}
 //		System.out.println("==========================b");
-		return "modules/sys/sysIndex";
+		return "redirect:" + adminPath + "/wechat/link_index";
 	}
 	
 	/**

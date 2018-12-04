@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.pswmanage.entity;
+package com.hzkans.crm.modules.sys.entity;
 
 import java.util.Date;
 /**

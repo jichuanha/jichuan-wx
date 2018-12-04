@@ -17,7 +17,21 @@
 			<include refid="activityColumns"/>
 		FROM t_platform_shop a
 		<include refid="activityJoins"/>
-		WHERE
+		<where>
+			a.del_flag = "0"
+			<if test="platformName != null and platformName != ''">
+				and a.platform_name = #{platformName}
+			</if>
+			<if test="shopName != null and shopName != ''">
+				and a.shop_name = #{shopName}
+			</if>
+			<if test="platform != null">
+				and a.platform = #{platform}
+			</if>
+			<if test="shop != null">
+				and a.shop = #{shop}
+			</if>
+		</where>
 			a.del_flag = "0"
 	</select>
 
@@ -35,5 +49,19 @@
 			</if>
 		</where>
 	</select>
-	
+	<insert id="insert">
+		INSERT INTO t_platform_shop(
+		platform,
+		platform_name,
+		shop,
+		shop_name,
+		del_flag,
+		) VALUES (
+		#{paltform},
+		#{paltformName},
+		#{shop},
+		#{shopName},
+		#{delFlag},
+		)
+	</insert>
 </mapper>

@@ -7,6 +7,7 @@ import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.activity.dao.PlatformShopDao;
+import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class PlatformShopService extends CrudService<PlatformShopDao, PlatformShop> {
-	
+
+	@Override
 	public List<PlatformShop> findList(PlatformShop platformShop) {
 		return super.findList(platformShop);
 	}
@@ -45,4 +47,9 @@ public class PlatformShopService extends CrudService<PlatformShopDao, PlatformSh
 		return shop;
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public void save(PlatformShop PlatformShop) {
+		super.save(PlatformShop);
+	}
 }
