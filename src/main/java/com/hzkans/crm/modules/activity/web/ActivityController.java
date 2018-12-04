@@ -312,6 +312,7 @@ public class ActivityController extends BaseController {
 		try {
 			PlatformShop platformShop1 = new PlatformShop();
 			platformShop1.setShopName(shopName);
+			platformShop1.setPlatform(platform);
 			platformShop1.setDelFlag("0");
 			platformShopList = platformShopService.findList(platformShop1);
 		} catch (Exception e) {
