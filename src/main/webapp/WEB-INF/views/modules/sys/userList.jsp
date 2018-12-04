@@ -124,10 +124,9 @@
 
 			<li><label>状    态：</label>
 				<form:select id="loginFlag" path="loginFlag" class="input-medium">
-					<form:option value="" label=""/>
+					<form:option value="" label="请选择"/>
 					<form:option value="0" label="禁用" htmlEscape="false"/>
 					<form:option value="1" label="正常" htmlEscape="false"/>
-					<%--<form:options items="${typeList}" htmlEscape="false"/>--%>
 				</form:select>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/></li>
