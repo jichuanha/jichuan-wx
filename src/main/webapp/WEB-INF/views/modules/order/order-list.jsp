@@ -315,7 +315,7 @@
                                 $('#platform_type').append('<option value="'+el.platform+'">'+el.platform_name+'</option>')
                                 shopStr[el.platform] = [];
                             }
-                            shopStr[el.platform].push({name:el.shop_name,id:el.id});
+                            shopStr[el.platform].push({name:el.shop_name,id:el.shop});
                         })
                     })
                 }
@@ -329,11 +329,10 @@
                 if(key == shopValue){
                     value.forEach(function (el) {
                         $('#shop_no').append('<option value="'+el.id+'">'+el.name+'</option>')
-
                     })
                 }
             })
-            // console.log($(this).val())
+            $('#shop_no').val('').trigger("change");
         })
         var searchCon = [{
             name:'活动名称',
@@ -376,7 +375,6 @@
             $.each(dataSer,function(i,item){
                 dataObject[item.name] = item.value;
             });
-            console.log(dataObject);
             addSearch(dataObject);
             ajaxFuc();
         })
@@ -397,9 +395,22 @@
             })
         }
         $('.search-close').live('click',function () {
-            $(this).parent().css('display','none');
             var para = $(this).next().attr('data-pram');
-            $('#'+para).val('').trigger("change");
+            if(para == 'platform_type'){
+                $(this).parent().css('display','none');
+                var spans =  $('.search-cond');
+                $.each(spans,function (index,selector) {
+                    if($(selector).find('input').attr('data-pram') == 'shop_no'){
+                        $(selector).css('display','none');
+                    }
+                })
+                $('#platform_type').val('').trigger("change");
+                $('#shop_no').val('').trigger("change");
+            }
+            else{
+                $(this).parent().css('display','none');
+                $('#'+para).val('').trigger("change");
+            }
             ajaxFuc();
         })
         $('.current30').click(function () {

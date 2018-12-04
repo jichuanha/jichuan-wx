@@ -32,7 +32,6 @@
 				and a.shop = #{shop}
 			</if>
 		</where>
-			a.del_flag = "0"
 	</select>
 
 	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.PlatformShop"
@@ -55,13 +54,13 @@
 		platform_name,
 		shop,
 		shop_name,
-		del_flag,
+		del_flag
 		) VALUES (
 		#{paltform},
 		#{paltformName},
 		#{shop},
 		#{shopName},
-		#{delFlag},
+		#{delFlag}
 		)
 	</insert>
 </mapper>

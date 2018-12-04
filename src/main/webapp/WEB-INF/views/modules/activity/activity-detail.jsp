@@ -222,8 +222,8 @@ $(function () {
                 marketStr += '<li><i class="import-deco">*</i>返利渠道： 红包领取</li>';
                 marketStr += '<li><i class="import-deco">*</i>返利类型： 固定金额</li>';
                 marketStr += '<li><i class="import-deco">*</i>单笔金额： ¥ '+data.per_amount_str+'</li>';
-                marketStr += '<li>活动订单： 1000/50</li>';
-                marketStr += '<li>活动金额： 1000/50</li>';
+                marketStr += '<li>活动订单： '+(data.max_order_limit == 0?"-":data.max_order_limit)+' / '+data.order_count+'</li>';
+                marketStr += '<li>活动金额： '+(data.total_amount == 0?"-":"¥ "+data.total_amount/100)+' / ¥ '+(data.order_count*data.per_amount/100)+'</li>';
                 if(data.is_audit == 0){
                     marketStr += '<li><i class="import-deco">*</i>人工审核： 否</li>'
 				}
