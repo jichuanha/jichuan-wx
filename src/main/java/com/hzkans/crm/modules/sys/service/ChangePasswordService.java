@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.pswmanage.service;
+package com.hzkans.crm.modules.sys.service;
 
 import com.hzkans.crm.modules.sys.entity.User;
 import org.springframework.stereotype.Service;
