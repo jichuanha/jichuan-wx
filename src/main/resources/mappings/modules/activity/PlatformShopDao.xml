@@ -56,11 +56,13 @@
 		shop_name,
 		del_flag
 		) VALUES (
-		#{paltform},
-		#{paltformName},
+		#{platform},
+		#{platformName},
 		#{shop},
 		#{shopName},
 		#{delFlag}
 		)
 	</insert>
+	<update id="update">
+	</update>
 </mapper>

@@ -69,6 +69,20 @@ public class TimingUpdateActivityStatusService {
                         activityService.update(activity1);
                         logger.info("已更改活动"+_activity.getName()+"的状态");
                     }
+
+                    Long perAmount = _activity.getPerAmount();
+                    Integer maxOrderLimit = _activity.getMaxOrderLimit();
+                    Integer orderCount = _activity.getOrderCount();
+                    Long totalAmount = _activity.getTotalAmount();
+
+                    Boolean boo = ((0 != maxOrderLimit && maxOrderLimit < orderCount)
+                            || (0L != totalAmount && totalAmount < (perAmount * orderCount)))
+                            && ActivityStatusEnum.ACTIVING.getCode().equals(status);
+                    if (boo){
+                        activity1.setStatus(ActivityStatusEnum.ENDED.getCode());
+                        activityService.update(activity1);
+                        logger.info("因金额或数量已过限制，则迫使"+_activity.getName()+"活动结束");
+                    }
                 }
             }
         } catch (Exception e) {
