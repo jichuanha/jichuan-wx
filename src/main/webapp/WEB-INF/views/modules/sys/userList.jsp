@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
 	<title>用户管理</title>
@@ -63,6 +65,16 @@
         .my-table td a{
             color: #000;
         }
+		.my-table td span{
+			color: red;
+		}
+		.ul-form li{
+			width: 33%;
+		}
+		.ul-form .btns {
+			/*float: none;*/
+
+		}
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -109,7 +121,15 @@
 		<ul class="ul-form">
 			<li><label>用户姓名：</label><form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/></li>
 			<li><label>登录邮箱：</label><form:input path="loginName" htmlEscape="false" maxlength="50" class="input-medium"/></li>
-			<%--<li><label>登录邮箱：</label><form:input path="status" htmlEscape="false" maxlength="50" class="input-medium"/></li>--%>
+
+			<li><label>状    态：</label>
+				<form:select id="loginFlag" path="loginFlag" class="input-medium">
+					<form:option value="" label=""/>
+					<form:option value="0" label="禁用" htmlEscape="false"/>
+					<form:option value="1" label="正常" htmlEscape="false"/>
+					<%--<form:options items="${typeList}" htmlEscape="false"/>--%>
+				</form:select>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -123,8 +143,8 @@
 			<tr>
 				<td>${user.name}</td>
 				<td><a href="${ctx}/sys/user/form?id=${user.id}">${user.loginName}</a></td>
-				<td>${user.createDate}</td>
-				<td>${user.loginFlag eq 0?"禁用":"正常"}</td><%--
+				<td><fmt:formatDate value="${user.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td>${user.loginFlag eq 0?"<span>禁用</span>":"正常"}</td><%--
 				<td>${user.roleNames}</td> --%>
 				<shiro:hasPermission name="sys:user:edit"><td>
     				<a href="${ctx}/sys/user/form?id=${user.id}">修改</a>
