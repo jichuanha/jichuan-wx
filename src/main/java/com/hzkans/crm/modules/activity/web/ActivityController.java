@@ -103,7 +103,9 @@ public class ActivityController extends BaseController {
 
 		//必填不能为空
 		if (null == name || null == activityType || null == isFollow || null == rebateChannel
-				|| null == rebateType || null == perAmount || null == isAudit){
+				|| null == rebateType || null == perAmount || null == isAudit
+				|| null == activeDate || null == inactiveDate || null == orderActiveDate
+				|| null == orderInactiveDate){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_REQUIRED_NOT_FILLED);
 		}
 		//不能添加已存在的活动
@@ -263,6 +265,72 @@ public class ActivityController extends BaseController {
 		} catch (Exception e) {
 			logger.error("delete activity is error",e);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_DELETE);
+		}
+	}
+
+	/**
+	 * 创建店铺
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/saveShop")
+	@ResponseBody
+	public String saveShop(HttpServletRequest request) {
+
+		Integer platform = RequestUtils.getInt(request,"platform","");
+		String platformName = RequestUtils.getString(request, false, "platform_name", "");
+		String shopName = RequestUtils.getString(request, false, "shop_name", "");
+		Integer shop = 1;
+		List<Integer> shopList = new ArrayList<>();
+		List<PlatformShop> platformShopList;
+
+		//查询是否有这个平台添加过
+		try {
+			PlatformShop platformShop = new PlatformShop();
+			platformShop.setPlatform(platform);
+			platformShop.setDelFlag("0");
+			platformShopList = platformShopService.findList(platformShop);
+
+			//有平台添加过则查出这个平台店铺id的最大值
+			if (CollectionUtils.isNotEmpty(platformShopList)){
+				for (PlatformShop platformShop1 : platformShopList){
+					shopList.add(platformShop1.getShop());
+				}
+				//若已存在，则最大值+1就是所要添加shop的id；否则取默认值1
+				shop = Collections.max(shopList) + 1;
+			}
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
+		}
+
+		//不能添加已存在的店铺
+		try {
+			PlatformShop platformShop1 = new PlatformShop();
+			platformShop1.setShopName(shopName);
+			platformShop1.setDelFlag("0");
+			platformShopList = platformShopService.findList(platformShop1);
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
+		}
+		if (CollectionUtils.isNotEmpty(platformShopList)){
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SHOP_EXIST);
+		}
+
+		//添加店铺
+		try {
+			PlatformShop platformShop = new PlatformShop();
+			platformShop.setPlatform(platform);
+			platformShop.setPlatformName(platformName);
+			platformShop.setShop(shop);
+			platformShop.setShopName(shopName);
+			platformShop.setDelFlag("0");
+			platformShopService.save(platformShop);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (Exception e) {
+			logger.error("save platform shop is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_ADD);
 		}
 	}
 

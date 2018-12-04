@@ -90,6 +90,7 @@ public enum ResponseEnum {
     B_E_REQUIRED_NOT_FILLED(41013, 0, "有必填选项未填"),
     B_E_ACTIVITY_EXIST(41014, 0, "活动已存在"),
     B_E_UPDATE_STATUS_FAIL(41015, 0, "更改状态失败"),
+    B_E_SHOP_EXIST(41016, 0, "店铺已存在"),
 
 
     /**
