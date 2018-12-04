@@ -62,6 +62,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		TradeUtil.isAllNull(pagePara);
 		PagePara<JoinActivity> para = null;
 		try {
+			logger.info(" pagePara {}",JsonUtil.toJson(pagePara));
 			para = new PagePara<>();
 			List<JoinActivity> joinActivities = joinActivityDao.selectJoinActivityPage(pagePara);
 			List<JoinActivity> newJoinAct = new ArrayList<>();

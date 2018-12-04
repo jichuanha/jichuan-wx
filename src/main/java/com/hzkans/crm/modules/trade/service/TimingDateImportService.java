@@ -79,6 +79,7 @@ public class TimingDateImportService {
                     return;
                 }
             }
+
             logger.info("[{}] table:{}", JsonUtil.toJson(table));
             String tableName = table.getTableName();
             Integer type = table.getType();
@@ -90,14 +91,19 @@ public class TimingDateImportService {
                 return;
             }
             FileInputStream fis = new FileInputStream(file);
-            Workbook workBook = getWorkBook(name, fis);
+            Workbook workBook = TradeUtil.getWorkBook(name, fis);
             //保存表格数据到数据库
             int result = 0;
             Sheet sheetAt = workBook.getSheetAt(0);
             if(type.equals(TableFlowTypeEnum.CUSTOMER.getCode())) {
+                //格式校验
+
                 //保存顾客信息表
                 result  = saveCustomerMessage(sheetAt);
             }else if(type.equals(TableFlowTypeEnum.ORDER_INFO.getCode())) {
+                //格式校验
+
+
                 //保存订单信息
                 result = saveOrderMessage(sheetAt);
             }else if(type.equals(TableFlowTypeEnum.EVALUATE.getCode())) {
@@ -122,38 +128,7 @@ public class TimingDateImportService {
         }
     }
 
-    /**
-     * 删除已经成功导入数据库的表
-     */
-    public void deleteHasImportTable() throws Exception{
-        try {
-            logger.info("删除任务启动====");
-            TableFlow tableFlow = new TableFlow();
-            tableFlow.setStatus(TableFlowStatusEnum.TIMING_SUCCESS.getCode());
-            List<TableFlow> tables = tableFlowService.getTables(tableFlow);
-            if(!CollectionUtils.isEmpty(tables)) {
-                for (TableFlow table : tables) {
-                    File file = new File(TradeUtil.UPLOAD_ADDRESS+table.getTableName());
-                    if(file.exists()) {
-                        file.delete();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-
-    private Workbook getWorkBook(String name, FileInputStream fis) throws Exception{
-        Workbook workbook = null;
-        if(name.endsWith(TradeUtil.XLS)) {
-            workbook = new HSSFWorkbook(fis);
-        }else if(name.endsWith(TradeUtil.XLSX)) {
-            workbook = new XSSFWorkbook(fis);
-        }
-        return workbook;
-    }
 
     private int saveCustomerMessage(Sheet sheetAt){
         try {

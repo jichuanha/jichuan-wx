@@ -8,10 +8,13 @@ package com.hzkans.crm.modules.trade.constants;
 public enum  TableFlowStatusEnum {
 
 
-    IMPORT_SYSTEM_SUCCESS(1,"导入系统成功"),
-    IMPORT_SYSTEM_FAIL(2,"导入系统失败"),
-    TIMING_SUCCESS(3,"定时插入数据库成功"),
-    TIMING_FAIL(4,"定时插入数据库失败");
+    IMPORT_SYSTEM_SUCCESS(1,"校验中"),
+    IMPORT_SYSTEM_FAIL(2,"校验失败"),
+    TIMING_SUCCESS(3,"待发布"),
+    TIMING_FAIL(4,"定时导入失败"),
+    ENSURE_TABLE_SUCCESS(5, "发布成功"),
+    ENSURE_TABLE_FAIL(6, "发布失败");
+
 
     private Integer code;
     private String desc;

@@ -11,7 +11,29 @@
 		a.import_date AS "importDate",
 		a.timing_date AS "timingDate",
 		a.platform_type AS "platformType",
-		a.shop_no AS "shopNo"
+		a.shop_no AS "shopNo",
+		a.total_num AS "totalNum",
+		a.success_num AS "successNum"
+	</sql>
+
+	<sql id="base_where">
+		<where>
+			<if test="data.tableName != null and data.tableName != ''">
+				AND a.table_name = #{data.tableName}
+			</if>
+			<if test="data.status != null ">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.platformType != null">
+				AND a.platform_type = #{data.platformType}
+			</if>
+			<if test="data.shopNo != null">
+				AND a.shop_no = #{data.shopNo}
+			</if>
+			<if test="data.startDate != null and data.endDate != null">
+				AND  <![CDATA[a.import_date BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+		</where>
 	</sql>
 
 	<sql id="tableFlowJoins">
@@ -101,7 +123,8 @@
 			error_message,
 			import_date,
 			platform_type,
-			shop_no
+			shop_no,
+			total_num
 		) VALUES (
 			#{tableName},
 			#{status},
@@ -109,7 +132,8 @@
 			#{errorMessage},
 			#{importDate},
 			#{platformType},
-			#{shopNo}
+			#{shopNo},
+			#{totalNum}
 		)
 	</insert>
 	
@@ -132,20 +156,7 @@
 			resultType="com.hzkans.crm.modules.trade.entity.TableFlow">
 		SELECT <include refid="tableFlowColumns"/>
 		FROM t_table_flow a
-		<where>
-			<if test="data.tableName != null and data.tableName != ''">
-				AND a.table_name = #{data.tableName}
-			</if>
-			<if test="data.status != null and data.status != ''">
-				AND a.status = #{data.status}
-			</if>
-			<if test="data.importDate != null and data.importDate != ''">
-				AND a.import_date = #{data.importDate}
-			</if>
-			<if test="data.timingDate != null and data.timingDate != ''">
-				AND a.timing_date = #{data.timingDate}
-			</if>
-		</where>
+		<include refid="base_where" />
 		<if test="currentPage != null and pageSize != null">
 			limit #{currentPage},#{pageSize}
 		</if>
@@ -156,21 +167,7 @@
 	<select id="countTableFlowPage" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
 		SELECT count(*)
 		FROM t_table_flow a
-
-		<where>
-			<if test="data.tableName != null and data.tableName != ''">
-				AND a.table_name = #{data.tableName}
-			</if>
-			<if test="data.status != null and data.status != ''">
-				AND a.status = #{data.status}
-			</if>
-			<if test="data.importDate != null and data.importDate != ''">
-				AND a.import_date = #{data.importDate}
-			</if>
-			<if test="data.timingDate != null and data.timingDate != ''">
-				AND a.timing_date = #{data.timingDate}
-			</if>
-		</where>
+		<include refid="base_where" />
 	</select>
 
 	

@@ -24,7 +24,43 @@ public class TableFlow extends DataEntity<TableFlow> {
 	private Integer shopNo;
 	private Integer platformType;
 	private String statusStr;
+	private Date startDate;
+	private Date endDate;
+	private Long totalNum;
+	private Long successNum;
 
+
+	public Long getTotalNum() {
+		return totalNum;
+	}
+
+	public void setTotalNum(Long totalNum) {
+		this.totalNum = totalNum;
+	}
+
+	public Long getSuccessNum() {
+		return successNum;
+	}
+
+	public void setSuccessNum(Long successNum) {
+		this.successNum = successNum;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public String getStatusStr() {
 		return statusStr;

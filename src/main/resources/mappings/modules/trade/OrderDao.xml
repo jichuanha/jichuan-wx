@@ -23,7 +23,8 @@
 		a.create_date AS "createDate",
 		a.update_date AS "updateDate",
 		a.create_by AS "createBy.id",
-		a.update_by AS "updateBy.id"
+		a.update_by AS "updateBy.id",
+		a.table_id AS "tableId"
 	</sql>
 	
 	<sql id="tOrderJoins">
@@ -100,7 +101,8 @@
 			address,
 			consignee,
 			create_date,
-			update_date
+			update_date,
+			table_id
 		) VALUES (
 			#{orderSn},
 			#{ownShop},
@@ -121,7 +123,8 @@
 			#{address},
 			#{consignee},
 			now(),
-			now()
+			now(),
+			#{tableId}
 		)
 	</insert>
 	

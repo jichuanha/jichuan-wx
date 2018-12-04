@@ -6,6 +6,7 @@ import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,7 @@ public class TableFlowService extends CrudService<TableFlowDao, TableFlow> {
 		TradeUtil.isAllNull(flowPage);
 		PagePara<TableFlow> tableFlowPage = null;
 		try {
+			logger.info(" flowPage {}", JsonUtil.toJson(flowPage));
 			tableFlowPage = new PagePara<>();
 			List<TableFlow> tableFlows = tableFlowDao.listTableFlowPage(flowPage);
 			for (TableFlow tableFlow : tableFlows) {

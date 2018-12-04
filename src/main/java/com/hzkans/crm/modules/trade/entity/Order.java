@@ -38,7 +38,16 @@ public class Order extends DataEntity<Order> {
 	private String areaName;
 	private String address;
 	private String consignee;   //收件人
+	private Integer tableId;
 
+
+	public Integer getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(Integer tableId) {
+		this.tableId = tableId;
+	}
 
 	public Order() {
 		super();

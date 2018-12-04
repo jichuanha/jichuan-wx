@@ -72,6 +72,8 @@ public enum ResponseEnum {
     B_E_MESSAGE_IS_NULL(40032,0,"审核信息不能为空"),
     B_E_NOT_FIND_ACT(40032,0,"未找到对应的活动"),
     B_E_NOT_FIND_JOIN(40032,0,"未找到对应的参加信息"),
+    B_E_TYPE_ERROR(40033,0,"只能导入 xls,xlsx 结尾的表格"),
+    B_E_TYPE_DATA_ERROR(40034,0,"导入内容格式有误"),
     /**
      * 添加失败
      */

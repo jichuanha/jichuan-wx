@@ -2,18 +2,18 @@
 package com.hzkans.crm.modules.trade.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
-import com.hzkans.crm.common.utils.DateUtils;
-import com.hzkans.crm.common.utils.RequestUtils;
-import com.hzkans.crm.common.utils.ResponseUtils;
+import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.trade.constants.PlatformTypeEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +39,8 @@ public class TableFlowController extends BaseController {
 
 	private static final String MAX_SIZE_ERROR = "导入文件大小超过限制100M";
 	private static final Long MAX_SIZE =100*1024*1024L ;
+	private static final String TYPE_XLS = "xls";
+	private static final String TYPE_XLSX = "xlsx";
 
 	@Autowired
 	private TableFlowService tableFlowService;
@@ -72,6 +74,32 @@ public class TableFlowController extends BaseController {
 		logger.info("[{}] originalFilename:{}",originalFilename);
 		//给名字后加上时间戳
 		String[] split = originalFilename.split("\\.");
+		//判断格式
+		if(!TYPE_XLS.equals(split[1]) && !TYPE_XLSX.equals(split[1])) {
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TYPE_ERROR);
+		}
+		//判断内容格式
+		Workbook workBook = TradeUtil.getWorkBook(originalFilename, file.getInputStream());
+		Sheet sheetAt = workBook.getSheetAt(0);
+		Row row = sheetAt.getRow(0);
+		Cell cell = row.getCell(0);
+		//获取总数据
+		long rowNum = (long)(sheetAt.getLastRowNum());
+		if(null == cell) {
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TYPE_DATA_ERROR);
+		}
+		if(TableFlowTypeEnum.ORDER_INFO.getCode().equals(type)) {
+			if(!cell.getStringCellValue().equals("订单ID")) {
+				return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "请导入正确的订单表");
+			}
+		}
+		if(TableFlowTypeEnum.CUSTOMER.getCode().equals(type)) {
+			if(!cell.getStringCellValue().equals("昵称")) {
+				return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "请导入正确的顾客表");
+			}
+		}
+
+
 		originalFilename = split[0] + DateUtils.formatNewDate(new Date())+"."+split[1];
 		logger.info("[{}] originalFilename:{}",originalFilename);
 
@@ -81,6 +109,7 @@ public class TableFlowController extends BaseController {
 		tableFlow.setShopNo(shopNo);
 		tableFlow.setPlatformType(platformType);
 		tableFlow.setType(type);
+		tableFlow.setTotalNum(rowNum);
 		long size = file.getSize();
 		if(size > MAX_SIZE) {
 			logger.info("导入文件过大");
@@ -120,15 +149,34 @@ public class TableFlowController extends BaseController {
 	@RequestMapping("/tableShow")
 	@ResponseBody
 	public String tableShow(HttpServletRequest request, HttpServletResponse response) throws Exception{
-
-		String tableName = RequestUtils.getString(request, "table_name");
+		//必传参数
 		Integer currentPage = RequestUtils.getInt(request, "current_page", "current_page is null");
 		Integer pageSize = RequestUtils.getInt(request, "page_size", "page_size is null");;
+		//非必传参数
+		String tableName = RequestUtils.getString(request, "table_name");
+		Integer platformType = RequestUtils.getInt(request, "platform_type", "");
+		Integer shopNo = RequestUtils.getInt(request, "shop_no", "");
+		Integer status = RequestUtils.getInt(request, "status", "");
+		String startDate = RequestUtils.getString(request, "start_date" );
+		String endDate = RequestUtils.getString(request, "end_date");
+
+		if(currentPage == null || pageSize == null) {
+			currentPage = 1;
+			pageSize = 10;
+		}
 
 		try {
 			PagePara<TableFlow> tableFlowPage = new PagePara<>();
 			TableFlow tableFlow = new TableFlow();
 			tableFlow.setTableName(tableName);
+			tableFlow.setPlatformType(platformType);
+			tableFlow.setShopNo(shopNo);
+			tableFlow.setStatus(status);
+			if(!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+				tableFlow.setStartDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));
+				tableFlow.setEndDate(DateUtil.parse(endDate, DateUtil.NORMAL_DATETIME_PATTERN));
+			}
+
 			tableFlowPage.setCurrentPage((currentPage - 1)*pageSize);
 			tableFlowPage.setPageSize(pageSize);
 			tableFlowPage.setData(tableFlow);
