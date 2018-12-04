@@ -10,7 +10,10 @@
 		a.create_date AS "createDate",
 		a.create_by AS "createBy",
 		a.update_by AS "updateBy",
-		a.update_date AS "updateDate"
+		a.update_date AS "updateDate",
+		a.app_secret AS "appSecret",
+		a.token AS "token",
+		a.binding_flag AS "bindingFlag"
 	</sql>
 
     <sql id="tWechatPlatformJoins">
@@ -51,7 +54,10 @@
 			create_date,
 			create_by,
 			update_by,
-			update_date
+			update_date,
+			app_secret,
+			token,
+			binding_flag
 		) VALUES (
 			#{name},
 			#{mainPart},
@@ -59,7 +65,10 @@
 			now(),
 			#{createBy},
 			#{updateBy},
-			now()
+			now(),
+			#{appSecret},
+			#{token},
+			0
 		)
 	</insert>
 
@@ -71,6 +80,15 @@
             </if>
             <if test="updateBy != null and updateBy != ''">
                  update_by = #{updateBy},
+            </if>
+            <if test="appSecret != null and appSecret != ''">
+                app_secret = #{appSecret},
+            </if>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="bindingFlag != null ">
+                binding_flag = #{bindingFlag},
             </if>
             update_date = now()
         </set>

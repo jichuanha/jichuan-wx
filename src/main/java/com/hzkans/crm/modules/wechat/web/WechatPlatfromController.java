@@ -168,4 +168,31 @@ public class WechatPlatfromController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RESULT_IS_NULL);
         }
     }
+
+    @RequestMapping(value = "/binding")
+    public String bindingWechatPlatform(HttpServletRequest request){
+        try {
+            Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+            String appSecret = RequestUtils.getString(request, false, "app_secret", "app_secret is null");
+            String token = RequestUtils.getString(request, false, "token", "token is null");
+
+            User user = UserUtils.getUser();
+            if (null == user) {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT, ResponseEnum.B_E_SESSION_TIMEOUT.getMsg());
+            }
+
+            WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
+            wechatPlatfromDO.setId(id);
+            wechatPlatfromDO.setUpdateBy(user.getName());
+            wechatPlatfromDO.setAppSecret(appSecret);
+            wechatPlatfromDO.setToken(token);
+            //绑定状态为1
+            wechatPlatfromDO.setBindingFlag(1);
+            wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (Exception e) {
+            logger.error("bindingWechatPlatform is error", e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MODIFY_ERROR);
+        }
+    }
 }

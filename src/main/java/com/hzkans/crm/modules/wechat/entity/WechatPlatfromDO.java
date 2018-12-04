@@ -26,6 +26,33 @@ public class WechatPlatfromDO implements Serializable {
 	protected String updateBy;	// 更新者
 	protected Date updateDate;	// 更新日期
 	protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
+	protected String appSecret;
+	protected String token;
+	protected Integer bindingFlag; 	// 删除标记（0：正常；1：删除；2：审核）
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public Integer getBindingFlag() {
+		return bindingFlag;
+	}
+
+	public void setBindingFlag(Integer bindingFlag) {
+		this.bindingFlag = bindingFlag;
+	}
 
 	public Integer getId() {
 		return id;

@@ -155,6 +155,9 @@
 			JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
 		</if>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="loginFlag != null  and loginFlag != ''">
+			and a.login_flag = #{loginFlag}
+		</if>
 		<if test="company != null and company.id != null and company.id != ''">
 			AND (c.id = #{company.id} OR c.parent_ids LIKE 
 					<if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>

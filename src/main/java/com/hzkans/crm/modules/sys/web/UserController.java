@@ -9,6 +9,7 @@ import com.hzkans.crm.common.beanvalidator.BeanValidators;
 import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.utils.DateUtils;
+import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.utils.excel.ExportExcel;
 import com.hzkans.crm.common.utils.excel.ImportExcel;
@@ -62,6 +63,8 @@ public class UserController extends BaseController {
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
+		String loginFlag = RequestUtils.getString(request, true, "login_flag", "token is null");
+		user.setLoginFlag(loginFlag);
 		Page<User> page = systemService.findUser(new Page<User>(request, response), user);
         model.addAttribute("page", page);
 		return "modules/sys/userList";
