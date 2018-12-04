@@ -12,7 +12,10 @@ public class OrderTest extends BaseTest{
 	@Test
 	public void getOrder ()throws Exception{
 		OrderService orderService = context.getBean(OrderService.class);
-		Order order =  orderService.get("272200608488052227");
+
+		Order orderDO = new Order();
+		orderDO.setOrderSn("272200608488052227");
+		Order order =  orderService.getOrder(orderDO);
 		System.out.println("order:{}"+ JsonUtil.toJson(order));
 
 
