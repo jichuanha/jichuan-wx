@@ -76,6 +76,8 @@ public enum ResponseEnum {
     B_E_TYPE_DATA_ERROR(40034,0,"导入内容格式有误"),
     B_E_TABLE_NOT_EXIST(40034,0,"表格不存在"),
     B_E_TABLE_STATUS_ERROR(40035,0,"表格不在待发布状态"),
+    B_E_FILE_NOT_EXIST(40035,0,"表格不在待发布状态"),
+    B_E_DOWNLOAD_ERROR(40036,0,"下载异常"),
     /**
      * 添加失败
      */
@@ -95,6 +97,7 @@ public enum ResponseEnum {
     B_E_ACTIVITY_EXIST(41014, 0, "活动已存在"),
     B_E_UPDATE_STATUS_FAIL(41015, 0, "更改状态失败"),
     B_E_SHOP_EXIST(41016, 0, "店铺已存在"),
+    B_E_PER_MUST_LOWER_TOTAL(41017, 0, "单笔金额不能大于返利总额"),
 
 
     /**

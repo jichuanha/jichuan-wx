@@ -6,8 +6,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * @author jc
@@ -55,6 +54,12 @@ public class TradeUtil {
             workbook = new XSSFWorkbook(fis);
         }
         return workbook;
+    }
+
+    public static String getRealName(String name) {
+        String[] split = name.split("\\.");
+        String bizCode = split[0];
+        return bizCode.substring(0 ,bizCode.length() - 14);
     }
 
 }

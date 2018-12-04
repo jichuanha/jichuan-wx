@@ -108,6 +108,10 @@ public class ActivityController extends BaseController {
 				|| null == orderInactiveDate){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_REQUIRED_NOT_FILLED);
 		}
+		//如果返利总额已填且小于单笔金额，则给出提示
+		if (null != totalAmount && totalAmount < perAmount){
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_PER_MUST_LOWER_TOTAL);
+		}
 		//不能添加已存在的活动
 		try {
 			activityList = activityService.findList(activity);
@@ -308,6 +312,7 @@ public class ActivityController extends BaseController {
 		try {
 			PlatformShop platformShop1 = new PlatformShop();
 			platformShop1.setShopName(shopName);
+			platformShop1.setPlatform(platform);
 			platformShop1.setDelFlag("0");
 			platformShopList = platformShopService.findList(platformShop1);
 		} catch (Exception e) {
@@ -320,13 +325,13 @@ public class ActivityController extends BaseController {
 
 		//添加店铺
 		try {
-			PlatformShop platformShop = new PlatformShop();
-			platformShop.setPlatform(platform);
-			platformShop.setPlatformName(platformName);
-			platformShop.setShop(shop);
-			platformShop.setShopName(shopName);
-			platformShop.setDelFlag("0");
-			platformShopService.save(platformShop);
+			PlatformShop platformShop2 = new PlatformShop();
+			platformShop2.setPlatform(platform);
+			platformShop2.setPlatformName(platformName);
+			platformShop2.setShop(shop);
+			platformShop2.setShopName(shopName);
+			platformShop2.setDelFlag("0");
+			platformShopService.save(platformShop2);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.error("save platform shop is error",e);

@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+import java.io.*;
 import java.util.Date;
 
 /**
@@ -206,9 +206,15 @@ public class TableFlowController extends BaseController {
 	public String orderIssue(HttpServletRequest request, HttpServletResponse response) {
 
 		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
-		TableFlow tableFlow = new TableFlow();
-		tableFlow.setId(tableId.toString());
-		TableFlow table = tableFlowService.getTable(tableFlow);
+		TableFlow table = null;
+		try {
+			TableFlow tableFlow = new TableFlow();
+			tableFlow.setId(tableId.toString());
+			table = tableFlowService.getTable(tableFlow);
+		} catch (ServiceException e) {
+			logger.error("orderIssue error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
 
 		if(null == table) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
@@ -225,7 +231,54 @@ public class TableFlowController extends BaseController {
 			orderService.update(order);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (ServiceException e) {
+			logger.error("orderIssue error",e);
 			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
+	}
+
+	/**
+	 * 文件下载
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/orderDownLoad")
+	@ResponseBody
+	public String orderDownLoad(HttpServletRequest request, HttpServletResponse response) {
+
+		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
+
+		try {
+			TableFlow tableFlow = new TableFlow();
+			tableFlow.setId(tableId.toString());
+			TableFlow table = tableFlowService.getTable(tableFlow);
+
+			if(null == table) {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
+            }
+			String tableName = table.getTableName();
+			File file = new File(TradeUtil.UPLOAD_ADDRESS+tableName);
+			if(!file.exists()) {
+				logger.error(ResponseEnum.B_E_FILE_NOT_EXIST.getMsg());
+				return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FILE_NOT_EXIST);
+			}
+			InputStream fis = new BufferedInputStream(new FileInputStream(file));
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+			response.reset();
+			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+			String fileName = "Excel-"+new String(TradeUtil.getRealName(tableName).getBytes(),"iso-8859-1") + ".xls";
+			String headStr = "attachment; filename=\"" + fileName + "\"";
+			response.setContentType("APPLICATION/OCTET-STREAM");
+			response.setHeader("Content-Disposition", headStr);
+			toClient.write(buffer);
+			toClient.flush();
+			toClient.close();
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (IOException e) {
+			logger.error("orderDownLoad error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_DOWNLOAD_ERROR);
 		}
 	}
 
