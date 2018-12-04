@@ -33,7 +33,7 @@ import java.util.Date;
 
 /**
  * 表格流程Controller
- * @author chuan
+ * @author jc
  * @version 2018-11-26
  */
 @Controller
@@ -51,9 +51,14 @@ public class TableFlowController extends BaseController {
 	private OrderService orderService;
 
 
-	@RequestMapping("/tablePage")
+	@RequestMapping("/orderImportPage")
 	public String tablePage() {
-		return "";
+		return "modules/order/order-import";
+	}
+
+	@RequestMapping("/orderExtranetPage")
+	public String orderExtranetPage() {
+		return "modules/order/order-extranet";
 	}
 
 
