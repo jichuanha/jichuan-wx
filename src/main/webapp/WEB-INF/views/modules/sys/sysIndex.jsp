@@ -12,7 +12,7 @@
 			width: 100%;
 			height: 100%;
 			background: url("${ctxStatic}/images/bg.jpg") no-repeat;
-			background-size: 100%;
+			background-size: 100% 100%;
 			overflow: hidden;
 			padding-top: 30px;
 			padding-bottom: 30px;

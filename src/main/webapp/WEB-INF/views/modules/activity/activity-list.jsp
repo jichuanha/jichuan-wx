@@ -215,7 +215,7 @@
 	<div class="wrap-header">
 		<form id="searchForm"  class="form-search">
 			<input id="current_page" name="current_page" type="hidden" value="1"/>
-			<input id="page_size" name="page_size" type="hidden" value="2"/>
+			<input id="page_size" name="page_size" type="hidden" value="10"/>
 			<ul class="ul-form">
 				<li><label>活动名称：</label>
 					<input type="text" name="name" class="mid-input" id="name">
