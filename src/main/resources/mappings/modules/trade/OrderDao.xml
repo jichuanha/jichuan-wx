@@ -128,28 +128,17 @@
 		)
 	</insert>
 	
-	<update id="update">
+	<update id="update" parameterType="com.hzkans.crm.modules.trade.entity.Order">
 		UPDATE t_order SET 	
-			member_id = #{memberId},
-			order_sn = #{orderSn},
-			own_shop = #{ownShop},
-			shop_no = #{shopNo},
-			platform_type = #{platformType},
-			payable_ammount = #{payableAmmount},
-			pay_amount = #{payAmount},
-			status = #{status},
-			order_time = #{orderTime},
-			pay_time = #{payTime},
-			nick_name = #{nickName},
-			buyer_name = #{buyerName},
-			mobile = #{mobile},
-			item_name = #{itemName},
-			item_no = #{itemNo},
-			unit_price = #{unitPrice},
-			buy_count = #{buyCount},
-			update_date = #{updateDate},
-			update_by = #{updateBy.id}
-		WHERE id = #{id}
+		status = #{status}
+		<where>
+			<if test="tableId != null">
+				table_id = #{tableId}
+			</if>
+			<if test="id != null">
+				id = #{id}
+			</if>
+		</where>
 	</update>
 	
 	<update id="delete">

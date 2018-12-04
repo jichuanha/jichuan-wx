@@ -38,4 +38,19 @@ public class OrderService extends CrudService<OrderDao, Order> {
 		return order1;
 	}
 
+	/**
+	 * 更新订单的状态(通用改)
+	 * @param order
+	 * @throws ServiceException
+	 */
+	public void updateOrder(Order order) throws ServiceException{
+		TradeUtil.isAllNull(order);
+		try {
+			update(order);
+		} catch (Exception e) {
+			logger.error("updateOrder error",e);
+			throw new ServiceException(ResponseEnum.B_E_MODIFY_ERROR);
+		}
+	}
+
 }
