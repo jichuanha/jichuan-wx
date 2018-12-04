@@ -47,6 +47,13 @@ public class WechatPlatfromController extends BaseController {
         return "modules/wechatmanage/shopIndex";
     }
 
+    @RequestMapping(value = "/link_home_page")
+    public String gotoHomePage(HttpServletRequest request,Model model) {
+        Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+        model.addAttribute("wechat_platfrom_id",id);
+        return "modules/sys/sysIndex";
+    }
+
     @RequestMapping(value = "/link_update")
     public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {
