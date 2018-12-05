@@ -42,4 +42,20 @@ public class DictService extends CrudService<DictDao, Dict> {
 		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
 	}
 
+
+	/**
+	 * 根据字典type查询
+	 * @param type
+	 * @return
+	 */
+	public List<Dict> findListByType(String type){
+		Dict dict = new Dict();
+		dict.setType(type);
+		List<Dict> dictList = findList(dict);
+		return dictList;
+
+	}
+
+
+
 }
