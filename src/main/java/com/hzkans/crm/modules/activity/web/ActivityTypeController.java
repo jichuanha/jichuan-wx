@@ -41,7 +41,7 @@ public class ActivityTypeController extends BaseController {
 	 *
 	 * @return
 	 */
-	@RequestMapping("/activity-ype-new")
+	@RequestMapping("/activity-type-new")
 	public String saveActivityType(){
 		return "modules/activity/activity-type-new";
 	}
