@@ -13,7 +13,7 @@ package ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModule
 import ${i};
 </#list>
 
-import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.hzkans.crm.common.persistence.DataEntity;
 
 /**
  * ${functionName}Entity
