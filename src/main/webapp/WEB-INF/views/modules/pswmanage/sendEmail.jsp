@@ -111,7 +111,7 @@
             url:url,
             type:'POST',
             data:{
-                login_name:$('#doingEmail').val(),
+                login_name:$('#doingEmail').val().trim(),
                 verify_code:$('#verify_code').val(),
             },
             success:function(data){
