@@ -15,7 +15,9 @@ import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
 import com.hzkans.crm.modules.activity.service.ActivityService;
 import com.hzkans.crm.modules.activity.service.PlatformShopService;
+import com.hzkans.crm.modules.sys.entity.Dict;
 import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.service.DictService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class ActivityController extends BaseController {
 
 	@Autowired
 	private PlatformShopService platformShopService;
+
+	@Autowired
+	private DictService dictService;
 
 	/**
 	 * 创建活动
@@ -80,22 +85,22 @@ public class ActivityController extends BaseController {
 	@ResponseBody
 	public String saveActivity(HttpServletRequest request) {
 
-		String name = RequestUtils.getString(request, false, "name", "");
-		Integer activityType = RequestUtils.getInt(request,"activity_type","");
-		String activeDate = RequestUtils.getString(request, false, "active_date", "");
-		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "");
-		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "");
-		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "");
-		Integer isFollow = RequestUtils.getInt(request,"is_follow","");
-		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
-		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel","");
-		Long perAmount = RequestUtils.getLong(request,"per_amount","");
-		Integer maxOrderLimit = RequestUtils.getInt(request,"max_order_limit","");
-		Long totalAmount = RequestUtils.getLong(request,"total_amount","");
-        Integer isAudit = RequestUtils.getInt(request,"is_audit","");
-		String shopName = RequestUtils.getString(request, false, "shop_name", "");
-		String shopNo = RequestUtils.getString(request, false, "shop_no", "");
-		String templateLink = RequestUtils.getString(request, false, "template_link", "");
+		String name = RequestUtils.getString(request, false, "name", "name is null");
+		Integer activityType = RequestUtils.getInt(request,"activity_type",false,"activity_type is null","");
+		String activeDate = RequestUtils.getString(request, false, "active_date", "active_date is null");
+		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "inactive_date is null");
+		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "order_active_date is null");
+		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "order_inactive_date is null");
+		Integer isFollow = RequestUtils.getInt(request,"is_follow",false,"is_follow is null","");
+		Integer rebateType = RequestUtils.getInt(request,"rebate_type",false,"rebate_type is null","");
+		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel",false,"rebate_channel is null","");
+		Long perAmount = RequestUtils.getLong(request,"per_amount",false,"per_amount is null","");
+		Integer maxOrderLimit = RequestUtils.getInt(request,"max_order_limit",true,"","");
+		Long totalAmount = RequestUtils.getLong(request,"total_amount",true,"","");
+        Integer isAudit = RequestUtils.getInt(request,"is_audit",false,"is_audit is null","");
+		String shopName = RequestUtils.getString(request, false, "shop_name", "shop_name is null");
+		String shopNo = RequestUtils.getString(request, false, "shop_no", "shop_no is null");
+		String templateLink = RequestUtils.getString(request, false, "template_link", "template_link is null");
 		Activity activity = new Activity();
 		activity.setName(name);
 		activity.setDelFlag("0");
@@ -176,9 +181,9 @@ public class ActivityController extends BaseController {
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 		String name = RequestUtils.getString(request, true, "name", "");
 		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
-		Integer status = RequestUtils.getInt(request,"status","");
-		Integer rebateType = RequestUtils.getInt(request,"rebate_type","");
-		Integer activityType = RequestUtils.getInt(request,"activity_type","");
+		Integer status = RequestUtils.getInt(request,"status",true,"","");
+		Integer rebateType = RequestUtils.getInt(request,"rebate_type",true,"","");
+		Integer activityType = RequestUtils.getInt(request,"activity_type",true,"","");
 		String startDate = RequestUtils.getString(request, true,"active_date", "");
 		String endDate = RequestUtils.getString(request,true, "inactive_date", "");
 		if (start == null || start == 0) {
@@ -236,7 +241,7 @@ public class ActivityController extends BaseController {
 	@ResponseBody
 	public String activityDetail(HttpServletRequest request) {
 
-		String id = RequestUtils.getString(request,false,"id","");
+		String id = RequestUtils.getString(request,false,"id","id is null");
 		try {
 			Activity activity = activityService.get(id);
 			//将金额分转化为元
@@ -260,7 +265,7 @@ public class ActivityController extends BaseController {
 	@ResponseBody
 	public String deleteActivity(HttpServletRequest request) {
 
-		String id = RequestUtils.getString(request,false,"id","");
+		String id = RequestUtils.getString(request,false,"id","id is null");
 		try {
 			Activity activity = new Activity();
 			activity.setId(id);
@@ -281,9 +286,9 @@ public class ActivityController extends BaseController {
 	@ResponseBody
 	public String saveShop(HttpServletRequest request) {
 
-		Integer platform = RequestUtils.getInt(request,"platform","");
-		String platformName = RequestUtils.getString(request, false, "platform_name", "");
-		String shopName = RequestUtils.getString(request, false, "shop_name", "");
+		Integer platform = RequestUtils.getInt(request,"platform",true,"","");
+		String platformName = RequestUtils.getString(request, false, "platform_name", "platform_name is null");
+		String shopName = RequestUtils.getString(request, false, "shop_name", "shop_name is null");
 		Integer shop = 1;
 		List<Integer> shopList = new ArrayList<>();
 		List<PlatformShop> platformShopList;
@@ -387,8 +392,8 @@ public class ActivityController extends BaseController {
 	@ResponseBody
 	public String updateStatus(HttpServletRequest request) {
 		try {
-			String id = RequestUtils.getString(request,false,"id","");
-			Integer type = RequestUtils.getInt(request,"type","");
+			String id = RequestUtils.getString(request,false,"id","id is null");
+			Integer type = RequestUtils.getInt(request,"type",false,"type is null","");
 			Activity activity = new Activity();
 			activity.setId(id);
 
@@ -412,6 +417,27 @@ public class ActivityController extends BaseController {
 		} catch (Exception e) {
 			logger.error("update status is error",e);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_UPDATE_STATUS_FAIL);
+		}
+	}
+
+	/**
+	 * 获取活动类型列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/activityTypeList")
+	@ResponseBody
+	public String activityTypeList(HttpServletRequest request) {
+		try {
+			//从字典管理中查询活动类型
+			Dict dict = new Dict();
+			String type= "name_type";
+			dict.setType(type);
+			List<Dict> dictList = dictService.findList(dict);
+			return ResponseUtils.getSuccessApiResponseStr(dictList);
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
 		}
 	}
 }
