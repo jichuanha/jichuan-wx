@@ -233,7 +233,7 @@ public class TableFlowController extends BaseController {
 			Order order = new Order();
 			order.setTableId(tableId);
 			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
-			orderService.update(order);
+			orderService.updateOrder(order);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (ServiceException e) {
 			logger.error("orderIssue error",e);
@@ -265,7 +265,7 @@ public class TableFlowController extends BaseController {
 			File file = new File(TradeUtil.UPLOAD_ADDRESS+tableName);
 			if(!file.exists()) {
 				logger.error(ResponseEnum.B_E_FILE_NOT_EXIST.getMsg());
-				return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FILE_NOT_EXIST);
+				return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
 			}
 			InputStream fis = new BufferedInputStream(new FileInputStream(file));
 			byte[] buffer = new byte[fis.available()];
@@ -284,6 +284,43 @@ public class TableFlowController extends BaseController {
 		} catch (IOException e) {
 			logger.error("orderDownLoad error",e);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_DOWNLOAD_ERROR);
+		}
+	}
+
+	@RequestMapping("/orderList")
+	@ResponseBody
+	public String allOrderList(HttpServletRequest request, HttpServletResponse response) {
+		//必传参数
+		Integer currentPage = RequestUtils.getInt(request, "current_page", "");
+		Integer pageSize = RequestUtils.getInt(request, "page_size", "");
+		//非必传参数
+		Integer platformType = RequestUtils.getInt(request, "platform_type", "");
+		Integer shopNo = RequestUtils.getInt(request, "shop_no", "");
+		String startDate = RequestUtils.getString(request, "start_date");
+		String endDate = RequestUtils.getString(request, "end_date");
+		String orderSn = RequestUtils.getString(request, "order_sn");
+
+		try {
+			PagePara<Order> pagePara = new PagePara<>();
+			Order order = new Order();
+			order.setPlatformType(platformType);
+			order.setOrderSn(orderSn);
+			if(null != shopNo) {
+                order.setShopNo(shopNo.toString());
+            }
+			if(!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {
+                order.setStartDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));
+                order.setEndDate(DateUtil.parse(endDate, DateUtil.NORMAL_DATETIME_PATTERN));
+            }
+			pagePara.setData(order);
+			pagePara.setCurrentPage((currentPage-1)*pageSize);
+			pagePara.setPageSize(pageSize);
+			PagePara<Order> allOrder = orderService.getAllOrder(pagePara);
+
+			return ResponseUtils.getSuccessApiResponseStr(allOrder);
+		} catch (ServiceException e) {
+			logger.error("allOrderList error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
 		}
 	}
 

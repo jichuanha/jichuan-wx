@@ -39,7 +39,60 @@ public class Order extends DataEntity<Order> {
 	private String address;
 	private String consignee;   //收件人
 	private Integer tableId;
+	private Date startDate;
+	private Date endDate;
+	private String orderStatus;
+	private String platformTypeStr;
+	private String shopNoStr;
+	private String payAmountStr;
 
+	public String getPayAmountStr() {
+		return payAmountStr;
+	}
+
+	public void setPayAmountStr(String payAmountStr) {
+		this.payAmountStr = payAmountStr;
+	}
+
+	public String getPlatformTypeStr() {
+		return platformTypeStr;
+	}
+
+	public void setPlatformTypeStr(String platformTypeStr) {
+		this.platformTypeStr = platformTypeStr;
+	}
+
+	public String getShopNoStr() {
+		return shopNoStr;
+	}
+
+	public void setShopNoStr(String shopNoStr) {
+		this.shopNoStr = shopNoStr;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public Integer getTableId() {
 		return tableId;

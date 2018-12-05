@@ -26,6 +26,23 @@
 		a.update_by AS "updateBy.id",
 		a.table_id AS "tableId"
 	</sql>
+
+	<sql id="base_where">
+		<where>
+			<if test="data.orderSn != null and data.orderSn != ''">
+				AND a.order_sn = #{data.orderSn}
+			</if>
+			<if test="data.platformType != null">
+				AND a.platform_type = #{data.platformType}
+			</if>
+			<if test="data.shopNo != null">
+				AND a.shop_no = #{data.shopNo}
+			</if>
+			<if test="data.startDate != null and data.endDate != null">
+				AND  <![CDATA[a.pay_time BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+		</where>
+	</sql>
 	
 	<sql id="tOrderJoins">
 	</sql>
@@ -44,42 +61,7 @@
 		</where>
 	</select>
 	
-	<select id="findList" resultType="Order">
-		SELECT 
-			<include refid="tOrderColumns"/>
-		FROM t_order a
-		<include refid="tOrderJoins"/>
-		<where>
-			
-		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
-	<select id="findAllList" resultType="Order">
-		SELECT 
-			<include refid="tOrderColumns"/>
-		FROM t_order a
-		<include refid="tOrderJoins"/>
-		<where>
-			
-		</where>		
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO t_order(
 			order_sn,
@@ -140,10 +122,21 @@
 			</if>
 		</where>
 	</update>
-	
-	<update id="delete">
-		DELETE FROM t_order
-		WHERE id = #{id}
-	</update>
+
+	<select id="listOrderLimit" parameterType="com.hzkans.crm.common.persistence.PagePara"
+			resultType="com.hzkans.crm.modules.trade.entity.Order">
+		SELECT <include refid="tOrderColumns" />
+		FROM t_order a
+		<include refid="base_where" />
+		<if test="currentPage != null and pageSize != null">
+			limit #{currentPage},#{pageSize}
+		</if>
+	</select>
+
+	<select id="listOrderLimitCount" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
+		SELECT count(*)
+		FROM t_order a
+		<include refid="base_where" />
+	</select>
 	
 </mapper>
