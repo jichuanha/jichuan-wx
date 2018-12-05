@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatMaterialDao">
+    
+	<sql id="wechatMaterialColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.cover_picture AS "coverPicture",
+		a.content AS "content",
+		a.brief AS "brief",
+		a.uri AS "uri",
+		a.type AS "type",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.creator AS "creator",
+		a.updator AS "updator",
+		a.deleted AS "deleted",
+		a.wechat_id AS "wechatId"
+	</sql>
+	
+	<sql id="wechatMaterialJoins">
+	</sql>
+    
+	<select id="get" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatMaterialColumns"/>
+		FROM t_wechat_material a
+		<include refid="wechatMaterialJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatMaterialColumns"/>
+		FROM t_wechat_material a
+		<include refid="wechatMaterialJoins"/>
+		<where>
+			a.deleted = 0
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content LIKE 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="wechatId != null and wechatId != ''">
+				AND a.wechat_id = #{wechatId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatMaterialColumns"/>
+		FROM t_wechat_material a
+		<include refid="wechatMaterialJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_wechat_material(
+			title,
+			cover_picture,
+			content,
+			brief,
+			uri,
+			type,
+			create_date,
+			update_date,
+			creator,
+			updator,
+			deleted,
+			wechat_id
+		) VALUES (
+			#{title},
+			#{coverPicture},
+			#{content},
+			#{brief},
+			#{uri},
+			#{type},
+			now(),
+			now(),
+			#{creator},
+			#{updator},
+			0,
+			#{wechatId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_wechat_material SET 	
+			title = #{title},
+			cover_picture = #{coverPicture},
+			content = #{content},
+			brief = #{brief},
+			uri = #{uri},
+			type = #{type},
+			update_date = #{updateDate},
+			creator = #{creator},
+			updator = #{updator},
+			deleted = #{deleted},
+			wechat_id = #{wechatId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		update  t_wechat_material set
+		deleted = 1
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

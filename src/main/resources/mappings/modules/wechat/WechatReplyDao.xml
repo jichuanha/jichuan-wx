@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatReplyDao">
+    
+	<sql id="wechatNewReplyColumns">
+		a.id AS "id",
+		a.un_open AS "unOpen",
+		a.reply_type AS "replyType",
+		a.content_type AS "contentType",
+		a.key_type AS "keyType",
+		a.keywords AS "keywords",
+		a.remarks AS "remarks",
+		a.reply_desc AS "replyDesc",
+		a.reply_way AS "replyWay",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.creator AS "creator",
+		a.updator AS "updator",
+		a.deleted AS "deleted",
+		a.wechat_id AS "wechatId"
+	</sql>
+	
+	<sql id="wechatNewReplyJoins">
+	</sql>
+    
+	<select id="get" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatNewReplyColumns"/>
+		FROM t_wecha_new_reply a
+		<include refid="wechatNewReplyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatNewReplyColumns"/>
+		FROM t_wecha_new_reply a
+		<include refid="wechatNewReplyJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="unOpen != null and unOpen != ''">
+				AND a.un_open = #{unOpen}
+			</if>
+			<if test="replyType != null and replyType != ''">
+				AND a.reply_type = #{replyType}
+			</if>
+			<if test="contentType != null and contentType != ''">
+				AND a.content_type = #{contentType}
+			</if>
+			<if test="keyType != null and keyType != ''">
+				AND a.key_type = #{keyType}
+			</if>
+			<if test="keywords != null and keywords != ''">
+				AND a.keywords = #{keywords}
+			</if>
+			<if test="replyWay != null and replyWay != ''">
+				AND a.reply_way = #{replyWay}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="wechatId != null and wechatId != ''">
+				AND a.wechat_id = #{wechatId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WechatMaterial">
+		SELECT 
+			<include refid="wechatNewReplyColumns"/>
+		FROM t_wecha_new_reply a
+		<include refid="wechatNewReplyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_wecha_new_reply(
+			un_open,
+			reply_type,
+			content_type,
+			key_type,
+			keywords,
+			remarks,
+			reply_desc,
+			reply_way,
+			create_date,
+			update_date,
+			creator,
+			updator,
+			deleted,
+			wechat_id
+		) VALUES (
+			#{unOpen},
+			#{replyType},
+			#{contentType},
+			#{keyType},
+			#{keywords},
+			#{remarks},
+			#{replyDesc},
+			#{replyWay},
+			now(),
+			now(),
+			#{creator},
+			#{updator},
+			0,
+			#{wechatId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_wecha_new_reply SET 	
+			un_open = #{unOpen},
+			reply_type = #{replyType},
+			content_type = #{contentType},
+			key_type = #{keyType},
+			keywords = #{keywords},
+			remarks = #{remarks},
+			reply_desc = #{replyDesc},
+			reply_way = #{replyWay},
+			update_date = #{updateDate},
+			creator = #{creator},
+			updator = #{updator},
+			deleted = #{deleted},
+			wechat_id = #{wechatId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t_wecha_new_reply SET
+		deleted = 1
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

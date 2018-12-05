@@ -30,7 +30,7 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
     /**
      * 链接的地址
      */
-    private final static String URL = "http://10.1.35.118:8181/dongyin-CRM/a/changePassword/verification";
+    private final static String URL = "http://10.1.35.201:8181/dongyin-CRM/a/changePassword/verification";
     private final static String TOKEN_SEPRATOR= "$";
     private final static String EMAIL_SUBJECT= "修改密码";
     @Autowired

@@ -169,7 +169,7 @@ public class WechatPlatfromController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/binding")
+    @RequestMapping(value = "/binding_wechat_latform")
     public String bindingWechatPlatform(HttpServletRequest request){
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
