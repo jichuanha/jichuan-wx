@@ -210,7 +210,10 @@ public class TableFlowController extends BaseController {
 	@RequestMapping("/orderIssue")
 	@ResponseBody
 	public String orderIssue(HttpServletRequest request, HttpServletResponse response) {
-
+		/*Long memberId = Long.parseLong(UserUtils.getUser().getNo());
+		logger.info("memberId {}", memberId);*/
+		Long memberId = 17L;
+		logger.info("memberId {}", memberId);
 		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
 		TableFlow table = null;
 		try {
@@ -229,12 +232,20 @@ public class TableFlowController extends BaseController {
 		if(!TableFlowStatusEnum.TIMING_SUCCESS.getCode().equals(status)) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_STATUS_ERROR);
 		}
-		//更新这个表所有订单的状态为审核成功
+
 		try {
+			//更新这个表所有订单的状态为审核成功
 			Order order = new Order();
 			order.setTableId(tableId);
 			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
 			orderService.updateOrder(order);
+			//更新状态为发布成功..
+			TableFlow tableFlow = new TableFlow();
+			tableFlow.setId(table.getId());
+			tableFlow.setErrorMessage(memberId.toString());
+			tableFlow.setTimingDate(new Date());
+			tableFlow.setStatus(TableFlowStatusEnum.ENSURE_TABLE_SUCCESS.getCode());
+			tableFlowService.updateTableFlow(tableFlow);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (ServiceException e) {
 			logger.error("orderIssue error",e);

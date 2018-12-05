@@ -2,7 +2,6 @@
 package com.hzkans.crm.modules.trade.service;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
@@ -10,7 +9,6 @@ import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,5 +115,16 @@ public class TableFlowService extends CrudService<TableFlowDao, TableFlow> {
 			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
 		}
 		return tableFlowPage;
+	}
+
+
+	public void updateTableFlow(TableFlow tableFlow) {
+		TradeUtil.isAllNull(tableFlow);
+		try {
+			update(tableFlow);
+		} catch (Exception e) {
+			logger.error("updateTableFlow error");
+			throw new ServiceException(ResponseEnum.B_E_MODIFY_ERROR);
+		}
 	}
 }
