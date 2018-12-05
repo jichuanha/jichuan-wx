@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.activity.dao.ActivityTypeDao">
+    
+	<sql id="ActivityTypeColumns">
+		a.id AS "id",
+		a.type_name AS "typeName",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="ActivityTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="ActivityType">
+		SELECT 
+			<include refid="ActivityTypeColumns"/>
+		FROM t_activity_type a
+		<include refid="ActivityTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ActivityType">
+		SELECT 
+			<include refid="ActivityTypeColumns"/>
+		FROM t_activity_type a
+		<include refid="ActivityTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="typeName != null and typeName != ''">
+				AND a.type_name = #{typeName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityType">
+		SELECT 
+			<include refid="ActivityTypeColumns"/>
+		FROM t_activity_type a
+		<include refid="ActivityTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_activity_type(
+			type_name,
+			remarks,
+			del_flag,
+			create_by,
+			update_by,
+			create_date,
+			update_date
+		) VALUES (
+			#{typeName},
+			#{remarks},
+			#{delFlag},
+			#{createBy.id},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_activity_type SET 	
+			type_name = #{typeName},
+			remarks = #{remarks},
+			del_flag = #{delFlag},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t_activity_type SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

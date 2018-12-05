@@ -79,6 +79,7 @@ public class TableFlowController extends BaseController {
 				getInt(request, "platform_type", "platform_type is null");
 		Integer shopNo = RequestUtils.getInt(request, "shop_no", "shop_no is null");
 		Integer type = RequestUtils.getInt(request,"table_type","table_type is null");
+		String message = RequestUtils.getString(request, "message");
 
 		String originalFilename = file.getOriginalFilename();
 		logger.info("[{}] originalFilename:{}",originalFilename);
@@ -142,7 +143,7 @@ public class TableFlowController extends BaseController {
 
 			//保存上传记录
 			tableFlow.setStatus(TableFlowStatusEnum.IMPORT_SYSTEM_SUCCESS.getCode());
-			tableFlow.setErrorMessage("");
+			tableFlow.setErrorMessage(message);
 			tableFlowService.saveTableFlow(tableFlow);
 		} catch (ServiceException e) {
 			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());

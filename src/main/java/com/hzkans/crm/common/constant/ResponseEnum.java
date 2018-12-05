@@ -98,6 +98,7 @@ public enum ResponseEnum {
     B_E_UPDATE_STATUS_FAIL(41015, 0, "更改状态失败"),
     B_E_SHOP_EXIST(41016, 0, "店铺已存在"),
     B_E_PER_MUST_LOWER_TOTAL(41017, 0, "单笔金额不能大于返利总额"),
+    B_E_ACTIVITY_TYPE_EXIST(41018, 0, "活动类型已存在"),
 
 
     /**
