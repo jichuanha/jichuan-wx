@@ -27,6 +27,8 @@
 		.checked-public{text-align: center;margin-top: 10px}
 		.checked-public img{width: 50%;}
 		.checked-public p{font-size: 15px;margin-top: 10px}
+		.link_index{float: left;padding: 10px 20px;font-size: 18px;font-weight: bold;cursor: pointer;}
+		.link_index a{text-decoration: none;color:#000;}
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -165,6 +167,7 @@
 		<div id="header" class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="brand"><image id="productName" src="${ctxStatic}/images/login/logo.png" /></div>
+				<div class="link_index"><a href="${ctx}">[选择公众号]</a></div>
 				<ul id="userControl" class="nav pull-right">
 					<%--<li><a href="${pageContext.request.contextPath}${fns:getFrontPath()}/index-${fnc:getCurrentSiteId()}.html" target="_blank" title="访问网站主页"><i class="icon-home"></i></a></li>--%>
 					<%--<li id="themeSwitch" class="dropdown">--%>
@@ -295,7 +298,7 @@
 		    var total = 0;
             !$("#openClose").is(".open") && total++;
             !$("#openClose1").is(".open") && total++;
-            $("#right").width($("#content").width()- leftWidth*total - $("#openClose").width()*2 -5);
+            $("#right").width($("#content").width()- leftWidth*total - $("#openClose").width()*2 -50);
 		}// <c:if test="${tabmode eq '1'}"> 
 		function openCloseClickCallBack(b){
 			$.fn.jerichoTab.resize();

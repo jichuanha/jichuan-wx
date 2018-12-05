@@ -95,6 +95,7 @@ jQuery.validator.addMethod("card",function(value, element) {
 //验证身份证函数
 
 jQuery.validator.addMethod("doingEmail",function(value, element) {
+	value = value.trim();
     var tel = /^[a-z0-9]+([._\\-]*[a-z0-9])*@coseast\.com$/;
     return this.optional(element) ||(tel.test(value));
 },"请输入正确的东印邮箱")

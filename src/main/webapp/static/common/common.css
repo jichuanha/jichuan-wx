@@ -20,3 +20,6 @@
     width: 100%;
     bottom: 20px;
 }
+.navbar-inner{
+    background: #ccc;
+}
