@@ -161,7 +161,6 @@ public class OrderController extends BaseController {
 		try {
 			String[] split = ids.split(",");
 			List<String> strings = Arrays.asList(split);
-			logger.info("stings {}", JsonUtil.toJson(strings));
 			JoinActivity joinActivity = new JoinActivity();
 			joinActivity.setStatus(status);
 			joinActivity.setIds(strings);
