@@ -5,6 +5,7 @@
 <head>
     <title>Title</title>
     <meta name="decorator" content="default"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="${ctxStatic}/layer/layer.js"></script>
     <link rel="stylesheet" href="${ctxStatic}/page.my.css">
     <script src="${ctxStatic}/page.my.js"></script>
@@ -21,9 +22,33 @@
             margin: 5px 0;
         }
         .mid-input{
-            width: 200px;
             height: 30px;
             box-sizing: border-box;
+        }
+        @media screen and (min-width: 1500px) {
+            .mid-input{
+                width: 200px;
+            }
+        }
+        @media screen and (max-width: 1500px) {
+            .mid-input{
+                width: 200px;
+            }
+        }
+        @media screen and (max-width: 1200px) {
+            .mid-input{
+                width: 180px;
+            }
+        }
+        @media screen and (max-width: 1000px) {
+            .mid-input{
+                width: 150px;
+            }
+        }
+        @media screen and (max-width: 800px) {
+            .mid-input{
+                width: 100px;
+            }
         }
         input[type="text"]{
             height: 30px;
@@ -449,6 +474,7 @@
                 if (response.code === 10000) {
                     layer.msg(response.msg);
                     $('#myModal').modal('hide');
+                    ajaxFuc();
                 }
                 else{
                     layer.msg(response.msg);
@@ -722,7 +748,7 @@
                                 listStr += '校验失败';
                             }
                             else if(el.status == 3){
-                                listStr += '<a href="#" class="release-btn" data-id="'+el.id+'">发布</a>';
+                                listStr += '<a href="javascript:;" class="release-btn" data-id="'+el.id+'">发布</a>';
                             }
                             else if(el.status == 4){
                                 listStr += '发布失败';
