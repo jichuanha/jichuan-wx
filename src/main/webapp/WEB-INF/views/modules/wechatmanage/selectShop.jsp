@@ -11,6 +11,7 @@
   <script src="${ctxStatic}/bootstrap-3.3.0/js/bootstrap.min.js"></script>
   <script src="${ctxStatic}/jquery-validation/1.11.1/jquery.validate.min.js"></script>
   <script src="${ctxStatic}/jquery-validation/1.11.1/jquery.validate.method.min.js"></script>
+    <script src="${ctxStatic}/cookie/jquery.cookie.js" type="text/javascript"></script>
     <script src="${ctxStatic}/layer/layer.js"></script>
   <style>
     body{
@@ -105,7 +106,7 @@
                         _html.push('<div class="item pointer" data-id='+ item.id +'>' +
                             '        <img class="avatar" src="${ctxStatic}/images/wechatmanage/avatar.png">' +
                             '        <div class="desc">' +
-                            '          <div>'+ item.name +'</div>' +
+                            '          <div class="platFormName">'+ item.name +'</div>' +
                             '          <div style="margin-top:20px;color: #808080;">主体信息：'+ item.main_part +'</div>' +
                             '        </div>' +
                             '        <span class="set" data-id='+ item.id +'></span>' +
@@ -116,6 +117,8 @@
                         if(e.target.className == 'set') {
                             window.location = '${ctx}/wechat/link_update?id='+$(this).data('id');
                         }else{
+                            $.cookie('platFormId',$(this).data('id'));
+                            $.cookie('platFormName',$(this).find('.platFormName').html());
                             window.parent.location = '${ctx}/wechat/link_home_page?id='+$(this).data('id');
                         }
                     })

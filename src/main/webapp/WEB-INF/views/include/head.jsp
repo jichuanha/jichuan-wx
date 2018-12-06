@@ -20,4 +20,5 @@
 <link href="${ctxStatic}/common/jeesite.css" type="text/css" rel="stylesheet" />
 <link href="${ctxStatic}/common/common.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/common/jeesite.js" type="text/javascript"></script>
+<script src="${ctxStatic}/cookie/jquery.cookie.js" type="text/javascript"></script>
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
