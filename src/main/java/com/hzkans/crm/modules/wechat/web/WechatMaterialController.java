@@ -136,9 +136,9 @@ public class WechatMaterialController extends BaseController {
 	public String saveMaterial(HttpServletRequest request) {
 		try {
 			String title = RequestUtils.getString(request, false, "title", "app_secret is null");
-			String coverPicture = RequestUtils.getString(request, false, "cover_picture", "token is null");
-			String content = RequestUtils.getString(request, false, "content", "token is null");
-			String brief = RequestUtils.getString(request, false, "brief", "token is null");
+			String coverPicture = RequestUtils.getString(request, true, "cover_picture", "token is null");
+			String content = RequestUtils.getString(request, true, "content", "token is null");
+			String brief = RequestUtils.getString(request, true, "brief", "token is null");
 			String uri = RequestUtils.getString(request, true, "uri", "token is null");
 			Integer type = RequestUtils.getInt(request, "type", false, "id is null", "");
 			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
