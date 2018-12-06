@@ -37,7 +37,7 @@
 		FROM t_wecha_new_reply a
 		<include refid="wechatNewReplyJoins"/>
 		<where>
-			
+			a.deleted = 0
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -61,9 +61,6 @@
 			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
-			</if>
-			<if test="deleted != null and deleted != ''">
-				AND a.deleted = #{deleted}
 			</if>
 			<if test="wechatId != null and wechatId != ''">
 				AND a.wechat_id = #{wechatId}
@@ -97,7 +94,7 @@
 		</choose>
 	</select>
 	
-	<insert id="insert">
+	<insert id="saveReply" parameterType="com.hzkans.crm.modules.wechat.entity.WechatReply">
 		INSERT INTO t_wecha_new_reply(
 			un_open,
 			reply_type,
@@ -131,7 +128,7 @@
 		)
 	</insert>
 	
-	<update id="update">
+	<update id="updateReply" parameterType="com.hzkans.crm.modules.wechat.entity.WechatReply">
 		UPDATE t_wecha_new_reply
 		<set >
 			<if test="unOpen != null" >
@@ -171,5 +168,10 @@
 		deleted = 1
 		WHERE id = #{id}
 	</update>
-	
+
+	<select id="getReplyByKeywords" parameterType="java.lang.String"
+			resultType="com.hzkans.crm.modules.wechat.entity.WechatReply">
+		SELECT a.* FROM t_wecha_new_reply a
+		WHERE a.keywords = #{keywords} and a.deleted = 0
+	</select>
 </mapper>
