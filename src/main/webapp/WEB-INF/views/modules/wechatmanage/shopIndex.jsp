@@ -133,7 +133,7 @@
     <div class="container-bg">
         <div class="container-fluid">
             <div id="content" class="row-fluid">
-                <div id="right" style="overflow-y:scroll;overflow-x: hidden; ">
+                <div id="right" style="overflow-y:hidden;overflow-x: hidden; ">
                     <iframe id="menuFrame" name="menuFrame" src="${ctx}/wechat/link_get_list" style="overflow:visible;" scrolling="yes" frameborder="no" width="100%" height="650"></iframe>
                 </div>
             </div>

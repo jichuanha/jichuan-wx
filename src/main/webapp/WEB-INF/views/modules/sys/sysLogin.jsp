@@ -16,7 +16,7 @@
       .header{height:180px;padding-top:20px;} .alert{position:relative;width:300px;margin:0 auto;*padding-bottom:0px;}
       label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
 		body{
-			background: url('${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/bg.jpg') no-repeat;
+			background: url('${ctxStatic}/images/login/bg.jpg') no-repeat;
 			background-size:cover;
 			position: absolute;
 			top: 0;
@@ -42,7 +42,7 @@
 		  position: absolute;
 		  left: 10px;
 		  transform: translateY(50%);
-		  background: url('${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/email.png') no-repeat;
+		  background: url('${ctxStatic}/images/login/email.png') no-repeat;
 	  }
 	  .pswicon{
 		  width: 20px;
@@ -50,7 +50,7 @@
 		  position: absolute;
 		  left: 10px;
 		  transform: translateY(50%);
-		  background: url('${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/psw.png') no-repeat;
+		  background: url('${ctxStatic}/images/login/psw.png') no-repeat;
 	  }
       .code_icon{
           width: 20px;
@@ -104,7 +104,7 @@
 	</div>
 	<%--<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>--%>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
-		<img src="${fns:getConfig('service.url')}/dongyin-CRM/static/images/login/logo.png" id="logo">
+		<img src="${ctxStatic}/images/login/logo.png" id="logo">
 		<label class="input-label" for="username">登录名</label>
 		<div style="position: relative">
 			<div class="usernameicon"></div>
