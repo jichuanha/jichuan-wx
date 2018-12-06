@@ -40,7 +40,7 @@
     }
     .shop-wrap .item{
       border:1px solid #d8d8d8;
-      border-top: 4px solid #3f5185;
+      border-top: 4px solid #3f51B5;
       padding: 30px 20px;
       width: 390px;
       float: left;
