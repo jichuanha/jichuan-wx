@@ -9,11 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
 import com.hzkans.crm.modules.wechat.entity.WechatReply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +38,11 @@ public class WechatReplyController extends BaseController {
 
     @Autowired
     private WechatReplyService wechatNewReplyService;
+
+    @RequestMapping(value = "/link_auto_resopnse")
+    public String gotoInsert() {
+        return "modules/wechatplatform/autoResopnse";
+    }
 
     /**
      * 获取所有的自动回复信息
@@ -105,13 +112,13 @@ public class WechatReplyController extends BaseController {
             reply.setKeyType(keyType);
             reply.setKeywords(keywords);
             reply.setRemarks(remarks);
-            reply.setReplyDesc(replyDesc);
+            reply.setReplyDesc(JsonUtil.toJson(replyDesc));
             reply.setReplyWay(replyWay);
             reply.setUpdator(user.getName());
-            wechatNewReplyService.update(reply);
+            wechatNewReplyService.updateReply(reply);
             return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (ServiceException e) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
+        } catch (Exception e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR,e.getMessage());
         }
     }
 
@@ -149,16 +156,16 @@ public class WechatReplyController extends BaseController {
             reply.setKeyType(keyType);
             reply.setKeywords(keywords);
             reply.setRemarks(remarks);
-            reply.setReplyDesc(replyDesc);
+            reply.setReplyDesc(JsonUtil.toJson(replyDesc));
             reply.setReplyWay(replyWay);
             reply.setWechatId(wechatId);
             reply.setCreator(user.getName());
             reply.setUpdator(user.getName());
 
-            wechatNewReplyService.save(reply);
+            wechatNewReplyService.saveReply(reply);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (ServiceException e) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR,e.getMessage());
         }
     }
 
@@ -179,6 +186,25 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (ServiceException e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
+        }
+    }
+
+    /**
+     * 通过关键词搜索自动回复的信息
+     * @param request
+     * @return
+     */
+    @RequestMapping
+    public String getReplyByKeywords(HttpServletRequest request) {
+        try {
+            String keywords = RequestUtils.getString(request, false, "keywords", "id is null");
+            WechatReply wechatReply = wechatNewReplyService.getReplyByKeywords(keywords);
+            if (null == wechatReply){
+                throw new Exception(WechatErrorEnum.KEYWORDS_DOSES_NOT_EXIST.getDesc());
+            }
+            return ResponseUtils.getSuccessApiResponseStr(wechatReply);
+        } catch (Exception e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_QUERY_ERROR,e.getMessage());
         }
     }
 

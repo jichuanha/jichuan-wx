@@ -14,5 +14,9 @@ import com.hzkans.crm.modules.wechat.entity.WechatReply;
  */
 @MyBatisDao
 public interface WechatReplyDao extends CrudDao<WechatReply> {
-	
+    WechatReply getReplyByKeywords(String keywords);
+
+    void saveReply(WechatReply wechatReply);
+
+    void updateReply(WechatReply wechatReply);
 }
