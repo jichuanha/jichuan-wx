@@ -2,7 +2,7 @@ package com.hzkans.crm.modules.wechat.web;
 
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wechat.utils.WechatUtil;
+import com.hzkans.crm.modules.wechat.utils.WechatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +49,8 @@ public class AcceptEventPushController{
             PrintWriter out = response.getWriter();
 
             WechatPlatfromDO wechatPlatformById = wechatPlatfromService.getWechatPlatformById(12);
-            // 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
-            if (WechatUtil.checkSignature(signature, timestamp, nonce,wechatPlatformById.getToken())) {
+            // 通过检验signature对请求进行校验，若校成功则原样返回echostr，表示接入成功，否则接入失败
+            if (WechatUtils.checkSignature(signature, timestamp, nonce,wechatPlatformById.getToken())) {
                 out.print(echostr);
             }
 

@@ -2,13 +2,16 @@ package com.hzkans.crm.modules.wechat.web;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
+import com.hzkans.crm.common.utils.WxOSSClient;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -30,6 +38,10 @@ public class WechatPlatfromController extends BaseController {
 
     @Autowired
     private WechatPlatfromService wechatPlatfromService;
+    @Autowired
+    private WxOSSClient wxOSSClient;
+
+    private static final String UPLOAD_EX = "ex";
 
     @RequestMapping(value = "/link_add")
     public String gotoInsert() {
@@ -193,4 +205,40 @@ public class WechatPlatfromController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MODIFY_ERROR);
         }
     }
+
+    /**
+     * 图片和音频的上传
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/upload")
+    @ResponseBody
+    public String uploadImg(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+            MultipartFile file = multipartRequest.getFile("file");
+            String originalFilename = file.getOriginalFilename();
+            logger.info("originalFilename {}",originalFilename);
+            String replace = UUID.randomUUID().toString().replace("-", "");
+            String realPath = TradeUtil.UPLOAD_ADDRESS+originalFilename;
+            String newPath = replace+originalFilename;
+            logger.info("realPath {}",realPath);
+            File newFile = new File(realPath);
+            if(!newFile.exists()) {
+                newFile.mkdirs();
+            }
+            //先保存到本地,在上传到阿里云,最后删除本地文件
+            file.transferTo(newFile);
+            wxOSSClient.uploadFile(UPLOAD_EX,newPath,realPath);
+            if(newFile.exists()) {
+                newFile.delete();
+            }
+            return ResponseUtils.getSuccessApiResponseStr(newPath);
+        } catch (Exception e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+
+    }
+
 }

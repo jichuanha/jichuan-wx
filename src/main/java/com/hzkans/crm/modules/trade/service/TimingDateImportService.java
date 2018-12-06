@@ -83,6 +83,7 @@ public class TimingDateImportService {
             logger.info("[{}] table:{}", JsonUtil.toJson(table));
             String tableName = table.getTableName();
             Integer type = table.getType();
+            String id = table.getId();
             //读取表格
             String name = TradeUtil.UPLOAD_ADDRESS+tableName;
             File file = new File(name);
@@ -105,7 +106,7 @@ public class TimingDateImportService {
 
 
                 //保存订单信息
-                result = saveOrderMessage(sheetAt);
+                result = saveOrderMessage(sheetAt, id);
             }else if(type.equals(TableFlowTypeEnum.EVALUATE.getCode())) {
                 //保存评价信息
             }
@@ -184,7 +185,7 @@ public class TimingDateImportService {
         return 0;
     }
 
-    private int saveOrderMessage(Sheet sheetAt) {
+    private int saveOrderMessage(Sheet sheetAt, String id) {
         try {
             //获取总行数
             int lastRowNum = sheetAt.getLastRowNum();
@@ -198,6 +199,7 @@ public class TimingDateImportService {
                     continue;
                 }
                 Order order = new Order();
+                order.setTableId(Long.parseLong(id));
                 order.setOrderSn(row.getCell(0).getStringCellValue());
                 //查询该订单是否已经导入
                 Order order1 = orderDao.get(order);
