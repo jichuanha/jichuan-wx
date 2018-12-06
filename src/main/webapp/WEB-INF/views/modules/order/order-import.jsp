@@ -545,7 +545,7 @@
             });
         });
         $('#importUpload').live('click',function () {
-            upload();
+            uploader.upload();
         })
         //关闭模态框销毁WebUploader，解决再次打开模态框时按钮越变越大问题
         $('#myModal').on('hide.bs.modal', function () {
