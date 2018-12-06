@@ -121,9 +121,7 @@
                         content:'系统已发送确认邮件到'+$('#doingEmail').val() +',请及时查收邮件',
                     })
                 }else{
-                    if(data.code == '30001'){
-                        $('.verify_codeRefresh').click();
-                    }
+                    $('.verify_codeRefresh').click();
                     layer.open({
                         content:data.msg,
                     })
