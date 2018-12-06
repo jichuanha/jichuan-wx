@@ -233,7 +233,7 @@
         .status-name,.start-time,.receive-time{
             display: inline-block;
             margin-left: 40px;
-            width: 20%;
+            /*width: 20%;*/
         }
         .search-cond{
             display: inline-block;

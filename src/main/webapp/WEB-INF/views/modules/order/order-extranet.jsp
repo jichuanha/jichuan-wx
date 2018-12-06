@@ -326,17 +326,15 @@
 
         $('.search-close').live('click',function () {
             var para = $(this).next().attr('data-pram');
+            var _this = $(this);
             if(para == 'platform_type'){
-                $(this).parent().css('display','none');
-                var spans =  $('.search-cond');
-                $.each(spans,function (index,selector) {
-                    if($(selector).find('input').attr('data-pram') == 'shop_no'){
-                        console.log($(selector));
-                        $(selector).css('display','none');
-                    }
-                })
-                $('#platform_type').val('').trigger("change");
-                $('#shop_no').val('').trigger("change");
+                cancelEach(_this,'platform_type','shop_no');
+            }
+            else if(para == 'start_date'){
+                cancelEach(_this,'start_date','end_date');
+            }
+            else if(para == 'end_date'){
+                cancelEach(_this,'end_date','start_date');
             }
             else{
                 $(this).parent().css('display','none');
@@ -344,6 +342,19 @@
             }
             ajaxFuc();
         })
+        //互相关联的元素的关闭事件
+        function cancelEach(_this,parent,child){
+            $(_this).parent().css('display','none');
+            var spans =  $('.search-cond');
+            $.each(spans,function (index,selector) {
+                if($(selector).find('input').attr('data-pram') == child){
+                    console.log($(selector))
+                    $(selector).css('display','none');
+                }
+            })
+            $('#'+parent).val('').trigger("change");
+            $('#'+child).val('').trigger("change");
+        }
         // /分页跳转方法
 //         下一页点击事件
         $('.nextli').live('click',function () {
