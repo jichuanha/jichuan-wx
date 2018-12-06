@@ -181,9 +181,24 @@
 <script>
 $(function () {
     var para = GetRequest();
+    var activityType = {};
+    // 获取活动类型列表
+    $.ajax({
+		url:'${ctx}/activity/activity/activityTypeList',
+		type:'post',
+		async:false,
+		success:function (msg) {
+			var msg = strToJson(msg);
+			if(msg.code == 10000){
+                activityType = msg.data;
+			}
+        }
+	})
+    //获取活动详情相关信息
     $.ajax({
 		url:'activityDetail',
 		type:'POST',
+		async:false,
 		data:{
 		    id:para.id
 		},
@@ -204,7 +219,7 @@ $(function () {
                 else if(data.status == 3){
                     baseStr += '<li>活动状态： 已结束</li>'
                 }
-                baseStr += '<li><i class="import-deco">*</i>活动类型： 活动类型'+data.activity_type+'</li>'
+                baseStr += '<li><i class="import-deco">*</i>活动类型： '+activityType[data.activity_type]+'</li>'
                 baseStr += '<li>有效时间： '+data.active_date+' 至 '+data.inactive_date+'</li>';
                 baseStr += '<li>订单时效： '+data.order_active_date+' 至 '+data.order_inactive_date+'</li>';
                 baseStr += '<li>URL链接： <input type="text" name="real_name" id="url" style="width: 422px" readonly="readonly" value="'+data.url+'">' +
@@ -238,8 +253,9 @@ $(function () {
 			}
         }
 	})
+    //获取订单列表
     ajaxFuc();
-    function ajaxFuc() {
+    function ajaxFuc(nextPageSec) {
         var dataObject = {};
         dataObject.act_type = para.activity_type;
         dataObject.current_page = $('#current_page').val();
@@ -300,7 +316,7 @@ $(function () {
             }
         })
     }
-
+    //复制事件
     var clipboard = new ClipboardJS('.copy-btn');
     clipboard.on('success', function(e) {
         layer.msg('已复制到粘贴板上');
@@ -309,7 +325,7 @@ $(function () {
         console.log(e);
     });
 
-    pageList(10,1)
+    //点击查看图片
     $(".wrap").on("click",".img_ifram", function(){
         var src = $(this).attr("data-src");
         $('#preview-layer').remove();
@@ -323,6 +339,66 @@ $(function () {
             shadeClose: true,
             content: $('#preview-layer')
         });
+    })
+    // /分页跳转方法
+//         下一页点击事件
+    $('.nextli').live('click',function () {
+        currPage = $('#current_page').val();
+        nextPage = parseInt(currPage) + 1;
+        pageCount  = $('#pageCount').val();
+        pageNum = $('#page_size').val();
+        //当前页码 小于 总数/一页数
+        if(currPage >= Math.ceil(pageCount/pageNum)){
+            return;
+        }
+        else{
+            ajaxFuc(nextPage);
+        }
+    })
+// //    上一页点击事件
+    $('.prevli').live('click',function () {
+        currPage = $('#current_page').val();
+        if(currPage < 2){
+            return;
+        }
+        else{
+            nextPage = currPage - 1;
+            ajaxFuc(nextPage);
+        }
+    })
+//    某一页点击事件
+    $('.page-lis').live('click',function () {
+        nextPage = $(this).children().html();
+        ajaxFuc(nextPage);
+    })
+//    input回车跳转事件
+    $('.curr-page').live('keyup',function (event) {
+        if(event.keyCode == 13){
+            nextPage = $(this).val();
+            if (nextPage != '' && !isNaN(nextPage)) {
+                ajaxFuc(nextPage);
+            }
+            else{
+                $.alert({
+                    title: '提示',
+                    content: '请检查后重新输入!'
+                });
+                return;
+            }
+        }
+    })
+    $('.btn-link').live('click',function () {
+        nextPage = $('.curr-page').val();
+        if (nextPage != '' && !isNaN(nextPage)) {
+            ajaxFuc(nextPage);
+        }
+        else{
+            $.alert({
+                title: '提示',
+                content: '请检查后重新输入!'
+            });
+            return;
+        }
     })
     //对url的处理
     function GetRequest() {

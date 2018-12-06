@@ -217,6 +217,7 @@
             color: #7C7C7C;
             border-radius: 3px;
             padding: 3px 5px;
+            margin-right: 8px;
         }
         .search-close{
             display: inline-block;
@@ -298,7 +299,7 @@
         </form>
     </div>
     <input id="pageCount" type="hidden" value=""/>
-    <p class="h3-title search-box"><i class="h3-deco"></i><span class="activity-type">活动类型2</span></p>
+    <p class="h3-title search-box"><span class="activity-type"><i class="h3-deco"></i></span></p>
     <div class="order-lists">
         <ul class="lists-title clearfix">
             <li class="mycol-10">订单状态</li>
@@ -323,14 +324,29 @@
 
 <script>
     $(function () {
-        var para = GetRequest();
-        var shopStr = {};
-        $('.activity-type').html('活动类型'+para.activity_type);
+        var para = GetRequest();//url参数
+        var shopStr = {};//店铺参数
+        var activityType = {}; //活动类型数据
+        //获取活动类型参数
+        $.ajax({
+            url:'${ctx}/activity/activity/activityTypeList',
+            type:'post',
+            async:false,
+            success:function (msg) {
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    activityType = msg.data;
+                    $('.activity-type').html('<i class="h3-deco"></i>'+activityType[para.activity_type]);
+                }
+            }
+        })
+        //带上活动类型参数
         var paraStr = '?activity_type='+para.activity_type;
         $.each($('.my-nav-tabs li a'),function (index,selector) {
             var oldHref = $(selector).attr('href');
             $(selector).attr('href',oldHref+paraStr);
         })
+        //获取店铺信息
         $.ajax({
             url:'${ctx}/activity/activity/platformShopList',
             type:'post',
@@ -351,6 +367,7 @@
             }
         })
         ajaxFuc();
+        //所属平台发生变化时所属店铺也发生变化
         $('#platform_type').change(function () {
             $('#shop_no').html('<option value="">请选择</option>');
             var shopValue =  $(this).val();
@@ -363,6 +380,7 @@
             })
             $('#shop_no').val('').trigger("change");
         })
+        //筛选参数数组
         var searchCon = [{
             name:'活动名称',
             type:'input',
@@ -398,7 +416,7 @@
         }];
         //搜索
         $('#btnSubmit').click(function () {
-            $('.search-box').html('<i class="h3-deco"></i>活动类型 '+para.activity_type);
+            $('.search-box').html('<span class="activity-type"><i class="h3-deco"></i>'+activityType[para.activity_type]+'</span>');
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
@@ -407,6 +425,7 @@
             addSearch(dataObject);
             ajaxFuc();
         })
+        //搜索出现搜索条件
         var searchVal;
         function addSearch(dataObject){
             searchCon.forEach(function (el) {
@@ -423,24 +442,45 @@
                 }
             })
         }
+        //搜索关闭事件
         $('.search-close').live('click',function () {
             var para = $(this).next().attr('data-pram');
+            var _this = $(this);
             if(para == 'platform_type'){
-                $(this).parent().css('display','none');
-                var spans =  $('.search-cond');
-                $.each(spans,function (index,selector) {
-                    if($(selector).find('input').attr('data-pram') == 'shop_no'){
-                        $(selector).css('display','none');
-                    }
-                })
-                $('#platform_type').val('').trigger("change");
-                $('#shop_no').val('').trigger("change");
+                cancelEach(_this,'platform_type','shop_no');
+            }
+            else if(para == 'start_data'){
+                cancelEach(_this,'start_data','end_data');
+            }
+            else if(para == 'end_data'){
+                cancelEach(_this,'end_data','start_data');
             }
             else{
                 $(this).parent().css('display','none');
                 $('#'+para).val('').trigger("change");
             }
             ajaxFuc();
+        })
+        //互相关联的元素的关闭事件
+        function cancelEach(_this,parent,child){
+            $(_this).parent().css('display','none');
+            var spans =  $('.search-cond');
+            $.each(spans,function (index,selector) {
+                if($(selector).find('input').attr('data-pram') == child){
+                    console.log($(selector))
+                    $(selector).css('display','none');
+                }
+            })
+            $('#'+parent).val('').trigger("change");
+            $('#'+child).val('').trigger("change");
+        }
+        //点击清空搜索条件
+        $('.activity-type').live('click',function () {
+            $.each(searchCon,function (index,value) {
+                $('#'+value.id).val('').trigger('change');
+                $('.search-cond').remove();
+                ajaxFuc();
+            })
         })
         $('.current30').click(function () {
             $('#start_data').val(currentDate(30).active_date);
@@ -479,6 +519,7 @@
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
+        //查看图片
         $(".wrap").on("click",".img_ifram", function(){
             var src = $(this).attr("data-src");
             $('#preview-layer').remove();
@@ -553,6 +594,7 @@
                 return;
             }
         })
+        //列表获取事件
         function ajaxFuc(nextPage) {
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
@@ -623,6 +665,7 @@
                 }
             })
         }
+        //最近x天事件
         function currentDate(count){
             var time1 = new Date()
             time1.setTime(time1.getTime() - (24 * 60 * 60 * 1000))

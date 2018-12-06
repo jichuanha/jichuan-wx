@@ -191,6 +191,7 @@
 			color: #7C7C7C;
 			border-radius: 3px;
 			padding: 3px 5px;
+			margin-right: 8px;
 		}
 		.search-close{
 			display: inline-block;
@@ -284,7 +285,7 @@
 		</form>
 	</div>
 	<input id="pageCount" type="hidden" value=""/>
-	<p class="h3-title search-box"><i class="h3-deco"></i><span class="activity-type">活动类型2</span></p>
+	<p class="h3-title search-box"><span class="activity-type"><i class="h3-deco"></i></span></p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
 			<li class="mycol-10">活动状态</li>
@@ -307,13 +308,28 @@
 </div>
 <script>
     $(function () {
-        var para = GetRequest();
-        $('.activity-type').html('活动类型'+para.activity_type);
+        var para = GetRequest(); //url参数
+        var activityType = {}; //活动类型数据
+        //获取活动类型参数
+        $.ajax({
+            url:'${ctx}/activity/activity/activityTypeList',
+            type:'post',
+            async:false,
+            success:function (msg) {
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    activityType = msg.data;
+                    $('.search-box').html('<span class="activity-type"><i class="h3-deco"></i>'+activityType[para.activity_type]+'</span>');
+                }
+            }
+        })
+        //切换的时候加上activity_type 参数
         var paraStr = '?activity_type='+para.activity_type;
         $.each($('.my-nav-tabs li a'),function (index,selector) {
             var oldHref = $(selector).attr('href');
 			$(selector).attr('href',oldHref+paraStr);
         })
+        //获取店铺参数
         $.ajax({
             url:'platformShopList',
             type:'POST',
@@ -330,6 +346,7 @@
 				}
             }
         })
+        //获取列表
         ajaxFuc();
         function ajaxFuc(nextPage){
             var dataObject = {};
@@ -422,6 +439,7 @@
                 }
             })
 		}
+		//查询条件数组
 		var searchCon = [{
             name:'活动名称',
 			type:'input',
@@ -447,9 +465,9 @@
             type:'select',
             id:'shop_no'
         }];
-        //搜索
+        //搜索事件
         $('#btnSubmit').click(function () {
-            $('.search-box').html('<i class="h3-deco"></i>活动类型 '+para.activity_type);
+            $('.search-box').html('<span class="activity-type"><i class="h3-deco"></i>'+activityType[para.activity_type]+'</span>');
             var dataObject = {};
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
@@ -458,6 +476,7 @@
             addSearch(dataObject);
             ajaxFuc();
         })
+		//搜索点击出现条件
 		var searchVal;
 		function addSearch(dataObject){
             searchCon.forEach(function (el) {
@@ -474,11 +493,42 @@
                 }
 			})
 		}
+		// 搜索条件关闭
 		$('.search-close').live('click',function () {
-			$(this).parent().css('display','none');
-			var para = $(this).next().attr('data-pram');
-			$('#'+para).val('').trigger("change");
-			ajaxFuc();
+            var para = $(this).next().attr('data-pram');
+            var _this = $(this);
+            if(para == 'active_date'){
+                cancelEach(_this,'active_date','inactive_date');
+            }
+            else if(para == 'inactive_date'){
+                cancelEach(_this,'inactive_date','active_date');
+            }
+            else{
+                $(this).parent().css('display','none');
+                $('#'+para).val('').trigger("change");
+            }
+            ajaxFuc();
+        })
+        //互相关联的元素的关闭事件
+        function cancelEach(_this,parent,child){
+            $(_this).parent().css('display','none');
+            var spans =  $('.search-cond');
+            $.each(spans,function (index,selector) {
+                if($(selector).find('input').attr('data-pram') == child){
+                    console.log($(selector))
+                    $(selector).css('display','none');
+                }
+            })
+            $('#'+parent).val('').trigger("change");
+            $('#'+child).val('').trigger("change");
+        }
+        //点击清空搜索条件
+        $('.activity-type').live('click',function () {
+            $.each(searchCon,function (index,value) {
+                $('#'+value.id).val('').trigger('change');
+                $('.search-cond').remove();
+                ajaxFuc();
+            })
         })
 		//新建活动
 		$('#btnNew').click(function () {
@@ -499,6 +549,7 @@
             var activityId = $(this).nextAll('input').val();
             activityHandle(activityId,3);
         })
+		//活动操作事件
 		function activityHandle(activityId,type){
             $.ajax({
                 url:'updateStatus',
