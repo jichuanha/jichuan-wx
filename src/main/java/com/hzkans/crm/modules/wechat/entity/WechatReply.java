@@ -31,7 +31,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	private Integer wechatId;		// wechat_id
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
-	
+
 	public WechatReply() {
 		super();
 	}
@@ -55,7 +55,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setReplyType(Integer replyType) {
 		this.replyType = replyType;
 	}
-	
+
 
 	public Integer getContentType() {
 		return contentType;
@@ -64,7 +64,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setContentType(Integer contentType) {
 		this.contentType = contentType;
 	}
-	
+
 	public Integer getKeyType() {
 		return keyType;
 	}
@@ -72,7 +72,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setKeyType(Integer keyType) {
 		this.keyType = keyType;
 	}
-	
+
 	@Length(min=1, max=30, message="关键字长度必须介于 1 和 30 之间")
 	public String getKeywords() {
 		return keywords;
@@ -81,7 +81,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setKeywords(String keywords) {
 		this.keywords = keywords;
 	}
-	
+
 	public String getReplyDesc() {
 		return replyDesc;
 	}
@@ -89,7 +89,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setReplyDesc(String replyDesc) {
 		this.replyDesc = replyDesc;
 	}
-	
+
 	public Integer getReplyWay() {
 		return replyWay;
 	}
@@ -97,7 +97,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setReplyWay(Integer replyWay) {
 		this.replyWay = replyWay;
 	}
-	
+
 	@Length(min=0, max=64, message="创建者长度必须介于 0 和 64 之间")
 	public String getCreator() {
 		return creator;
@@ -106,7 +106,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
-	
+
 	@Length(min=0, max=64, message="修改者长度必须介于 0 和 64 之间")
 	public String getUpdator() {
 		return updator;
@@ -123,7 +123,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setDeleted(Integer deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@NotNull(message="wechat_id不能为空")
 	public Integer getWechatId() {
 		return wechatId;
@@ -132,7 +132,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setWechatId(Integer wechatId) {
 		this.wechatId = wechatId;
 	}
-	
+
 	public Date getBeginCreateDate() {
 		return beginCreateDate;
 	}
@@ -140,7 +140,7 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setBeginCreateDate(Date beginCreateDate) {
 		this.beginCreateDate = beginCreateDate;
 	}
-	
+
 	public Date getEndCreateDate() {
 		return endCreateDate;
 	}
@@ -148,5 +148,5 @@ public class WechatReply extends DataEntity<WechatReply> {
 	public void setEndCreateDate(Date endCreateDate) {
 		this.endCreateDate = endCreateDate;
 	}
-		
+
 }

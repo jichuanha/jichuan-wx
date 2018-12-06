@@ -23,7 +23,7 @@
 	<sql id="wechatNewReplyJoins">
 	</sql>
     
-	<select id="get" resultType="WechatMaterial">
+	<select id="get" resultType="WechatReply">
 		SELECT 
 			<include refid="wechatNewReplyColumns"/>
 		FROM t_wecha_new_reply a
@@ -31,7 +31,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="WechatMaterial">
+	<select id="findList" resultType="WechatReply">
 		SELECT 
 			<include refid="wechatNewReplyColumns"/>
 		FROM t_wecha_new_reply a
@@ -79,7 +79,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="WechatMaterial">
+	<select id="findAllList" resultType="WechatReply">
 		SELECT 
 			<include refid="wechatNewReplyColumns"/>
 		FROM t_wecha_new_reply a
@@ -132,21 +132,38 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE t_wecha_new_reply SET 	
-			un_open = #{unOpen},
-			reply_type = #{replyType},
-			content_type = #{contentType},
-			key_type = #{keyType},
-			keywords = #{keywords},
-			remarks = #{remarks},
-			reply_desc = #{replyDesc},
-			reply_way = #{replyWay},
-			update_date = #{updateDate},
-			creator = #{creator},
-			updator = #{updator},
-			deleted = #{deleted},
-			wechat_id = #{wechatId}
-		WHERE id = #{id}
+		UPDATE t_wecha_new_reply
+		<set >
+			<if test="unOpen != null" >
+				un_open = #{unOpen},
+			</if>
+			<if test="replyType != null" >
+				reply_type = #{replyType},
+			</if>
+			<if test="contentType != null" >
+				content_type = #{contentType},
+			</if>
+			<if test="keyType != null" >
+				key_type = #{keyType},
+			</if>
+			<if test="keywords != null" >
+				keywords = #{keywords},
+			</if>
+			<if test="remarks != null" >
+				remarks = #{remarks},
+			</if>
+			<if test="replyDesc != null" >
+				reply_desc = #{replyDesc},
+			</if>
+			<if test="replyWay != null" >
+				reply_way = #{replyWay},
+			</if>
+			<if test="updator != null" >
+				updator = #{updator},
+			</if>
+			update_date = now()
+		</set>
+		where id = #{id}
 	</update>
 	
 	<update id="delete">

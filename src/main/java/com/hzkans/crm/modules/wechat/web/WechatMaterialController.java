@@ -49,6 +49,13 @@ public class WechatMaterialController extends BaseController {
 		return "modules/wechatplatform/article_list";
 	}
 
+	/**
+	 * 查询所有的微信公众号素材信息
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "list_material")
 	@ResponseBody
 	public String list( HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -81,15 +88,48 @@ public class WechatMaterialController extends BaseController {
 		}
 	}
 
-	@RequestMapping(value = "form")
-	public String form(WechatMaterial material, Model model) {
-		model.addAttribute("wechatMaterial", material);
-		return "modules/material/wechatMaterialForm";
+	@RequestMapping(value = "update_material")
+	@ResponseBody
+	public String form(HttpServletRequest request) {
+		try {
+			String id = RequestUtils.getString(request, true, "id", "id is null");
+			String title = RequestUtils.getString(request, true, "title", "app_secret is null");
+			String coverPicture = RequestUtils.getString(request, true, "cover_picture", "token is null");
+			String content = RequestUtils.getString(request, true, "content", "token is null");
+			String brief = RequestUtils.getString(request, true, "brief", "token is null");
+			String uri = RequestUtils.getString(request, true, "uri", "token is null");
+
+
+			User user = UserUtils.getUser();
+			if (null == user){
+				return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
+			}
+
+			WechatMaterial material = new WechatMaterial();
+			material.setId(id);
+			material.setTitle(title);
+			material.setCoverPicture(coverPicture);
+			material.setContent(content);
+			material.setBrief(brief);
+			material.setUri(uri);
+			material.setCreator(user.getName());
+			material.setUpdator(user.getName());
+
+			materialService.update(material);
+			return ResponseUtils.getSuccessApiResponseStr(true);
+		} catch (ServiceException e) {
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MODIFY_ERROR);
+		}
 	}
 
+	/**
+	 * 添加微信公众号素材
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "save_material")
 	@ResponseBody
-	public String saveMaterial(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+	public String saveMaterial(HttpServletRequest request) {
 		try {
 			String title = RequestUtils.getString(request, false, "title", "app_secret is null");
 			String coverPicture = RequestUtils.getString(request, false, "cover_picture", "token is null");
@@ -114,7 +154,6 @@ public class WechatMaterialController extends BaseController {
 			material.setWechatId(wechatId);
 			material.setCreator(user.getName());
 			material.setUpdator(user.getName());
-			material.setWechatId(wechatId);
 
 			materialService.save(material);
 			return ResponseUtils.getSuccessApiResponseStr(true);
@@ -122,14 +161,17 @@ public class WechatMaterialController extends BaseController {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
 		}
 	}
-	
 
+	/**
+	 * 删除单个微信公众号素材
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "remove_material")
 	@ResponseBody
 	public String removeMaterial(HttpServletRequest request) {
 		try {
-			String id = RequestUtils.getString(request,false, "id", "id is null");
-
+			String id = RequestUtils.getString(request, true, "id", "id is null");
 			WechatMaterial material = new WechatMaterial();
 			material.setId(id);
 

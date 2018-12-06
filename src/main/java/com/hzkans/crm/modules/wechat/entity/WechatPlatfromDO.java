@@ -29,6 +29,15 @@ public class WechatPlatfromDO implements Serializable {
 	protected String appSecret;
 	protected String token;
 	protected Integer bindingFlag; 	// 删除标记（0：正常；1：删除；2：审核）
+	protected String appId;
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
 
 	public String getAppSecret() {
 		return appSecret;

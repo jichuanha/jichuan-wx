@@ -28,7 +28,7 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	private Integer wechatId;		// wechat_id
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
-	
+
 	public WechatMaterial() {
 		super();
 	}
@@ -45,7 +45,7 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	@Length(min=0, max=255, message="封面长度必须介于 0 和 255 之间")
 	public String getCoverPicture() {
 		return coverPicture;
@@ -54,7 +54,7 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	public void setCoverPicture(String coverPicture) {
 		this.coverPicture = coverPicture;
 	}
-	
+
 	@Length(min=0, max=1024, message="内容长度必须介于 0 和 1024 之间")
 	public String getContent() {
 		return content;

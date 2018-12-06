@@ -31,7 +31,7 @@ import com.hzkans.crm.modules.wechat.service.WechatReplyService;
  * @version 2018-12-05
  */
 @Controller
-@RequestMapping(value = "${adminPath}/wechatreply/wechatNewReply")
+@RequestMapping(value = "${adminPath}/wechat_reply")
 public class WechatReplyController extends BaseController {
 
     @Autowired
@@ -45,30 +45,33 @@ public class WechatReplyController extends BaseController {
      * @return
      */
     @RequestMapping(value = "list_reply")
+    @ResponseBody
     public String listReply(HttpServletRequest request, HttpServletResponse response, Model model) {
-        Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
-        Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
-        Integer wechatId = RequestUtils.getInt(request, "wechat_id", true, "id is null", "");
+        try {
+            Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
+            Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+            Integer replyType = RequestUtils.getInt(request, "reply_type", true, "reply_type is null", "");
 
-        if (start == null || start == 0) {
-            start = 1;
+            if (start == null || start == 0) {
+                start = 1;
+            }
+            if (count == null || count == 0) {
+                count = 20;
+            }
+
+            Page wechatNewReplyPage = new Page<WechatReply>();
+            wechatNewReplyPage.setPageNo(start);
+            wechatNewReplyPage.setPageSize(count);
+
+            WechatReply wechatMaterial = new WechatReply();
+            wechatMaterial.setReplyType(replyType);
+            wechatMaterial.setDeleted(0);
+
+            Page<WechatReply> page = wechatNewReplyService.findPage(wechatNewReplyPage, wechatMaterial);
+            return ResponseUtils.getSuccessApiResponseStr(page);
+        } catch (ServiceException e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
-        if (count == null || count == 0) {
-            count = 20;
-        }
-
-        Page wechatNewReplyPage = new Page<WechatReply>();
-        wechatNewReplyPage.setPageNo(start);
-        wechatNewReplyPage.setPageSize(count);
-
-        WechatReply wechatMaterial = new WechatReply();
-        wechatMaterial.setWechatId(wechatId);
-        wechatMaterial.setDeleted(0);
-
-        Page<WechatReply> page = wechatNewReplyService.findPage(wechatNewReplyPage, wechatMaterial);
-        model.addAttribute("page", page);
-
-        return "modules/wechatreply/wechatNewReplyList";
     }
 
     /**
@@ -79,33 +82,37 @@ public class WechatReplyController extends BaseController {
     @RequestMapping(value = "update_reply.do")
     @ResponseBody
     public String updateReply(HttpServletRequest request) {
-        String id = RequestUtils.getString(request, false, "id", "id is null");
-        Integer unOpen = RequestUtils.getInt(request, "un_open", true, "un_open is null", "");
-        Integer replyType = RequestUtils.getInt(request, "reply_type", true, "reply_type is null", "");
-        Integer contentType = RequestUtils.getInt(request, "content_type", true, "content_type is null", "");
-        Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
-        String keywords = RequestUtils.getString(request, true, "keywords", "keywords is null");
-        String remarks = RequestUtils.getString(request, true, "remarks", "");
-        String replyDesc = RequestUtils.getString(request, true, "reply_desc", "reply_desc is null");
-        Integer replyWay = RequestUtils.getInt(request, "reply_way", true, "reply_way is null", "");
+        try {
+            String id = RequestUtils.getString(request, true, "id", "id is null"); Integer unOpen = RequestUtils.getInt(request, "un_open", true, "un_open is null", "");
+            Integer replyType = RequestUtils.getInt(request, "reply_type", true, "reply_type is null", "");
+            Integer contentType = RequestUtils.getInt(request, "content_type", true, "content_type is null", "");
+            Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
+            String keywords = RequestUtils.getString(request, true, "keywords", "keywords is null");
+            String remarks = RequestUtils.getString(request, true, "remarks", "");
+            String replyDesc = RequestUtils.getString(request, true, "reply_desc", "reply_desc is null");
+            Integer replyWay = RequestUtils.getInt(request, "reply_way", true, "reply_way is null", "");
 
-        User user = UserUtils.getUser();
-        if (null == user) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
+            User user = UserUtils.getUser();
+            if (null == user) {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
+            }
+
+            WechatReply reply = new WechatReply();
+            reply.setId(id);
+            reply.setUnOpen(unOpen);
+            reply.setReplyType(replyType);
+            reply.setContentType(contentType);
+            reply.setKeyType(keyType);
+            reply.setKeywords(keywords);
+            reply.setRemarks(remarks);
+            reply.setReplyDesc(replyDesc);
+            reply.setReplyWay(replyWay);
+            reply.setUpdator(user.getName());
+            wechatNewReplyService.update(reply);
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (ServiceException e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
         }
-
-        WechatReply reply = new WechatReply();
-        reply.setUnOpen(unOpen);
-        reply.setReplyType(replyType);
-        reply.setContentType(contentType);
-        reply.setKeyType(keyType);
-        reply.setKeywords(keywords);
-        reply.setRemarks(remarks);
-        reply.setReplyDesc(replyDesc);
-        reply.setReplyWay(replyWay);
-        reply.setUpdator(user.getName());
-        wechatNewReplyService.update(reply);
-        return ResponseUtils.getSuccessApiResponseStr(true);
     }
 
     /**
@@ -119,36 +126,40 @@ public class WechatReplyController extends BaseController {
     @RequestMapping(value = "save_reply")
     @ResponseBody
     public String saveReply(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
-        Integer unOpen = RequestUtils.getInt(request, "un_open", false, "un_open is null", "");
-        Integer replyType = RequestUtils.getInt(request, "reply_type", false, "reply_type is null", "");
-        Integer contentType = RequestUtils.getInt(request, "content_type", false, "content_type is null", "");
-        Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
-        String keywords = RequestUtils.getString(request, false, "keywords", "keywords is null");
-        String remarks = RequestUtils.getString(request, true, "remarks", "");
-        String replyDesc = RequestUtils.getString(request, false, "reply_desc", "reply_desc is null");
-        Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
-        Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+        try {
+            Integer unOpen = RequestUtils.getInt(request, "un_open", false, "un_open is null", "");
+            Integer replyType = RequestUtils.getInt(request, "reply_type", false, "reply_type is null", "");
+            Integer contentType = RequestUtils.getInt(request, "content_type", false, "content_type is null", "");
+            Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
+            String keywords = RequestUtils.getString(request, false, "keywords", "keywords is null");
+            String remarks = RequestUtils.getString(request, true, "remarks", "");
+            String replyDesc = RequestUtils.getString(request, false, "reply_desc", "reply_desc is null");
+            Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
+            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
-        User user = UserUtils.getUser();
-        if (null == user) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
+            User user = UserUtils.getUser();
+            if (null == user) {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
+            }
+
+            WechatReply reply = new WechatReply();
+            reply.setUnOpen(unOpen);
+            reply.setReplyType(replyType);
+            reply.setContentType(contentType);
+            reply.setKeyType(keyType);
+            reply.setKeywords(keywords);
+            reply.setRemarks(remarks);
+            reply.setReplyDesc(replyDesc);
+            reply.setReplyWay(replyWay);
+            reply.setWechatId(wechatId);
+            reply.setCreator(user.getName());
+            reply.setUpdator(user.getName());
+
+            wechatNewReplyService.save(reply);
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (ServiceException e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
         }
-
-        WechatReply reply = new WechatReply();
-        reply.setUnOpen(unOpen);
-        reply.setReplyType(replyType);
-        reply.setContentType(contentType);
-        reply.setKeyType(keyType);
-        reply.setKeywords(keywords);
-        reply.setRemarks(remarks);
-        reply.setReplyDesc(replyDesc);
-        reply.setReplyWay(replyWay);
-        reply.setWechatId(wechatId);
-        reply.setCreator(user.getName());
-        reply.setUpdator(user.getName());
-
-        wechatNewReplyService.save(reply);
-        return ResponseUtils.getSuccessApiResponseStr(true);
     }
 
     /**
@@ -160,8 +171,7 @@ public class WechatReplyController extends BaseController {
     @ResponseBody
     public String removeReply(HttpServletRequest request) {
         try {
-            String id = RequestUtils.getString(request, false, "id", "id is null");
-
+            String id = RequestUtils.getString(request, true, "id", "id is null");
             WechatReply reply = new WechatReply();
             reply.setId(id);
 
