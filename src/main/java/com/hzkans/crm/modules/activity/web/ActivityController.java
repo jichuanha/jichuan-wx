@@ -19,6 +19,8 @@ import com.hzkans.crm.modules.sys.entity.Dict;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.DictService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +47,9 @@ public class ActivityController extends BaseController {
 
 	@Autowired
 	private DictService dictService;
+
+	@Autowired
+	private WechatPlatfromService wechatPlatfromService;
 
 	/**
 	 * 创建活动
@@ -91,6 +96,7 @@ public class ActivityController extends BaseController {
 		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "inactive_date is null");
 		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "order_active_date is null");
 		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "order_inactive_date is null");
+		Long wechatPlatformId = RequestUtils.getLong(request, "wechat_platform_id", false, "wechat_platform_id is null", "");
 		Integer isFollow = RequestUtils.getInt(request,"is_follow",false,"is_follow is null","");
 		Integer rebateType = RequestUtils.getInt(request,"rebate_type",false,"rebate_type is null","");
 		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel",false,"rebate_channel is null","");
@@ -138,6 +144,7 @@ public class ActivityController extends BaseController {
 			activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setIsFollow(isFollow);
+			activity.setWechatPlatformId(wechatPlatformId);
 			activity.setRebateType(rebateType);
 			activity.setRebateChannel(rebateChannel);
 			activity.setPerAmount(PriceUtil.parseYuan2Fen(perAmount * 1.0));
@@ -217,6 +224,8 @@ public class ActivityController extends BaseController {
 				List<Activity> activityList = page.getList();
 				if (CollectionUtils.isNotEmpty(activityList)){
 					for (Activity activity1 : activityList){
+						WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(Integer.valueOf(activity1.getWechatPlatformId().toString()));
+						activity1.setWechatPlatformName(wechatPlatfromDO.getName());
 						//将金额分转化为元
 						activity1.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity1.getPerAmount()));
 						if (null != activity1.getTotalAmount()){
@@ -248,6 +257,8 @@ public class ActivityController extends BaseController {
 			if (null != activity.getTotalAmount()){
 				activity.setTotalAmountStr(PriceUtil.parseFen2YuanStr(activity.getTotalAmount()));
 			}
+			WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(Integer.valueOf(activity.getWechatPlatformId().toString()));
+			activity.setWechatPlatformName(wechatPlatfromDO.getName());
 			activity.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity.getPerAmount()));
 			return ResponseUtils.getSuccessApiResponseStr(activity);
 		} catch (Exception e) {
