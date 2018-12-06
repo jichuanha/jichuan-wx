@@ -332,7 +332,7 @@
             $(selector).attr('href',oldHref+paraStr);
         })
         $.ajax({
-            url:'/dongyin-CRM/a/activity/activity/platformShopList',
+            url:'${ctx}/activity/activity/platformShopList',
             type:'post',
             success:function (msg) {
                 var msg = strToJson(msg);

@@ -388,7 +388,7 @@
         var shopStr = {};
         var platName = '',shopName = '';
         $.ajax({
-            url:'/dongyin-CRM/a/activity/activity/platformShopList',
+            url:'${ctx}/activity/activity/platformShopList',
             type:'post',
             async:false,
             success:function (msg) {
