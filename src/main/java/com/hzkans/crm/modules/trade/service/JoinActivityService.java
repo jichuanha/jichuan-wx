@@ -165,6 +165,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			newAct.setStatusStr(ActivityStatusEnum.getActivityStatusEnum(act.getStatus()).getDesc());
 			newAct.setActiveDate(act.getActiveDate());
 			newAct.setInactiveDate(act.getInactiveDate());
+			newAct.setActivityType(act.getActivityType());
 			JoinActivity newJoin = initParameter(wechatId.toString(), activity);
 
 			resultMap.put("act", newAct);

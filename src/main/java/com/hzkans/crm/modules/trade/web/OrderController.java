@@ -76,6 +76,12 @@ public class OrderController extends BaseController {
 	}
 
 
+	/**
+	 * 活动管理中的订单列表和订单管理
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/orderListDate")
 	@ResponseBody
 	public String getOrderList(HttpServletRequest request, HttpServletResponse response) {
