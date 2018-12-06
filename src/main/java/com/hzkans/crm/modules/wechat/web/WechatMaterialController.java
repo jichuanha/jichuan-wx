@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.hzkans.crm.modules.wechat.service.WechatMaterialService;
 
 /**
@@ -88,6 +87,11 @@ public class WechatMaterialController extends BaseController {
 		}
 	}
 
+	/**
+	 * 更改微信公众号素材
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "update_material")
 	@ResponseBody
 	public String form(HttpServletRequest request) {
