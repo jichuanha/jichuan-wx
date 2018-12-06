@@ -13,7 +13,8 @@
 		a.update_date AS "updateDate",
 		a.app_secret AS "appSecret",
 		a.token AS "token",
-		a.binding_flag AS "bindingFlag"
+		a.binding_flag AS "bindingFlag",
+		a.app_id AS "appId"
 	</sql>
 
     <sql id="tWechatPlatformJoins">
@@ -56,6 +57,7 @@
 			update_by,
 			update_date,
 			app_secret,
+			aoo_id,
 			token,
 			binding_flag
 		) VALUES (
@@ -67,6 +69,7 @@
 			#{updateBy},
 			now(),
 			#{appSecret},
+			#{app_id}
 			#{token},
 			0
 		)
@@ -89,6 +92,9 @@
             </if>
             <if test="bindingFlag != null ">
                 binding_flag = #{bindingFlag},
+            </if>
+            <if test="appId != null and appId != ''">
+                app_id = #{appId},
             </if>
             update_date = now()
         </set>
