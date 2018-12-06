@@ -361,9 +361,6 @@
 					data.list.forEach(function (el,index) {
 					    var listShowEach = '';
                         listShowEach += '<p><span class="list-time">'+el.active_date+' - '+el.inactive_date+'</span>';
-                        if(index == 0){
-                            listShowEach += '<span class="list-prompt">(列表根据创建时间"倒序"排列)</span>';
-						}
 						listShowEach += '<i class="list-right">';
 						if(el.status == 1){
                             listShowEach += '<span class="activity-pause">暂停</span>';
