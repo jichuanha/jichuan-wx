@@ -14,6 +14,7 @@ import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
 import com.hzkans.crm.modules.trade.service.OrderService;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -45,6 +46,12 @@ public class TableFlowController extends BaseController {
 	private static final Long MAX_SIZE =100*1024*1024L ;
 	private static final String TYPE_XLS = "xls";
 	private static final String TYPE_XLSX = "xlsx";
+
+	private static final String ORDER = "一叶子旗舰店最近下单顾客20181130135925.xlsx";
+	private static final String CUSTOMER = "一叶子旗舰店_已成交顾客分析20181130154701.xlsx";
+
+	private static final Integer ORDER_NUM = -1;
+	private static final Integer CUSTOMER_NUM = -2;
 
 	@Autowired
 	private TableFlowService tableFlowService;
@@ -268,14 +275,21 @@ public class TableFlowController extends BaseController {
 		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
 
 		try {
-			TableFlow tableFlow = new TableFlow();
-			tableFlow.setId(tableId.toString());
-			TableFlow table = tableFlowService.getTable(tableFlow);
+			String tableName = "";
+			if(ORDER_NUM.equals(tableId)) {
+				tableName = ORDER;
+			}else if(CUSTOMER_NUM.equals(tableId)) {
+				tableName = CUSTOMER;
+			}else {
+				TableFlow tableFlow = new TableFlow();
+				tableFlow.setId(tableId.toString());
+				TableFlow table = tableFlowService.getTable(tableFlow);
+				if(null == table) {
+					return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
+				}
+				tableName = table.getTableName();
+			}
 
-			if(null == table) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TABLE_NOT_EXIST);
-            }
-			String tableName = table.getTableName();
 			File file = new File(TradeUtil.UPLOAD_ADDRESS+tableName);
 			if(!file.exists()) {
 				logger.error(ResponseEnum.B_E_FILE_NOT_EXIST.getMsg());

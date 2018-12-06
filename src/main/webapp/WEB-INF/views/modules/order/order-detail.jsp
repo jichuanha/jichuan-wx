@@ -94,25 +94,25 @@
 
 <script>
     $(function () {
+        console.log(window.parent.location.href);
         var para = GetRequest();
-        /*
-        *
-
-
-
-
-
-
-
-
-
-
-
-
-        */
+        var activityType = {}; //活动类型数据
+        //获取活动类型参数
         $.ajax({
-            url:'orderDetail',
+            url:'${ctx}/activity/activity/activityTypeList',
             type:'post',
+            async:false,
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    activityType = msg.data;
+                }
+            }
+        })
+        $.ajax({
+            url:'${ctx}/trade/order/orderDetail',
+            type:'post',
+            asycs:false,
             data:{
                 id:para.id,
                 wechat_id:1
@@ -124,7 +124,7 @@
                     var order = msg.data.order;
                     $('.activity-info').html('<li><i class="import-deco">*</i>活动名称：'+act.name+'</li>' +
                         '<li>活动状态：'+act.status_str+'</li>' +
-                        '<li><i class="import-deco">*</i>活动类型：活动类型'+para.activity_type+'</li>' +
+                        '<li><i class="import-deco">*</i>活动类型：'+activityType[act.activity_type]+'</li>' +
                         '<li>有效时间：'+act.active_date+' 至 '+act.inactive_date+'</li>');
                     $('.order-info').html('<li>订单编号：'+order.order_sn+'</li>' +
                         ' <li>买家姓名：'+order.member_name+'</li>' +
