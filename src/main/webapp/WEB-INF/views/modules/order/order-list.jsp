@@ -6,7 +6,7 @@
 <head>
     <title>订单列表</title>
     <meta name="decorator" content="default"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">--%>
     <script src="${ctxStatic}/layer/layer.js"></script>
     <link rel="stylesheet" href="${ctxStatic}/page.my.css">
     <script src="${ctxStatic}/page.my.js"></script>

@@ -5,7 +5,7 @@
 <head>
     <title>Title</title>
     <meta name="decorator" content="default"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">--%>
     <script src="${ctxStatic}/layer/layer.js"></script>
     <link rel="stylesheet" href="${ctxStatic}/page.my.css">
     <script src="${ctxStatic}/page.my.js"></script>
@@ -259,7 +259,16 @@
         .prompt-msg{
             color: #7c7c7c;
         }
-
+        .modal.fade{
+            top: -100%;
+        }
+        #importUpload{
+            padding: 1.5px 0;
+            vertical-align: bottom;
+            background-color: #fff;
+            color: #3F51B5;
+            border: 1px solid #3F51B5;
+        }
     </style>
 </head>
 <body>
@@ -354,13 +363,14 @@
                         </li>
                         <li>
                             <label>其他备注</label>
-                            <input type="text" class="mid-input import-message"/>
+                            <input type="text" class="mid-input import-message" style="width: 200px"/>
                         </li>
                         <li>
                             <%--<a href="#" id="chooseExcel">选择文件--%>
                                 <%--<input href="#" class="choose-execl" type="file" value="选择文件"/>--%>
                             <%--</a>--%>
                             <a href="#" class="import-excel" id="importExcel">选择文件</a>
+                            <a href="#" class="import-upload" id="importUpload">开始上传</a>
                         </li>
                         <li class="choosed-excel"></li>
                         <li class="prompt-msg">*请选择所有信息之后再选择文件</li>
@@ -434,7 +444,7 @@
         //在点击弹出模态框的时候再初始化WebUploader，解决点击上传无反应问题
         $("#myModal").on("shown.bs.modal",function(){
             uploader = WebUploader.create({
-                auto: true, // 选择文件后自动上传
+                auto: false, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
                 pick: {
                     id: '#importExcel', // 按钮元素
@@ -534,6 +544,9 @@
                 alert('提示:'+ errorTxt);
             });
         });
+        $('#importUpload').live('click',function () {
+            upload();
+        })
         //关闭模态框销毁WebUploader，解决再次打开模态框时按钮越变越大问题
         $('#myModal').on('hide.bs.modal', function () {
             $('.platform-type').val("").trigger('change');
@@ -767,7 +780,7 @@
                             })
                             listStr += '<li class="mycol-20">'+platName+'</li>';
                             listStr += '<li class="mycol-20">'+shopName+'</li>';
-                            listStr += '<li class="mycol-20">'+el.total_num+'/'+el.success_num+'</li>';
+                            listStr += '<li class="mycol-20">'+el.total_num+'/'+(el.success_num ? el.success_num : "-")+'</li>';
                             listStr += '<li class="mycol-20">'+el.error_message+'</li>';
                             listStr += '</ul>';
                         })
