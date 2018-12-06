@@ -430,14 +430,7 @@ public class ActivityController extends BaseController {
 	public String activityTypeList(HttpServletRequest request) {
 		try {
 			//从字典管理中查询活动类型
-			Map map = new HashMap();
-			List<Dict> dictList = dictService.findListByType("name_type");
-			if (CollectionUtils.isNotEmpty(dictList)){
-				for (Dict dict : dictList){
-					map.put(dict.getValue(),dict.getLabel());
-				}
-			}
-			return ResponseUtils.getSuccessApiResponseStr(map);
+			return ResponseUtils.getSuccessApiResponseStr(dictService.findListByType("name_type"));
 		} catch (Exception e) {
 			logger.error("findList is error",e);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
