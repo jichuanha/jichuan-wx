@@ -1,9 +1,8 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
 package com.hzkans.crm.modules.wechat.web;
 
+
 import javax.servlet.http.HttpServletRequest;
+
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
@@ -53,7 +52,6 @@ public class WechatPlatfromController extends BaseController {
         model.addAttribute("wechat_platfrom_id",id);
         return "modules/sys/sysIndex";
     }
-
     @RequestMapping(value = "/link_update")
     public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {

@@ -15,8 +15,8 @@ import java.io.*;
  */
 public class TradeUtil {
 
-    /*private static final String UPLOAD_ADDRESS = "/deploy/data/www/static/upload/";*/
-    public static final String UPLOAD_ADDRESS = "E:/youxi/";
+    public static final String UPLOAD_ADDRESS = "/deploy/data/www/static/upload/";
+    /*public static final String UPLOAD_ADDRESS = "E:/youxi/";*/
 
     public static final String XLS = "xls";
     public static final String XLSX = "xlsx";
