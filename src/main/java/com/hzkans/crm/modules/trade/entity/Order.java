@@ -38,7 +38,7 @@ public class Order extends DataEntity<Order> {
 	private String areaName;
 	private String address;
 	private String consignee;   //收件人
-	private Integer tableId;
+	private Long tableId;
 	private Date startDate;
 	private Date endDate;
 	private String orderStatus;
@@ -94,11 +94,11 @@ public class Order extends DataEntity<Order> {
 		this.endDate = endDate;
 	}
 
-	public Integer getTableId() {
+	public Long getTableId() {
 		return tableId;
 	}
 
-	public void setTableId(Integer tableId) {
+	public void setTableId(Long tableId) {
 		this.tableId = tableId;
 	}
 

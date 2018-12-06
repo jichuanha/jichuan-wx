@@ -6,6 +6,7 @@ import com.hzkans.crm.common.persistence.PagePara;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
+import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.constants.OrderStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
@@ -80,6 +81,9 @@ public class TableFlowController extends BaseController {
 		Integer shopNo = RequestUtils.getInt(request, "shop_no", "shop_no is null");
 		Integer type = RequestUtils.getInt(request,"table_type","table_type is null");
 		String message = RequestUtils.getString(request, "message");
+		if(null == message){
+			message = "";
+		}
 
 		String originalFilename = file.getOriginalFilename();
 		logger.info("[{}] originalFilename:{}",originalFilename);
@@ -210,9 +214,7 @@ public class TableFlowController extends BaseController {
 	@RequestMapping("/orderIssue")
 	@ResponseBody
 	public String orderIssue(HttpServletRequest request, HttpServletResponse response) {
-		/*Long memberId = Long.parseLong(UserUtils.getUser().getNo());
-		logger.info("memberId {}", memberId);*/
-		Long memberId = 17L;
+		Long memberId = Long.parseLong(UserUtils.getUser().getNo());
 		logger.info("memberId {}", memberId);
 		Integer tableId = RequestUtils.getInt(request, "table_id", "table_id is null");
 		TableFlow table = null;
@@ -236,7 +238,7 @@ public class TableFlowController extends BaseController {
 		try {
 			//更新这个表所有订单的状态为审核成功
 			Order order = new Order();
-			order.setTableId(tableId);
+			order.setTableId((long)tableId);
 			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
 			orderService.updateOrder(order);
 			//更新状态为发布成功..
