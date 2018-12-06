@@ -65,6 +65,9 @@
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
+			<if test="wechatPlatformId != null">
+				AND a.wechat_platform_id = #{wechatPlatformId}
+			</if>
 			<if test="activeDate != null or inactiveDate != null">
 				AND (
 				<if test="activeDate != null">
