@@ -111,6 +111,9 @@
         }
         .mycol-20{
             width: 20%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .lists-title li{
             background-color: #F7F7F7;
@@ -150,7 +153,7 @@
         .status-name,.start-time,.receive-time{
             display: inline-block;
             margin-left: 40px;
-            width: 20%;
+            width: 40%;
         }
         .search-box{
             width: 96%;
@@ -163,6 +166,7 @@
             color: #7C7C7C;
             border-radius: 3px;
             padding: 3px 5px;
+            margin-right: 8px;
         }
         .search-close{
             display: inline-block;
@@ -178,7 +182,7 @@
         }
         .import-ul{
             list-style: none;
-            width: 320px;
+            /*width: 320px;*/
             margin: 0 auto;
         }
         .import-ul label{
@@ -231,14 +235,17 @@
         .radio-box{
             margin-bottom: 10px;
         }
-        .radio-box>input
+        .radio-box>input,
+        .down-box>input
         {
             display: none;
         }
-        .radio-box>label{
+        .radio-box>label,
+        .down-box>label{
             position: relative;
         }
-        .radio-box>label::before{
+        .radio-box>label::before,
+        .down-box>label::before{
             display: inline-block;
             content: "";
             width: 16px;
@@ -248,10 +255,14 @@
             background: url("${ctxStatic}/images/no-checked.png") no-repeat;
             background-size: 100%;
         }
-        .radio-box>input:checked+label::before{
+        .radio-box>input:checked+label::before,
+        .down-box>input:checked+label::before{
             background: url("${ctxStatic}/images/checked.png") no-repeat;
             background-size: 100%;
 
+        }
+        .down-box label{
+            margin-right: 20px;
         }
         .choosed-excel{
             margin-top: 10px;
@@ -268,6 +279,10 @@
             background-color: #fff;
             color: #3F51B5;
             border: 1px solid #3F51B5;
+        }
+        .tem-down{
+            color: #3f51b5;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -300,17 +315,18 @@
                 </li>
                 <li>
                     <label>下单时间：</label>
-                    <input id="start_data" name="start_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
+                    <input id="start_date" name="start_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
                 </li>
                 <li>
                     <label>结束时间：</label>
-                    <input id="end_data" name="end_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
+                    <input id="end_date" name="end_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
                 </li>
                 <li class="clearfix"></li>
                 <li class="btns">
                     <a href="#" id="btnSubmit" class="review-btn">查询</a>
                     <a href="#" id="btnImport" class="review-btn" data-toggle="modal" data-target="#myModal">导入</a>
+                    <span class="tem-down" data-toggle="modal" data-target="#myModaltemp">模板下载</span>
                 </li>
                 <li class="clearfix"></li>
             </ul>
@@ -344,7 +360,7 @@
                 <div class="modal-body">
                     <ul class="import-ul">
                         <li class="radio-box"><input type="radio" name="table_type" id="table_type1" value="1">
-                            <label for="table_type1" style="cursor:pointer"> <span>订单</span></label>'
+                            <label for="table_type1" style="cursor:pointer"> <span>订单</span></label>
                             <input type="radio" name="table_type" id="table_type2" value="2">
                             <label for="table_type2" style="cursor:pointer"> <span>评价</span></label>
                             <input type="radio" name="table_type" id="table_type3" value="3">
@@ -366,18 +382,37 @@
                             <input type="text" class="mid-input import-message" style="width: 200px"/>
                         </li>
                         <li>
-                            <%--<a href="#" id="chooseExcel">选择文件--%>
-                                <%--<input href="#" class="choose-execl" type="file" value="选择文件"/>--%>
-                            <%--</a>--%>
                             <a href="#" class="import-excel" id="importExcel">选择文件</a>
                             <a href="#" class="import-upload" id="importUpload">开始上传</a>
                         </li>
                         <li class="choosed-excel"></li>
-                        <li class="prompt-msg">*请选择所有信息之后再选择文件</li>
-                        </ul>'
+                        <li class="prompt-msg"></li>
+                        </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="myModaltemp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabeltemp">模板下载</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="down-box">
+                        <input type="radio" name="table_type_down" id="table_type_down1" value="1">
+                        <label for="table_type_down1" style="cursor:pointer"> <span>订单</span></label>
+                        <input type="radio" name="table_type_down" id="table_type_down3" value="2">
+                        <label for="table_type_down3" style="cursor:pointer"> <span>顾客信息</span></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary down-btn">确定</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -406,7 +441,6 @@
                             shopStr[el.platform].push({name:el.shop_name,id:el.shop,platform_name:el.platform_name});
                         })
                     })
-                    // console.log(shopStr);
                 }
             }
         })
@@ -440,6 +474,16 @@
 
 
         })
+        //下载模板
+        $('.down-btn').live('click',function () {
+            var val = $('.down-box input[type="radio"]:checked').val();
+            if(val != undefined){
+                location.href = '${ctx}/trade/tableFlow/orderDownLoad?table_id='+val;
+            }
+            else{
+                layer.msg('请先选择下载模板类型');
+            }
+        })
         var uploader;
         //在点击弹出模态框的时候再初始化WebUploader，解决点击上传无反应问题
         $("#myModal").on("shown.bs.modal",function(){
@@ -467,7 +511,8 @@
 
             // 当有文件被添加进队列的时候
             uploader.on( 'fileQueued', function( file ) {
-
+                console.log(file);
+                $('.prompt-msg').html('已选择:'+file.name);
             });
             uploader.on('uploadBeforeSend',function (obj,data,headers) {
 
@@ -521,10 +566,6 @@
                     layer.msg('请选择所属店铺');
                     uploader.cancelFile( file );
                 }
-                else if(data.message == ''){
-                    layer.msg('请填写备注');
-                    uploader.cancelFile( file );
-                }
             });
             // 上传完成（不论成功或失败都会执行）
             uploader.on( 'uploadComplete', function( file ) {
@@ -571,11 +612,11 @@
         },{
             name:'下单时间',
             type:'input',
-            id:'start_data'
+            id:'start_date'
         },{
             name:'结束时间',
             type:'input',
-            id:'end_data'
+            id:'end_date'
         }];
         $('#btnSubmit').live('click',function () {
             var dataObject = {};
@@ -643,25 +684,25 @@
             })
         })
 // 选择开始时间方法
-        $('#start_data').live('click',function () {
-            var inactive_date=$dp.$('end_data');
+        $('#start_date').live('click',function () {
+            var inactive_date=$dp.$('end_date');
             WdatePicker({
                 onpicked:function(){
-                    if($dp.$('end_data').value == ''){
-                        $dp.$('end_data').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
+                    if($dp.$('end_date').value == ''){
+                        $dp.$('end_date').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
                         inactive_date.click();
                     }
 
                 },
                 isShowClear:false,
                 dateFmt:'yyyy-MM-dd HH:mm:ss',
-                maxDate:'#F{$dp.$D(\'end_data\')}'
+                maxDate:'#F{$dp.$D(\'end_date\')}'
             })
         })
         //选择结束时间方法
-        $('#end_data').live('click',function () {
+        $('#end_date').live('click',function () {
             WdatePicker({
-                minDate:'#F{$dp.$D(\'start_data\')}',
+                minDate:'#F{$dp.$D(\'start_date\')}',
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
@@ -773,7 +814,7 @@
                             listStr += ' <ul class="order-list clearfix">';
                             listStr += '<li class="mycol-20">'+el.status_str+'</li>';
                             $.each(shopStr[el.platform_type],function (index,value) {
-                                if(index == el.shop_no){
+                                if(index == el.shop_no-1){
                                     platName = value.platform_name;
                                     shopName = value.name;
                                 }

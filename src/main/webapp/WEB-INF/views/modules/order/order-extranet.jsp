@@ -119,6 +119,9 @@
         }
         .mycol-15{
             width: 15%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .lists-title li{
             background-color: #F7F7F7;
@@ -157,7 +160,7 @@
         .status-name,.start-time,.receive-time{
             display: inline-block;
             margin-left: 40px;
-            width: 20%;
+            width: 40%;
         }
         .search-cond{
             display: inline-block;
@@ -194,11 +197,11 @@
             <ul class="ul-form">
                 <li>
                     <label>下单时间：</label>
-                    <input id="start_data" name="start_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
+                    <input id="start_date" name="start_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate"/>
                 </li>
                 <li>
                     <label>结束时间：</label>
-                    <input id="end_data" name="end_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
+                    <input id="end_date" name="end_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
                 </li>
                 <li><label>订单编号：</label>
@@ -292,11 +295,11 @@
         var searchCon = [{
             name:'下单时间',
             type:'input',
-            id:'start_data'
+            id:'start_date'
         },{
             name:'结束时间',
             type:'input',
-            id:'end_data'
+            id:'end_date'
         },{
             name:'店铺平台',
             type:'select',
@@ -402,25 +405,25 @@
             }
         })
         // 选择开始时间方法
-        $('#start_data').live('click',function () {
-            var inactive_date=$dp.$('end_data');
+        $('#start_date').live('click',function () {
+            var inactive_date=$dp.$('end_date');
             WdatePicker({
                 onpicked:function(){
-                    if($dp.$('end_data').value == ''){
-                        $dp.$('end_data').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
+                    if($dp.$('end_date').value == ''){
+                        $dp.$('end_date').value=$dp.cal.getP('y')+'-'+$dp.cal.getP('M')+'-'+$dp.cal.getP('d')+' '+(parseInt($dp.cal.getP('H'))+1)+':'+$dp.cal.getP('m')+':'+$dp.cal.getP('s');
                         inactive_date.click();
                     }
 
                 },
                 isShowClear:false,
                 dateFmt:'yyyy-MM-dd HH:mm:ss',
-                maxDate:'#F{$dp.$D(\'end_data\')}'
+                maxDate:'#F{$dp.$D(\'end_date\')}'
             })
         })
         //选择结束时间方法
-        $('#end_data').live('click',function () {
+        $('#end_date').live('click',function () {
             WdatePicker({
-                minDate:'#F{$dp.$D(\'start_data\')}',
+                minDate:'#F{$dp.$D(\'start_date\')}',
                 dateFmt:'yyyy-MM-dd HH:mm:ss'
             })
         })
@@ -458,7 +461,7 @@
                             listStr += '<li class="mycol-15">'+el.buyer_name+'</li>';
                             listStr += '<li class="mycol-15">'+el.mobile+'</li>';
                             listStr += '<li class="mycol-15">'+el.pay_amount_str+'</li>';
-                            listStr += '<li class="mycol-15">查看详情</li>';
+                            listStr += '<li class="mycol-15"><a href="${ctx}/trade/order/order_detail?id='+el.table_id+'">查看详情</a></li>';
                             listStr += '</ul>';
                         })
                         $('.lists-show').html(listStr);
@@ -484,6 +487,7 @@
         }
         var searchVal;
         function addSearch(dataObject){
+            $('.search-box').html('');
             searchCon.forEach(function (el) {
                 var id = el.id;
                 searchVal = '';

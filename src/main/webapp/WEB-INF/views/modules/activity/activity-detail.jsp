@@ -262,8 +262,8 @@ $(function () {
         dataObject.page_size = $('#page_size').val();
         dataObject.page_type = 1;
         dataObject.act_name = para.act_name;
-        //待改 公众号
-        dataObject.wechat_id = 1;
+        dataObject.wechat_platform_id = $.cookie().platFormId;
+
         $.ajax({
             url:'${ctx}/trade/order/orderListDate',
             type:'post',
