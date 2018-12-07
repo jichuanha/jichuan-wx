@@ -94,7 +94,7 @@
 
 <script>
     $(function () {
-        console.log(window.parent.location.href);
+        // console.log(window.parent.location.href);
         var para = GetRequest();
         var activityType = {}; //活动类型数据
         //获取活动类型参数
@@ -115,7 +115,7 @@
             asycs:false,
             data:{
                 id:para.id,
-                wechat_id:1
+                wechat_id:$.cookie().platFormId
             },
             success:function (msg) {
                 var msg = JSON.parse(msg);

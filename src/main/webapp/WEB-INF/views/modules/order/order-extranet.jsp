@@ -472,7 +472,7 @@
                             listStr += '<li class="mycol-15">'+el.buyer_name+'</li>';
                             listStr += '<li class="mycol-15">'+el.mobile+'</li>';
                             listStr += '<li class="mycol-15">'+el.pay_amount_str+'</li>';
-                            listStr += '<li class="mycol-15"><a href="${ctx}/trade/order/order_detail?id='+el.table_id+'">查看详情</a></li>';
+                            listStr += '<li class="mycol-15"><a href="${ctx}/trade/tableFlow/orderExtranetDetailPage?id='+el.id+'">查看详情</a></li>';
                             listStr += '</ul>';
                         })
                         $('.lists-show').html(listStr);

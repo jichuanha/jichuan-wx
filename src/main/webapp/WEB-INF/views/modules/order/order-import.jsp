@@ -586,6 +586,9 @@
             });
         });
         $('#importUpload').live('click',function () {
+            if($('.prompt-msg').html() == ''){
+                layer.msg('请先选择文件');
+            }
             uploader.upload();
         })
         //关闭模态框销毁WebUploader，解决再次打开模态框时按钮越变越大问题
