@@ -15,7 +15,8 @@
 		a.creator AS "creator",
 		a.updator AS "updator",
 		a.deleted AS "deleted",
-		a.wechat_id AS "wechatId"
+		a.wechat_id AS "wechatId",
+		a.article_uri AS "articleUri"
 	</sql>
 	
 	<sql id="wechatMaterialJoins">
@@ -102,7 +103,8 @@
 			creator,
 			updator,
 			deleted,
-			wechat_id
+			wechat_id,
+			article_uri
 		) VALUES (
 			#{title},
 			#{coverPicture},
@@ -115,27 +117,31 @@
 			#{creator},
 			#{updator},
 			0,
-			#{wechatId}
+			#{wechatId},
+			#{articleUri}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE t_wechat_material 
 		<set >
-			<if test="title != null" >
+			<if test="title != null and  title != '' " >
 				title = #{title},
 			</if>
-			<if test="coverPicture != null" >
+			<if test="coverPicture != null and  title != ''" >
 				cover_picture = #{coverPicture},
 			</if>
-			<if test="content != null" >
+			<if test="content != null and  content != ''" >
 				content = #{content},
 			</if>
-			<if test="brief != null" >
+			<if test="brief != null and  brief != ''" >
 				brief = #{brief},
 			</if>
-			<if test="uri != null" >
+			<if test="uri != null and  uri != ''" >
 				uri = #{uri},
+			</if>
+			<if test="articleUri != null and  articleUri = ''" >
+				article_uri = #{articleUri},
 			</if>
 			update_date = now()
 		</set>

@@ -28,6 +28,15 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	private Integer wechatId;		// wechat_id
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
+	private String articleUri;
+
+	public String getArticleUri() {
+		return articleUri;
+	}
+
+	public void setArticleUri(String articleUri) {
+		this.articleUri = articleUri;
+	}
 
 	public WechatMaterial() {
 		super();

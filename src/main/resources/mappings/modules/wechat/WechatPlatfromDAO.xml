@@ -57,7 +57,7 @@
 			update_by,
 			update_date,
 			app_secret,
-			aoo_id,
+			app_id,
 			token,
 			binding_flag
 		) VALUES (
@@ -69,9 +69,9 @@
 			#{updateBy},
 			now(),
 			#{appSecret},
-			#{app_id}
+			#{appId},
 			#{token},
-			0
+			#{bindingFlag}
 		)
 	</insert>
 

@@ -64,6 +64,14 @@ public class WechatPlatfromController extends BaseController {
         model.addAttribute("wechat_platfrom_id",id);
         return "modules/sys/sysIndex";
     }
+
+    /**
+     * 进入修改微信公众号页面
+     * @param request
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/link_update")
     public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {
@@ -92,6 +100,9 @@ public class WechatPlatfromController extends BaseController {
         try {
             String name = RequestUtils.getString(request, false, "name", "name is null");
             String mainPart = RequestUtils.getString(request, false, "main_part", "main_part is null");
+            String appSecret = RequestUtils.getString(request, true, "app_secret", "app_secret is null");
+            String token = RequestUtils.getString(request, true, "token", "token is null");
+            String appId = RequestUtils.getString(request, true, "app_id", "token is null");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -103,6 +114,10 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setCreateBy(user.getName());
             wechatPlatfromDO.setUpdateBy(user.getName());
             wechatPlatfromDO.setMainPart(mainPart);
+            wechatPlatfromDO.setMainPart(appSecret);
+            wechatPlatfromDO.setMainPart(token);
+            wechatPlatfromDO.setMainPart(appId);
+
             wechatPlatfromService.addWechatPlatform(wechatPlatfromDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
@@ -179,12 +194,18 @@ public class WechatPlatfromController extends BaseController {
         }
     }
 
+    /**
+     * 绑定微信公众号
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/binding_wechat_latform")
     public String bindingWechatPlatform(HttpServletRequest request){
         try {
             Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
             String appSecret = RequestUtils.getString(request, false, "app_secret", "app_secret is null");
             String token = RequestUtils.getString(request, false, "token", "token is null");
+            String appId = RequestUtils.getString(request, false, "app_id", "token is null");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -196,6 +217,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setUpdateBy(user.getName());
             wechatPlatfromDO.setAppSecret(appSecret);
             wechatPlatfromDO.setToken(token);
+            wechatPlatfromDO.setToken(appId);
             //绑定状态为1
             wechatPlatfromDO.setBindingFlag(1);
             wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
