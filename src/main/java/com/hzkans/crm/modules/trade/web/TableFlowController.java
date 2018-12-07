@@ -257,7 +257,7 @@ public class TableFlowController extends BaseController {
 			//更新状态为发布成功..
 			TableFlow tableFlow = new TableFlow();
 			tableFlow.setId(table.getId());
-			tableFlow.setErrorMessage(memberId.toString());
+			tableFlow.setIssuePer(memberId);
 			tableFlow.setTimingDate(new Date());
 			tableFlow.setStatus(TableFlowStatusEnum.ENSURE_TABLE_SUCCESS.getCode());
 			tableFlowService.updateTableFlow(tableFlow);
