@@ -48,7 +48,7 @@
 
     <ul class="creat-block">
         <li class="back"><i class="icon-chevron-left"></i></li>
-        <li>新建图文</li>
+        <li class="page-title">新建图文</li>
     </ul>
 </header>
 <div id="list-wrap" class="init-block">
@@ -192,6 +192,7 @@
                 $('input[name="cover"]').val(data.cover_picture);
                 $('.cover').attr('src','//yiyezi.yyzws.com/ex/'+ data.cover_picture);
                 btnType = 'edit';
+                $('.page-title').html('编辑图文');
                 initInputChange();
             });
 
