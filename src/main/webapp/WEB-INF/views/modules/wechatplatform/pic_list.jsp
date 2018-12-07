@@ -9,7 +9,7 @@
     <script src="${ctxStatic}/layer/layer.js"></script>
     <link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
     <script src="${ctxStatic}/jquery.page/page.js"></script>
-    <title>图文</title>
+    <title>图片</title>
     <style>
         #list-wrap,#creat-wrap{padding: 50px;}
         header{width: 100%;height: 55px;border-bottom: 2px solid #eee;}
@@ -21,8 +21,10 @@
         .creat-wrap .btn{font-size: 20px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
-        .item{width: 200px;margin-right: 20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;}
+        .item{width: 200px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;}
         #creat-block .item{height: 667px;}
+        .creat-btn{padding: 3px 30px;}
+        .creat-btn .webuploader-pick{font-size: 20px;display: inline;}
         .item img{display: block;width: 100%;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;}
         .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
@@ -45,14 +47,9 @@
         <li class="actived"><a href="${ctx}/wechat_material/link_pic_list">图片</a></li>
         <li><a href="${ctx}/wechat_material/link_sound_list">语音</a></li>
     </ul>
-
-    <ul class="creat-block">
-        <li class="back"><i class="icon-chevron-left"></i></li>
-        <li>上传</li>
-    </ul>
 </header>
 <div id="list-wrap" class="init-block">
-    <div class="creat-wrap"><button class="btn btn-primary creat-btn">新建</button><span class="total">共同0条</span></div>
+    <div class="creat-wrap"><button class="btn btn-primary creat-btn">上传</button><span class="total">共同0条</span></div>
     <div id="list-block">
         <div class="item">
         <div class="opration">

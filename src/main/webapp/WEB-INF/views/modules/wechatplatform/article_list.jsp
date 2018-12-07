@@ -21,7 +21,7 @@
         .creat-wrap .btn{font-size: 20px;padding: 10px 30px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
-        .item{width: 375px;margin-right: 20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
+        .item{width: 375px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
         #creat-block .item{height: 667px;}
         .item img{display: block;width: 100%;height: 200px;margin: 20px 0;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;}
@@ -130,7 +130,7 @@
                             '                <i class="icon-edit" data-index="'+ index +'"></i>\n' +
                             '            </div>\n' +
                             '            <div>\n' +
-                            '                <div>'+ item.title+'</div>\n' +
+                            '                <div style="font-size:20px;">'+ item.title+'</div>\n' +
                             '                <div>2018-12-05</div>\n' +
                             '            </div>\n' +
                             '            <img src="//yiyezi.yyzws.com/ex/'+ item.cover_picture+'">\n' +
