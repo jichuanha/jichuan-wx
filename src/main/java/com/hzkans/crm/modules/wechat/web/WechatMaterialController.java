@@ -4,8 +4,6 @@
 package com.hzkans.crm.modules.wechat.web;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.ServiceException;
@@ -17,7 +15,6 @@ import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.hzkans.crm.modules.wechat.service.WechatMaterialService;
@@ -51,8 +48,6 @@ public class WechatMaterialController extends BaseController {
 	/**
 	 * 查询所有的微信公众号素材信息
 	 * @param request
-	 * @param response
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "list_material")

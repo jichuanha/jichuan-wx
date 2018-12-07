@@ -173,10 +173,8 @@ public class CustomMenuServiceImpl implements CustomMenuService {
 
     @Override
     public CustomMenuDO getCustomMenu(CustomMenuDO customMenuDO) throws Exception {
-        CustomMenuDO customMenu = new CustomMenuDO();
         try {
-
-            customMenu = customMenuDAO.select(customMenuDO);
+            CustomMenuDO customMenu = customMenuDAO.select(customMenuDO);
             if (null == customMenu) {
                 return null;
             }
@@ -184,7 +182,6 @@ public class CustomMenuServiceImpl implements CustomMenuService {
         } catch (Exception e) {
             logger.error("getCustomMenu error :{}", e.getMessage());
             throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
-
         }
     }
 

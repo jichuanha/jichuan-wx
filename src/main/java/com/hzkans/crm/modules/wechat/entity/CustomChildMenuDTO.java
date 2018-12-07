@@ -23,6 +23,16 @@ public class CustomChildMenuDTO implements Serializable{
 
     private Long parentId;
 
+    private Integer wechatId;
+
+    public Integer getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(Integer wechatId) {
+        this.wechatId = wechatId;
+    }
+
     public String getName() {
         return name;
     }

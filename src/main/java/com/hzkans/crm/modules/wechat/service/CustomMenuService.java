@@ -59,5 +59,4 @@ public interface CustomMenuService {
 	 */
 	CustomMenuDO getCustomMenu(CustomMenuDO customMenuDO) throws Exception;
 
-
 }

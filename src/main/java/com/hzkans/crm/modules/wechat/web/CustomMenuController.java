@@ -119,6 +119,7 @@ public class CustomMenuController {
             customMenuDO.setKeywords(keywords);
             customMenuDO.setUri(uri);
             customMenuDO.setWechatId(wechatId);
+
             customMenuService.modifCustomMenu(customMenuDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
@@ -154,14 +155,33 @@ public class CustomMenuController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/get_main_menu.do")
+    @RequestMapping("/get_main_menu")
     @ResponseBody
     public String getMainMenu(HttpServletRequest request) throws Exception {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            List<CustomMenuDO> customMenuDTOList = customMenuService
-                    .selectParentMenu(wechatId);
-            return ResponseUtils.getSuccessApiResponseStr(customMenuDTOList);
+
+            List<CustomMenuDO> customMenuDOList = customMenuService.selectParentMenu(wechatId);
+            return ResponseUtils.getSuccessApiResponseStr(customMenuDOList);
+        } catch (Exception e) {
+            logger.error("---------->deletedCustomMenu found error:", e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_QUERY_ERROR, e.getMessage());
+        }
+    }
+
+    @RequestMapping("/get_menu_details")
+    @ResponseBody
+    public String getMenuDetails(HttpServletRequest request) throws Exception {
+        try {
+            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+            Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
+
+            CustomMenuDO customMenuDO = new CustomMenuDO();
+            customMenuDO.setWechatId(wechatId);
+            customMenuDO.setId(id);
+
+            CustomMenuDO customMenuDOresult = customMenuService.getCustomMenu(customMenuDO);
+            return ResponseUtils.getSuccessApiResponseStr(customMenuDOresult);
         } catch (Exception e) {
             logger.error("---------->deletedCustomMenu found error:", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_QUERY_ERROR, e.getMessage());

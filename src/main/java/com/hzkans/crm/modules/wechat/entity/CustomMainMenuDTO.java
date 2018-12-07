@@ -25,7 +25,17 @@ public class CustomMainMenuDTO implements Serializable {
 
 	private Long parentId;
 
+	private Integer wechatId;
+
 	private List<CustomChildMenuDTO> customChildMenuDTOS;
+
+	public Integer getWechatId() {
+		return wechatId;
+	}
+
+	public void setWechatId(Integer wechatId) {
+		this.wechatId = wechatId;
+	}
 
 	public Long getParentId() {
 		return parentId;
