@@ -160,7 +160,7 @@
         .status-name,.start-time,.receive-time{
             display: inline-block;
             margin-left: 40px;
-            width: 40%;
+            margin-right: 100px;
         }
         .search-cond{
             display: inline-block;
@@ -464,7 +464,7 @@
                         var listStr = '';
                         data.list.forEach(function (el,index) {
                             listStr += '<p class="clearfix"><span class="status-name">订单编号:';
-                            listStr += el.order_sn+'</span><span class="start-time">下单时间:'+el.order_time+'</span></p>';
+                            listStr += el.order_sn+'</span><span class="start-time">下单时间:'+el.order_time+'</span><span class="start-time">导入时间:'+el.create_date+'</span></p>';
                             listStr += ' <ul class="order-list clearfix">';
                             listStr += '<li class="mycol-10">'+el.order_status+'</li>';
                             listStr += '<li class="mycol-15">'+el.platform_type_str+'</li>';

@@ -511,7 +511,6 @@
 
             // 当有文件被添加进队列的时候
             uploader.on( 'fileQueued', function( file ) {
-                console.log(file);
                 $('.prompt-msg').html('已选择:'+file.name);
             });
             uploader.on('uploadBeforeSend',function (obj,data,headers) {
@@ -533,7 +532,8 @@
                 }
                 else{
                     layer.msg(response.msg);
-                    $('#myModal').modal('hide');
+                    uploader.cancelFile(file);
+                    $('.prompt-msg').html('');
                 }
             });
 
@@ -554,18 +554,6 @@
                 data.shop_no = $('.shop-no option:selected').val();
                 data.table_type = $('.radio-box input[type="radio"]:checked').val();
                 data.message = $('.import-message').val();
-                if(data.table_type == undefined){
-                    layer.msg('请选择文件类型');
-                    uploader.cancelFile( file );
-                }
-                else if(data.platform_type == ''){
-                    layer.msg('请选择所属平台');
-                    uploader.cancelFile( file );
-                }
-                else if(data.shop_no == ''){
-                    layer.msg('请选择所属店铺');
-                    uploader.cancelFile( file );
-                }
             });
             // 上传完成（不论成功或失败都会执行）
             uploader.on( 'uploadComplete', function( file ) {
@@ -586,8 +574,24 @@
             });
         });
         $('#importUpload').live('click',function () {
+            if($('.radio-box input[type="radio"]:checked').val() == undefined){
+                layer.msg('请选择文件类型');
+                uploader.stop(file);
+                return;
+            }
+            else if($('.platform-type option:selected').val() == ''){
+                layer.msg('请选择所属平台');
+                uploader.stop(file);
+                return;
+            }
+            else if($('.shop-no option:selected').val() == ''){
+                layer.msg('请选择所属店铺');
+                uploader.stop(file);
+                return;
+            }
             if($('.prompt-msg').html() == ''){
                 layer.msg('请先选择文件');
+                return;
             }
             uploader.upload();
         })
@@ -597,7 +601,7 @@
             $('.shop-no').val("").trigger('change');
             $('.radio-box input[type="radio"]:checked').attr("checked",false);
             $('.import-message').val('');
-            $("#responeseText").text("");
+            $('.prompt-msg').html('');
             uploader.destroy();
         });
         var searchCon = [{
@@ -808,7 +812,7 @@
                         $('.lists-show').html('');
                         var listStr = '';
                         data.list.forEach(function (el,index) {
-                            listStr += '<p class="clearfix"><span class="start-time">下单时间:'+el.import_date+'</span>';
+                            listStr += '<p class="clearfix"><span class="start-time">导入时间:'+el.import_date+'</span>';
                             listStr += ' <i class="list-right">';
                             if(el.status == 1){
                                 listStr += '校验中';
