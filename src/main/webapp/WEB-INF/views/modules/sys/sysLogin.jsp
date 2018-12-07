@@ -14,7 +14,7 @@
       .form-signin .btn.btn-large{font-size:16px;} .form-signin #themeSwitch{position:absolute;right:15px;bottom:10px;}
       .form-signin div.validateCode {padding-bottom:15px;} .mid{vertical-align:middle;}
       .header{height:180px;padding-top:20px;} .alert{position:relative;width:300px;margin:0 auto;*padding-bottom:0px;}
-      label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}
+      /*label.error{background:none;width:270px;font-weight:normal;color:inherit;margin:0;}*/
 		body{
 			background: url('${ctxStatic}/images/login/bg.jpg') no-repeat;
 			background-size:cover;
@@ -76,16 +76,20 @@
 		$(document).ready(function() {
 			$("#loginForm").validate({
 				rules: {
-					validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}
+					<%--validateCode: {remote: "${pageContext.request.contextPath}/servlet/validateCodeServlet"}--%>
 				},
 				messages: {
-					username: {required: "请填写用户名."},password: {required: "请填写密码."},
-					validateCode: {remote: "验证码不正确.", required: "请填写验证码."}
+					username: {required: "请填写用户名"},password: {required: "请填写密码"},
+					validateCode: {
+					    // remote: "验证码不正确",
+						required: "请填写验证码."}
 				},
-				errorLabelContainer: "#messageBox",
-				errorPlacement: function(error, element) {
-					error.appendTo($("#loginError").parent());
-				}
+				// errorLabelContainer: "#messageBox",
+				// errorPlacement: function(error, element) {
+				// 	if($('input[name=validateCode]').val().length==4){
+                 //        $('.validateCodeRefresh').click();
+                 //    }
+				// }
 			});
 		});
 		// 如果在框架或在对话框中，则弹出提示并跳转到首页
@@ -98,9 +102,7 @@
 <body>
 	<!--[if lte IE 6]><br/><div class='alert alert-block' style="text-align:left;padding-bottom:10px;"><a class="close" data-dismiss="alert">x</a><h4>温馨提示：</h4><p>你使用的浏览器版本过低。为了获得更好的浏览体验，我们强烈建议您 <a href="http://browsehappy.com" target="_blank">升级</a> 到最新版本的IE浏览器，或者使用较新版本的 Chrome、Firefox、Safari 等。</p></div><![endif]-->
 	<div class="header">
-		<div id="messageBox" class="alert alert-error ${empty message ? 'hide' : ''}"><button data-dismiss="alert" class="close">×</button>
-			<label id="loginError" class="error">${message}</label>
-		</div>
+
 	</div>
 	<%--<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>--%>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
@@ -125,6 +127,10 @@
 			<a id="foundPsw" href="${ctx}/changePassword/link_send_mail" target="_blank">找回密码</a>
 		</div>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录" id="login-btn"/>&nbsp;&nbsp;
+
+		<div  class=" ${empty message ? 'hide' : ''}">
+			<label id="loginError" class="error">${message}</label>
+		</div>
 		<div id="themeSwitch" class="dropdown">
 			<%--<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>--%>
 			<ul class="dropdown-menu">
