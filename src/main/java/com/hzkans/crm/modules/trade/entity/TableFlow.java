@@ -28,7 +28,16 @@ public class TableFlow extends DataEntity<TableFlow> {
 	private Date endDate;
 	private Long totalNum;
 	private Long successNum;
+	private Long issuePer;
 
+
+	public Long getIssuePer() {
+		return issuePer;
+	}
+
+	public void setIssuePer(Long issuePer) {
+		this.issuePer = issuePer;
+	}
 
 	public Long getTotalNum() {
 		return totalNum;

@@ -44,6 +44,7 @@ public class OrderService extends CrudService<OrderDao, Order> {
 		Order order1 = null;
 		try {
 			order1 = get(order);
+			dealOrder(order1);
 		} catch (Exception e) {
 			logger.error("getPlatformShop service error",e);
 			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
@@ -73,15 +74,7 @@ public class OrderService extends CrudService<OrderDao, Order> {
 			List<Order> orderList = orderDao.listOrderLimit(pagePara);
 			if(CollectionUtils.isNotEmpty(orderList)) {
 				for (Order order : orderList) {
-					//因为导入的订单都是已付款订单
-					order.setOrderStatus("已付款");
-					PlatformShop platformShop = new PlatformShop();
-					platformShop.setShop(Integer.parseInt(order.getShopNo()));
-					platformShop.setPlatform(order.getPlatformType());
-					PlatformShop shop = platformShopService.getPlatformShop(platformShop);
-					order.setPlatformTypeStr(shop.getPlatformName());
-					order.setShopNoStr(shop.getShopName());
-					order.setPayAmountStr(PriceUtil.parseFen2YuanStr(order.getPayAmount()));
+					dealOrder(order);
 				}
 			}
 
@@ -94,5 +87,38 @@ public class OrderService extends CrudService<OrderDao, Order> {
 		}
 		return para;
 	}
+
+	private void dealOrder(Order order) {
+		//因为导入的订单都是已付款订单
+		order.setOrderStatus("已付款");
+		PlatformShop platformShop = new PlatformShop();
+		platformShop.setShop(Integer.parseInt(order.getShopNo()));
+		platformShop.setPlatform(order.getPlatformType());
+		PlatformShop shop = platformShopService.getPlatformShop(platformShop);
+		order.setPlatformTypeStr(shop.getPlatformName());
+		order.setShopNoStr(shop.getShopName());
+		order.setPayAmountStr(PriceUtil.parseFen2YuanStr(order.getPayAmount()));
+	}
+
+	/**
+	 * 获取外网订单详情
+	 * @param order
+	 * @return
+	 */
+	public Order getOrderDetail(Order order) {
+		TradeUtil.isAllNull(order);
+		Order order1 = null;
+		try {
+			order1 = get(order);
+			dealOrder(order1);
+		} catch (Exception e) {
+			logger.error("getOrderDetail error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+		return order1;
+	}
+
+
+
 
 }

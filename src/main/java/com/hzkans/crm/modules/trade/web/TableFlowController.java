@@ -69,6 +69,12 @@ public class TableFlowController extends BaseController {
 		return "modules/order/order-extranet";
 	}
 
+	@RequestMapping("/orderExtranetDetailPage")
+	public String orderExtranetDetailPage() {
+		return "modules/order/order-extranet-detail";
+	}
+
+
 
 	/**
 	 * 表格导入
@@ -251,7 +257,7 @@ public class TableFlowController extends BaseController {
 			//更新状态为发布成功..
 			TableFlow tableFlow = new TableFlow();
 			tableFlow.setId(table.getId());
-			tableFlow.setErrorMessage(memberId.toString());
+			tableFlow.setIssuePer(memberId);
 			tableFlow.setTimingDate(new Date());
 			tableFlow.setStatus(TableFlowStatusEnum.ENSURE_TABLE_SUCCESS.getCode());
 			tableFlowService.updateTableFlow(tableFlow);
@@ -352,4 +358,21 @@ public class TableFlowController extends BaseController {
 		}
 	}
 
+
+	@RequestMapping("/orderDetail")
+	@ResponseBody
+	public String orderDetail(HttpServletRequest request, HttpServletResponse response) {
+		Long id = RequestUtils.getLong(request, "id", "id is null");
+		try {
+			Order order = new Order();
+			order.setId(id.toString());
+
+			Order newOrder = orderService.getOrder(order);
+
+			return ResponseUtils.getSuccessApiResponseStr(newOrder);
+		} catch (ServiceException e) {
+			logger.error("orderDetail error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
+	}
 }

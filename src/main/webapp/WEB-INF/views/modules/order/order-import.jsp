@@ -404,9 +404,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="down-box">
-                        <input type="radio" name="table_type_down" id="table_type_down1" value="1">
+                        <input type="radio" name="table_type_down" id="table_type_down1" value="-1">
                         <label for="table_type_down1" style="cursor:pointer"> <span>订单</span></label>
-                        <input type="radio" name="table_type_down" id="table_type_down3" value="2">
+                        <input type="radio" name="table_type_down" id="table_type_down3" value="-2">
                         <label for="table_type_down3" style="cursor:pointer"> <span>顾客信息</span></label>
                     </div>
                 </div>
@@ -582,10 +582,13 @@
                 } else {
                     errorTxt = '其他错误';
                 }
-                alert('提示:'+ errorTxt);
+                layer.msg('提示:'+ errorTxt);
             });
         });
         $('#importUpload').live('click',function () {
+            if($('.prompt-msg').html() == ''){
+                layer.msg('请先选择文件');
+            }
             uploader.upload();
         })
         //关闭模态框销毁WebUploader，解决再次打开模态框时按钮越变越大问题
