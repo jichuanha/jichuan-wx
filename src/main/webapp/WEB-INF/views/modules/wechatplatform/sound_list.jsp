@@ -32,7 +32,7 @@
         .table-head,#list-block  .item{width: 100%;height: 50px;background: #eee;line-height: 50px;text-align: center;}
         .table-head .title,#list-block .item>div{width: 25%;float: left;}
         #list-block .item{background: #fff;border:1px solid #eee;margin-top: 20px;}
-        #list-block .item>div{border-right: 1px solid #eee;box-sizing: border-box;}
+        #list-block .item>div{border-right: 1px solid #eee;box-sizing: border-box;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
         #list-block .item .delete {border-right: none;cursor: pointer}
     </style>
 </head>
