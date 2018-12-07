@@ -24,7 +24,7 @@
         .item{width: 375px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
         #creat-block .item{height: 667px;}
         .item img{display: block;width: 100%;height: 200px;margin: 20px 0;}
-        .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;}
+        .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;word-break: break-all;}
         .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
         .opration i{font-size: 30px;margin-right: 10px;cursor: pointer}
         .platName{height: 50px;line-height: 50px;width: 100%;font-size: 20px;text-align: center;background: #dddddd;color:#fff;position: absolute;
