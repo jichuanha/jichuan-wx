@@ -102,6 +102,7 @@ public class WechatMaterialController extends BaseController {
 			String content = RequestUtils.getString(request, true, "content", "token is null");
 			String brief = RequestUtils.getString(request, true, "brief", "token is null");
 			String uri = RequestUtils.getString(request, true, "uri", "token is null");
+			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
 
 
 			User user = UserUtils.getUser();
@@ -116,6 +117,7 @@ public class WechatMaterialController extends BaseController {
 			material.setContent(content);
 			material.setBrief(brief);
 			material.setUri(uri);
+			material.setArticleUri(articleUri);
 			material.setCreator(user.getName());
 			material.setUpdator(user.getName());
 
