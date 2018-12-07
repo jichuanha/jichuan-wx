@@ -7,6 +7,8 @@ import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.wechat.entity.WechatReply;
 
+import java.util.Map;
+
 /**
  * 微信公众号自动回复DAO接口
  * @author dtm
@@ -14,7 +16,7 @@ import com.hzkans.crm.modules.wechat.entity.WechatReply;
  */
 @MyBatisDao
 public interface WechatReplyDao extends CrudDao<WechatReply> {
-    WechatReply getReplyByKeywords(String keywords);
+    WechatReply getReplyByKeywords(Map map);
 
     void saveReply(WechatReply wechatReply);
 

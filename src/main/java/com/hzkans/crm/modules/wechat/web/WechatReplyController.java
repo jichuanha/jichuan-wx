@@ -98,11 +98,11 @@ public class WechatReplyController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "update_reply.do")
+    @RequestMapping(value = "update_reply")
     @ResponseBody
     public String updateReply(HttpServletRequest request) {
         try {
-            String id = RequestUtils.getString(request, true, "id", "id is null"); Integer unOpen = RequestUtils.getInt(request, "un_open", true, "un_open is null", "");
+            String id = RequestUtils.getString(request, false, "id", "id is null"); Integer unOpen = RequestUtils.getInt(request, "un_open", true, "un_open is null", "");
             Integer replyType = RequestUtils.getInt(request, "reply_type", true, "reply_type is null", "");
             Integer contentType = RequestUtils.getInt(request, "content_type", true, "content_type is null", "");
             Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
@@ -214,7 +214,7 @@ public class WechatReplyController extends BaseController {
         try {
             String keywords = RequestUtils.getString(request, false, "keywords", "id is null");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            WechatReply wechatReply = wechatNewReplyService.getReplyByKeywords(keywords);
+            WechatReply wechatReply = wechatNewReplyService.getReplyByKeywords(keywords,wechatId);
             if (null == wechatReply){
                 throw new Exception(WechatErrorEnum.KEYWORDS_DOSES_NOT_EXIST.getDesc());
             }

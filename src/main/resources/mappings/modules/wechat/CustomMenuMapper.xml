@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.CustomMenuDAO">
+    <resultMap id="BaseResultMap" type="com.hzkans.crm.modules.wechat.entity.CustomMenuDO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="meun_level" property="menuLevel" jdbcType="TINYINT"/>
+        <result column="keywords" property="keywords" jdbcType="VARCHAR"/>
+        <result column="uri" property="uri" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="TINYINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="updator" property="updator" jdbcType="BIGINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="wechat_id" property="wechatId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, parent_id ,meun_level ,name, keywords, uri, sort, type ,create_date, update_date, creator, updator, deleted,wechat_id
+    </sql>
+    <select id="select" resultMap="BaseResultMap" parameterType="com.hzkans.crm.modules.wechat.entity.CustomMenuDO">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wechat_custom_menu
+        where deleted = 0 and wechat_id =#{wechatId}
+        <if test="id != null">
+            and id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId,jdbcType=BIGINT}
+        </if>
+        <if test="menuLevel != null">
+            and menuLevel = #{menuLevel}
+        </if>
+    </select>
+    <select id="selectParentMenu" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wechat_custom_menu
+        where deleted = 0 and wechat_id =#{wechatId}
+        and parent_id is null order by sort asc
+    </select>
+
+    <select id="selectChildMenu" resultMap="BaseResultMap" parameterType="long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wechat_custom_menu
+        where deleted = 0
+        and parent_id = #{parentId,jdbcType=BIGINT}
+        order by sort asc
+    </select>
+
+
+    <select id="selectchildMenu" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wechat_custom_menu
+        where deleted = 0 and wechat_id = #{wechatId}
+        order by sort asc
+    </select>
+
+    <update id="deleteByPrimaryKey" parameterType="java.util.Map">
+        UPDATE  t_wechat_custom_menu set deleted = 1
+        where id = #{id,jdbcType=BIGINT} and wechat_id = #{wechatId}
+    </update>
+
+    <insert id="insert" parameterType="com.hzkans.crm.modules.wechat.entity.CustomMenuDO">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_wechat_custom_menu ( parent_id , meun_level , name, keywords,
+        uri, sort, type , create_date,
+        update_date, creator, updator, deleted,wechat_id)
+        values (#{parentId}, #{menuLevel}, #{name,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR},
+        #{uri,jdbcType=VARCHAR}, #{sort,jdbcType=TINYINT}, #{type} , now(),
+        now(), #{creator,jdbcType=BIGINT}, #{updator,jdbcType=BIGINT}, 0,#{wechatId})
+    </insert>
+
+    <update id="modifCustomMenu" parameterType="com.hzkans.crm.modules.wechat.entity.CustomMenuDO">
+        update t_wechat_custom_menu
+        <set>
+            <if test=" name != null and name != '' ">
+                name = #{name},
+            </if>
+            <if test=" keywords != null and keywords != '' ">
+                keywords = #{keywords},uri=null,
+            </if>
+            <if test=" uri != null and uri != '' ">
+                uri = #{uri},keywords = null,
+            </if>
+            <if test=" sort != null">
+                sort = #{sort},
+            </if>
+            <if test=" type != null ">
+                type = #{type},
+                <if test=" type == 1 ">
+                    uri = null,keywords = null,
+                </if>
+            </if>
+            <if test=" updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+            <if test=" updator != null">
+                updator = #{updator}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT} and wechat_id = #{wechatId}
+    </update>
+
+</mapper>

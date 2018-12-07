@@ -3,7 +3,9 @@
  */
 package com.hzkans.crm.modules.wechat.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
@@ -81,9 +83,12 @@ public class WechatReplyService extends CrudService<WechatReplyDao, WechatReply>
      * @param keywords
      * @return
      */
-    public WechatReply getReplyByKeywords(String keywords) throws Exception {
+    public WechatReply getReplyByKeywords(String keywords, Integer wechatId) throws Exception {
         try {
-            return wechatNewReplyDao.getReplyByKeywords(keywords);
+            Map<String, Object> map = new HashMap<>();
+            map.put("keywords",keywords);
+            map.put("wechatId",wechatId);
+            return wechatNewReplyDao.getReplyByKeywords(map);
         } catch (Exception e) {
             throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
         }
@@ -97,7 +102,7 @@ public class WechatReplyService extends CrudService<WechatReplyDao, WechatReply>
      */
     public boolean checkByKeywords(WechatReply reply) throws Exception {
         if (null != reply.getKeywords()){
-            WechatReply wechatReply = getReplyByKeywords(reply.getKeywords());
+            WechatReply wechatReply = getReplyByKeywords(reply.getKeywords(),reply.getWechatId());
             if (null == wechatReply){
                 throw new Exception(WechatErrorEnum.KEYWORDS_ALREADY_EXIST.getDesc());
             }

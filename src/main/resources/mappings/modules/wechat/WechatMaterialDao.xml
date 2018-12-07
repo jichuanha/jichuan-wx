@@ -36,7 +36,7 @@
 		FROM t_wechat_material a
 		<include refid="wechatMaterialJoins"/>
 		<where>
-			a.deleted = 0
+			a.deleted = 0	AND a.wechat_id = #{wechatId}
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -57,9 +57,6 @@
 			</if>
 			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
 				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
-			</if>
-			<if test="wechatId != null and wechatId != ''">
-				AND a.wechat_id = #{wechatId}
 			</if>
 		</where>
 		<choose>

@@ -57,12 +57,12 @@ public class WechatMaterialController extends BaseController {
 	 */
 	@RequestMapping(value = "list_material")
 	@ResponseBody
-	public String list( HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String list( HttpServletRequest request) {
 		try {
 			Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 			Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 			Integer type = RequestUtils.getInt(request, "type", true, "id is null", "");
-			Integer wechatId = RequestUtils.getInt(request, "wechat_id", true, "id is null", "");
+			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
 
 			if (start == null || start == 0) {
 				start = 1;
@@ -78,7 +78,6 @@ public class WechatMaterialController extends BaseController {
 			WechatMaterial material = new WechatMaterial();
 			material.setType(type);
 			material.setWechatId(wechatId);
-			material.setDeleted(0);
 
 			Page<WechatMaterial> page = materialService.findPage(wechatMaterialPage, material);
 			return ResponseUtils.getSuccessApiResponseStr(page);
@@ -96,14 +95,14 @@ public class WechatMaterialController extends BaseController {
 	@ResponseBody
 	public String form(HttpServletRequest request) {
 		try {
-			String id = RequestUtils.getString(request, true, "id", "id is null");
+			String id = RequestUtils.getString(request, false, "id", "id is null");
 			String title = RequestUtils.getString(request, true, "title", "app_secret is null");
 			String coverPicture = RequestUtils.getString(request, true, "cover_picture", "token is null");
 			String content = RequestUtils.getString(request, true, "content", "token is null");
 			String brief = RequestUtils.getString(request, true, "brief", "token is null");
 			String uri = RequestUtils.getString(request, true, "uri", "token is null");
 			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
-
+			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
 
 			User user = UserUtils.getUser();
 			if (null == user){
@@ -120,6 +119,7 @@ public class WechatMaterialController extends BaseController {
 			material.setArticleUri(articleUri);
 			material.setCreator(user.getName());
 			material.setUpdator(user.getName());
+			material.setWechatId(wechatId);
 
 			materialService.update(material);
 			return ResponseUtils.getSuccessApiResponseStr(true);

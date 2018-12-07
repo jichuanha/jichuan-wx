@@ -166,11 +166,11 @@
 		WHERE id = #{id}
 	</update>
 
-    <select id="getReplyByKeywords" parameterType="java.lang.String"
+    <select id="getReplyByKeywords" parameterType="java.util.Map"
             resultType="com.hzkans.crm.modules.wechat.entity.WechatReply">
         SELECT
         <include refid="wechatNewReplyColumns"/>
         FROM t_wecha_new_reply a
-        WHERE a.keywords = #{keywords} and a.deleted = 0
+        WHERE a.keywords = #{keywords} and wechat_id =#{wechatId} and a.deleted = 0
     </select>
 </mapper>
