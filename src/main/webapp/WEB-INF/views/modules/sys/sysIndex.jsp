@@ -303,6 +303,12 @@
 		function openCloseClickCallBack(b){
 			$.fn.jerichoTab.resize();
 		} // </c:if>
+        var iframe = document.getElementById('mainFrame')
+        iframe.onload = function() {
+            iframe.contentDocument.onclick = function () {
+				$('#userInfo').removeClass('open');
+            };
+        }
 	</script>
 	<script src="${ctxStatic}/common/wsize.min.js" type="text/javascript"></script>
 </body>
