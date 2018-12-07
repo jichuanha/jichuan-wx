@@ -19,6 +19,8 @@ import com.hzkans.crm.modules.sys.entity.Dict;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.DictService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -91,6 +93,7 @@ public class ActivityController extends BaseController {
 		String inactiveDate = RequestUtils.getString(request, false, "inactive_date", "inactive_date is null");
 		String orderActiveDate = RequestUtils.getString(request, false, "order_active_date", "order_active_date is null");
 		String orderInactiveDate = RequestUtils.getString(request, false, "order_inactive_date", "order_inactive_date is null");
+		Long wechatPlatformId = RequestUtils.getLong(request, "wechat_platform_id", false, "wechat_platform_id is null", "");
 		Integer isFollow = RequestUtils.getInt(request,"is_follow",false,"is_follow is null","");
 		Integer rebateType = RequestUtils.getInt(request,"rebate_type",false,"rebate_type is null","");
 		Integer rebateChannel = RequestUtils.getInt(request,"rebate_channel",false,"rebate_channel is null","");
@@ -138,6 +141,7 @@ public class ActivityController extends BaseController {
 			activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setIsFollow(isFollow);
+			activity.setWechatPlatformId(wechatPlatformId);
 			activity.setRebateType(rebateType);
 			activity.setRebateChannel(rebateChannel);
 			activity.setPerAmount(PriceUtil.parseYuan2Fen(perAmount * 1.0));
@@ -179,6 +183,7 @@ public class ActivityController extends BaseController {
 
 		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+		Long wechatPlatformId = RequestUtils.getLong(request, "wechat_platform_id", false, "wechat_platform_id is null", "");
 		String name = RequestUtils.getString(request, true, "name", "");
 		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status",true,"","");
@@ -203,6 +208,7 @@ public class ActivityController extends BaseController {
 			activity.setName(name);
 			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
+			activity.setWechatPlatformId(wechatPlatformId);
 			//搜索开始时间和结束时间非空判断
 			if (startDate != null) {
 				activity.setActiveDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));

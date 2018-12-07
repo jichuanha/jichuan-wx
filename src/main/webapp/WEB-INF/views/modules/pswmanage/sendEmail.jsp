@@ -115,7 +115,7 @@
                 verify_code:$('#verify_code').val(),
             },
             success:function(data){
-                typeof data != 'Object'&& (data = JSON.parse(data));
+                typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code=='10000'){
                     layer.open({
                         content:'系统已发送确认邮件到'+$('#doingEmail').val() +',请及时查收邮件',

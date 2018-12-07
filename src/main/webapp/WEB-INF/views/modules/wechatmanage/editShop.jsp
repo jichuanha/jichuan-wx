@@ -90,7 +90,7 @@
                     new_main_part:$('#main_part').val(),
                 },
                 success:function(data){
-                    typeof data != 'Object'&& (data = JSON.parse(data));
+                    typeof data != 'object'&& (data = JSON.parse(data));
                     if(data.code=='10000'){
                         layer.open({
                             content:'修改公众号成功!',

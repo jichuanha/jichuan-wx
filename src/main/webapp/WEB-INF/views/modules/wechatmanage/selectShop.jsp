@@ -99,7 +99,7 @@
             url:'${ctx}/wechat/wechat_latform_list',
             type:'POST',
             success:function (data) {
-                typeof data != 'Object'&& (data = JSON.parse(data));
+                typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code=='10000'){
                     var _html = [];
                     data.data.forEach(function(item){
@@ -117,8 +117,8 @@
                         if(e.target.className == 'set') {
                             window.location = '${ctx}/wechat/link_update?id='+$(this).data('id');
                         }else{
-                            $.cookie('platFormId',$(this).data('id'));
-                            $.cookie('platFormName',$(this).find('.platFormName').html());
+                            $.cookie('platFormId',$(this).data('id'),{path:'/'});
+                            $.cookie('platFormName',$(this).find('.platFormName').html(),{path:'/'});
                             window.parent.location = '${ctx}/wechat/link_home_page?id='+$(this).data('id');
                         }
                     })

@@ -4,6 +4,7 @@ import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,19 +50,29 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
         WechatPlatfromDO wechatPlatfromDO1 = new WechatPlatfromDO();
         wechatPlatfromDO1.setName(wechatPlatfromDO.getName());
         List<WechatPlatfromDO> wechatPlatfromDOS = null;
+
+        //判断是否存在这位微信公众号名称
         try {
             wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO1);
         } catch (Exception e) {
             log.error("getWechatPlatforms error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
         }
-        log.info("[{}]wechatPlatfromDOS",JsonUtil.toJson(wechatPlatfromDOS));
-        if (wechatPlatfromDOS.size() > 0) {
+        if (CollectionUtils.isNotEmpty(wechatPlatfromDOS)) {
             throw new Exception(ResponseEnum.B_E_ALERADY_EXIST.getMsg());
         }
+
+        //判断是否插入微信公众号绑定信息
+        if (wechatPlatfromDO.getAppId() != null
+                || wechatPlatfromDO.getAppSecret() != null
+                || wechatPlatfromDO.getToken() != null){
+            wechatPlatfromDO.setBindingFlag(1);
+        }else {
+            wechatPlatfromDO.setBindingFlag(0);
+        }
+
         try {
             wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
-
         } catch (Exception e) {
             log.error("insertWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());

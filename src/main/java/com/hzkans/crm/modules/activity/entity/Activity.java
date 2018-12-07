@@ -23,6 +23,8 @@ public class Activity extends DataEntity<Activity> {
 	private Date inactiveDate;		// 活动有效结束时间
 	private Date orderActiveDate;		// 订单时效开始时间
 	private Date orderInactiveDate;		// 订单时效结束时间
+	private Long wechatPlatformId;
+	private String wechatPlatformName;
 	private String url;		// url
 	private Integer isFollow;		// 关注类型  0 -需要 1-不需要
 	private Integer rebateType;		// 返利类型 ： 1-固定金额
@@ -105,6 +107,22 @@ public class Activity extends DataEntity<Activity> {
 
 	public void setOrderInactiveDate(Date orderInactiveDate) {
 		this.orderInactiveDate = orderInactiveDate;
+	}
+
+	public Long getWechatPlatformId() {
+		return wechatPlatformId;
+	}
+
+	public void setWechatPlatformId(Long wechatPlatformId) {
+		this.wechatPlatformId = wechatPlatformId;
+	}
+
+	public String getWechatPlatformName() {
+		return wechatPlatformName;
+	}
+
+	public void setWechatPlatformName(String wechatPlatformName) {
+		this.wechatPlatformName = wechatPlatformName;
 	}
 
 	public String getUrl() {

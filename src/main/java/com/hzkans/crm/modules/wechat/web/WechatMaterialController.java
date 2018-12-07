@@ -135,13 +135,14 @@ public class WechatMaterialController extends BaseController {
 	@ResponseBody
 	public String saveMaterial(HttpServletRequest request) {
 		try {
-			String title = RequestUtils.getString(request, false, "title", "app_secret is null");
-			String coverPicture = RequestUtils.getString(request, false, "cover_picture", "token is null");
-			String content = RequestUtils.getString(request, false, "content", "token is null");
-			String brief = RequestUtils.getString(request, false, "brief", "token is null");
-			String uri = RequestUtils.getString(request, true, "uri", "token is null");
-			Integer type = RequestUtils.getInt(request, "type", false, "id is null", "");
-			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
+			String title = RequestUtils.getString(request, false, "title", "title is null");
+			String coverPicture = RequestUtils.getString(request, true, "cover_picture", "cover_picture is null");
+			String content = RequestUtils.getString(request, true, "content", "content is null");
+			String brief = RequestUtils.getString(request, true, "brief", "brief is null");
+			String uri = RequestUtils.getString(request, true, "uri", "uri is null");
+			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
+			Integer type = RequestUtils.getInt(request, "type", false, "type is null", "");
+			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
 			User user = UserUtils.getUser();
 			if (null == user){
@@ -154,6 +155,7 @@ public class WechatMaterialController extends BaseController {
 			material.setContent(content);
 			material.setBrief(brief);
 			material.setUri(uri);
+			material.setArticleUri(articleUri);
 			material.setType(type);
 			material.setWechatId(wechatId);
 			material.setCreator(user.getName());

@@ -10,6 +10,7 @@
 		a.inactive_date AS "inactiveDate",
 		a.order_active_date AS "orderActiveDate",
 		a.order_inactive_date AS "orderInactiveDate",
+		a.wechat_platform_id AS "wechatPlatformId",
 		a.url AS "url",
 		a.is_follow AS "isFollow",
 		a.rebate_type AS "rebateType",
@@ -64,6 +65,9 @@
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
+			<if test="wechatPlatformId != null">
+				AND a.wechat_platform_id = #{wechatPlatformId}
+			</if>
 			<if test="activeDate != null or inactiveDate != null">
 				AND (
 				<if test="activeDate != null">
@@ -116,6 +120,7 @@
 			inactive_date,
 			order_active_date,
 			order_inactive_date,
+			wechat_platform_id,
 			url,
 			is_follow,
 			rebate_type,
@@ -142,6 +147,7 @@
 			#{inactiveDate},
 			#{orderActiveDate},
 			#{orderInactiveDate},
+			#{wechatPlatformId},
 			#{url},
 			#{isFollow},
 			#{rebateType},

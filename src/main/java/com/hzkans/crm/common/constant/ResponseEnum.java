@@ -99,7 +99,7 @@ public enum ResponseEnum {
     B_E_SHOP_EXIST(41016, 0, "店铺已存在"),
     B_E_PER_MUST_LOWER_TOTAL(41017, 0, "单笔金额不能大于返利总额"),
     B_E_ACTIVITY_TYPE_EXIST(41018, 0, "活动类型已存在"),
-
+    B_E_BING_EXIST(41019, 0, "此活动与此公众号已绑定"),
 
     /**
      * 商品模板文件类异常

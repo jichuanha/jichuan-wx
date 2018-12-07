@@ -158,6 +158,9 @@
         }
         .mycol-5{
             width: 5%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .mycol-10{
             width: 10%;
@@ -167,9 +170,15 @@
         }
         .mycol-15{
             width: 15%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .mycol-20{
             width: 20%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .lists-title li{
             background-color: #F7F7F7;
@@ -208,7 +217,7 @@
         .status-name,.start-time,.receive-time{
             display: inline-block;
             margin-left: 40px;
-            width: 20%;
+            /*width: 20%;*/
         }
         .search-cond{
             display: inline-block;
@@ -612,7 +621,7 @@
             }
             dataObject.act_type = para.activity_type;
             //待改 公众号
-            dataObject.wechat_id = 1;
+            dataObject.wechat_id = $.cookie().platFormId;
             $.ajax({
                 url:'orderListDate',
                 type:'post',

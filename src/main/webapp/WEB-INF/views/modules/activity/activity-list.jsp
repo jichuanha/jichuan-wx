@@ -142,12 +142,21 @@
 		}
 		.mycol-5{
 			width: 5%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 		.mycol-10{
 			width: 10%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 		.mycol-15{
 			width: 15%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 		.mycol-25{
 			width: 25%;
@@ -308,6 +317,7 @@
 </div>
 <script>
     $(function () {
+        console.log($.cookie())
         var para = GetRequest(); //url参数
         var activityType = {}; //活动类型数据
         //获取活动类型参数
@@ -363,6 +373,7 @@
                 nextPageSec = 1;
             }
             dataObject.activity_type = para.activity_type;
+            dataObject.wechat_platform_id = $.cookie().platFormId;
             $.ajax({
                 url:"activityList",
                 type:"post",
