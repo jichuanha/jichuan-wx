@@ -48,9 +48,6 @@ public class ActivityController extends BaseController {
 	@Autowired
 	private DictService dictService;
 
-	@Autowired
-	private WechatPlatfromService wechatPlatfromService;
-
 	/**
 	 * 创建活动
 	 *
@@ -186,6 +183,7 @@ public class ActivityController extends BaseController {
 
 		Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+		Long wechatPlatformId = RequestUtils.getLong(request, "wechat_platform_id", false, "wechat_platform_id is null", "");
 		String name = RequestUtils.getString(request, true, "name", "");
 		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status",true,"","");
@@ -210,6 +208,7 @@ public class ActivityController extends BaseController {
 			activity.setName(name);
 			activity.setShopNo(shopNo);
 			activity.setActivityType(activityType);
+			activity.setWechatPlatformId(wechatPlatformId);
 			//搜索开始时间和结束时间非空判断
 			if (startDate != null) {
 				activity.setActiveDate(DateUtil.parse(startDate, DateUtil.NORMAL_DATETIME_PATTERN));
@@ -224,8 +223,6 @@ public class ActivityController extends BaseController {
 				List<Activity> activityList = page.getList();
 				if (CollectionUtils.isNotEmpty(activityList)){
 					for (Activity activity1 : activityList){
-						WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(Integer.valueOf(activity1.getWechatPlatformId().toString()));
-						activity1.setWechatPlatformName(wechatPlatfromDO.getName());
 						//将金额分转化为元
 						activity1.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity1.getPerAmount()));
 						if (null != activity1.getTotalAmount()){
@@ -257,8 +254,6 @@ public class ActivityController extends BaseController {
 			if (null != activity.getTotalAmount()){
 				activity.setTotalAmountStr(PriceUtil.parseFen2YuanStr(activity.getTotalAmount()));
 			}
-			WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(Integer.valueOf(activity.getWechatPlatformId().toString()));
-			activity.setWechatPlatformName(wechatPlatfromDO.getName());
 			activity.setPerAmountStr(PriceUtil.parseFen2YuanStr(activity.getPerAmount()));
 			return ResponseUtils.getSuccessApiResponseStr(activity);
 		} catch (Exception e) {

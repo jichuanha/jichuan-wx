@@ -256,7 +256,7 @@
 </head>
 <body>
 <div class="nav">
-	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>新建活动(<span class="activity-type">活动类型2</span>)</p>
+	<p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>新建活动(<span class="activity-type"></span>)</p>
 	<form id="searchForm"  class="form-search">
 		<h3>基本信息</h3>
 		<div class="base-info">
@@ -434,7 +434,21 @@
 <script>
     $(function () {
         var para = GetRequest();
-        $('.activity-type').html('活动类型'+para.activity_type);
+        var activityType = {}; //活动类型数据
+        //获取活动类型参数
+        $.ajax({
+            url:'${ctx}/activity/activity/activityTypeList',
+            type:'post',
+            async:false,
+            success:function (msg) {
+                var msg = strToJson(msg);
+                if(msg.code == 10000){
+                    activityType = msg.data;
+                    $('.activity-type').html(activityType[para.activity_type]);
+
+                }
+            }
+        })
         $.ajax({
             url:"platformShopList",
             type:"post",
@@ -483,7 +497,7 @@
                 $.each(dataSer,function(i,item){
                     dataObject[item.name] = item.value;
                 });
-
+                dataObject.wechat_platform_id = $.cookie().platFormId;
                 var shopValue = $('.shop-list input[type="checkbox"]');
                 var shopNameArr = {};
                 var shopplatArr = [];
