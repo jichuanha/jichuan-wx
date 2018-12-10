@@ -12,24 +12,20 @@ import com.hzkans.crm.modules.trade.dao.TableFlowDao;
 import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
+import com.hzkans.crm.modules.trade.entity.TableTimeError;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author jc
@@ -37,7 +33,6 @@ import java.util.List;
  * @create 2018/11/26
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class TimingDateImportService {
 
     private Logger logger = LoggerFactory.getLogger(TimingDateImportService.class);
@@ -45,6 +40,8 @@ public class TimingDateImportService {
 
     @Autowired
     private TableFlowService tableFlowService;
+    @Autowired
+    private TableTimeErrorService tableTimeErrorService;
     @Autowired
     private OrderMemberDao orderMemberDao;
     @Autowired
@@ -106,22 +103,17 @@ public class TimingDateImportService {
 
 
                 //保存订单信息
-                result = saveOrderMessage(sheetAt, id);
+                result = saveOrderMessage(sheetAt, id, table);
             }else if(type.equals(TableFlowTypeEnum.EVALUATE.getCode())) {
                 //保存评价信息
             }
 
-            tableFlow.setTableName(tableName);
+            tableFlow.setId(id);
             tableFlow.setTimingDate(new Date());
-            if(result > 0) {
-                tableFlow.setStatus(TableFlowStatusEnum.TIMING_SUCCESS.getCode());
-                tableFlow.setErrorMessage("");
-                tableFlowDao.update(tableFlow);
-            }else {
-                tableFlow.setStatus(TableFlowStatusEnum.TIMING_FAIL.getCode());
-                tableFlow.setErrorMessage("定时任务失败");
-                tableFlowDao.update(tableFlow);
-            }
+            tableFlow.setSuccessNum((long)result);
+            tableFlow.setStatus(TableFlowStatusEnum.TIMING_SUCCESS.getCode());
+            tableFlowDao.update(tableFlow);
+
             long end = System.currentTimeMillis();
             logger.info("定时导入"+tableName+"到数据库,共耗时"+(end - start)+"毫秒");
         } catch (Exception e) {
@@ -185,57 +177,64 @@ public class TimingDateImportService {
         return 0;
     }
 
-    private int saveOrderMessage(Sheet sheetAt, String id) {
-        try {
+    private int saveOrderMessage(Sheet sheetAt, String id, TableFlow table) {
+        int currentNum = 0;
+        int totalOrderNum = 0;
+
             //获取总行数
             int lastRowNum = sheetAt.getLastRowNum();
-            int result = 1;
             logger.info("[{}]lastRowNum :{}",lastRowNum);
             //遍历数据
             for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
-                Row row = sheetAt.getRow(rowNum);
-                String payTime = row.getCell(5).getStringCellValue();
-                if(payTime.equals("-")) {
-                    continue;
-                }
-                Order order = new Order();
-                order.setTableId(Long.parseLong(id));
-                order.setOrderSn(row.getCell(0).getStringCellValue());
-                //查询该订单是否已经导入
-                Order order1 = orderDao.get(order);
-                if(order1 != null) {
-                    continue;
-                }
-                order.setBuyerName(row.getCell(1).getStringCellValue());
-                order.setMobile(row.getCell(2).getStringCellValue());
-                order.setOrderTime(DateUtil.parse(row.getCell(4).
-                        getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
-                order.setPayTime(DateUtil.parse(row.getCell(5).
-                        getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
-                order.setItemName(row.getCell(7).getStringCellValue());
-                order.setItemNo(row.getCell(8).getStringCellValue());
-                order.setUnitPrice(priceY2F(row.getCell(9).getStringCellValue()));
-                order.setPayableAmmount(priceY2F(row.getCell(10).getStringCellValue()));
-                order.setPayAmount(priceY2F(row.getCell(11).getStringCellValue()));
-                order.setProvinceName(row.getCell(17).getStringCellValue());
-                order.setCityName(row.getCell(18).getStringCellValue());
-                order.setAreaName(row.getCell(19).getStringCellValue());
-                order.setAddress(row.getCell(20).getStringCellValue());
-                order.setConsignee(row.getCell(21).getStringCellValue());
-                //TODO  一下三个数据没有给出,现在先写死
-                order.setShopNo("1");
-                order.setOwnShop("1");
-                order.setPlatformType(1);
-                int insert = orderDao.insert(order);
-                if(insert < 0) {
-                    result = -1;
+                try {
+                    currentNum = rowNum;
+                    Row row = sheetAt.getRow(rowNum);
+                    String payTime = row.getCell(5).getStringCellValue();
+                    if(payTime.equals("-")) {
+                        continue;
+                    }
+                    Order order = new Order();
+                    order.setTableId(Long.parseLong(id));
+                    order.setOrderSn(row.getCell(0).getStringCellValue());
+                    //查询该订单是否已经导入
+                    Order order1 = orderDao.get(order);
+                    if(order1 != null) {
+                        continue;
+                    }
+                    order.setBuyerName(row.getCell(1).getStringCellValue());
+                    order.setMobile(row.getCell(2).getStringCellValue());
+                    order.setOrderTime(DateUtil.parse(row.getCell(4).
+                            getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
+                    order.setPayTime(DateUtil.parse(row.getCell(5).
+                            getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
+                    order.setItemName(row.getCell(7).getStringCellValue());
+                    order.setItemNo(row.getCell(8).getStringCellValue());
+                    order.setUnitPrice(priceY2F(row.getCell(9).getStringCellValue()));
+                    order.setPayableAmmount(priceY2F(row.getCell(10).getStringCellValue()));
+                    order.setPayAmount(priceY2F(row.getCell(11).getStringCellValue()));
+                    order.setProvinceName(row.getCell(17).getStringCellValue());
+                    order.setCityName(row.getCell(18).getStringCellValue());
+                    order.setAreaName(row.getCell(19).getStringCellValue());
+                    order.setAddress(row.getCell(20).getStringCellValue());
+                    order.setConsignee(row.getCell(21).getStringCellValue());
+                    order.setShopNo(table.getShopNo().toString());
+                    order.setOwnShop(table.getShopNo().toString());
+                    order.setPlatformType(table.getPlatformType());
+                    int insert = orderDao.insert(order);
+                    if(insert > 0) {
+                        totalOrderNum ++;
+                    }
+                } catch (Exception e) {
+                    logger.error("saveOrderMessage error",e);
+                    TableTimeError tableTimeError  = new TableTimeError();
+                    tableTimeError.setErrorMessage(e.getMessage());
+                    tableTimeError.setErrorNum(currentNum);
+                    tableTimeError.setTableId(Long.parseLong(id));
+                    tableTimeError.setCreateDate(new Date());
+                    tableTimeErrorService.save(tableTimeError);
                 }
             }
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
+            return totalOrderNum;
     }
 
 

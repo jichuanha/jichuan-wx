@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.trade.dao.TableTimeErrorDao">
+    
+	<sql id="tableTimeErrorColumns">
+		a.id AS "id",
+		a.table_id AS "tableId",
+		a.error_num AS "errorNum",
+		a.error_message AS "errorMessage",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="tableTimeErrorJoins">
+	</sql>
+    
+	<select id="get" resultType="TableTimeError">
+		SELECT 
+			<include refid="tableTimeErrorColumns"/>
+		FROM t_table_time_error a
+		<include refid="tableTimeErrorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TableTimeError">
+		SELECT 
+			<include refid="tableTimeErrorColumns"/>
+		FROM t_table_time_error a
+		<include refid="tableTimeErrorJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="tableId != null and tableId != ''">
+				AND a.table_id = #{tableId}
+			</if>
+			<if test="errorNum != null and errorNum != ''">
+				AND a.error_num = #{errorNum}
+			</if>
+			<if test="errorMessage != null and errorMessage != ''">
+				AND a.error_message = #{errorMessage}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TableTimeError">
+		SELECT 
+			<include refid="tableTimeErrorColumns"/>
+		FROM t_table_time_error a
+		<include refid="tableTimeErrorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_table_time_error(
+			table_id,
+			error_num,
+			error_message,
+			create_date
+		) VALUES (
+			#{tableId},
+			#{errorNum},
+			#{errorMessage},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_table_time_error SET 	
+			id = #{id},
+			table_id = #{tableId},
+			error_num = #{errorNum},
+			error_message = #{errorMessage}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_table_time_error
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
