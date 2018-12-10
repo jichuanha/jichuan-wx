@@ -140,8 +140,9 @@
 	<update id="update">
 		UPDATE t_table_flow SET
 			status = #{status},
-			error_message = #{errorMessage},
-			timing_date = #{timingDate}
+			issue_per = #{issuePer},
+			timing_date = #{timingDate},
+			success_num = #{successNum}
 		<where>
 			<if test="tableName != null and tableName != ''">
 				and table_name = #{tableName}

@@ -14,7 +14,6 @@ import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
 import com.hzkans.crm.modules.trade.service.OrderService;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -97,7 +96,6 @@ public class TableFlowController extends BaseController {
 		if(null == message){
 			message = "";
 		}
-
 		String originalFilename = file.getOriginalFilename();
 		logger.info("[{}] originalFilename:{}",originalFilename);
 		//给名字后加上时间戳
@@ -112,7 +110,9 @@ public class TableFlowController extends BaseController {
 		Row row = sheetAt.getRow(0);
 		Cell cell = row.getCell(0);
 		//获取总数据
-		long rowNum = (long)(sheetAt.getLastRowNum());
+		long lastRowNum = (long)(sheetAt.getLastRowNum());
+		//定义一个参数为不导入
+		int notImportNum = 0;
 		if(null == cell) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_TYPE_DATA_ERROR);
 		}
@@ -126,18 +126,26 @@ public class TableFlowController extends BaseController {
 				return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, "请导入正确的顾客表");
 			}
 		}
-
-
+		//计算订单表格数量时,去除未付款的订单
+		if(TableFlowTypeEnum.ORDER_INFO.getCode().equals(type)) {
+			for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
+				Row row1 = sheetAt.getRow(rowNum);
+				String payTime = row1.getCell(5).getStringCellValue();
+				if(payTime.equals("-")) {
+					notImportNum ++;
+				}
+			}
+		}
+		logger.info("lastRowNum {} , notImportNum{}",lastRowNum,notImportNum);
 		originalFilename = split[0] + DateUtils.formatNewDate(new Date())+"."+split[1];
 		logger.info("[{}] originalFilename:{}",originalFilename);
-
 		TableFlow tableFlow = new TableFlow();
 		tableFlow.setImportDate(new Date());
 		tableFlow.setTableName(originalFilename);
 		tableFlow.setShopNo(shopNo);
 		tableFlow.setPlatformType(platformType);
 		tableFlow.setType(type);
-		tableFlow.setTotalNum(rowNum);
+		tableFlow.setTotalNum(lastRowNum - notImportNum);
 		long size = file.getSize();
 		if(size > MAX_SIZE) {
 			logger.info("导入文件过大");
