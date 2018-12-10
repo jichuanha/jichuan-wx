@@ -63,8 +63,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
         }
 
         //判断是否插入微信公众号绑定信息
-        if (wechatPlatfromDO.getAppId() != null
-                || wechatPlatfromDO.getAppSecret() != null
+        if (wechatPlatfromDO.getAppId() != null || wechatPlatfromDO.getAppSecret() != null
                 || wechatPlatfromDO.getToken() != null){
             wechatPlatfromDO.setBindingFlag(1);
         }else {

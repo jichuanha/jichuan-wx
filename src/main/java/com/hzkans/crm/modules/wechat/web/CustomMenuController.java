@@ -33,6 +33,10 @@ public class CustomMenuController {
     @Autowired
     private CustomMenuService customMenuService;
 
+    @RequestMapping(value = "/link_diy_menu")
+    public String gotoInsert() {
+        return "modules/wechatplatform/diy_menu";
+    }
     /**
      * 获取自定义菜单列表
      *
@@ -169,6 +173,12 @@ public class CustomMenuController {
         }
     }
 
+    /**
+     * 获取自定义菜单详情
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/get_menu_details")
     @ResponseBody
     public String getMenuDetails(HttpServletRequest request) throws Exception {

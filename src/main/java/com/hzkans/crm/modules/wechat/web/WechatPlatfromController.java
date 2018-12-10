@@ -114,14 +114,14 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setCreateBy(user.getName());
             wechatPlatfromDO.setUpdateBy(user.getName());
             wechatPlatfromDO.setMainPart(mainPart);
-            wechatPlatfromDO.setMainPart(appSecret);
-            wechatPlatfromDO.setMainPart(token);
-            wechatPlatfromDO.setMainPart(appId);
+            wechatPlatfromDO.setAppSecret(appSecret);
+            wechatPlatfromDO.setToken(token);
+            wechatPlatfromDO.setAppId(appId);
 
             wechatPlatfromService.addWechatPlatform(wechatPlatfromDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
-            logger.error("selectWechatPlatformById is error", e);
+            logger.error("addWechatPlatform is error", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_ADD, e.getMessage());
         }
     }
@@ -220,6 +220,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setToken(appId);
             //绑定状态为1
             wechatPlatfromDO.setBindingFlag(1);
+
             wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
