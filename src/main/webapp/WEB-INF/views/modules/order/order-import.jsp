@@ -387,6 +387,7 @@
                         </li>
                         <li class="choosed-excel"></li>
                         <li class="prompt-msg"></li>
+                        <li id="percent"></li>
                         </ul>
                 </div>
                 <div class="modal-footer">
@@ -518,13 +519,18 @@
             })
             // 文件上传过程中创建进度条实时显示。
             uploader.on( 'uploadProgress', function( file, percentage ) {
-
+                if(percentage!=1){
+                    var per = percentage.toFixed(4)*100;
+                    $('#percent').show().html('上传进度:'+per+'%');
+                }else{
+                    $('#percent').show().html('文件处理中');
+                }
             });
 
             // 上传成功
             uploader.on('uploadSuccess', function(file, response) {
                 //hideBatchDialog();
-                console.log(response)
+                $('#percent').html('');
                 if (response.code === 10000) {
                     layer.msg(response.msg);
                     $('#myModal').modal('hide');
@@ -540,6 +546,7 @@
             // 上传失败
             uploader.on('uploadError', function(file) {
                 layer.msg('上传失败');
+                $('#percent').html('');
 
             });
             uploader.on( 'uploadBeforeSend', function( block, data ) {
@@ -557,7 +564,7 @@
             });
             // 上传完成（不论成功或失败都会执行）
             uploader.on( 'uploadComplete', function( file ) {
-
+                $('#percent').html('');
             });
 
             // 上传错误
