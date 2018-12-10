@@ -12,11 +12,13 @@ import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
+import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
 import com.hzkans.crm.modules.wechat.entity.WechatReply;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +65,7 @@ public class WechatReplyController extends BaseController {
      */
     @RequestMapping(value = "list_reply")
     @ResponseBody
-    public String listReply(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String listReply(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
         try {
             Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
             Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
@@ -87,8 +89,14 @@ public class WechatReplyController extends BaseController {
             wechatMaterial.setWechatId(wechatId);
 
             Page<WechatReply> page = wechatNewReplyService.findPage(wechatNewReplyPage, wechatMaterial);
+
+            //把自动回复中的图文信息转化成一个list对象给前台
+            for (WechatReply wechatReply:page.getList()) {
+                wechatNewReplyService.packageDesc(wechatReply);
+            }
             return ResponseUtils.getSuccessApiResponseStr(page);
         } catch (ServiceException e) {
+            logger.error("listReply is error", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
@@ -154,7 +162,8 @@ public class WechatReplyController extends BaseController {
             Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
             String keywords = RequestUtils.getString(request, false, "keywords", "keywords is null");
             String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String replyDesc = RequestUtils.getString(request, false, "reply_desc", "reply_desc is null");
+            String replyDesc = RequestUtils.getString(request, true, "reply_desc", "reply_desc is null");
+            String response = RequestUtils.getString(request, true, "response", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
@@ -170,11 +179,20 @@ public class WechatReplyController extends BaseController {
             reply.setKeyType(keyType);
             reply.setKeywords(keywords);
             reply.setRemarks(remarks);
-            reply.setReplyDesc(JsonUtil.toJson(replyDesc));
             reply.setReplyWay(replyWay);
             reply.setWechatId(wechatId);
             reply.setCreator(user.getName());
             reply.setUpdator(user.getName());
+
+            if (contentType == 0) {
+                if (StringUtils.isBlank(response)){
+                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.CONTENT_IS_NULL);
+                }
+                reply.setResponse(response);
+            } else {
+                reply.setReplyDesc(JsonUtil.toJson(replyDesc));
+                reply.setResponse("图文内容");
+            }
 
             wechatNewReplyService.saveReply(reply);
             return ResponseUtils.getSuccessApiResponseStr(true);
@@ -208,7 +226,7 @@ public class WechatReplyController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping
+    @RequestMapping(value = "get_reply_by_keywords")
     @ResponseBody
     public String getReplyByKeywords(HttpServletRequest request) {
         try {

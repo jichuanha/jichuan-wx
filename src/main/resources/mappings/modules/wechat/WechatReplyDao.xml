@@ -106,7 +106,8 @@
 			creator,
 			updator,
 			deleted,
-			wechat_id
+			wechat_id,
+			response
 		) VALUES (
 			#{unOpen},
 			#{replyType},
@@ -121,7 +122,8 @@
 			#{creator},
 			#{updator},
 			0,
-			#{wechatId}
+			#{wechatId},
+			#{response}
 		)
 	</insert>
 

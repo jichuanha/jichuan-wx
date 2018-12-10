@@ -33,7 +33,7 @@ public class CustomMenuController {
     @Autowired
     private CustomMenuService customMenuService;
 
-    @RequestMapping(value = "/link_diy_menu")
+    @RequestMapping("/link_diy_menu")
     public String gotoInsert() {
         return "modules/wechatplatform/diy_menu";
     }

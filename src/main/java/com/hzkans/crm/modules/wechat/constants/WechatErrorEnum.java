@@ -11,7 +11,8 @@ package com.hzkans.crm.modules.wechat.constants;
 public enum WechatErrorEnum {
 
     KEYWORDS_ALREADY_EXIST(1, "关键词已存在"),
-    KEYWORDS_DOSES_NOT_EXIST(1, "关键词不存在");
+    KEYWORDS_DOSES_NOT_EXIST(2, "关键词不存在"),
+    CONTENT_IS_NULL(3, "文本内容不能为空");
 
 
     private Integer code;

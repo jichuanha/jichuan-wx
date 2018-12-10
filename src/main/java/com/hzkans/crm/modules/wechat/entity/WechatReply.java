@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -31,6 +32,24 @@ public class WechatReply extends DataEntity<WechatReply> {
 	private Integer wechatId;		// wechat_id
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
+	private String response;
+	private List<ReplyDescDTO> replyDescDTOS;// 图文回复实体
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+	public List<ReplyDescDTO> getReplyDescDTOS() {
+		return replyDescDTOS;
+	}
+
+	public void setReplyDescDTOS(List<ReplyDescDTO> replyDescDTOS) {
+		this.replyDescDTOS = replyDescDTOS;
+	}
 
 	public WechatReply() {
 		super();
