@@ -232,7 +232,7 @@
                             $('.total').html('共同'+ --count +'条');
                             layer.close(confirmL);
                         }else{
-                            layer.open(data.msg);
+                            layer.open({content:data.msg});
                         }
                     })
                 })

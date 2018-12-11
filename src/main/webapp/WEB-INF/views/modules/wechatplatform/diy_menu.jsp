@@ -85,7 +85,7 @@
                     </div>
                     <div><label>排序：</label><input class="input-large" name="sort" type="number" required></div>
                     <div class="kw-wrap"><label>关键字：</label><input class="input-large" name="keyword" type="text" required></div>
-                    <div class="url-wrap"><label>链接：</label><input class="input-large" name="uri" type="text" id="url" required></div>
+                    <div class="url-wrap"><label>链接：</label><input class="input-large" name="url" type="url" id="url" required></div>
                 </div>
                 <div class="modal-footer">
                     <div type="button" class="btn btn-default" data-dismiss="modal">关闭</div>
@@ -120,7 +120,7 @@
                     if(params.type==2){
                         params.keywords = $('input[name=keyword]').val();
                     }else if(params.type==3){
-                        params.uri = $('input[name=uri]').val();
+                        params.uri = $('input[name=url]').val();
                     }
                     $.post('${ctx}/wechat_menu/modify_menu',params,function (res) {
                         typeof res != 'object'&& (res = JSON.parse(res));
@@ -167,12 +167,12 @@
         getData();
         function initEvent() {
             $('#syMenu').live('click',function () {
-                $.post('${ctx}/toWechat/syMenu',{wechat_id:params.wechat_id},function (data) {
+                $.post('${ctx}/toWechat/syMenu',{wechat_id:params.wechat_id},function (res) {
                     typeof res != 'object'&& (res = JSON.parse(res));
                     if(res.code==10000){
-                        layer.open('同步成功');
+                        layer.open({content:'同步成功'});
                     }else{
-                        layer.open(data.msg);
+                        layer.open({content:res.msg});
                     }
                 })
             });
@@ -237,7 +237,9 @@
                 $.post('${ctx}/wechat_menu/modify_menu',params,function (res) {
                     typeof res != 'object'&& (res = JSON.parse(res));
                     if(res.code==10000){
-                        $('.menu-wrap .menu1').eq(_pindex).html(params.name);
+                        if(_data.level===1){
+                            $('.menu-wrap .menu1').eq(_pindex).html(params.name);
+                        }
                         data.name = params.name;
                     }
                 })
@@ -255,7 +257,7 @@
                     if(data.code==10000){
                         window.location.reload();
                     }else{
-                        layer.open(data.msg);
+                        layer.open({content:data.msg});
                     }
                 })
             });
@@ -272,7 +274,7 @@
                             layer.close(confirmL);
                             window.location.reload();
                         }else{
-                            layer.open(data.msg);
+                            layer.open({content:data.msg});
                         }
                     })
                 })
@@ -301,7 +303,7 @@
                     if(data.code==10000){
                         window.location.reload();
                     }else{
-                        layer.open(data.msg);
+                        layer.open({content:data.msg});
                     }
                 })
             });
@@ -350,7 +352,7 @@
                 $('.kw-wrap').hide();
                 $('.url-wrap').show();
                 $('#link').attr('checked','checked');
-                $('input[name=uri]').val(data.uri);
+                $('input[name=url]').val(data.uri);
             }
             $('input[name=sort]').val(data.sort);
         }
