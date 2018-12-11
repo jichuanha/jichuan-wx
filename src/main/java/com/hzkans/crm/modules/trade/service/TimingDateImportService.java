@@ -14,6 +14,7 @@ import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
 import com.hzkans.crm.modules.trade.entity.TableTimeError;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -202,16 +203,32 @@ public class TimingDateImportService {
                         continue;
                     }
                     order.setBuyerName(row.getCell(1).getStringCellValue());
-                    order.setMobile(row.getCell(2).getStringCellValue());
+                    Cell cell2 = row.getCell(2);
+                    if(cell2 != null) {
+                        cell2.setCellType(Cell.CELL_TYPE_STRING);
+                        order.setMobile(cell2.getStringCellValue());
+                    }
                     order.setOrderTime(DateUtil.parse(row.getCell(4).
                             getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
                     order.setPayTime(DateUtil.parse(row.getCell(5).
                             getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
                     order.setItemName(row.getCell(7).getStringCellValue());
                     order.setItemNo(row.getCell(8).getStringCellValue());
-                    order.setUnitPrice(priceY2F(row.getCell(9).getStringCellValue()));
-                    order.setPayableAmmount(priceY2F(row.getCell(10).getStringCellValue()));
-                    order.setPayAmount(priceY2F(row.getCell(11).getStringCellValue()));
+                    Cell cell9 = row.getCell(9);
+                    if(cell9 != null) {
+                        cell9.setCellType(Cell.CELL_TYPE_STRING);
+                        order.setUnitPrice(priceY2F(cell9.getStringCellValue()));
+                    }
+                    Cell cell10 = row.getCell(10);
+                    if(cell10 != null) {
+                        cell10.setCellType(Cell.CELL_TYPE_STRING);
+                        order.setPayableAmmount(priceY2F(cell10.getStringCellValue()));
+                    }
+                    Cell cell11 = row.getCell(11);
+                    if(cell11 != null) {
+                        cell11.setCellType(Cell.CELL_TYPE_STRING);
+                        order.setPayAmount(priceY2F(cell11.getStringCellValue()));
+                    }
                     order.setProvinceName(row.getCell(17).getStringCellValue());
                     order.setCityName(row.getCell(18).getStringCellValue());
                     order.setAreaName(row.getCell(19).getStringCellValue());

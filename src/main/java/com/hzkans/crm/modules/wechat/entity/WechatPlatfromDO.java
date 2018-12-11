@@ -21,15 +21,24 @@ public class WechatPlatfromDO implements Serializable {
 	private Integer id;
 	private String name;		// 公众号名称
 	private String mainPart;		// 公众号主体
-	protected String createBy;	// 创建者
-	protected Date createDate;	// 创建日期
-	protected String updateBy;	// 更新者
-	protected Date updateDate;	// 更新日期
-	protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
-	protected String appSecret;
-	protected String token;
-	protected Integer bindingFlag; 	// 删除标记（0：正常；1：删除；2：审核）
-	protected String appId;
+	private String createBy;	// 创建者
+	private Date createDate;	// 创建日期
+	private String updateBy;	// 更新者
+	private Date updateDate;	// 更新日期
+	private String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
+	private String appSecret;
+	private String token;
+	private Integer bindingFlag; 	// 删除标记（0：正常；1：删除；2：审核）
+	private String appId;
+	private String wechatNo;
+
+	public String getWechatNo() {
+		return wechatNo;
+	}
+
+	public void setWechatNo(String wechatNo) {
+		this.wechatNo = wechatNo;
+	}
 
 	public String getAppId() {
 		return appId;

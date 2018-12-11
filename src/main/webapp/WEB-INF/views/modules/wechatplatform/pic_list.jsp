@@ -12,22 +12,23 @@
     <title>图片</title>
     <style>
         #list-wrap,#creat-wrap{padding: 50px;}
+        a:hover, a:focus{text-decoration: none;color: inherit;}
         header{width: 100%;height: 55px;border-bottom: 2px solid #eee;}
         header ul{text-decoration: none;list-style: none}
-        header ul li{font-size: 20px;line-height: 50px;display: inline-block;margin-right: 50px;box-sizing: border-box;}
+        header ul li{font-size: 16px;line-height: 50px;display: inline-block;margin-right: 70px;box-sizing: border-box;}
         header ul li a{color:#000; text-decoration: none;list-style: none;}
-        .actived{border-bottom: 5px solid #3f5185;}
+        .actived{border-bottom: 5px solid #3f51B5;}
         .creat-wrap{margin-bottom: 20px;}
         .creat-wrap .btn{font-size: 20px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
-        .item{width: 200px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;}
+        .item{width: 200px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;line-height: 400px;}
         #creat-block .item{height: 667px;}
         .creat-btn{padding: 3px 30px;}
         .creat-btn .webuploader-pick{font-size: 20px;display: inline;}
-        .item img{display: block;width: 100%;}
+        .item img{display: inline;width: 100%;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;}
-        .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
+        .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;line-height: normal;}
         .opration i{font-size: 30px;margin-right: 10px;cursor: pointer}
         .platName{height: 50px;line-height: 50px;width: 100%;font-size: 20px;text-align: center;background: #dddddd;color:#fff;position: absolute;
             top: 0;left: 0;}
@@ -128,7 +129,7 @@
                             $('.total').html('共同'+ --count +'条');
                             layer.close(confirmL);
                         }else{
-                            layer.open(data.msg);
+                            layer.open({content:data.msg});
                         }
                     })
                 })

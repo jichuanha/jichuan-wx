@@ -108,8 +108,8 @@ public class CustomMenuController {
     public String modifyCustomMenu(HttpServletRequest request) {
         try {
             Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
-            String keywords = RequestUtils.getString(request, true, "uri", "uri is null");
-            String uri = RequestUtils.getString(request, true, "keywords", "article_uri is null");
+            String keywords = RequestUtils.getString(request, true, "keywords", "keywords is null");
+            String uri = RequestUtils.getString(request, true, "uri", "uri is null");
             String name = RequestUtils.getString(request, true, "name", "name is null");
             Integer type = RequestUtils.getInt(request, "type", true, "type is null", "");
             Integer sort = RequestUtils.getInt(request, "sort", true, "sort is null", "");

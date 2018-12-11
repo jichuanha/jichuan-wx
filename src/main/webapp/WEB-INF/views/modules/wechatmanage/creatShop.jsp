@@ -47,6 +47,12 @@
 <div class="shop-wrap">
   <form class="form-horizontal">
     <div class="form-group">
+      <label for="wechat_no" class="col-sm-1 control-label"><font style="color: red">*</font>微信账号</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="wechat_no" placeholder="微信账号" name="wechat_no">
+      </div>
+    </div>
+    <div class="form-group">
       <label for="name" class="col-sm-1 control-label"><font style="color: red">*</font>公众号名称</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" id="name" placeholder="请输入公众号名称" name="name">
@@ -58,7 +64,6 @@
         <input type="text" class="form-control" id="main_part" placeholder="请输入账号主体名称" name="main_part">
       </div>
     </div>
-
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button type="submit" class="btn btn-primary">创建公众号</button>
@@ -79,8 +84,14 @@
             main_part: {
                 required: true,
             },
+            wechat_no:{
+                required:true,
+            }
         },
         messages: {
+            wechat_no:{
+                required: "请输入微信账号",
+            },
             name: {
                 required: "请输入公众号名称",
             },
@@ -96,6 +107,7 @@
                 data:{
                     name:$('#name').val(),
                     main_part:$('#main_part').val(),
+                    wechat_no:$('#wechat_no').val(),
                 },
                 success:function(data){
                     typeof data != 'object'&& (data = JSON.parse(data));

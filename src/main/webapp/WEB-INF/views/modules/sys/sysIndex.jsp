@@ -32,6 +32,7 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
+		    $('#platFormName').html($.cookie('platFormName'));
 			// <c:if test="${tabmode eq '1'}"> 初始化页签
 			$.fn.initJerichoTab({
                 renderTo: '#right', uniqueId: 'jerichotab',
@@ -236,7 +237,7 @@
                     <div id="left1" class="navbar">
 						<div class="checked-public">
 							<img src="${ctxStatic}/images/login/logo.png" alt="">
-							<p>公众号名称</p>
+							<p id="platFormName">公众号名称</p>
 							<input type="hidden" value="1">
 						</div>
                         <div class="nav-collapse">
