@@ -23,7 +23,7 @@
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
         .item{width: 295px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
-        #creat-block .item{height: 667px;}
+        #creat-block .item{height: 580px;}
         .item img{display: block;width: 100%;height: 200px;margin: 20px 0;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;word-break: break-all;}
         .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
@@ -31,7 +31,7 @@
         .platName{height: 50px;line-height: 50px;width: 100%;font-size: 17px;text-align: center;color:#fff;position: absolute;
             top: 0;left: 0;background: url("${ctxStatic}/images/bg_mobile.png");background-size: cover;line-height: 65px;}
         .info{margin-top: 50px;}
-        #input-block{border:1px solid #eee;width: 400px;float: left;margin-left: 20px;height: 667px;}
+        #input-block{border:1px solid #eee;width: 400px;float: left;margin-left: 20px;height: 580px;}
         #input-block form>div{padding: 10px 20px;}
         .input-title{border-bottom: 1px solid #eee;}
         #save{margin:0 auto;display: block;width: 200px;padding: 10px 0;}
