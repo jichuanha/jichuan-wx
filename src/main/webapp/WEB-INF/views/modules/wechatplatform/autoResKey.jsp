@@ -513,6 +513,9 @@
             font-size: 15px;
             margin: 0 ;
         }
+        .add{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -1203,7 +1206,7 @@
         });
     });
     $('.save-btn').live('click',function () {
-        
+
     })
 </script>
 </body>
