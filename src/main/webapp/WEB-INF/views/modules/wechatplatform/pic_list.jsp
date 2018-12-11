@@ -21,13 +21,13 @@
         .creat-wrap .btn{font-size: 20px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
-        .item{width: 200px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;}
+        .item{width: 200px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;position: relative;box-sizing: border-box;height: 400px;overflow: hidden;line-height: 400px;}
         #creat-block .item{height: 667px;}
         .creat-btn{padding: 3px 30px;}
         .creat-btn .webuploader-pick{font-size: 20px;display: inline;}
-        .item img{display: block;width: 100%;}
+        .item img{display: inline;width: 100%;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;}
-        .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
+        .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;line-height: normal;}
         .opration i{font-size: 30px;margin-right: 10px;cursor: pointer}
         .platName{height: 50px;line-height: 50px;width: 100%;font-size: 20px;text-align: center;background: #dddddd;color:#fff;position: absolute;
             top: 0;left: 0;}
