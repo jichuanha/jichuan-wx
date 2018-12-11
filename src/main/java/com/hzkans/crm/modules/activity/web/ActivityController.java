@@ -107,6 +107,7 @@ public class ActivityController extends BaseController {
 		Activity activity = new Activity();
 		activity.setName(name);
 		activity.setDelFlag("0");
+		activity.setWechatPlatformId(wechatPlatformId);
 		List<Activity> activityList;
 
 		//必填不能为空
@@ -141,7 +142,6 @@ public class ActivityController extends BaseController {
 			activity.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activity.setIsFollow(isFollow);
-			activity.setWechatPlatformId(wechatPlatformId);
 			activity.setRebateType(rebateType);
 			activity.setRebateChannel(rebateChannel);
 			activity.setPerAmount(PriceUtil.parseYuan2Fen(perAmount * 1.0));
@@ -366,6 +366,7 @@ public class ActivityController extends BaseController {
 			List<PlatformShop> platformShopDTOS;
 			Map<String,Object> map = new HashMap<>();
 			if (CollectionUtils.isNotEmpty(platformShopList)){
+				//将平台放到set中
 				for (PlatformShop platformShop1 : platformShopList){
 					Integer platform = platformShop1.getPlatform();
 					set.add(platform);
@@ -374,6 +375,7 @@ public class ActivityController extends BaseController {
 				while (iterator.hasNext()) {
 					platformShopDTOS = new ArrayList<>();
 					Integer platform = iterator.next();
+					//将各个店铺放到相应的平台中
 					for (PlatformShop platformShop1 : platformShopList){
 						if (platform.equals(platformShop1.getPlatform())){
 							platformShopDTOS.add(platformShop1);
