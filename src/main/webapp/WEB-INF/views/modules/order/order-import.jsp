@@ -519,11 +519,12 @@
             })
             // 文件上传过程中创建进度条实时显示。
             uploader.on( 'uploadProgress', function( file, percentage ) {
+                console.log(percentage);
                 if(percentage!=1){
                     var per = percentage.toFixed(4)*100;
                     $('#percent').show().html('上传进度:'+per+'%');
                 }else{
-                    $('#percent').show().html('文件处理中');
+                    $('#percent').show().html('文件处理中...');
                 }
             });
 
@@ -531,7 +532,7 @@
             uploader.on('uploadSuccess', function(file, response) {
                 //hideBatchDialog();
                 $('#percent').html('');
-                if (response.code === 10000) {
+                if (response.code == 10000) {
                     layer.msg(response.msg);
                     $('#myModal').modal('hide');
                     ajaxFuc();

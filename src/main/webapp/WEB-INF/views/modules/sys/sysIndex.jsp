@@ -142,8 +142,8 @@
 					}
 				});
 			}
-			getNotifyNum(); //<c:if test="${oaNotifyRemindInterval ne '' && oaNotifyRemindInterval ne '0'}">
-			setInterval(getNotifyNum, ${oaNotifyRemindInterval}); //</c:if>
+			<%--getNotifyNum(); //<c:if test="${oaNotifyRemindInterval ne '' && oaNotifyRemindInterval ne '0'}">--%>
+			<%--setInterval(getNotifyNum, ${oaNotifyRemindInterval}); //</c:if>--%>
 		});
 		// <c:if test="${tabmode eq '1'}"> 添加一个页签
 		function addTab($this, refresh){
@@ -185,7 +185,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="${ctx}/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a></li>
 							<li><a href="${ctx}/sys/user/modifyPwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
-							<li><a href="${ctx}/logout" title="退出登录">退出</a></li>
+							<li><a href="${ctx}/logout" title="退出登录"><i class="icon-off"></i>&nbsp;  退出</a></li>
 						</ul>
 					</li>
 					<li>&nbsp;</li>
