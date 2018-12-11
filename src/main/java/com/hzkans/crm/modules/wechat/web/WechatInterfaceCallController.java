@@ -50,27 +50,44 @@ public class WechatInterfaceCallController {
     @ResponseBody
     public String syMenu2Wechat(HttpServletRequest request, HttpServletResponse response) {
         Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
+        List<CustomMainMenuDTO> allCustomMenu = null;
+        WechatPlatfromDO wechatPlatform = null;
         try {
-            List<CustomMainMenuDTO> allCustomMenu = customMenuService.getAllCustomMenu(wechatId);
-
+            allCustomMenu = customMenuService.getAllCustomMenu(wechatId);
             //获取该公众号的appid和appsecret
-            WechatPlatfromDO wechatPlatform = wechatPlatfromService.getWechatPlatformById(wechatId);
-
-            if(CollectionUtils.isEmpty(allCustomMenu)) {
-                throw new ServiceException(ResponseEnum.B_E_MENU_EMPTY);
-            }
+            wechatPlatform = wechatPlatfromService.getWechatPlatformById(wechatId);
+        } catch (Exception e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+        //一级菜单的校验
+        if(CollectionUtils.isEmpty(allCustomMenu)) {
+            throw new ServiceException(ResponseEnum.B_E_MENU_EMPTY);
+        }
+        if(allCustomMenu.size() > 3) {
+            logger.error("allCustomMenu size {}"+allCustomMenu.size());
+            throw new ServiceException(ResponseEnum.B_E_FIRST_MENU_ERROR);
+        }
+        //将菜单同步到微信公众号
+        try {
             String bizCode = syMenu(allCustomMenu, wechatPlatform);
             if(!bizCode.equals("0")) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
             }
-
             return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (Exception e) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        } catch (ServiceException e) {
+            logger.error("syMenu2Wechat error",e);
+            throw new ServiceException(e.getCode(), e.getServiceMessage());
         }
+
     }
 
 
+    /**
+     * 同步菜单的方法
+     * @param allCustomMenu
+     * @param wechatPlatform
+     * @return
+     */
     private String syMenu(List<CustomMainMenuDTO> allCustomMenu, WechatPlatfromDO wechatPlatform) {
         //创建最外层
         Map<String, List<WechatMenu>> listMap = new HashMap<>();
@@ -100,6 +117,10 @@ public class WechatInterfaceCallController {
             if(MenuType.MENU.getCode().equals(type)) {
                 wechatMenu.setName(dto.getName());
                 List<CustomMainMenuDTO> customChildMenuDTOS = dto.getCustomChildMenuDTOS();
+                if(customChildMenuDTOS.size() > 5) {
+                    logger.error("customChildMenuDTOS size {}",customChildMenuDTOS.size());
+                    throw new ServiceException(ResponseEnum.B_E_SECOND_MENU_ERROR);
+                }
                 for (CustomMainMenuDTO menuDTO : customChildMenuDTOS) {
                     WechatMenu child = new WechatMenu();
                     Integer type1 = menuDTO.getType();
