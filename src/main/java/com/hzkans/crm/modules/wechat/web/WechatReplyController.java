@@ -79,8 +79,6 @@ public class WechatReplyController extends BaseController {
             }
 
 
-
-
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (ServiceException e) {
             logger.error("listReply is error", e);
@@ -89,7 +87,7 @@ public class WechatReplyController extends BaseController {
     }
 
     /**
-     * 添加自动回复信息
+     * 添加自动回复信息--
      *
      * @param request
      * @param model
@@ -101,15 +99,10 @@ public class WechatReplyController extends BaseController {
     @ResponseBody
     public String saveReplynew(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
 
-        Integer unOpen = RequestUtils.getInt(request, "un_open", false, "un_open is null", "");
-        Integer replyType = RequestUtils.getInt(request, "reply_type", false, "reply_type is null", "");
         Integer contentType = RequestUtils.getInt(request, "content_type", false, "content_type is null", "");
-        Integer keyType = RequestUtils.getInt(request, "key_type", true, "key_type is null", "");
-        String keywords = RequestUtils.getString(request, false, "keywords", "keywords is null");
         String remarks = RequestUtils.getString(request, true, "remarks", "");
         String content = RequestUtils.getString(request, true, "content", "");
-        String replyDesc = RequestUtils.getString(request, true, "reply_desc", "reply_desc is null");
-        String response = RequestUtils.getString(request, true, "response", "reply_desc is null");
+        String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
         Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
         Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
@@ -127,6 +120,7 @@ public class WechatReplyController extends BaseController {
         wechatReplyNew.setStatus(status);
         wechatReplyNew.setRemarks(remarks);
         wechatReplyNew.setReplyWay(replyWay);
+        wechatReplyNew.setRuleName(ruleName);
 
         //插入主表信息 以及获取id
         Integer replyId = newWechatReplyService.saveReply(wechatReplyNew);
