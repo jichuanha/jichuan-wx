@@ -13,13 +13,14 @@
 
     <task:scheduled-tasks scheduler="scheduler">
         <task:scheduled ref="timingDateImportService" method="import2DataBase"
-                        cron="0 0/1 * * * ?" />
+                        cron="0 0/2 * * * ?" />
 
         <task:scheduled ref="timingUpdateActivityStatusService" method="updateStatus"
                         cron="0 0/1 * * * ?" />
 
         <!-- * 0/30 * * * ?-->
         <!--<task:scheduled ref="timingDateImportService" method="deleteHasImportTable"
+
                         cron="0 0/1 * * * ?" />-->
 
     </task:scheduled-tasks>
