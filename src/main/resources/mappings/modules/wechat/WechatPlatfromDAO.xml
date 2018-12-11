@@ -14,7 +14,8 @@
 		a.app_secret AS "appSecret",
 		a.token AS "token",
 		a.binding_flag AS "bindingFlag",
-		a.app_id AS "appId"
+		a.app_id AS "appId",
+		a.wechat_no AS "wechatNo"
 	</sql>
 
     <sql id="tWechatPlatformJoins">
@@ -51,6 +52,7 @@
 		INSERT INTO t_wechat_platform(
 			name,
 			main_part,
+			wechat_no,
 			del_flag,
 			create_date,
 			create_by,
@@ -63,6 +65,7 @@
 		) VALUES (
 			#{name},
 			#{mainPart},
+			#{wechatNo},
 			0,
 			now(),
 			#{createBy},
