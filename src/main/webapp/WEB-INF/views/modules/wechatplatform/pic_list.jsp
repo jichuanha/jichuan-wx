@@ -12,9 +12,10 @@
     <title>图片</title>
     <style>
         #list-wrap,#creat-wrap{padding: 50px;}
+        a:hover, a:focus{text-decoration: none;color: inherit;}
         header{width: 100%;height: 55px;border-bottom: 2px solid #eee;}
         header ul{text-decoration: none;list-style: none}
-        header ul li{font-size: 20px;line-height: 50px;display: inline-block;margin-right: 50px;box-sizing: border-box;}
+        header ul li{font-size: 16px;line-height: 50px;display: inline-block;margin-right: 50px;box-sizing: border-box;}
         header ul li a{color:#000; text-decoration: none;list-style: none;}
         .actived{border-bottom: 5px solid #3f5185;}
         .creat-wrap{margin-bottom: 20px;}
