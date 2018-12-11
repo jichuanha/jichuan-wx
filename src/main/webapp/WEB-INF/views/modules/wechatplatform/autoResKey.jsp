@@ -13,6 +13,8 @@
     <title>Title</title>
     <meta name="decorator" content="default"/>
     <script src="${ctxStatic}/layer/layer.js"></script>
+    <link rel="stylesheet" href="${ctxStatic}/webuploader-0.1.5/webuploader.css">
+    <script src="${ctxStatic}/webuploader-0.1.5/webuploader.js"></script>
     <link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
     <script src="${ctxStatic}/jquery.page/page.js"></script>
     <style>
@@ -314,6 +316,19 @@
         .btns .add-btn{
             letter-spacing: 0;
             padding-left: 0;
+            background-color: #fff;
+            color: #3F51B5;
+            border: 1px solid #3F51B5;
+            width: 80px;
+        }
+        .btns .add-btn:hover{
+            color: #3F51B5;
+        }
+        .btns .search-btn{
+            margin-left: 20px;
+            width: 80px;
+            letter-spacing: 0;
+            padding-left: 0;
         }
         .add{
             /*display: none;*/
@@ -401,7 +416,7 @@
         .res-iframe{
             /*width: 96%;*/
             border: 1px solid #E4E4E4;
-            height: 318px;
+            min-height: 318px;
             display: none;
         }
         .res-txt{
@@ -427,6 +442,9 @@
             margin: 0;
             position: relative;
             text-align: center;
+        }
+        .select-article{
+            width: 100%;
         }
         .res-box:hover{
             border-color: #B3B3B3;
@@ -471,13 +489,29 @@
         .img-choosed img{
             height: 100%;
         }
-        .less-img-btn{
+        .less-img-btn,.less-vedio-btn,.less-article-btn{
             display: inline-block;
             width: 30px;
             margin-left: 30px;
         }
-        .less-img-btn img{
+        .less-img-btn img,.less-vedio-btn img,.less-article-btn img{
             width: 100%;
+        }
+        .webuploader-pick{
+            background-color: transparent;
+            color: #9A9A9A;
+            font-size: 16px;
+            vertical-align: bottom;
+            padding-top: 80px;
+            margin-top: -75px;
+        }
+        #sound-select .webuploader-pick{
+            color: #fff;
+            height: 30px;
+            padding: 0;
+            line-height: 30px;
+            font-size: 15px;
+            margin: 0 ;
         }
     </style>
 </head>
@@ -494,10 +528,12 @@
     <p>通过编辑内容或关键词规则，快速进行自动回复设置。</p>
     <p>关闭自动回复之后，将立即对所有用户生效。</p>
 </div>
-<div class="btns clearfix">
-    <a href="#" class="add-btn">添加回复</a>
-</div>
+
 <div class="rules">
+    <div class="btns clearfix">
+        <input type="text" style="vertical-align: baseline"><label><a href="javascript:;" class="search-btn">搜索</a></label>
+        <a href="#" class="add-btn">新建</a>
+    </div>
     <table class="rules-list">
         <tr>
             <th>规则名称</th>
@@ -550,9 +586,6 @@
                             <div class="article-block clearfix res-block">
                                 <div class="select-article res-box left-res-box">
                                     <a href="javascript:;" class="select-article-btn res-upload-btn">从素材库中选择</a>
-                                </div>
-                                <div class="upload-article res-box">
-                                    <a href="javascript:;" class="upload-article-btn res-upload-btn">上传图文</a>
                                 </div>
                             </div>
                         </div>
@@ -667,6 +700,7 @@
 </div>
 
 <script>
+    uploadPic();
     $('.save-btn').click(function () {
         //关键词处理
         var arr = [];
@@ -805,9 +839,27 @@
                 '</div>')
         }
         else if(name == 'voice'){
-            var para = $('.pic-block .item.active').attr('data-para');
+            var para = $('.sound-block input[name=sound]:checked').attr('data-para');
             var paraJson = JSON.parse(para);
+            $('.content-block').eq(index).find('.voice-block').html('<p data-para="'+para+'">已选择:语音名称:'+paraJson.title+'&nbsp;&nbsp;文件名称:'+paraJson.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+
         }
+        else if(name == 'article'){
+            var para = $('.article-block .item.active').attr('data-para');
+            var paraJson = JSON.parse(para);
+            $('.content-block').eq(index).find('.article-block').html('<div>\n' +
+                '                        <div class="item">' +
+                '            <div>\n' +
+                '                <div style="font-size:20px;">' + paraJson.title + '</div>\n' +
+                '                <div>2018-12-05</div>\n' +
+                '            </div>\n' +
+                '            <img src="//yiyezi.yyzws.com/ex/' + paraJson.cover_picture + '">\n' +
+                '            <p class="desc">' + paraJson.brief + '</p>\n' +
+                '            <div><span class="floatL">阅读原文</span><span class="floatR"><i class="icon-chevron-right"></i></span></div>\n' +
+                '        </div>' +
+                '            <a href="javascript:;" class="less-article-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>        </div>')
+        }
+        $('#myModalArtcle').modal('hide');
     })
     var replyDesc = [];
     function addMater(type) {
@@ -853,11 +905,12 @@
         $('#myModalArtcle').modal('show').attr('data-name','img').attr('data-index',index);
     })
     $('.select-voice-btn').live('click',function () {
+        var index = $('.content-block').index($(this).parents('.content-block'));
         getSound();
-        $('#myModalArtcle').modal('show');
+        $('#myModalArtcle').modal('show').attr('data-name','voice').attr('data-index',index);
     })
     $('.less-img-btn').live('click',function () {
-        $('.img-block').html('<div class="select-img res-box left-res-box">\n' +
+        $(this).parents('.img-block').html('<div class="select-img res-box left-res-box">\n' +
             '                <a href="javascript:;" class="select-img-btn res-upload-btn">从素材库中选择</a>\n' +
             '            </div>\n' +
             '            <div class="upload-img res-box">\n' +
@@ -865,12 +918,17 @@
             '            </div>');
     })
     $('.less-vedio-btn').live('click',function () {
-        $('.voice-block').html('<div class="select-voice res-box left-res-box">\n' +
+        $(this).parents('.voice-block').html('<div class="select-voice res-box left-res-box">\n' +
             '                <a href="javascript:;" class="select-voice-btn res-upload-btn">从素材库中选择</a>\n' +
             '            </div>\n' +
             '            <div class="upload-voice res-box">\n' +
             '                <a href="javascript:;" class="upload-voice-btn res-upload-btn">上传语音</a>\n' +
             '            </div>');
+    })
+    $('.less-article-btn').live('click',function () {
+        $(this).parents('.article-block').html('<div class="select-article res-box left-res-box">\n' +
+            '                                    <a href="javascript:;" class="select-article-btn res-upload-btn">从素材库中选择</a>\n' +
+            '                                </div>\n')
     })
     var params = {
         current_page: 1,
@@ -1060,7 +1118,7 @@
                     console.log(1);
                     $('.img-block').html('<div data-para="'+JSON.stringify(list)+'">' +
                         '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+list.cover_picture+'"/></i>' +
-                        '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
+                        '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                         '</div>');
 
                 }else{
@@ -1133,7 +1191,7 @@
                 $.post(url,list,function (data) {
                     typeof data != 'object'&& (data = JSON.parse(data));
                     if(data.code=='10000'){
-                        $('.voice-block').html('<p data-para="'+JSON.stringify(list)+'">已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                        $('.voice-block').html('<p data-para="'+JSON.stringify(list)+'">已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                         $('#myModal').modal('hide');
                     }else{
                         layer.open({
@@ -1144,6 +1202,9 @@
             }
         });
     });
+    $('.save-btn').live('click',function () {
+        
+    })
 </script>
 </body>
 </html>
