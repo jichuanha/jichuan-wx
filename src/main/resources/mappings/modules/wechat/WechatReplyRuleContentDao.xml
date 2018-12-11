@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatReplyRuleContentDao">
-    
-	<sql id="wechatReplyRuleContentColumns">
+
+    <sql id="wechatReplyRuleContentColumns">
 		a.id AS "id",
 		a.wechat_id AS "wechatId",
 		a.rule_id AS "ruleId",
@@ -14,84 +14,84 @@
 		a.updator AS "updator",
 		a.deleted AS "deleted"
 	</sql>
-	
-	<sql id="wechatReplyRuleContentJoins">
-	</sql>
-    
-	<select id="get" resultType="WechatReplyNew">
-		SELECT 
-			<include refid="wechatReplyRuleContentColumns"/>
-		FROM t_wx_reply_rule_content a
-		<include refid="wechatReplyRuleContentJoins"/>
-		<where>
 
-		<if test="id != null and id != ''">
-			AND a.id = #{id}
-		</if>
-		<if test="wechatId != null and wechatId != ''">
-			AND a.wechat_id = #{wechatId}
-		</if>
-		<if test="ruleId != null and ruleId != ''">
-			AND a.rule_id = #{ruleId}
-		</if>
-		</where>
-	</select>
-	
-	<select id="findList" resultType="WechatReplyNew">
-		SELECT 
-			<include refid="wechatReplyRuleContentColumns"/>
-		FROM t_wx_reply_rule_content a
-		<include refid="wechatReplyRuleContentJoins"/>
-		<where>
-			
-			<if test="id != null and id != ''">
-				AND a.id = #{id}
-			</if>
-			<if test="wechatId != null and wechatId != ''">
-				AND a.wechat_id = #{wechatId}
-			</if>
-			<if test="ruleId != null and ruleId != ''">
-				AND a.rule_id = #{ruleId}
-			</if>
-			<if test="contentType != null and contentType != ''">
-				AND a.content_type = #{contentType}
-			</if>
-			<if test="content != null and content != ''">
-				AND a.content = #{content}
-			</if>
-			<if test="deleted != null and deleted != ''">
-				AND a.deleted = #{deleted}
-			</if>
-		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
-	<select id="findAllList" resultType="WechatReplyNew">
-		SELECT 
-			<include refid="wechatReplyRuleContentColumns"/>
-		FROM t_wx_reply_rule_content a
-		<include refid="wechatReplyRuleContentJoins"/>
-		<where>
-			
-		</where>		
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
-	<insert id="insert">
+    <sql id="wechatReplyRuleContentJoins">
+    </sql>
+
+    <select id="get" resultType="WechatReplyContentDO">
+        SELECT
+        <include refid="wechatReplyRuleContentColumns"/>
+        FROM t_wx_reply_rule_content a
+        <include refid="wechatReplyRuleContentJoins"/>
+        <where>
+
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="wechatId != null and wechatId != ''">
+                AND a.wechat_id = #{wechatId}
+            </if>
+            <if test="ruleId != null and ruleId != ''">
+                AND a.rule_id = #{ruleId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findList" resultType="WechatReplyContentDO">
+        SELECT
+        <include refid="wechatReplyRuleContentColumns"/>
+        FROM t_wx_reply_rule_content a
+        <include refid="wechatReplyRuleContentJoins"/>
+        <where>
+
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="wechatId != null and wechatId != ''">
+                AND a.wechat_id = #{wechatId}
+            </if>
+            <if test="ruleId != null and ruleId != ''">
+                AND a.rule_id = #{ruleId}
+            </if>
+            <if test="contentType != null and contentType != ''">
+                AND a.content_type = #{contentType}
+            </if>
+            <if test="content != null and content != ''">
+                AND a.content = #{content}
+            </if>
+            <if test="deleted != null and deleted != ''">
+                AND a.deleted = #{deleted}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="WechatReplyContentDO">
+        SELECT
+        <include refid="wechatReplyRuleContentColumns"/>
+        FROM t_wx_reply_rule_content a
+        <include refid="wechatReplyRuleContentJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
 		INSERT INTO t_wx_reply_rule_content(
 			wechat_id,
 			rule_id,
@@ -107,30 +107,54 @@
 			#{ruleId},
 			#{contentType},
 			#{content},
-			#{createDate},
-			#{updateDate},
+			now(),
+			now(),
 			#{creator},
 			#{updator},
-			#{deleted}
+			0
 		)
 	</insert>
-	
-	<update id="update">
-		UPDATE t_wx_reply_rule_content SET 	
-			wechat_id = #{wechatId},
-			rule_id = #{ruleId},
-			content_type = #{contentType},
-			content = #{content},
-			update_date = #{updateDate},
-			creator = #{creator},
-			updator = #{updator},
-			deleted = #{deleted}
-		WHERE id = #{id}
-	</update>
-	
-	<update id="delete">
+
+    <update id="update">
+        UPDATE t_wx_reply_rule_content SET
+        wechat_id = #{wechatId},
+        rule_id = #{ruleId},
+        content_type = #{contentType},
+        content = #{content},
+        update_date = #{updateDate},
+        creator = #{creator},
+        updator = #{updator},
+        deleted = #{deleted}
+        WHERE id = #{id}
+
+        update t_wx_reply_rule_content
+        <set>
+            <if test="wechatId != null">
+                wechat_id = #{wechatId},
+            </if>
+            <if test="ruleId != null">
+                rule_id = #{ruleId},
+            </if>
+            <if test="contentType != null">
+                content_type = #{contentType},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="updator != null">
+                updator = #{updator},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted}
+            </if>
+            update_date = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="delete">
 		DELETE FROM t_wx_reply_rule_content
 		WHERE id = #{id}
 	</update>
-	
+
 </mapper>

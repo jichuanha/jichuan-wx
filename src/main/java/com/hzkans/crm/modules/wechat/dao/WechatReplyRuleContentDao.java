@@ -5,6 +5,7 @@ package com.hzkans.crm.modules.wechat.dao;
 
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
+import com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 
 /**
@@ -13,6 +14,6 @@ import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
  * @version 2018-12-10
  */
 @MyBatisDao
-public interface WechatReplyRuleContentDao extends CrudDao<WechatReplyNew> {
+public interface WechatReplyRuleContentDao extends CrudDao<WechatReplyContentDO> {
 	
 }

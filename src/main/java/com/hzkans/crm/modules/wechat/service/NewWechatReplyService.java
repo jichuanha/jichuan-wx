@@ -14,6 +14,7 @@ import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleContentDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleDao;
 import com.hzkans.crm.modules.wechat.entity.ReplyDescDTO;
 import com.hzkans.crm.modules.wechat.entity.WechatReply;
+import com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,66 +46,67 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
     private WechatReplyRuleDao wechatReplyRuleDao;
 
     /**
-     *
      * @param
      * @return
      */
-    public WechatReplyNew getFollowedOrImmeReply(Integer wechatId,Integer ruleId) throws Exception {
+    public WechatReplyNew getFollowedOrImmeReply(Integer wechatId, Integer ruleId) throws Exception {
 
         try {
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setRuleId(ruleId);
-
-            WechatReplyNew wechatReplyRule = wechatReplyRuleDao.get(wechatReplyNew);
-            WechatReplyNew wechatReplyContent =  wechatReplyRuleContentDao.get(wechatReplyNew);
-
-            wechatReplyContent.setStatus(wechatReplyRule.getStatus());
-            wechatReplyContent.setRuleName(wechatReplyRule.getRuleName());
-            wechatReplyContent.setRuleType(wechatReplyRule.getRuleType());
-            wechatReplyContent.setReplyWay(wechatReplyRule.getReplyWay());
-            wechatReplyContent.setRemarks(wechatReplyRule.getRemarks());
-            return  wechatReplyContent;
+//            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+//            wechatReplyNew.setWechatId(wechatId);
+//            wechatReplyNew.setRuleId(ruleId);
+//
+//            WechatReplyNew wechatReplyRule = wechatReplyRuleDao.get(wechatReplyNew);
+//            WechatReplyNew wechatReplyContent = wechatReplyRuleContentDao.get(wechatReplyNew);
+//
+//            wechatReplyContent.setStatus(wechatReplyRule.getStatus());
+//            wechatReplyContent.setRuleName(wechatReplyRule.getRuleName());
+//            wechatReplyContent.setRuleType(wechatReplyRule.getRuleType());
+//            wechatReplyContent.setReplyWay(wechatReplyRule.getReplyWay());
+//            wechatReplyContent.setRemarks(wechatReplyRule.getRemarks());
+            return  new WechatReplyNew();
         } catch (Exception e) {
-            logger.error("查询错误",e);
+            logger.error("查询错误", e);
             throw new Exception("查询***错误");
         }
     }
 
     /**
      * 添加自动回复主表
+     *
      * @param wechatReplyNew
      * @throws Exception
      */
     @Transactional(readOnly = false)
-    public Integer saveReply(WechatReplyNew wechatReplyNew) throws Exception {
-        return wechatReplyRuleDao.insert(wechatReplyNew);
+    public String saveReply(WechatReplyNew wechatReplyNew) throws Exception {
+        WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.get(wechatReplyNew);
+        if (null == wechatReplyNewResult) {
+            wechatReplyRuleDao.insert(wechatReplyNew);
+            return wechatReplyNew.getId();
+        } else {
+            return wechatReplyNewResult.getId();
+        }
+
     }
 
     /**
      * 添加自动回复内容表
-     * @param wechatReplyNew
+     *
+     * @param descList
      * @throws Exception
      */
     @Transactional(readOnly = false)
-    public Integer saveReplyContent(WechatReplyNew wechatReplyNew) throws Exception {
+    public void saveReplyContent(List<WechatReplyContentDO> descList) throws Exception {
 
-        if (wechatReplyNew.getRuleType() == 1 || wechatReplyNew.getRuleType() == 3){
-            WechatReplyNew checkWechatReply = wechatReplyRuleContentDao.get(wechatReplyNew);
-            if (null == checkWechatReply){
-                return wechatReplyRuleContentDao.insert(wechatReplyNew);
-            }else {
-                return wechatReplyRuleContentDao.update(wechatReplyNew);
-            }
 
+        WechatReplyContentDO wechatReplyContentDO = wechatReplyRuleContentDao.get(descList.get(0));
+        if (null == wechatReplyContentDO) {
+            wechatReplyRuleContentDao.insert(wechatReplyContentDO);
+        } else {
+            wechatReplyRuleContentDao.update(wechatReplyContentDO);
         }
 
-        return wechatReplyRuleContentDao.insert(wechatReplyNew);
     }
-
-
-
-
 
 
 //    /**

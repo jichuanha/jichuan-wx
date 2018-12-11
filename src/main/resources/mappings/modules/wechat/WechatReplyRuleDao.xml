@@ -25,7 +25,23 @@
 			<include refid="wechatReplyRuleColumns"/>
 		FROM t_wx_reply_rule a
 		<include refid="wechatReplyRuleJoins"/>
-		WHERE a.id = #{id}
+		<where>
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="wechatId != null and wechatId != ''">
+			AND a.wechat_id = #{wechatId}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		<if test="ruleName != null and ruleName != ''">
+			AND a.rule_name = #{ruleName}
+		</if>
+		<if test="ruleType != null and ruleType != ''">
+			AND a.rule_type = #{ruleType}
+		</if>
+		</where>
 	</select>
 	
 	<select id="findList" resultType="WechatReplyNew">
@@ -89,8 +105,10 @@
 	</select>
 	
 	<insert id="insert">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID() as id
+		</selectKey>
 		INSERT INTO t_wx_reply_rule(
-			id,
 			wechat_id,
 			status,
 			rule_name,
@@ -103,18 +121,17 @@
 			updator,
 			deleted
 		) VALUES (
-			#{id},
 			#{wechatId},
 			#{status},
 			#{ruleName},
 			#{ruleType},
 			#{remarks},
 			#{replyWay},
-			#{createDate},
-			#{updateDate},
+			now(),
+			now(),
 			#{creator},
 			#{updator},
-			#{deleted}
+			0
 		)
 	</insert>
 	
