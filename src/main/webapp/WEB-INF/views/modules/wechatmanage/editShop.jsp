@@ -45,6 +45,12 @@
 <div class="shop-wrap">
     <form class="form-horizontal">
         <div class="form-group">
+            <label for="wechat_no" class="col-sm-1 control-label"><font style="color: red">*</font>微信账号</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="wechat_no" placeholder="请输入微信账号" name="name" disabled value="${wechat_no}">
+            </div>
+        </div>
+        <div class="form-group">
             <label for="name" class="col-sm-1 control-label"><font style="color: red">*</font>公众号名称</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="name" placeholder="请输入公众号名称" name="name" disabled value="${name}">
