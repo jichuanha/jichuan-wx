@@ -26,6 +26,7 @@
 		FROM t_wx_reply_rule a
 		<include refid="wechatReplyRuleJoins"/>
 		<where>
+			a.deleted =0
 		<if test="id != null and id != ''">
 			AND a.id = #{id}
 		</if>
@@ -50,7 +51,7 @@
 		FROM t_wx_reply_rule a
 		<include refid="wechatReplyRuleJoins"/>
 		<where>
-			
+			a.deleted =0
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -72,9 +73,7 @@
 			<if test="replyWay != null and replyWay != ''">
 				AND a.reply_way = #{replyWay}
 			</if>
-			<if test="deleted != null and deleted != ''">
-				AND a.deleted = #{deleted}
-			</if>
+
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -136,22 +135,33 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE t_wx_reply_rule SET 	
-			wechat_id = #{wechatId},
-			status = #{status},
-			rule_name = #{ruleName},
-			rule_type = #{ruleType},
-			remarks = #{remarks},
-			reply_way = #{replyWay},
-			update_date = #{updateDate},
-			updator = #{updator},
-			deleted = #{deleted}
-		WHERE id = #{id}
+		update t_wx_reply_rule
+		<set>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="ruleName != null and ruleName != ''">
+				rule_name = #{ruleName},
+			</if>
+			<if test="replyWay != null">
+				reply_way = #{replyWay},
+			</if>
+			update_date = now()
+		</set>
+		where id = #{id} and wechat_id = #{wechatId}
+
 	</update>
 	
 	<update id="delete">
-		DELETE FROM t_wx_reply_rule
-		WHERE id = #{id}
+		update t_wx_reply_rule set deleted = 1
+		<where>
+			<if test="id != null ">
+				 and id = #{id}
+			</if>
+			<if test="wechatId != null">
+				 and wechat_id = #{wechatId}
+			</if>
+		</where>
 	</update>
 	
 </mapper>

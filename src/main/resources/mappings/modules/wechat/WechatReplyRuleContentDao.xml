@@ -24,7 +24,7 @@
         FROM t_wx_reply_rule_content a
         <include refid="wechatReplyRuleContentJoins"/>
         <where>
-
+            a.deleted = 0
             <if test="id != null and id != ''">
                 AND a.id = #{id}
             </if>
@@ -43,7 +43,7 @@
         FROM t_wx_reply_rule_content a
         <include refid="wechatReplyRuleContentJoins"/>
         <where>
-
+            a.deleted = 0
             <if test="id != null and id != ''">
                 AND a.id = #{id}
             </if>
@@ -58,9 +58,6 @@
             </if>
             <if test="content != null and content != ''">
                 AND a.content = #{content}
-            </if>
-            <if test="deleted != null and deleted != ''">
-                AND a.deleted = #{deleted}
             </if>
         </where>
         <choose>
@@ -116,25 +113,8 @@
 	</insert>
 
     <update id="update">
-        UPDATE t_wx_reply_rule_content SET
-        wechat_id = #{wechatId},
-        rule_id = #{ruleId},
-        content_type = #{contentType},
-        content = #{content},
-        update_date = #{updateDate},
-        creator = #{creator},
-        updator = #{updator},
-        deleted = #{deleted}
-        WHERE id = #{id}
-
         update t_wx_reply_rule_content
         <set>
-            <if test="wechatId != null">
-                wechat_id = #{wechatId},
-            </if>
-            <if test="ruleId != null">
-                rule_id = #{ruleId},
-            </if>
             <if test="contentType != null">
                 content_type = #{contentType},
             </if>
@@ -144,17 +124,24 @@
             <if test="updator != null">
                 updator = #{updator},
             </if>
-            <if test="deleted != null">
-                deleted = #{deleted}
-            </if>
             update_date = now()
         </set>
         where id = #{id}
     </update>
 
     <update id="delete">
-		DELETE FROM t_wx_reply_rule_content
-		WHERE id = #{id}
+		update t_wx_reply_rule_content set deleted = 1
+        <where>
+            <if test="id != null and id != ''">
+                 and id = #{id}
+            </if>
+            <if test="wechatId != null ">
+                and wechat_id = #{wechatId}
+            </if>
+            <if test="ruleId != null and ruleId != ''">
+                 and rule_id = #{ruleId}
+            </if>
+        </where>
 	</update>
 
 </mapper>

@@ -33,45 +33,24 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
 	private String content;		// 回复消息内容
 
-	List<WechatMaterial> wechatMaterials;
+	List<WechatReplyContentDO> wechatReplyContentDOS;
 
-	List<Keyword> keywords;
+	List<WechatReplyKeywordDO> wechatReplyKeywordDOS;
 
-	private class Keyword{
-		private String type;
-		private String keyWord;
-
-		public String getType() {
-			return type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		public String getKeyWord() {
-			return keyWord;
-		}
-
-		public void setKeyWord(String keyWord) {
-			this.keyWord = keyWord;
-		}
+	public List<WechatReplyContentDO> getWechatReplyContentDOS() {
+		return wechatReplyContentDOS;
 	}
 
-	public List<Keyword> getKeywords() {
-		return keywords;
+	public void setWechatReplyContentDOS(List<WechatReplyContentDO> wechatReplyContentDOS) {
+		this.wechatReplyContentDOS = wechatReplyContentDOS;
 	}
 
-	public void setKeywords(List<Keyword> keywords) {
-		this.keywords = keywords;
+	public List<WechatReplyKeywordDO> getWechatReplyKeywordDOS() {
+		return wechatReplyKeywordDOS;
 	}
 
-	public List<WechatMaterial> getWechatMaterials() {
-		return wechatMaterials;
-	}
-
-	public void setWechatMaterials(List<WechatMaterial> wechatMaterials) {
-		this.wechatMaterials = wechatMaterials;
+	public void setWechatReplyKeywordDOS(List<WechatReplyKeywordDO> wechatReplyKeywordDOS) {
+		this.wechatReplyKeywordDOS = wechatReplyKeywordDOS;
 	}
 
 	public Integer getWechatId() {

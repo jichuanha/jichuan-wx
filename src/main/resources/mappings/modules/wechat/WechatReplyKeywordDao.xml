@@ -32,7 +32,7 @@
 		FROM t_wx_reply_keyword a
 		<include refid="wechatReplyKeywordJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = 0
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -47,9 +47,6 @@
 			</if>
 			<if test="keyword != null and keyword != ''">
 				AND a.keyword = #{keyword}
-			</if>
-			<if test="delFlag != null and delFlag != ''">
-				AND a.del_flag = #{delFlag}
 			</if>
 		</where>
 		<choose>
@@ -68,7 +65,7 @@
 		FROM t_wx_reply_keyword a
 		<include refid="wechatReplyKeywordJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = 0
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -86,9 +83,7 @@
 			rule_id,
 			keyword_type,
 			keyword,
-			create_by,
 			create_date,
-			update_by,
 			update_date,
 			del_flag
 		) VALUES (
@@ -96,11 +91,9 @@
 			#{ruleId},
 			#{keywordType},
 			#{keyword},
-			#{createBy.id},
-			#{createDate},
-			#{updateBy.id},
-			#{updateDate},
-			#{delFlag}
+			now(),
+			now(),
+			0
 		)
 	</insert>
 	
@@ -117,9 +110,19 @@
 	</update>
 	
 	<update id="delete">
-		UPDATE t_wx_reply_keyword SET 
-			del_flag = #{DEL_FLAG_DELETE}
-		WHERE id = #{id}
+		UPDATE t_wx_reply_keyword SET del_flag = 1
+		<where>
+			<if test="id != null and id != ''">
+				 and id = #{id}
+			</if>
+			<if test="wechatId != null and wechatId != ''">
+				and wechat_id = #{wechatId}
+			</if>
+			<if test="ruleId != null and ruleId != ''">
+				and rule_id = #{ruleId}
+			</if>
+		</where>
+
 	</update>
 	
 </mapper>
