@@ -284,6 +284,20 @@
             color: #3f51b5;
             cursor: pointer;
         }
+        #myModal .modal-body{
+            position: relative;
+        }
+        #percent{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            margin: 0;
+            display: none;
+        }
+        #percent img{
+            width: 100%;
+            vertical-align: bottom;
+        }
     </style>
 </head>
 <body>
@@ -387,7 +401,7 @@
                         </li>
                         <li class="choosed-excel"></li>
                         <li class="prompt-msg"></li>
-                        <li id="percent"></li>
+                        <li id="percent"><img src="${ctxStatic}/images/loadingBar.gif" alt=""></li>
                         </ul>
                 </div>
                 <div class="modal-footer">
@@ -520,18 +534,13 @@
             // 文件上传过程中创建进度条实时显示。
             uploader.on( 'uploadProgress', function( file, percentage ) {
                 console.log(percentage);
-                if(percentage!=1){
-                    var per = percentage.toFixed(4)*100;
-                    $('#percent').show().html('上传进度:'+per+'%');
-                }else{
-                    $('#percent').show().html('文件处理中...');
-                }
+                $('#percent').css('display','block');
             });
 
             // 上传成功
             uploader.on('uploadSuccess', function(file, response) {
                 //hideBatchDialog();
-                $('#percent').html('');
+                $('#percent').css('display','none');
                 if (response.code == 10000) {
                     layer.msg(response.msg);
                     $('#myModal').modal('hide');
@@ -547,7 +556,7 @@
             // 上传失败
             uploader.on('uploadError', function(file) {
                 layer.msg('上传失败');
-                $('#percent').html('');
+                $('#percent').css('display','none');
 
             });
             uploader.on( 'uploadBeforeSend', function( block, data ) {
@@ -565,7 +574,7 @@
             });
             // 上传完成（不论成功或失败都会执行）
             uploader.on( 'uploadComplete', function( file ) {
-                $('#percent').html('');
+                $('#percent').css('display','none');
             });
 
             // 上传错误
