@@ -44,8 +44,8 @@
 <body>
 
 <div id="creat-wrap" class="creat-block">
-    <div>由于微信接口延迟，菜单修改后需点击“提交发布”，最长可能需要30分钟才会更新至公众号。</div>
-    <div>点击“提交发布”前的操作仅在当前页面生效。如需公众号菜单即时生效，可先取消关注，再重新关注。</div>
+    <div style="color: #9A9A9A;">由于微信接口延迟，菜单修改后需点击“提交发布”，最长可能需要30分钟才会更新至公众号。</div>
+    <div style="color: #9A9A9A;">点击“提交发布”前的操作仅在当前页面生效。如需公众号菜单即时生效，可先取消关注，再重新关注。</div>
     <div id="creat-block">
         <div class="item">
             <div class="platName"></div>
