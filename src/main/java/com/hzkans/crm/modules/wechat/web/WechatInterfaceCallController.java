@@ -9,9 +9,12 @@ import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.modules.wechat.constants.MenuType;
 import com.hzkans.crm.modules.wechat.constants.WechatMenu;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
 import com.hzkans.crm.modules.wechat.service.CustomMenuService;
+import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
 import com.hzkans.crm.modules.wechat.utils.WechatCofig;
+import com.hzkans.crm.modules.wechat.utils.WechatUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,8 @@ public class WechatInterfaceCallController {
 
     @Autowired
     private CustomMenuService customMenuService;
+    @Autowired
+    private WechatPlatfromService wechatPlatfromService;
 
     private static Logger logger = LoggerFactory.getLogger(WechatInterfaceCallController.class);
 
@@ -47,22 +52,26 @@ public class WechatInterfaceCallController {
         Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
         try {
             List<CustomMainMenuDTO> allCustomMenu = customMenuService.getAllCustomMenu(wechatId);
+
+            //获取该公众号的appid和appsecret
+            WechatPlatfromDO wechatPlatform = wechatPlatfromService.getWechatPlatformById(wechatId);
+
             if(CollectionUtils.isEmpty(allCustomMenu)) {
                 throw new ServiceException(ResponseEnum.B_E_MENU_EMPTY);
             }
-            String bizCode = syMenu(allCustomMenu);
+            String bizCode = syMenu(allCustomMenu, wechatPlatform);
             if(!bizCode.equals("0")) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
             }
 
             return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (ServiceException e) {
-            return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+        } catch (Exception e) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
 
 
-    private String syMenu(List<CustomMainMenuDTO> allCustomMenu) {
+    private String syMenu(List<CustomMainMenuDTO> allCustomMenu, WechatPlatfromDO wechatPlatform) {
         //创建最外层
         Map<String, List<WechatMenu>> listMap = new HashMap<>();
         List<WechatMenu> menuList = new ArrayList<>();
@@ -116,11 +125,10 @@ public class WechatInterfaceCallController {
         listMap.put("button",menuList);
 
         logger.info("listMpa {}",JsonUtil.toJson(listMap));
-        String accessToken = getAccessToken(WechatCofig.APPID, WechatCofig.APPSECRET);
+        String accessToken = WechatUtils.getAccessToken(wechatPlatform.getAppId(), wechatPlatform.getAppSecret());
         String url = WechatCofig.CREATE_MENU.replace("ACCESS_TOKEN", accessToken);
         String data = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, url,
                 JsonUtil.toJson(listMap), "", 0, "false");
-        logger.info("data {}", data);
         JSONObject jsonObject = JSONObject.parseObject(data);
 
         return jsonObject.getString("errcode");
