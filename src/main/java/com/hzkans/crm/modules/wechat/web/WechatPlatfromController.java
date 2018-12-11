@@ -103,6 +103,7 @@ public class WechatPlatfromController extends BaseController {
             String appSecret = RequestUtils.getString(request, true, "app_secret", "app_secret is null");
             String token = RequestUtils.getString(request, true, "token", "token is null");
             String appId = RequestUtils.getString(request, true, "app_id", "token is null");
+            String wechatNo = RequestUtils.getString(request, false, "wechat_no", "token is null");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -117,6 +118,7 @@ public class WechatPlatfromController extends BaseController {
             wechatPlatfromDO.setAppSecret(appSecret);
             wechatPlatfromDO.setToken(token);
             wechatPlatfromDO.setAppId(appId);
+            wechatPlatfromDO.setWechatNo(wechatNo);
 
             wechatPlatfromService.addWechatPlatform(wechatPlatfromDO);
             return ResponseUtils.getSuccessApiResponseStr(true);
