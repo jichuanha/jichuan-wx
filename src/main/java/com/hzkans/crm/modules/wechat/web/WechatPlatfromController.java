@@ -81,6 +81,7 @@ public class WechatPlatfromController extends BaseController {
             model.addAttribute("id", wechatPlatfromDO.getId());
             model.addAttribute("name", wechatPlatfromDO.getName());
             model.addAttribute("mainPart", wechatPlatfromDO.getMainPart());
+            model.addAttribute("wechat_no", wechatPlatfromDO.getWechatNo());
             return "modules/wechatmanage/editShop";
         } catch (Exception e) {
             logger.error("selectWechatPlatformById is error", e);
