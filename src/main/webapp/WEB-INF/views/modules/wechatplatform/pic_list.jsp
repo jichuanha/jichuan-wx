@@ -17,7 +17,7 @@
         header ul{text-decoration: none;list-style: none}
         header ul li{font-size: 16px;line-height: 50px;display: inline-block;margin-right: 70px;box-sizing: border-box;}
         header ul li a{color:#000; text-decoration: none;list-style: none;}
-        .actived{border-bottom: 5px solid #3f5185;}
+        .actived{border-bottom: 5px solid #3f51B5;}
         .creat-wrap{margin-bottom: 20px;}
         .creat-wrap .btn{font-size: 20px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
