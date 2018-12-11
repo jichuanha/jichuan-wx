@@ -21,16 +21,16 @@
         .creat-wrap .btn{font-size: 20px;padding: 10px 30px;display: inline-block;}
         .creat-wrap span{font-size: 20px;margin-left: 20px;}
         #list-block,#creat-block{padding: 50px 0;overflow: hidden;}
-        .item{width: 375px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
-        #creat-block .item{height: 667px;}
+        .item{width: 294px;margin-right: 20px;margin-bottom:20px;float: left;border:1px solid #eee;padding: 20px;position: relative;box-sizing: border-box;}
+        #creat-block .item{height: 580px;}
         .item img{display: block;width: 100%;height: 200px;margin: 20px 0;}
         .floatL{float: left} .floatR{float: right;}.desc{border-bottom: 1px solid #eee;padding-bottom: 20px;word-break: break-all;}
         .opration{display: none;position: absolute;top:0;left: 0;right: 0;bottom: 0;background: rgba(255,255,255,0.8);padding: 20px;}
         .opration i{font-size: 30px;margin-right: 10px;cursor: pointer}
-        .platName{height: 50px;line-height: 50px;width: 100%;font-size: 20px;text-align: center;background: #dddddd;color:#fff;position: absolute;
-            top: 0;left: 0;}
+        .platName{height: 50px;line-height: 50px;width: 100%;font-size: 17px;text-align: center;background: url('${ctxStatic}/images/bg_mobile.png');color:#fff;position: absolute;
+            top: 0;left: 0;background-size: cover;line-height: 65px;}
         .info{margin-top: 50px;}
-        #input-block{border:1px solid #eee;width: 600px;float: left;margin-left: 20px;height: 667px;}
+        #input-block{border:1px solid #eee;width: 600px;float: left;margin-left: 20px;height: 580px;}
         #input-block form>div{padding: 10px 20px;}
         .input-title{border-bottom: 1px solid #eee;}
         #save{margin:0 auto;display: block;width: 200px;padding: 10px 0;}
@@ -63,7 +63,7 @@
             </form>
         </div>
     </div>
-    <div><button class="btn btn-primary" style="margin-left: 375px;margin-top: -50px;" id="syMenu">同步到微信</button></div>
+    <div><button class="btn btn-primary" style="margin-left: 294px;margin-top: -50px;" id="syMenu">同步到微信</button></div>
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
