@@ -78,7 +78,9 @@ public enum ResponseEnum {
     B_E_TABLE_STATUS_ERROR(40035,0,"表格不在待发布状态"),
     B_E_FILE_NOT_EXIST(40035,0,"表格不在待发布状态"),
     B_E_DOWNLOAD_ERROR(40036,0,"下载异常"),
-    CONTENT_IS_NULL(40037, 0, "文本内容不能为空"),
+    B_E_MENU_EMPTY(40037,0,"菜单列表为空"),
+    B_E_FIRST_MENU_ERROR(40038,0,"一级菜单超出3个限制数"),
+    CONTENT_IS_NULL(40039, 0, "文本内容不能为空"),
     /**
      * 添加失败
      */

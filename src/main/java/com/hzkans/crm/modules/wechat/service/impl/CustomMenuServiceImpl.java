@@ -1,7 +1,9 @@
 package com.hzkans.crm.modules.wechat.service.impl;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.constants.MenuLvlEnum;
 import com.hzkans.crm.modules.wechat.dao.CustomMenuDAO;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
@@ -183,6 +185,54 @@ public class CustomMenuServiceImpl implements CustomMenuService {
             logger.error("getCustomMenu error :{}", e.getMessage());
             throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
         }
+    }
+
+    @Override
+    public List<CustomMainMenuDTO> getAllCustomMenu(Integer wechatId) throws ServiceException {
+        List<CustomMainMenuDTO> customMainMenuDTOS = new ArrayList<>();;
+        try {
+            //获取所有的菜单信息
+            List<CustomMenuDO> customMenuDOList = customMenuDAO
+                    .selectchildMenu(wechatId);
+
+            if (CollectionUtils.isNotEmpty(customMenuDOList)) {
+
+                Map<Long, List<CustomMenuDO>> customMenuDOMap;
+
+                //用parentMenuList装下所有的一级菜单
+                //用customMenuDOMap装下所有以一级菜单id为键的二级菜单
+                List<CustomMenuDO> parentMenuList = new ArrayList<CustomMenuDO>();
+
+                customMenuDOMap = customMenuDOList2Map(customMenuDOList, parentMenuList);
+                logger.info("customMenuDOMap {}",JsonUtil.toJson(customMenuDOMap));
+                logger.info("parentMenuList {}",JsonUtil.toJson(parentMenuList));
+
+                //把一级菜单以及所属的二级菜单按顺序排列在customMainMenuDTOS中
+                for (CustomMenuDO parentMenuDO : parentMenuList) {
+                    CustomMainMenuDTO customMainMenuDTO = new CustomMainMenuDTO();
+                    BeanUtils.copyProperties(parentMenuDO, customMainMenuDTO);
+
+
+                    List<CustomMenuDO> customChildMenuDOs = customMenuDOMap
+                            .get(parentMenuDO.getId());
+                    //把二级菜单都放入到customMainMenuDTOS中
+
+                    if (CollectionUtils.isNotEmpty(customChildMenuDOs)) {
+                        List<CustomMainMenuDTO> customChildMenuDTOS = new ArrayList<CustomMainMenuDTO>();
+                        customChildMenuDTOS = convert2CustomChildMenuDTOS(customChildMenuDOs);
+                        customMainMenuDTO.setCustomChildMenuDTOS(customChildMenuDTOS);
+                    }
+
+                    customMainMenuDTOS.add(customMainMenuDTO);
+                }
+                logger.info(" customMainMenuDTOS:{} ",
+                        JsonUtil.toJson(customMainMenuDTOS));
+            }
+        } catch (Exception e) {
+            logger.error("getCustomMenu error :{}", e.getMessage());
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
+        }
+        return customMainMenuDTOS;
     }
 
 }

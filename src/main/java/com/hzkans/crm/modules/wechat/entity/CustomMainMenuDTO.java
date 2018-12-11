@@ -27,7 +27,7 @@ public class CustomMainMenuDTO implements Serializable {
 
 	private Integer wechatId;
 
-	private List<CustomChildMenuDTO> customChildMenuDTOS;
+	private List<CustomMainMenuDTO> customChildMenuDTOS;
 
 	public Integer getWechatId() {
 		return wechatId;
@@ -101,12 +101,11 @@ public class CustomMainMenuDTO implements Serializable {
 		this.menuLevel = menuLevel;
 	}
 
-	public List<CustomChildMenuDTO> getCustomChildMenuDTOS() {
+	public List<CustomMainMenuDTO> getCustomChildMenuDTOS() {
 		return customChildMenuDTOS;
 	}
 
-	public void setCustomChildMenuDTOS(
-			List<CustomChildMenuDTO> customChildMenuDTOS) {
+	public void setCustomChildMenuDTOS(List<CustomMainMenuDTO> customChildMenuDTOS) {
 		this.customChildMenuDTOS = customChildMenuDTOS;
 	}
 }

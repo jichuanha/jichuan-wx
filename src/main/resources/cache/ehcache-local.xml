@@ -29,5 +29,9 @@
 	<!-- 系统活动会话缓存 -->
     <cache name="activeSessionsCache" maxEntriesLocalHeap="10000" eternal="true" overflowToDisk="true"
            diskPersistent="true" diskExpiryThreadIntervalSeconds="600" statistics="true"/>
+
+	<!-- 微信缓存 -->
+	<cache name="wechatCache" maxEntriesLocalHeap="1000" eternal="false" overflowToDisk="true"
+		   diskPersistent="true" statistics="true" timeToLiveSeconds="6000"/>
     	
 </ehcache>

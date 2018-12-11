@@ -1,5 +1,6 @@
 package com.hzkans.crm.modules.wechat.service;
 
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
 import com.hzkans.crm.modules.wechat.entity.CustomMenuDO;
 import java.util.List;
@@ -58,5 +59,13 @@ public interface CustomMenuService {
 	 * @throws Exception
 	 */
 	CustomMenuDO getCustomMenu(CustomMenuDO customMenuDO) throws Exception;
+
+	/**
+	 * 获取全部菜单
+	 * @param wechatId
+	 * @return
+	 * @throws Exception
+	 */
+	List<CustomMainMenuDTO> getAllCustomMenu(Integer wechatId) throws ServiceException;
 
 }
