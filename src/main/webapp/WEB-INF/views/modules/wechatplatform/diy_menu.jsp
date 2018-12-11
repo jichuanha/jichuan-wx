@@ -63,6 +63,7 @@
             </form>
         </div>
     </div>
+    <div><button class="btn btn-primary" style="margin-left: 375px;margin-top: -50px;" id="syMenu">同步到微信</button></div>
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -165,6 +166,17 @@
         }
         getData();
         function initEvent() {
+            $('#syMenu').live('click',function () {
+                $.post('${ctx}/toWechat/syMenu',{wechat_id:params.wechat_id},function (data) {
+                    typeof res != 'object'&& (res = JSON.parse(res));
+                    if(res.code==10000){
+                        layer.open('同步成功');
+                    }else{
+                        layer.open(data.msg);
+                    }
+                })
+            });
+
             $('input[type=radio]').live('click',function(){
                 var type = parseInt($(this).val());
                 btnType = type;

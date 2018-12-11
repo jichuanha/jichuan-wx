@@ -60,7 +60,7 @@
             box-sizing: border-box;
         }
         .shop-wrap .item .desc{
-            width: 240px;
+            width: 260px;
             float: left;
             padding-left: 20px;
             height: 60px;
