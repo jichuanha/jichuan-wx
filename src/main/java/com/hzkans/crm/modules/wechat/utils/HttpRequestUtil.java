@@ -3,16 +3,14 @@ package com.hzkans.crm.modules.wechat.utils;
 
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.*;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -420,5 +418,62 @@ public class HttpRequestUtil {
         }
         return sb.toString().toUpperCase();
     }
+
+
+    public static String uploadMaterial(File file, String type, String url,
+                                        String title, String introduction, String host, Integer port, String isHttps) {
+        String result = null;
+
+        try {
+            URL uploadURL = new URL(url);
+            HttpURLConnection conn = getConnection(HttpRequestUtil.POST_METHOD, uploadURL, host, port, isHttps);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(30000);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Cache-Control", "no-cache");
+            String boundary = "-----------------------------" + System.currentTimeMillis();
+            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            OutputStream output = conn.getOutputStream();
+            output.write(("--" + boundary + "\r\n").getBytes());
+            output.write(String.format("Content-Disposition: form-data; name=\"media\"; filename=\"%s\"\r\n", file.getName()).getBytes());
+            output.write("Content-Type: video/mp4 \r\n\r\n".getBytes());
+
+            byte[] data = new byte[1024];
+            int len = 0;
+            FileInputStream input = new FileInputStream(file);
+            while ((len = input.read(data)) > -1) {
+                output.write(data, 0, len);
+            }
+
+			/*对类型为video的素材进行特殊处理*/
+            if ("video".equals(type)) {
+                output.write(("--" + boundary + "\r\n").getBytes());
+                output.write("Content-Disposition: form-data; name=\"description\";\r\n\r\n".getBytes());
+                output.write(String.format("{\"title\":\"%s\", \"introduction\":\"%s\"}", title, introduction).getBytes());
+            }
+
+            output.write(("\r\n--" + boundary + "--\r\n\r\n").getBytes());
+            output.flush();
+            output.close();
+            input.close();
+
+            InputStream resp = conn.getInputStream();
+
+            StringBuffer sb = new StringBuffer();
+
+            while ((len = resp.read(data)) > -1)
+                sb.append(new String(data, 0, len, "utf-8"));
+            resp.close();
+            result = sb.toString();
+        } catch (IOException e) {
+            //....
+        }
+
+        return result;
+    }
+
+
+
 
 }

@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.wechat.entity;
+package com.hzkans.crm.modules.wechat.message;
 
 /**
  * @author jc

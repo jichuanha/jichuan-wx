@@ -82,6 +82,7 @@ public enum ResponseEnum {
     B_E_FIRST_MENU_ERROR(40038,0,"一级菜单超出3个限制数"),
     CONTENT_IS_NULL(40039, 0, "文本内容不能为空"),
     B_E_SECOND_MENU_ERROR(40038,0,"二级菜单超出5个限制数"),
+    B_E_MATE_TYPE_ERROR(40039,0,"传递的类型异常"),
     /**
      * 添加失败
      */
