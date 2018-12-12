@@ -25,4 +25,8 @@ public class WechatCofig {
     /** 创建公众号菜单*/
     public static final String CREATE_MENU = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
 
+    /** 上传永久素材(不包括图文)*/
+    public static final String UPLOAD_MEDIA =
+            "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE";
+
 }

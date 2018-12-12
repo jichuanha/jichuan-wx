@@ -3,7 +3,7 @@ package com.hzkans.crm.modules.wechat.service;
 import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
-import com.hzkans.crm.modules.wechat.entity.EventMessage;
+import com.hzkans.crm.modules.wechat.message.EventMessage;
 import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

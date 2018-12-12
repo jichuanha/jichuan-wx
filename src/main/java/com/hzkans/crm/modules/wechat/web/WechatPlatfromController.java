@@ -4,7 +4,9 @@ package com.hzkans.crm.modules.wechat.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.utils.WxOSSClient;
@@ -12,7 +14,12 @@ import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
+import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
+import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
+import com.hzkans.crm.modules.wechat.utils.WechatCofig;
+import com.hzkans.crm.modules.wechat.utils.WechatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -241,6 +250,13 @@ public class WechatPlatfromController extends BaseController {
     @RequestMapping("/upload")
     @ResponseBody
     public String uploadImg(HttpServletRequest request, HttpServletResponse response) {
+
+        Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
+        Integer type = RequestUtils.getInt(request, "type", "type is null");
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.getMessageTypeEnum(type);
+        if(null == messageTypeEnum) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MATE_TYPE_ERROR);
+        }
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("file");
@@ -257,10 +273,26 @@ public class WechatPlatfromController extends BaseController {
             //先保存到本地,在上传到阿里云,最后删除本地文件
             file.transferTo(newFile);
             wxOSSClient.uploadFile(UPLOAD_EX,newPath,realPath);
+            //上传到微信素材
+            WechatPlatfromDO wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
+            logger.info("wechatPlatform {}", JsonUtil.toJson(wechat));
+
+            String url = WechatCofig.UPLOAD_MEDIA
+                    .replace("ACCESS_TOKEN", WechatUtils.getAccessToken(wechat.getAppId(), wechat.getAppSecret()))
+                    .replace("TYPE",  messageTypeEnum.getCode());
+
+            String result = HttpRequestUtil.uploadMaterial(newFile, MessageTypeEnum.IMAGE.getCode(), url, "",
+                    "", "", 0, "false");
+            logger.info(" result : {}",result);
             if(newFile.exists()) {
                 newFile.delete();
             }
-            return ResponseUtils.getSuccessApiResponseStr(newPath);
+            JSONObject object = JSONObject.parseObject(result);
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("path", newPath);
+            resultMap.put("mediaId", object.get("media_id"));
+            logger.info(" resultMap {}",JsonUtil.toJson(resultMap));
+            return ResponseUtils.getSuccessApiResponseStr(resultMap);
         } catch (Exception e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
