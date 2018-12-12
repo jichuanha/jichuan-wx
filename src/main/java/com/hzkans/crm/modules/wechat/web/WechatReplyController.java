@@ -64,6 +64,10 @@ public class WechatReplyController extends BaseController {
         return "modules/wechatplatform/autoResKey";
     }
 
+    @RequestMapping(value = "/link_auto_res_key_new")
+    public String autoResKeyNew() {
+        return "modules/wechatplatform/autoResKeyNew";
+    }
 
     @RequestMapping(value = "list_reply_new")
     @ResponseBody
