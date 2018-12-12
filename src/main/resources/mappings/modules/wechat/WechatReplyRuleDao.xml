@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatReplyRuleDao">
+    
+	<sql id="wechatReplyRuleColumns">
+		a.id AS "id",
+		a.wechat_id AS "wechatId",
+		a.status AS "status",
+		a.rule_name AS "ruleName",
+		a.rule_type AS "ruleType",
+		a.remarks AS "remarks",
+		a.reply_way AS "replyWay",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.creator AS "creator",
+		a.updator AS "updator",
+		a.deleted AS "deleted"
+	</sql>
+	
+	<sql id="wechatReplyRuleJoins">
+	</sql>
+    
+	<select id="get" resultType="WechatReplyNew">
+		SELECT 
+			<include refid="wechatReplyRuleColumns"/>
+		FROM t_wx_reply_rule a
+		<include refid="wechatReplyRuleJoins"/>
+		<where>
+			a.deleted =0
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="wechatId != null and wechatId != ''">
+			AND a.wechat_id = #{wechatId}
+		</if>
+		<if test="status != null and status != ''">
+			AND a.status = #{status}
+		</if>
+		<if test="ruleName != null and ruleName != ''">
+			AND a.rule_name = #{ruleName}
+		</if>
+		<if test="ruleType != null and ruleType != ''">
+			AND a.rule_type = #{ruleType}
+		</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="WechatReplyNew">
+		SELECT 
+			<include refid="wechatReplyRuleColumns"/>
+		FROM t_wx_reply_rule a
+		<include refid="wechatReplyRuleJoins"/>
+		<where>
+			a.deleted =0
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="wechatId != null and wechatId != ''">
+				AND a.wechat_id = #{wechatId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="ruleName != null and ruleName != ''">
+				AND a.rule_name = #{ruleName}
+			</if>
+			<if test="ruleType != null and ruleType != ''">
+				AND a.rule_type = #{ruleType}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="replyWay != null and replyWay != ''">
+				AND a.reply_way = #{replyWay}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WechatReplyNew">
+		SELECT 
+			<include refid="wechatReplyRuleColumns"/>
+		FROM t_wx_reply_rule a
+		<include refid="wechatReplyRuleJoins"/>
+		<where>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID() as id
+		</selectKey>
+		INSERT INTO t_wx_reply_rule(
+			wechat_id,
+			status,
+			rule_name,
+			rule_type,
+			remarks,
+			reply_way,
+			create_date,
+			update_date,
+			creator,
+			updator,
+			deleted
+		) VALUES (
+			#{wechatId},
+			#{status},
+			#{ruleName},
+			#{ruleType},
+			#{remarks},
+			#{replyWay},
+			now(),
+			now(),
+			#{creator},
+			#{updator},
+			0
+		)
+	</insert>
+	
+	<update id="update">
+		update t_wx_reply_rule
+		<set>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="ruleName != null and ruleName != ''">
+				rule_name = #{ruleName},
+			</if>
+			<if test="replyWay != null">
+				reply_way = #{replyWay},
+			</if>
+			update_date = now()
+		</set>
+		where id = #{id} and wechat_id = #{wechatId}
+
+	</update>
+	
+	<update id="delete">
+		update t_wx_reply_rule set deleted = 1
+		<where>
+			<if test="id != null ">
+				 and id = #{id}
+			</if>
+			<if test="wechatId != null">
+				 and wechat_id = #{wechatId}
+			</if>
+		</where>
+	</update>
+	
+</mapper>
