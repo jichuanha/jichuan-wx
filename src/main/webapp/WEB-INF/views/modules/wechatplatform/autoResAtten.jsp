@@ -560,6 +560,7 @@
                     var data = JSON.parse(data);
                     if(data.code == 10000){
                         layer.open({content:'保存成功！'})
+                        // ajaxFuc();
                     }else{
                         layer.open({content:data.msg})
                     }
@@ -582,14 +583,11 @@
                 type:'post',
                 data:{
                     wechat_id:$.cookie().platFormId,
-                    rule_type:2
+                    rule_type:3
                 },
                 success:function (msg) {
                     var msg = JSON.parse(msg);
-                    if(msg.data.list.length > 0){
-
-                    }
-                    else{
+                    if(msg.code == 10000){
 
                     }
                 }
