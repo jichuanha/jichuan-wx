@@ -107,7 +107,7 @@
 		) VALUES (
 			#{wechatId},
 			#{ruleId},
-			#{media_id},
+			#{mediaId},
 			#{contentType},
 			#{content},
 			now(),
