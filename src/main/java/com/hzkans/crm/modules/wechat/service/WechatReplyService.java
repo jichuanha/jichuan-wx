@@ -6,6 +6,7 @@ package com.hzkans.crm.modules.wechat.service;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
+import com.hzkans.crm.modules.wechat.constants.ReplyType;
 import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleContentDao;
@@ -210,20 +211,27 @@ public class WechatReplyService {
     public void deleteReply(String ruleId, Integer wechatId, Integer ruleType) throws Exception {
         try {
             WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
-            wechatReplyContentDO.setRuleId(ruleId);
-            wechatReplyContentDO.setWechatId(wechatId);
+            if (ReplyType.FOLLOW.getCode().equals(ruleType) || ReplyType.RECEIVED.getCode().equals(ruleType)){
+                WechatReplyNew wechatReplyNew = new WechatReplyNew();
+                wechatReplyNew.setWechatId(wechatId);
+                wechatReplyNew.setRuleType(ruleType);
+                WechatReplyNew wechatReplyNewTemp =  wechatReplyRuleDao.get(wechatReplyNew);
+                wechatReplyContentDO.setWechatId(wechatId);
+                wechatReplyContentDO.setRuleId(wechatReplyNewTemp.getId());
+                wechatReplyRuleContentDao.delete(wechatReplyContentDO);
+            }else if (ruleType == 1) {
+                //如果是删除关键字则要删除主表以及关键词表的信息
+                wechatReplyContentDO.setRuleId(ruleId);
+                wechatReplyContentDO.setWechatId(wechatId);
 
-            wechatReplyRuleContentDao.delete(wechatReplyContentDO);
-
-            //如果是删除关键字则要删除主表以及关键词表的信息
-            if (ruleType == 1) {
+                wechatReplyRuleContentDao.delete(wechatReplyContentDO);
                 WechatReplyKeywordDO wechatReplyKeywordDO = new WechatReplyKeywordDO();
                 wechatReplyKeywordDO.setRuleId(ruleId);
                 wechatReplyKeywordDO.setWechatId(wechatId);
                 wechatReplyKeywordDao.delete(wechatReplyKeywordDO);
 
                 WechatReplyNew wechatReplyNew = new WechatReplyNew();
-                wechatReplyNew.setId("" + ruleId);
+                wechatReplyNew.setId(ruleId);
                 wechatReplyNew.setWechatId(wechatId);
                 logger.info("wechatReplyNew [{}]", JsonUtil.toJson(wechatReplyNew));
                 wechatReplyRuleDao.delete(wechatReplyNew);
@@ -305,5 +313,7 @@ public class WechatReplyService {
             throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
         }
     }
+
+
 
 }

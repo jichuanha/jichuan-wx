@@ -182,7 +182,7 @@ public class WechatReplyController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "remove_reply_new")
+    @RequestMapping(value = "remove_reply")
     @ResponseBody
     public String removeReplynew(HttpServletRequest request) throws Exception {
         try {

@@ -37,6 +37,34 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 
 	List<WechatReplyKeywordDO> wechatReplyKeywordDOS;
 
+	List<Keywords> keywords;		// 关键词
+	List<ReplyContent> replyContents;		// 回复内容
+	public List<Keywords> getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(List<Keywords> keywords) {
+		this.keywords = keywords;
+	}
+
+	public List<ReplyContent> getReplyContents() {
+		return replyContents;
+	}
+
+	public void setReplyContents(List<ReplyContent> replyContents) {
+		this.replyContents = replyContents;
+	}
+
+	public static class Keywords{
+		private String keywordType;
+		private String keyword;
+	}
+
+	public static class ReplyContent{
+		private String contentType;
+		private String content;
+	}
+
 	public List<WechatReplyContentDO> getWechatReplyContentDOS() {
 		return wechatReplyContentDOS;
 	}
