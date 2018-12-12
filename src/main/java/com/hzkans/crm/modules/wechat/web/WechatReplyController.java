@@ -249,15 +249,24 @@ public class WechatReplyController extends BaseController {
         }
     }
 
+    /**
+     * 所有的关键词回复
+     * @param request
+     * @param model
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "list_reply_all")
     @ResponseBody
     public String listReplyAll(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "wechat_id is null", "");
 
             WechatReplyNew wechatReplyNew = new WechatReplyNew();
             wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setRuleType(ReplyType.KEYWORD.getCode());
+            wechatReplyNew.setRuleType(ruleType);
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
 
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
@@ -266,4 +275,5 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
+
 }

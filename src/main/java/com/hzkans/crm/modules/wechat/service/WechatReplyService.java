@@ -75,6 +75,7 @@ public class WechatReplyService {
             List<WechatReplyContentDO> wechatReplyContentS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
             List<WechatReplyKeywordDO> wechatReplyKeywordS = wechatReplyKeywordDao.findList(wechatReplyKeywordDO);
 
+            logger.info("[{}] wechatReplyContentS",JsonUtil.toJson(wechatReplyContentS));
             //把回复内容转化成对象传到前台
             if (CollectionUtils.isNotEmpty(wechatReplyContentS)) {
                 WechatMaterial wechatMaterial = new WechatMaterial();
