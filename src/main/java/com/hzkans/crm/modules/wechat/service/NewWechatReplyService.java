@@ -59,6 +59,10 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
             wechatReplyNew.setRuleId(ruleId);
 
             WechatReplyNew wechatReplyRule = wechatReplyRuleDao.get(wechatReplyNew);
+            //把回复内容转化成对象传到前台
+            if (null == wechatReplyRule) {
+                throw new Exception(ResponseEnum.B_E_RESULT_IS_NULL.getMsg());
+            }
             List<WechatReplyContentDO> wechatReplyContentS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
             List<WechatReplyKeywordDO> wechatReplyKeywordS = wechatReplyKeywordDao.findList(wechatReplyKeywordDO);
 
@@ -255,8 +259,13 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
         }
     }
 
-    public List<WechatReplyNew> listWechatReply(String wechatId){
-        return new ArrayList<>();
+    public List<WechatReplyNew> listWechatReply(WechatReplyNew wechatReplyNew) throws Exception {
+        try {
+            return  wechatReplyRuleDao.findList(wechatReplyNew);
+        } catch (Exception e) {
+            logger.error("updateReplyRrule is errpr", e);
+            throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
+        }
     }
 
 

@@ -16,6 +16,7 @@ import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
+import com.hzkans.crm.modules.wechat.constants.ReplyType;
 import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
 import com.hzkans.crm.modules.wechat.entity.*;
 import com.hzkans.crm.modules.wechat.service.NewWechatReplyService;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hzkans.crm.modules.wechat.service.WechatReplyService;
 
+import java.util.List;
 
 
 /**
@@ -255,11 +257,11 @@ public class WechatReplyController extends BaseController {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
-
             WechatReplyNew wechatReplyNew = new WechatReplyNew();
             wechatReplyNew.setWechatId(wechatId);
-
-            return ResponseUtils.getSuccessApiResponseStr(true);
+            wechatReplyNew.setRuleType(ReplyType.KEYWORD.getCode());
+            List<WechatReplyNew> wechatReplyNewList= newWechatReplyService.listWechatReply(wechatReplyNew);
+            return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
