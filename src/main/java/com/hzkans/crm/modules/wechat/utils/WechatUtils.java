@@ -3,6 +3,9 @@
  */
 package com.hzkans.crm.modules.wechat.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hzkans.crm.common.utils.EhCacheUtils;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.SpringContextHolder;
 import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
@@ -99,6 +102,23 @@ public class WechatUtils {
 		tempArr[1] = Digit[mByte & 0X0F];
 		String s = new String(tempArr);
 		return s;
+	}
+
+
+	public static String getAccessToken(String appId, String appSecret) {
+		Object result = EhCacheUtils.get(WechatCofig.EHCACHE, appId);
+		logger.info("result {}",result);
+		if(null != result) {
+			return (String) result;
+		}
+		String url = WechatCofig.GET_ACCESS_TOKEN.replace("APPID", appId).replace("APPSECRET", appSecret);
+		String data = HttpRequestUtil.
+				HttpsDefaultExecute(HttpRequestUtil.GET_METHOD, url, "", "", 0, "false");
+		logger.info("[{}] data:{}", JsonUtil.toJson(data));
+		JSONObject jsonObject = JSONObject.parseObject(data);
+		String accessToken = jsonObject.getString("access_token");
+		EhCacheUtils.put(WechatCofig.EHCACHE, appId, accessToken);
+		return accessToken;
 	}
 	
 }

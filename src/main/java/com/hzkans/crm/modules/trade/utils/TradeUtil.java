@@ -5,8 +5,11 @@ import com.hzkans.crm.common.service.ServiceException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jc
@@ -60,6 +63,40 @@ public class TradeUtil {
         String[] split = name.split("\\.");
         String bizCode = split[0];
         return bizCode.substring(0 ,bizCode.length() - 14);
+    }
+
+
+    /**
+     * 对象转换
+     * @param source
+     * @param target
+     * @param <T>
+     * @return
+     * @throws AgentException
+     */
+    public static <T,V> V  twoObjectTransforms(T source,Class<V> target) throws Exception{
+        isNull(source);
+        V c = target.newInstance();
+        BeanUtils.copyProperties(source,c);
+        return c;
+    }
+
+    /**
+     * 转换集合
+     * @param t
+     * @param v
+     * @param <T>
+     * @param <V>
+     * @return
+     */
+    public static  <T,V> List<V> coverList(List<T> t, Class<V> v) throws Exception{
+        List<V> list = new ArrayList<V>();
+        for (T temp : t) {
+            V c = v.newInstance();
+            BeanUtils.copyProperties(temp,c);
+            list.add(c);
+        }
+        return list;
     }
 
 }

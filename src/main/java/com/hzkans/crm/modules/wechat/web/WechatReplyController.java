@@ -17,9 +17,7 @@ import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
-import com.hzkans.crm.modules.wechat.entity.*;
-import com.hzkans.crm.modules.wechat.service.NewWechatReplyService;
-import org.apache.commons.collections.CollectionUtils;
+import com.hzkans.crm.modules.wechat.entity.WechatReply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,10 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hzkans.crm.modules.wechat.service.WechatReplyService;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 微信公众号自动回复Controller
@@ -45,9 +39,6 @@ public class WechatReplyController extends BaseController {
 
     @Autowired
     private WechatReplyService wechatNewReplyService;
-
-    @Autowired
-    private NewWechatReplyService newWechatReplyService;
 
     @RequestMapping(value = "/link_auto_res_atten")
     public String autoResAtten() {
@@ -63,193 +54,6 @@ public class WechatReplyController extends BaseController {
     public String autoResKey() {
         return "modules/wechatplatform/autoResKey";
     }
-
-
-    @RequestMapping(value = "list_reply_new")
-    @ResponseBody
-    public String listReply(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-        try {
-            Integer ruleId = RequestUtils.getInt(request, "rule_Id", true, "reply_type is null", "");
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "reply_type is null", "");
-
-            WechatReplyNew wechatReplyNew = newWechatReplyService.getFollowedOrImmeReply(wechatId, ruleId);
-            return ResponseUtils.getSuccessApiResponseStr(wechatReplyNew);
-        } catch (ServiceException e) {
-            logger.error("listReply is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-        }
-    }
-
-    /**
-     * 添加自动回复信息--被关注回复，收到信息回复
-     *
-     * @param request
-     * @param model
-     * @param redirectAttributes
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "save_reply_new")
-    @ResponseBody
-    public String saveReplynew(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
-        try {
-            String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String content = RequestUtils.getString(request, true, "content", "");
-            String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
-            Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
-
-            User user = UserUtils.getUser();
-            if (null == user) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
-            }
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setRuleType(ruleType);
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setStatus(status);
-            wechatReplyNew.setRemarks(remarks);
-            wechatReplyNew.setReplyWay(replyWay);
-            wechatReplyNew.setRuleName(ruleName);
-
-            //插入主表信息 以及获取id
-            String ruleId = newWechatReplyService.saveReply(wechatReplyNew);
-
-            newWechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
-            return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (Exception e) {
-            logger.error("saveReplynew is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-        }
-
-    }
-
-    /**
-     * 添加自动回复信息--关键字回复
-     *
-     * @param request
-     * @param model
-     * @param redirectAttributes
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "save_reply_follow")
-    @ResponseBody
-    public String saveReplyFollow(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
-        try {
-            String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String keywords = RequestUtils.getString(request, true, "keywords", "");
-            String content = RequestUtils.getString(request, true, "content", "");
-            String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
-            Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
-
-            User user = UserUtils.getUser();
-            if (null == user) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
-            }
-
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setRuleType(ruleType);
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setStatus(status);
-            wechatReplyNew.setRemarks(remarks);
-            wechatReplyNew.setReplyWay(replyWay);
-            wechatReplyNew.setRuleName(ruleName);
-
-            //插入主表信息 以及获取id
-            String ruleId = newWechatReplyService.saveReply(wechatReplyNew);
-
-            //插入
-            newWechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
-            newWechatReplyService.saveReplyKeyword(wechatId, ruleId, keywords);
-            return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (Exception e) {
-            logger.error("saveReplynew is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-        }
-    }
-
-    /**
-     * 删除自动回复信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "remove_reply_new")
-    @ResponseBody
-    public String removeReplynew(HttpServletRequest request) throws Exception {
-        try {
-            Integer ruleId = RequestUtils.getInt(request, "rule_id", true, "reply_type is null", "");
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "reply_type is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
-
-            newWechatReplyService.deleteReply(ruleId,wechatId,ruleType);
-            return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (ServiceException e) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
-        }
-    }
-
-    /**
-     * 修改关键字回复
-     *
-     * @param request
-     * @param model
-     * @param redirectAttributes
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "update_reply_follow")
-    @ResponseBody
-    public String updateReplyFollow(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
-        try {
-            String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String keywords = RequestUtils.getString(request, true, "keywords", "");
-            String content = RequestUtils.getString(request, true, "content", "");
-            String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
-            Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
-            String ruleId = RequestUtils.getString(request, false, "rule_id", "reply_desc is null");
-
-            User user = UserUtils.getUser();
-            if (null == user) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
-            }
-
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setRuleType(ruleType);
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setStatus(status);
-            wechatReplyNew.setRemarks(remarks);
-            wechatReplyNew.setReplyWay(replyWay);
-            wechatReplyNew.setRuleName(ruleName);
-            wechatReplyNew.setId(ruleId);
-
-            //主信息表
-            newWechatReplyService.updateReplyRrule(wechatReplyNew);
-            //删除所有的关键字回复内容以及关键字
-            newWechatReplyService.deleteReplykeywordAndContent(Integer.parseInt(ruleId),wechatId);
-            //插入
-            newWechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
-            newWechatReplyService.saveReplyKeyword(wechatId, ruleId, keywords);
-            return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (Exception e) {
-            logger.error("saveReplynew is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-        }
-    }
-
-    /******************------------*********************************--------******************/
 
     /**
      * 获取所有的自动回复信息

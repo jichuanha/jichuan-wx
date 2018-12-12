@@ -60,7 +60,7 @@
             box-sizing: border-box;
         }
         .shop-wrap .item .desc{
-            width: 240px;
+            width: 260px;
             float: left;
             padding-left: 20px;
             height: 60px;
@@ -122,7 +122,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="${ctx}/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a></li>
                         <li><a href="${ctx}/sys/user/modifyPwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
-                        <li><a href="${ctx}/logout" title="退出登录">退出</a></li>
+                        <li><a href="${ctx}/logout" title="退出登录"><i class="icon-off"></i>&nbsp;退出</a></li>
                     </ul>
                 </li>
                 <li>&nbsp;</li>
