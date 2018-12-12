@@ -23,9 +23,9 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 	private Integer deleted;		// 0.存在1.删除
 	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
 	private String content;		// 回复消息内容
-	private Integer mediaId;
+	private String mediaId;
 
-	List<WechatMaterial> wechatMaterials;
+	WechatMaterial wechatMaterial;
 
 	List<Keyword> keywords;
 
@@ -50,11 +50,11 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		}
 	}
 
-	public Integer getMediaId() {
+	public String getMediaId() {
 		return mediaId;
 	}
 
-	public void setMediaId(Integer mediaId) {
+	public void setMediaId(String mediaId) {
 		this.mediaId = mediaId;
 	}
 
@@ -114,12 +114,12 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		this.content = content;
 	}
 
-	public List<WechatMaterial> getWechatMaterials() {
-		return wechatMaterials;
+	public WechatMaterial getWechatMaterial() {
+		return wechatMaterial;
 	}
 
-	public void setWechatMaterials(List<WechatMaterial> wechatMaterials) {
-		this.wechatMaterials = wechatMaterials;
+	public void setWechatMaterial(WechatMaterial wechatMaterial) {
+		this.wechatMaterial = wechatMaterial;
 	}
 
 	public List<Keyword> getKeywords() {

@@ -77,7 +77,7 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNew);
         } catch (ServiceException e) {
             logger.error("listReply is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
         }
     }
 
