@@ -12,7 +12,8 @@
 		a.update_date AS "updateDate",
 		a.creator AS "creator",
 		a.updator AS "updator",
-		a.deleted AS "deleted"
+		a.deleted AS "deleted",
+		a.media_id AS "mediaId"
 	</sql>
 
     <sql id="wechatReplyRuleContentJoins">
@@ -59,6 +60,9 @@
             <if test="content != null and content != ''">
                 AND a.content = #{content}
             </if>
+            <if test="mediaId != null ">
+                AND a.media_id = #{mediaId}
+            </if>
         </where>
         <choose>
             <when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -92,6 +96,7 @@
 		INSERT INTO t_wx_reply_rule_content(
 			wechat_id,
 			rule_id,
+			media_id,
 			content_type,
 			content,
 			create_date,
@@ -102,6 +107,7 @@
 		) VALUES (
 			#{wechatId},
 			#{ruleId},
+			#{media_id},
 			#{contentType},
 			#{content},
 			now(),
@@ -118,12 +124,14 @@
             <if test="contentType != null">
                 content_type = #{contentType},
             </if>
-            <if test="content != null">
-                content = #{content},
+            <if test="updator != null">
+                updator = #{updator},
             </if>
             <if test="updator != null">
                 updator = #{updator},
             </if>
+            media_id = #{mediaId},
+            content = #{content},
             update_date = now()
         </set>
         where id = #{id}

@@ -20,7 +20,7 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 
 	private static final long serialVersionUID = 1L;
 	private Integer wechatId;		// 微信ID
-	private Integer ruleId;		// 规则ID
+	private String ruleId;		// 规则ID
 	private Integer keywordType;		// 关键词类型： 0-半匹配  1-全匹配
 	private String keyword;		// 关键词
 	private Integer status;		// 回复：0-关闭回复 1.开启回复
@@ -61,11 +61,11 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 		this.wechatId = wechatId;
 	}
 
-	public Integer getRuleId() {
+	public String getRuleId() {
 		return ruleId;
 	}
 
-	public void setRuleId(Integer ruleId) {
+	public void setRuleId(String ruleId) {
 		this.ruleId = ruleId;
 	}
 

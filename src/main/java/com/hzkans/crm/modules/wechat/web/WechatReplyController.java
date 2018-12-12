@@ -73,7 +73,7 @@ public class WechatReplyController extends BaseController {
     @ResponseBody
     public String listReply(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
         try {
-            Integer ruleId = RequestUtils.getInt(request, "rule_Id", true, "reply_type is null", "");
+            String ruleId = RequestUtils.getString(request, true, "rule_id", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "reply_type is null", "");
 
             WechatReplyNew wechatReplyNew = newWechatReplyService.getFollowedOrImmeReply(wechatId, ruleId);
@@ -102,7 +102,6 @@ public class WechatReplyController extends BaseController {
             String ruleName = RequestUtils.getString(request, true, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-
             Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
             Integer status = RequestUtils.getInt(request, "status", false, "reply_type is null", "");
 
@@ -190,7 +189,7 @@ public class WechatReplyController extends BaseController {
     @ResponseBody
     public String removeReplynew(HttpServletRequest request) throws Exception {
         try {
-            Integer ruleId = RequestUtils.getInt(request, "rule_id", true, "reply_type is null", "");
+            String ruleId = RequestUtils.getString(request, true, "rule_id", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "reply_type is null", "");
             Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
 
@@ -241,7 +240,7 @@ public class WechatReplyController extends BaseController {
             //主信息表
             newWechatReplyService.updateReplyRrule(wechatReplyNew);
             //删除所有的关键字回复内容以及关键字
-            newWechatReplyService.deleteReplykeywordAndContent(Integer.parseInt(ruleId),wechatId);
+            newWechatReplyService.deleteReplykeywordAndContent(ruleId,wechatId);
             //插入
             newWechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
 

@@ -17,7 +17,7 @@ public class WechatReplyKeywordDO extends DataEntity<WechatReplyKeywordDO> {
 
 	private static final long serialVersionUID = 1L;
 	private Integer wechatId;		// 微信ID
-	private Integer ruleId;		// 规则ID
+	private String ruleId;		// 规则ID
 	private Integer keywordType;		// 关键词类型： 0-半匹配  1-全匹配
 	private String keyword;		// 关键词
 	private String creator;		// 创建者
@@ -57,11 +57,12 @@ public class WechatReplyKeywordDO extends DataEntity<WechatReplyKeywordDO> {
 		this.wechatId = wechatId;
 	}
 
-	public Integer getRuleId() {
+
+	public String getRuleId() {
 		return ruleId;
 	}
 
-	public void setRuleId(Integer ruleId) {
+	public void setRuleId(String ruleId) {
 		this.ruleId = ruleId;
 	}
 

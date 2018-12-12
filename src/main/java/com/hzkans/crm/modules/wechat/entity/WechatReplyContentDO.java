@@ -17,12 +17,13 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 
 	private static final long serialVersionUID = 1L;
 	private Integer wechatId;		// 微信ID
-	private Integer ruleId;		// 规则ID
+	private String ruleId;		// 规则ID
 	private String creator;		// 创建者
 	private String updator;		// 修改者
 	private Integer deleted;		// 0.存在1.删除
 	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
 	private String content;		// 回复消息内容
+	private Integer mediaId;
 
 	List<WechatMaterial> wechatMaterials;
 
@@ -49,6 +50,14 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		}
 	}
 
+	public Integer getMediaId() {
+		return mediaId;
+	}
+
+	public void setMediaId(Integer mediaId) {
+		this.mediaId = mediaId;
+	}
+
 	public Integer getWechatId() {
 		return wechatId;
 	}
@@ -57,11 +66,11 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		this.wechatId = wechatId;
 	}
 
-	public Integer getRuleId() {
+	public String getRuleId() {
 		return ruleId;
 	}
 
-	public void setRuleId(Integer ruleId) {
+	public void setRuleId(String ruleId) {
 		this.ruleId = ruleId;
 	}
 
