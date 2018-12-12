@@ -252,7 +252,7 @@ public class WechatPlatfromController extends BaseController {
     public String uploadImg(HttpServletRequest request, HttpServletResponse response) {
 
         Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
-        Integer type = RequestUtils.getInt(request, "type", "type is null");
+        Integer type = RequestUtils.getInt(request, "fileType", "type is null");
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.getMessageTypeEnum(type);
         if(null == messageTypeEnum) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MATE_TYPE_ERROR);
