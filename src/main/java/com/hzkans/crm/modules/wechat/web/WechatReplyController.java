@@ -206,13 +206,13 @@ public class WechatReplyController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "update_reply_follow")
+    @RequestMapping(value = "update_reply_keyword")
     @ResponseBody
     public String updateReplyFollow(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
         try {
             String remarks = RequestUtils.getString(request, true, "remarks", "");
             String keywords = RequestUtils.getString(request, true, "keywords", "");
-            String content = RequestUtils.getString(request, true, "content", "");
+            String content = RequestUtils.getString(request, true, "content_all", "");
             String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
@@ -263,10 +263,67 @@ public class WechatReplyController extends BaseController {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
             Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "wechat_id is null", "");
+            String ruleId = RequestUtils.getString(request, true, "rule_id", "");
 
             WechatReplyNew wechatReplyNew = new WechatReplyNew();
             wechatReplyNew.setWechatId(wechatId);
             wechatReplyNew.setRuleType(ruleType);
+            wechatReplyNew.setId(ruleId);
+            List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
+
+            return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
+        } catch (Exception e) {
+            logger.error("saveReplynew is error", e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+    }
+
+    /**
+     * 暂停关键词回复
+     * @param request
+     * @param model
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "suspend_reply")
+    @ResponseBody
+    public String suspendReply(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        try {
+            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+            String ruleId = RequestUtils.getString(request, false, "rule_id", "");
+
+            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+            wechatReplyNew.setWechatId(wechatId);
+            wechatReplyNew.setId(ruleId);
+            wechatReplyService.suspendReply(wechatReplyNew);
+
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (Exception e) {
+            logger.error("saveReplynew is error", e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+    }
+    /**
+     * 搜索获得自动回复信息
+     * @param request
+     * @param model
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "list_reply_by_name")
+    @ResponseBody
+    public String listReplyByName(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        try {
+            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "wechat_id is null", "");
+            String ruleName = RequestUtils.getString(request, false, "rule_name", "");
+
+            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+            wechatReplyNew.setWechatId(wechatId);
+            wechatReplyNew.setRuleType(ruleType);
+            wechatReplyNew.setRuleName(ruleName);
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
 
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);

@@ -145,6 +145,9 @@
 			<if test="replyWay != null">
 				reply_way = #{replyWay},
 			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
 			update_date = now()
 		</set>
 		where id = #{id} and wechat_id = #{wechatId}

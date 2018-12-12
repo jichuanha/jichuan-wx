@@ -7,6 +7,7 @@ import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import com.hzkans.crm.modules.wechat.constants.ReplyType;
+import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
 import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleContentDao;
@@ -81,8 +82,8 @@ public class WechatReplyService {
                 WechatMaterial wechatMaterial = new WechatMaterial();
                 //把素材内容传进自动回复对象中
                 for (WechatReplyContentDO temp:wechatReplyContentS) {
-                    if (MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMediaId()){
-                        wechatMaterial.setMediaId(temp.getMediaId());
+                    if (MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMaterialId()){
+                        wechatMaterial.setMediaId(temp.getMaterialId());
                         wechatMaterial = wechatMaterialDao.get(wechatMaterial);
                         temp.setWechatMaterial(wechatMaterial);
                     }
@@ -158,6 +159,7 @@ public class WechatReplyService {
                     if (null == wechatReplyContentDO) {
                         wechatReplyRuleContentDao.insert(descList.get(0));
                     } else {
+                        descList.get(0).setId(wechatReplyContentDO.getId());
                         wechatReplyRuleContentDao.update(descList.get(0));
                     }
                 } else {
@@ -284,6 +286,12 @@ public class WechatReplyService {
         }
     }
 
+    /**
+     * 获取所有的回复信息，能够把所有信息查询出来
+     * @param wechatReplyNew
+     * @return
+     * @throws Exception
+     */
     public List<WechatReplyNew> listWechatReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
             List<WechatReplyNew> wechatReplyNewList = wechatReplyRuleDao.findList(wechatReplyNew);
@@ -303,6 +311,16 @@ public class WechatReplyService {
                 wechatReplyContentDO.setWechatId(wechatReplytemp.getWechatId());
                 List<WechatReplyContentDO> wechatReplyContentDOS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
                 if (CollectionUtils.isNotEmpty(wechatReplyContentDOS)){
+                    WechatMaterial wechatMaterial = new WechatMaterial();
+                    //把素材内容传进自动回复对象中
+                    for (WechatReplyContentDO temp:wechatReplyContentDOS) {
+                        if (!MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMaterialId()){
+                            wechatMaterial.setId(temp.getMaterialId());
+                            wechatMaterial = wechatMaterialDao.get(wechatMaterial);
+                            logger.info("[{}]wechatMaterial ",JsonUtil.toJson(wechatMaterial));
+                            temp.setWechatMaterial(wechatMaterial);
+                        }
+                    }
                     wechatReplytemp.setWechatReplyContentDOS(wechatReplyContentDOS);
                 }
 
@@ -314,6 +332,20 @@ public class WechatReplyService {
         }
     }
 
+    /**
+     * 暂停自动回复
+     * @param wechatReplyNew
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void suspendReply(WechatReplyNew wechatReplyNew) throws Exception {
+        try {
+            wechatReplyRuleDao.update(wechatReplyNew);
+        } catch (Exception e) {
+            logger.error("listWechatReply is errpr", e);
+            throw new Exception(WechatErrorEnum.SUSPEND_IS_ERROR.getDesc());
+        }
+    }
 
 
 }
