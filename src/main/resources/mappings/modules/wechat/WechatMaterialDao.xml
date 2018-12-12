@@ -19,9 +19,39 @@
 		a.article_uri AS "articleUri",
 		a.media_id AS "mediaId"
 	</sql>
+
+	<sql id="base_query_sql">
+		a.title AS "title",
+		a.cover_picture AS "coverPicture",
+		a.content AS "content",
+		a.brief AS "brief",
+		a.uri AS "uri",
+		a.type AS "type",
+		a.article_uri AS "articleUri",
+		a.media_id AS "mediaId",
+		rr.reply_way AS ""
+	</sql>
 	
 	<sql id="wechatMaterialJoins">
 	</sql>
+
+
+	<select id="getWechatMaFromWhere" resultType="com.hzkans.crm.modules.wechat.entity.WechatMaterial"
+			parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyNew" >
+		SELECT
+			<include refid="base_query_sql" />
+		FROM
+			t_wx_reply_rule rr,
+			t_wx_reply_rule_content rc,
+			t_wechat_material a
+		WHERE
+			rr.id = rc.rule_id
+		AND rc.media_id = a.id
+		AND rr.wechat_id = #{wechatId}
+		AND rr.rule_type = #{ruleType}
+		AND rr.deleted = 0
+		AND a.deleted = 0
+	</select>
     
 	<select id="get" resultType="WechatMaterial">
 		SELECT 
@@ -32,6 +62,7 @@
 	</select>
 	
 	<select id="findList" resultType="WechatMaterial">
+
 		SELECT 
 			<include refid="wechatMaterialColumns"/>
 		FROM t_wechat_material a
@@ -88,7 +119,10 @@
 		</choose>
 	</select>
 	
-	<insert id="insert">
+	<insert id="insert" parameterType="com.hzkans.crm.modules.wechat.entity.WechatMaterial">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 		INSERT INTO t_wechat_material(
 			title,
 			cover_picture,

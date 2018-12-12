@@ -5,9 +5,12 @@ package com.hzkans.crm.modules.wechat.service;
 
 import java.util.List;
 
+import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
@@ -18,8 +21,11 @@ import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
  * @version 2018-12-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional(rollbackFor = Exception.class)
 public class WechatMaterialService extends CrudService<WechatMaterialDao, WechatMaterial> {
+
+	@Autowired
+	private WechatMaterialDao wechatMaterialDao;
 
 	public WechatMaterial get(String id) {
 		return super.get(id);
@@ -33,9 +39,14 @@ public class WechatMaterialService extends CrudService<WechatMaterialDao, Wechat
 		return super.findPage(page, material);
 	}
 	
-	@Transactional(readOnly = false)
-	public void save(WechatMaterial material) {
-		super.save(material);
+
+	public String saveWechatMaterial(WechatMaterial material) {
+		try {
+			wechatMaterialDao.insert(material);
+			return material.getId();
+		} catch (Exception e) {
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
 	}
 	
 	@Transactional(readOnly = false)

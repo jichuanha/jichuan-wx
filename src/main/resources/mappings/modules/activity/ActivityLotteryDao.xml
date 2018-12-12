@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzkans.crm.modules.activity.dao.ActivityDao">
+<mapper namespace="com.hzkans.crm.modules.activity.dao.ActivityLotteryDao">
     
-	<sql id="activityColumns">
+	<sql id="activityLotteryColumns">
 		a.id AS "id",
-		a.activity_type AS "activityType",
 		a.name AS "name",
+		a.activity_type AS "activityType",
+		a.status AS "status",
 		a.active_date AS "activeDate",
 		a.inactive_date AS "inactiveDate",
 		a.order_active_date AS "orderActiveDate",
@@ -13,18 +14,13 @@
 		a.wechat_platform_id AS "wechatPlatformId",
 		a.url AS "url",
 		a.is_follow AS "isFollow",
-		a.rebate_type AS "rebateType",
-		a.rebate_channel AS "rebateChannel",
-		a.per_amount AS "perAmount",
-		a.max_order_limit AS "maxOrderLimit",
-		a.order_count AS "orderCount",
+		a.audit_type AS "auditType",
+		a.text_audit_type AS "textAuditType",
+		a.total_order AS "totalOrder",
 		a.version AS "version",
-		a.total_amount AS "totalAmount",
-		a.is_audit AS "isAudit",
 		a.shop_name AS "shopName",
 		a.shop_no AS "shopNo",
 		a.template_link AS "templateLink",
-		a.status AS "status",
 		a.del_flag AS "delFlag",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
@@ -32,41 +28,35 @@
 		a.update_date AS "updateDate"
 	</sql>
 	
-	<sql id="activityJoins">
+	<sql id="activityLotteryJoins">
 	</sql>
     
-	<select id="get" resultType="Activity">
+	<select id="get" resultType="ActivityLottery">
 		SELECT 
-			<include refid="activityColumns"/>
-		FROM t_activity a
-		<include refid="activityJoins"/>
+			<include refid="activityLotteryColumns"/>
+		FROM t_activity_lottery a
+		<include refid="activityLotteryJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Activity">
+	<select id="findList" resultType="ActivityLottery">
 		SELECT 
-			<include refid="activityColumns"/>
-		FROM t_activity a
-		<include refid="activityJoins"/>
+			<include refid="activityLotteryColumns"/>
+		FROM t_activity_lottery a
+		<include refid="activityLotteryJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
-			<if test="status != null">
-				AND a.status = #{status}
-			</if>
-			<if test="rebateType != null">
-				AND a.rebate_type = #{rebateType}
-			</if>
-			<if test="shopNo != null and shopNo != ''">
-				AND a.shop_no LIKE concat('%',#{shopNo},'%')
-			</if>
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
-			<if test="wechatPlatformId != null">
-				AND a.wechat_platform_id = #{wechatPlatformId}
+			<if test="activityType != null and activityType != ''">
+				AND a.activity_type = #{activityType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
 			</if>
 			<if test="activeDate != null or inactiveDate != null">
 				AND (
@@ -75,13 +65,25 @@
 				</if>
 				<if test="inactiveDate != null">
 					<if test="activeDate == null">
-					(#{inactiveDate} > a.active_date AND a.inactive_date > #{inactiveDate})
+						(#{inactiveDate} > a.active_date AND a.inactive_date > #{inactiveDate})
 					</if>
 					or (#{inactiveDate} > a.active_date AND a.inactive_date > #{inactiveDate})
 				</if>)
 			</if>
-			<if test="activityType != null">
-				AND a.activity_type = #{activityType}
+			<if test="isFollow != null and isFollow != ''">
+				AND a.is_follow = #{isFollow}
+			</if>
+			<if test="auditType != null and auditType != ''">
+				AND a.audit_type = #{auditType}
+			</if>
+			<if test="shopNo != null and shopNo != ''">
+				AND a.shop_no = #{shopNo}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="wechatPlatformId != null">
+				AND a.wechat_platform_id = #{wechatPlatformId}
 			</if>
 		</where>
 		<choose>
@@ -89,16 +91,16 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.create_date DESC
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Activity">
+	<select id="findAllList" resultType="ActivityLottery">
 		SELECT 
-			<include refid="activityColumns"/>
-		FROM t_activity a
-		<include refid="activityJoins"/>
+			<include refid="activityLotteryColumns"/>
+		FROM t_activity_lottery a
+		<include refid="activityLotteryJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -112,10 +114,14 @@
 		</choose>
 	</select>
 	
-	<insert id="insert">
-		INSERT INTO t_activity(
-			activity_type,
+	<insert id="insert" >
+		<selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO t_activity_lottery(
 			name,
+			activity_type,
+			status,
 			active_date,
 			inactive_date,
 			order_active_date,
@@ -123,26 +129,22 @@
 			wechat_platform_id,
 			url,
 			is_follow,
-			rebate_type,
-			rebate_channel,
-			per_amount,
-			max_order_limit,
-			order_count,
+			audit_type,
+			text_audit_type,
+			total_order,
 			version,
-			total_amount,
-			is_audit,
 			shop_name,
 			shop_no,
 			template_link,
-			status,
 			del_flag,
 			create_by,
 			create_date,
 			update_by,
 			update_date
 		) VALUES (
-			#{activityType},
 			#{name},
+			#{activityType},
+			#{status},
 			#{activeDate},
 			#{inactiveDate},
 			#{orderActiveDate},
@@ -150,18 +152,13 @@
 			#{wechatPlatformId},
 			#{url},
 			#{isFollow},
-			#{rebateType},
-			#{rebateChannel},
-			#{perAmount},
-			#{maxOrderLimit},
-			0,
-			0,
-			#{totalAmount},
-			#{isAudit},
+			#{auditType},
+			#{textAuditType},
+			#{totalOrder},
+			#{version},
 			#{shopName},
 			#{shopNo},
 			#{templateLink},
-			#{status},
 			#{delFlag},
 			#{createBy.id},
 			now(),
@@ -171,14 +168,14 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE t_activity SET 	
+		UPDATE t_activity_lottery SET 	
 			status = #{status},
 			update_date = now()
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE t_activity SET 
+		UPDATE t_activity_lottery SET 
 			del_flag = "1",
 			update_date = now()
 		WHERE id = #{id}

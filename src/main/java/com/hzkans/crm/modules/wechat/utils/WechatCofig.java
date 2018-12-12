@@ -29,4 +29,10 @@ public class WechatCofig {
     public static final String UPLOAD_MEDIA =
             "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE";
 
+    /** 删除永久素材*/
+    public static final String DEL_MEDIA =
+            "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=ACCESS_TOKEN";
+
+
+
 }

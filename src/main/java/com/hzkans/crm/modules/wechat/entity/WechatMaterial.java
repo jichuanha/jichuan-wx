@@ -30,7 +30,16 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	private Date endCreateDate;		// 结束 创建时间
 	private String articleUri;
 	private String mediaId;
+	private Integer replyWay;
 
+
+	public Integer getReplyWay() {
+		return replyWay;
+	}
+
+	public void setReplyWay(Integer replyWay) {
+		this.replyWay = replyWay;
+	}
 
 	public String getMediaId() {
 		return mediaId;

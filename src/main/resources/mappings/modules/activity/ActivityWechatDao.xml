@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.activity.dao.ActivityWechatDao">
+    
+	<sql id="activityWechatColumns">
+		a.id AS "id",
+		a.activity_id AS "activityId",
+		a.wechat_platform_id AS "wechatPlatformId",
+		a.del_flag AS "delFlag",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.create_by AS "createBy.id"
+	</sql>
+	
+	<sql id="activityWechatJoins">
+	</sql>
+    
+	<select id="get" resultType="ActivityWechat">
+		SELECT 
+			<include refid="activityWechatColumns"/>
+		FROM t_activity_wechat a
+		<include refid="activityWechatJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ActivityWechat">
+		SELECT 
+			<include refid="activityWechatColumns"/>
+		FROM t_activity_wechat a
+		<include refid="activityWechatJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="activityId != null and activityId != ''">
+				AND a.activity_id = #{activityId}
+			</if>
+			<if test="wechatPlatformId != null and wechatPlatformId != ''">
+				AND a.wechat_platform_id = #{wechatPlatformId}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ActivityWechat">
+		SELECT 
+			<include refid="activityWechatColumns"/>
+		FROM t_activity_wechat a
+		<include refid="activityWechatJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_activity_wechat(
+			id,
+			activity_id,
+			wechat_platform_id,
+			del_flag,
+			update_by,
+			create_date,
+			update_date,
+			create_by
+		) VALUES (
+			#{id},
+			#{activityId},
+			#{wechatPlatformId},
+			#{delFlag},
+			#{updateBy.id},
+			#{createDate},
+			#{updateDate},
+			#{createBy.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_activity_wechat SET 	
+			del_flag = #{delFlag},
+			update_by = #{updateBy.id},
+			update_date = now()
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t_activity_wechat SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
