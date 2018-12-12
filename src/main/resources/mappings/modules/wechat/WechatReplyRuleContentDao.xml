@@ -13,7 +13,7 @@
 		a.creator AS "creator",
 		a.updator AS "updator",
 		a.deleted AS "deleted",
-		a.media_id AS "mediaId"
+		a.material_id AS "materialId"
 	</sql>
 
     <sql id="wechatReplyRuleContentJoins">
@@ -38,6 +38,22 @@
         </where>
     </select>
 
+    <select id="getContent" resultType="com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO"
+            parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO">
+        SELECT
+        <include refid="wechatReplyRuleContentColumns"/>
+        FROM t_wx_reply_rule_content a
+        <include refid="wechatReplyRuleContentJoins"/>
+        <where>
+            a.deleted = 0
+            <if test="wechatId != null and wechatId != ''">
+                AND a.wechat_id = #{wechatId}
+            </if>
+            <if test="ruleId != null and ruleId != ''">
+                AND a.rule_id = #{ruleId}
+            </if>
+        </where>
+    </select>
     <select id="findList" resultType="WechatReplyContentDO">
         SELECT
         <include refid="wechatReplyRuleContentColumns"/>
@@ -60,8 +76,8 @@
             <if test="content != null and content != ''">
                 AND a.content = #{content}
             </if>
-            <if test="mediaId != null ">
-                AND a.media_id = #{mediaId}
+            <if test="materialId != null ">
+                AND a.material_id = #{materialId}
             </if>
         </where>
         <choose>
@@ -96,7 +112,7 @@
 		INSERT INTO t_wx_reply_rule_content(
 			wechat_id,
 			rule_id,
-			media_id,
+			material_id,
 			content_type,
 			content,
 			create_date,
@@ -107,7 +123,7 @@
 		) VALUES (
 			#{wechatId},
 			#{ruleId},
-			#{mediaId},
+			#{materialId},
 			#{contentType},
 			#{content},
 			now(),
@@ -130,7 +146,7 @@
             <if test="updator != null">
                 updator = #{updator},
             </if>
-            media_id = #{mediaId},
+            material_id = #{materialId},
             content = #{content},
             update_date = now()
         </set>

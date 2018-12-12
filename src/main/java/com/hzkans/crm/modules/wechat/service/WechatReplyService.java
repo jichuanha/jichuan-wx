@@ -153,7 +153,7 @@ public class WechatReplyService {
                 }
                 //如果为被关注回复以及收到信息回复则判断是否有数据
                 if (ruleType == 2 || ruleType == 3) {
-                    WechatReplyContentDO wechatReplyContentDO = wechatReplyRuleContentDao.get(descList.get(0));
+                    WechatReplyContentDO wechatReplyContentDO = wechatReplyRuleContentDao.getContent(descList.get(0));
                     logger.info("wechatReplyContentDO[{}]", JsonUtil.toJson(wechatReplyContentDO));
                     if (null == wechatReplyContentDO) {
                         wechatReplyRuleContentDao.insert(descList.get(0));

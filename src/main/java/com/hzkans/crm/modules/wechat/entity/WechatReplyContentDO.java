@@ -23,7 +23,7 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 	private Integer deleted;		// 0.存在1.删除
 	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
 	private String content;		// 回复消息内容
-	private String mediaId;
+	private String materialId;
 
 	WechatMaterial wechatMaterial;
 
@@ -50,12 +50,12 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		}
 	}
 
-	public String getMediaId() {
-		return mediaId;
+	public String getMaterialId() {
+		return materialId;
 	}
 
-	public void setMediaId(String mediaId) {
-		this.mediaId = mediaId;
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
 	}
 
 	public Integer getWechatId() {
