@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.MemberAssociationDao">
+    
+	<sql id="memberAssociationColumns">
+		a.id AS "id",
+		a.wechat_id AS "wechatId",
+		a.open_id AS "openId",
+		a.create_date AS "createDate",
+		a.deleted AS "deleted",
+		a.update_date AS "updateDate",
+		a.union_id AS "unionId",
+		a.sign AS "sign"
+	</sql>
+	
+	<sql id="memberAssociationJoins">
+	</sql>
+    
+	<select id="get" resultType="MemberAssociation">
+		SELECT 
+			<include refid="memberAssociationColumns"/>
+		FROM t_member_association a
+		WHERE a.open_id = #{openId}
+	</select>
+	
+	<select id="findList" resultType="MemberAssociation">
+		SELECT 
+			<include refid="memberAssociationColumns"/>
+		FROM t_member_association a
+		<include refid="memberAssociationJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="wechatId != null and wechatId != ''">
+				AND a.wechat_id = #{wechatId}
+			</if>
+			<if test="openId != null and openId != ''">
+				AND a.open_id = #{openId}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="deleted != null and deleted != ''">
+				AND a.deleted = #{deleted}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="unionId != null and unionId != ''">
+				AND a.union_id = #{unionId}
+			</if>
+			<if test="sign != null and sign != ''">
+				AND a.sign = #{sign}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MemberAssociation">
+		SELECT 
+			<include refid="memberAssociationColumns"/>
+		FROM t_member_association a
+		<include refid="memberAssociationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_member_association(
+			wechat_id,
+			open_id,
+			create_date,
+			update_date
+
+		) VALUES (
+			#{wechatId},
+			#{openId},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_member_association SET
+			deleted = 1,
+			sign = 1
+		WHERE open_id = #{openId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_member_association
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
