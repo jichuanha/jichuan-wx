@@ -278,9 +278,30 @@ public class WechatReplyService {
 
     public List<WechatReplyNew> listWechatReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
-            return  wechatReplyRuleDao.findList(wechatReplyNew);
+            List<WechatReplyNew> wechatReplyNewList = wechatReplyRuleDao.findList(wechatReplyNew);
+            WechatReplyKeywordDO wechatReplyKeywordDO = new WechatReplyKeywordDO();
+            WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
+            for (WechatReplyNew wechatReplytemp:wechatReplyNewList) {
+                //查询关键词
+                wechatReplyKeywordDO.setRuleId(wechatReplytemp.getId());
+                wechatReplyKeywordDO.setWechatId(wechatReplytemp.getWechatId());
+                List<WechatReplyKeywordDO> wechatReplyKeywordDOS = wechatReplyKeywordDao.findList(wechatReplyKeywordDO);
+                if (CollectionUtils.isNotEmpty(wechatReplyKeywordDOS)){
+                    wechatReplytemp.setWechatReplyKeywordDOS(wechatReplyKeywordDOS);
+                }
+
+                //查询回复内容
+                wechatReplyContentDO.setRuleId(wechatReplytemp.getId());
+                wechatReplyContentDO.setWechatId(wechatReplytemp.getWechatId());
+                List<WechatReplyContentDO> wechatReplyContentDOS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
+                if (CollectionUtils.isNotEmpty(wechatReplyContentDOS)){
+                    wechatReplytemp.setWechatReplyContentDOS(wechatReplyContentDOS);
+                }
+
+            }
+            return  wechatReplyNewList;
         } catch (Exception e) {
-            logger.error("updateReplyRrule is errpr", e);
+            logger.error("listWechatReply is errpr", e);
             throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
         }
     }

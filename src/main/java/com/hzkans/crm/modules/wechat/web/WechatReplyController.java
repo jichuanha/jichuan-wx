@@ -259,6 +259,7 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setWechatId(wechatId);
             wechatReplyNew.setRuleType(ReplyType.KEYWORD.getCode());
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
+
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
