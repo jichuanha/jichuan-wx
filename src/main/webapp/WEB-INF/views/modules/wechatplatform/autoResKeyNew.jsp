@@ -1188,7 +1188,7 @@
             if(name == 'txt'){
                 contentsArr.push({
                     content_type:contentType,
-                    content:$(this).find('.res-input').html()
+                    content:{"content":$(this).find('.res-input').html()}
                 })
             }
             else if(name == 'article'){
