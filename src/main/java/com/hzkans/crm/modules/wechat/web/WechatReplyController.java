@@ -77,7 +77,7 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNew);
         } catch (ServiceException e) {
             logger.error("listReply is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR,e.getMessage());
         }
     }
 
@@ -259,6 +259,7 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setWechatId(wechatId);
             wechatReplyNew.setRuleType(ReplyType.KEYWORD.getCode());
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
+
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
