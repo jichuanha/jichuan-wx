@@ -78,6 +78,7 @@
                 <div class="modal-body">
                     <div><label>语音名称：</label><input class="input-large" name="title" type="text" required></div>
                     <div style="display: none;"><input name="cover" class="input-large" disabled></div>
+                    <div style="display: none;"><input name="mediaId" class="input-large" disabled></div>
                     <div><label>语音文件：</label><div class="btn btn-primary" id="sound-select">选择语音</div>
                         <span id="percent" style="display: none;"></span>
                     </div>
@@ -109,6 +110,7 @@
         var count = 0;
         var hasInit = false;
         function getData(){
+            listArr = [];
             $.ajax({
                 url:'${ctx}/wechat_material/list_material',
                 type:'POST',
@@ -133,10 +135,10 @@
                             obj_box: '#pagenation',
                             total_item: count,
                             per_num: 50,
-                            current_page: '1',
+                            current_page: params.current_page,
                             change_content: function(per_num, current_page) {
                                 if(hasInit){
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getData();
                                 }
                             }
@@ -157,6 +159,10 @@
             uploader = WebUploader.create({
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                    fileType:3,
+                    wechat_id:$.cookie('platFormId'),
+                },
                 pick: {
                     id: '#sound-select', // 按钮元素
                     multiple: false // 是否支持文件多选，false表示只能选一个
@@ -174,10 +180,12 @@
             uploader.on('uploadSuccess',function(file,data){
                 typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code==10000){
-                    $('input[name=cover]').val(data.data);
+                    $('input[name=cover]').val(data.data.path);
+                    $('input[name=mediaId]').val(data.data.mediaId);
                     $('#percent').show().html('文件上传完毕');
                 }else{
                     $('#percent').show().html(data.msg);
+                    uploader.reset();
                 }
             });
 
@@ -189,6 +197,12 @@
                     $('#percent').show().html('文件处理中');
                 }
             });
+            uploader.on('uploadError',function () {
+                uploader.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
             $("#sound-form").validate({
                 submitHandler:function(){
                     if(!$('input[name="cover"]').val()){
@@ -203,6 +217,7 @@
                         wechat_id:$.cookie('platFormId'),
                         type:'3',
                         cover_picture:$('input[name="cover"]').val(),
+                        mediaId:$('input[name="mediaId"]').val(),
                     };
                     $.post(url,list,function (data) {
                         typeof data != 'object'&& (data = JSON.parse(data));
@@ -227,9 +242,10 @@
                     $.post('${ctx}/wechat_material/remove_material',{id:listArr[index].id},function (data) {
                         typeof data != 'object'&& (data = JSON.parse(data));
                         if(data.code==10000){
-                            listArr.splice(index,1);
-                            $('#list-block .item').eq(index).remove();
-                            $('.total').html('共同'+ --count +'条');
+                            // listArr.splice(index,1);
+                            // $('#list-block .item').eq(index).remove();
+                            // $('.total').html('共同'+ --count +'条');
+                            getData();
                             layer.close(confirmL);
                         }else{
                             layer.open({content:data.msg});

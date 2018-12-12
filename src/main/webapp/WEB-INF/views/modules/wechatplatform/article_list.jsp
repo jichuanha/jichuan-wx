@@ -92,6 +92,7 @@
                  <div><label>图文标题：</label><input class="input-large" name="title" type="text" required></div>
                  <div><label>图片封面：</label><div class="btn btn-primary" id="pic-select">选择图片</div></div>
                 <input name="cover" style="display: none">
+                <%--<input name="mediaId" style="display: none">--%>
                 <div><label>图文摘要：</label><textarea class="input-large" name="brief" type="text" required></textarea></div>
                  <div><label>链接地址：</label><input class="input-large" name="url" type="text" required></div>
                 <button class="btn btn-primary" id="save">保存</button>
@@ -115,6 +116,7 @@
         var editIndex = 0;
         var hasInit = false;
         function getData(){
+            listArr = [];
             $.ajax({
                 url:'${ctx}/wechat_material/list_material',
                 type:'POST',
@@ -146,10 +148,10 @@
                             obj_box: '#pagenation',
                             total_item: count,
                             per_num: 50,
-                            current_page: '1',
+                            current_page: params.current_page,
                             change_content: function(per_num, current_page) {
                                 if(hasInit){
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getData();
                                 }
                             }
@@ -171,9 +173,10 @@
                     $.post('${ctx}/wechat_material/remove_material',{id:listArr[index].id},function (data) {
                         typeof data != 'object'&& (data = JSON.parse(data));
                         if(data.code==10000){
-                            listArr.splice(index,1);
-                            $('#list-block .item').eq(index).remove();
-                            $('.total').html('共同'+ --count +'条');
+                            // listArr.splice(index,1);
+                            // $('#list-block .item').eq(index).remove();
+                            // $('.total').html('共同'+ --count +'条');
+                            getData();
                             layer.close(confirmL);
                         }else{
                             layer.open({content:data.msg});
@@ -191,6 +194,7 @@
                 $('textarea[name="brief"]').val(data.brief);
                 $('input[name="url"]').val(data.uri);
                 $('input[name="cover"]').val(data.cover_picture);
+                // $('input[name="mediaId"]').val(data.media_id);
                 $('.cover').attr('src','//yiyezi.yyzws.com/ex/'+ data.cover_picture);
                 btnType = 'edit';
                 $('.page-title').html('编辑图文');
@@ -206,6 +210,10 @@
             var uploader = WebUploader.create({
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                    fileType:1,
+                    wechat_id:$.cookie('platFormId'),
+                },
                 pick: {
                     id: '#pic-select', // 按钮元素
                     multiple: false // 是否支持文件多选，false表示只能选一个
@@ -221,11 +229,24 @@
                 fileSingleSizeLimit: 30 * 1024 * 1024,// 限制单个上传文件的大小
             });
             uploader.on('uploadSuccess',function(file,data){
-                console.log(data);
                 typeof data != 'object'&& (data = JSON.parse(data));
-                $('input[name="cover"]').val(data.data);
-                $('.cover').attr('src','//yiyezi.yyzws.com/ex/'+ data.data);
+                if(data.code!='10000'){
+                    uploader.reset();
+                    layer.open({
+                        content:data.msg,
+                    })
+                    return;
+                }
+                $('input[name="cover"]').val(data.data.path);
+                // $('input[name="mediaId"]').val(data.data.mediaId);
+                $('.cover').attr('src','//yiyezi.yyzws.com/ex/'+ data.data.path);
             });
+            uploader.on('uploadError',function () {
+                uploader.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
         }
 
         function initInputChange(){
@@ -253,6 +274,7 @@
                             brief:$('textarea[name="brief"]').val(),
                             uri:$('input[name="url"]').val(),
                             cover_picture:$('input[name="cover"]').val(),
+                            // mediaId:$('input[name="mediaId"]').val(),
                         };
                     }else{
                         url = '${ctx}/wechat_material/save_material';
@@ -263,6 +285,7 @@
                             uri:$('input[name="url"]').val(),
                             type:'4',
                             cover_picture:$('input[name="cover"]').val(),
+                            // mediaId:$('input[name="mediaId"]').val(),
                         };
                     }
                     $.post(url,list,function (data) {
