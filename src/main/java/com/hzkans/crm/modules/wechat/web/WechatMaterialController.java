@@ -140,7 +140,7 @@ public class WechatMaterialController extends BaseController {
 			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
 			Integer type = RequestUtils.getInt(request, "type", false, "type is null", "");
 			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-			String mediaId = RequestUtils.getString(request, "media_id");
+			String mediaId = RequestUtils.getString(request, "mediaId");
 			User user = UserUtils.getUser();
 			if (null == user){
 				return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
@@ -181,7 +181,6 @@ public class WechatMaterialController extends BaseController {
 			String id = RequestUtils.getString(request, true, "id", "id is null");
 			WechatMaterial material = new WechatMaterial();
 			material.setId(id);
-
 			materialService.delete(material);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (ServiceException e) {
