@@ -74,6 +74,7 @@
         var count = 0;
         var hasInit = false;
         function getData(){
+            listArr = [];
             $.ajax({
                 url:'${ctx}/wechat_material/list_material',
                 type:'POST',
@@ -98,10 +99,10 @@
                             obj_box: '#pagenation',
                             total_item: count,
                             per_num: 50,
-                            current_page: '1',
+                            current_page: params.current_page,
                             change_content: function(per_num, current_page) {
                                 if(hasInit){
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getData();
                                 }
                             }
@@ -124,10 +125,11 @@
                     $.post('${ctx}/wechat_material/remove_material',{id:listArr[index].id},function (data) {
                         typeof data != 'object'&& (data = JSON.parse(data));
                         if(data.code==10000){
-                            listArr.splice(index,1);
-                            $('#list-block .item').eq(index).remove();
-                            $('.total').html('共同'+ --count +'条');
-                            layer.close(confirmL);
+                            getData();
+                            // listArr.splice(index,1);
+                            // $('#list-block .item').eq(index).remove();
+                            // $('.total').html('共同'+ --count +'条');
+                            // layer.close(confirmL);
                         }else{
                             layer.open({content:data.msg});
                         }
@@ -145,6 +147,10 @@
             var uploader = WebUploader.create({
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                    fileType:1,
+                    wechat_id:$.cookie('platFormId'),
+                },
                 pick: {
                     id: '.creat-btn', // 按钮元素
                     multiple: false // 是否支持文件多选，false表示只能选一个
@@ -161,12 +167,14 @@
             });
             uploader.on('uploadSuccess',function(file,data){
                 typeof data != 'object'&& (data = JSON.parse(data));
+                if(data.code=='10000'){
                 var url = '${ctx}/wechat_material/save_material';
                 var list = {
                     title:'图片',
                     wechat_id:$.cookie('platFormId'),
                     type:'1',
-                    cover_picture:data.data,
+                    cover_picture:data.data.path,
+                    mediaId:data.data.mediaId,
                 };
                 $.post(url,list,function (data) {
                     typeof data != 'object'&& (data = JSON.parse(data));
@@ -178,7 +186,19 @@
                         })
                     }
                 })
+                }else{
+                    uploader.reset();
+                    layer.open({
+                        content:data.msg,
+                    })
+                }
             });
+            uploader.on('uploadError',function () {
+                uploader.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
         }
 
         initEvent();
