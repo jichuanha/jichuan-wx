@@ -129,7 +129,7 @@
                             // listArr.splice(index,1);
                             // $('#list-block .item').eq(index).remove();
                             // $('.total').html('共同'+ --count +'条');
-                            // layer.close(confirmL);
+                            layer.close(confirmL);
                         }else{
                             layer.open({content:data.msg});
                         }
