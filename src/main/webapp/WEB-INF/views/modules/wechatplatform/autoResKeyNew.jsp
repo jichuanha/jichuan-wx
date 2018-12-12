@@ -1183,32 +1183,28 @@
         $.each($('.contents-block .content-block'),function () {
             var selectedLi = $(this).find('.res-head li.active');
             var name = selectedLi.attr('data-name');
-            var contentType = selectedLi.val();
+            // var contentType = selectedLi.val();
             if(name == 'txt'){
                 contentsArr.push({
-                    content_type:contentType,
-                    content:$(this).find('.res-input').html(),
-                    media_id:''
+                    content_type:'0',
+                    content:$(this).find('.res-input').html()
                 })
             }
             else if(name == 'article'){
                 contentsArr.push({
-                    content_type:contentType,
-                    content:'',
+                    content_type:'4',
                     media_id:1
                 })
             }
             else if(name == 'img'){
                 contentsArr.push({
-                    content_type:contentType,
-                    content:'',
+                    content_type:'1',
                     media_id:1
                 })
             }
             else if(name == 'voice'){
                 contentsArr.push({
-                    content_type:contentType,
-                    content:'',
+                    content_type:'2',
                     media_id:1
                 })
             }
@@ -1232,6 +1228,15 @@
                 }
             }
         })
+    })
+
+    $.ajax({
+        url:'${ctx}/wechat_reply/list_reply_new',
+        type:'post',
+        data:{
+            rule_id:91,
+            wechat_id:1
+        }
     })
 </script>
 </body>
