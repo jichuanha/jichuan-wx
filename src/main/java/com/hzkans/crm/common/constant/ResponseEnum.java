@@ -105,6 +105,8 @@ public enum ResponseEnum {
     B_E_PER_MUST_LOWER_TOTAL(41017, 0, "单笔金额不能大于返利总额"),
     B_E_ACTIVITY_TYPE_EXIST(41018, 0, "活动类型已存在"),
     B_E_BING_EXIST(41019, 0, "此活动与此公众号已绑定"),
+    B_E_RATE_IS_BIGGER(41020, 0, "比例总和超过1，请重新设置"),
+    B_E_RATE_IS_SMALLER(41021, 0, "比例总和不到1，请重新设置"),
 
     /**
      * 商品模板文件类异常

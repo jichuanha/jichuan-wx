@@ -1,14 +1,12 @@
 package com.hzkans.crm.modules.activity.service;
 
-import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
 import com.hzkans.crm.modules.activity.entity.Activity;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +27,9 @@ public class TimingUpdateActivityStatusService {
 
     @Autowired
     private  ActivityService activityService;
+
+    @Autowired
+    private  ActivityLotteryService activityLotteryService;
 
     /**
      * 根据活动时间更新活动状态
@@ -82,6 +83,42 @@ public class TimingUpdateActivityStatusService {
                         activity1.setStatus(ActivityStatusEnum.ENDED.getCode());
                         activityService.update(activity1);
                         logger.info("因金额或数量已过限制，则迫使"+_activity.getName()+"活动结束");
+                    }
+                }
+            }
+
+
+            ActivityLottery activityLottery = new ActivityLottery();
+            //查询所有活动列表
+            List<ActivityLottery> activityLotteryList = activityLotteryService.findList(activityLottery);
+            if (CollectionUtils.isNotEmpty(activityList)){
+                for (ActivityLottery _activitylottery : activityLotteryList){
+                    ActivityLottery activityLottery1 = new ActivityLottery();
+                    Date now = new Date();
+                    Integer status = _activitylottery.getStatus();
+                    Date activeDate = _activitylottery.getActiveDate();
+                    Date inactiveDate = _activitylottery.getInactiveDate();
+                    activityLottery1.setId(_activitylottery.getId());
+                    //现在时间在活动时间内，且状态不为暂停、进行中和已结束的才做状态更新
+                    if (now.getTime() > activeDate.getTime() && now.getTime() < inactiveDate.getTime()){
+                        if (!ActivityStatusEnum.ACTIVING.getCode().equals(status)
+                                && !ActivityStatusEnum.PAUSE.getCode().equals(status)
+                                && !ActivityStatusEnum.ENDED.getCode().equals(status)){
+                            activityLottery1.setStatus(ActivityStatusEnum.ACTIVING.getCode());
+                            activityLotteryService.update(activityLottery1);
+                            logger.info("已更改幸运抽奖活动"+_activitylottery.getName()+"的状态");
+                        }
+                        //已过活动时间，且状态不为已结束的才做状态更新
+                    }else if (now.getTime() > inactiveDate.getTime()
+                            && !ActivityStatusEnum.ENDED.getCode().equals(status)){
+                        activityLottery1.setStatus(ActivityStatusEnum.ENDED.getCode());
+                        activityLotteryService.update(activityLottery1);
+                        logger.info("已更改幸运抽奖活动"+_activitylottery.getName()+"的状态");
+                    }else if (now.getTime() < activeDate.getTime()
+                            && !ActivityStatusEnum.NOT_START.getCode().equals(status)){
+                        activityLottery1.setStatus(ActivityStatusEnum.NOT_START.getCode());
+                        activityLotteryService.update(activityLottery1);
+                        logger.info("已更改幸运抽奖活动"+_activitylottery.getName()+"的状态");
                     }
                 }
             }
