@@ -16,7 +16,8 @@
 		a.updator AS "updator",
 		a.deleted AS "deleted",
 		a.wechat_id AS "wechatId",
-		a.article_uri AS "articleUri"
+		a.article_uri AS "articleUri",
+		a.media_id AS "mediaId"
 	</sql>
 	
 	<sql id="wechatMaterialJoins">
@@ -101,7 +102,8 @@
 			updator,
 			deleted,
 			wechat_id,
-			article_uri
+			article_uri,
+			media_id
 		) VALUES (
 			#{title},
 			#{coverPicture},
@@ -115,7 +117,8 @@
 			#{updator},
 			0,
 			#{wechatId},
-			#{articleUri}
+			#{articleUri},
+			#{mediaId}
 		)
 	</insert>
 	
