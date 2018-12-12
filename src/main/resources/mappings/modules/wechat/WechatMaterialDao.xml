@@ -120,7 +120,7 @@
 	</select>
 	
 	<insert id="insert" parameterType="com.hzkans.crm.modules.wechat.entity.WechatMaterial">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO t_wechat_material(
