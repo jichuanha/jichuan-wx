@@ -64,6 +64,18 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
             List<WechatReplyKeywordDO> wechatReplyKeywordS = wechatReplyKeywordDao.findList(wechatReplyKeywordDO);
 
             if (CollectionUtils.isNotEmpty(wechatReplyContentS)) {
+                for (WechatReplyContentDO wechatReplyContentDOTemp:wechatReplyContentS) {
+                    String content = wechatReplyContentDOTemp.getContent();
+
+                    if (!content.isEmpty()) {
+                        List<WechatMaterial> descList = new ArrayList<WechatMaterial>();
+                        Type type = new com.google.gson.reflect.TypeToken<List<WechatMaterial>>() {
+                        }.getType();
+                        descList = (List<WechatMaterial>) JsonUtil.parseJson(content,
+                                type);
+                        wechatReplyContentDOTemp.setWechatMaterials(descList);
+                    }
+                }
                 wechatReplyRule.setWechatReplyContentDOS(wechatReplyContentS);
             }
             if (CollectionUtils.isNotEmpty(wechatReplyKeywordS)) {

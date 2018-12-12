@@ -98,13 +98,13 @@ public class WechatReplyController extends BaseController {
     public String saveReplynew(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
         try {
             String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String content = RequestUtils.getString(request, true, "content", "");
-            String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
+            String content = RequestUtils.getString(request, true, "content_all", "");
+            String ruleName = RequestUtils.getString(request, true, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
 
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
+            Integer status = RequestUtils.getInt(request, "status", false, "reply_type is null", "");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -146,7 +146,7 @@ public class WechatReplyController extends BaseController {
         try {
             String remarks = RequestUtils.getString(request, true, "remarks", "");
             String keywords = RequestUtils.getString(request, true, "keywords", "");
-            String content = RequestUtils.getString(request, true, "content", "");
+            String content = RequestUtils.getString(request, true, "content_all", "");
             String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
@@ -252,6 +252,7 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
+
 
     /******************------------*********************************--------******************/
 
