@@ -528,19 +528,19 @@
             if(name == 'txt'){
                 contentsArr.push({
                     content_type:0,
-                    content:{"content":$('.res-input').html()}
+                    content:$('.res-input').html()
                 })
             }
             else if(name == 'img'){
                 contentsArr.push({
                     content_type:1,
-                    content:JSON.parse($('.img-block .item').attr('data-para'))
+                    media_id:'1'
                 })
             }
             else if(name == 'voice'){
                 contentsArr.push({
                     content_type:2,
-                    content:JSON.parse(unescape($('.voice-block .item').attr('data-para')))
+                    media_id:'1'
                 })
             }
             $.ajax({
