@@ -91,7 +91,6 @@
 		FROM t_wx_reply_rule a
 		<include refid="wechatReplyRuleJoins"/>
 		<where>
-			
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

@@ -249,6 +249,24 @@ public class WechatReplyController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "list_reply_all")
+    @ResponseBody
+    public String listReplyAll(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        try {
+            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+
+
+            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+            wechatReplyNew.setWechatId(wechatId);
+
+            return ResponseUtils.getSuccessApiResponseStr(true);
+        } catch (Exception e) {
+            logger.error("saveReplynew is error", e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+    }
+
+
 
     /******************------------*********************************--------******************/
 

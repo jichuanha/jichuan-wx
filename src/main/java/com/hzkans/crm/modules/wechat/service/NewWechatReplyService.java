@@ -64,17 +64,6 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
 
             //把回复内容转化成对象传到前台
             if (CollectionUtils.isNotEmpty(wechatReplyContentS)) {
-                for (WechatReplyContentDO wechatReplyContentDOTemp : wechatReplyContentS) {
-                    String content = wechatReplyContentDOTemp.getContent();
-                    if (!content.isEmpty()) {
-                        List<WechatMaterial> descList = new ArrayList<WechatMaterial>();
-                        Type type = new com.google.gson.reflect.TypeToken<List<WechatMaterial>>() {
-                        }.getType();
-                        descList = (List<WechatMaterial>) JsonUtil.parseJson(content,
-                                type);
-                        wechatReplyContentDOTemp.setWechatMaterials(descList);
-                    }
-                }
                 wechatReplyRule.setWechatReplyContentDOS(wechatReplyContentS);
             }
             //把关键词信息发送到前台
@@ -266,8 +255,7 @@ public class NewWechatReplyService extends CrudService<WechatReplyDao, WechatRep
         }
     }
 
-    public List<WechatReplyNew> listWechatReply(){
-
+    public List<WechatReplyNew> listWechatReply(String wechatId){
         return new ArrayList<>();
     }
 
