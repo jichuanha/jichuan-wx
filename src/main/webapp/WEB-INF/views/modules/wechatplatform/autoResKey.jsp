@@ -222,6 +222,18 @@ $(function () {
     $('.add-btn').live('click',function () {
         location.href = '${ctx}/wechat_reply/link_auto_res_key_new'
     })
+    function ajaxFuc() {
+        $.ajax({
+            url:'${ctxStatic}/wechat_reply/list_reply',
+            type:'post',
+            data:{
+                current_page:1
+                page_size:20,
+                wechat_id:$.cookie().platFormId
+
+            }
+        })
+    }
 })
 </script>
 </body>

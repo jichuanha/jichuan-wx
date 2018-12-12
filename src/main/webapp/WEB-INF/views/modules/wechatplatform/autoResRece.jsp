@@ -664,6 +664,7 @@
                 '            <div class="upload-img res-box">\n' +
                 '                <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>\n' +
                 '            </div>');
+            uploadPic();
         })
         $('.less-vedio-btn').live('click',function () {
             $('.voice-block').html('<div class="select-voice res-box left-res-box">\n' +
@@ -772,7 +773,7 @@
                             change_content: function (per_num, current_page) {
                                 if (hasInit) {
                                     params.page = current_page;
-                                    getData();
+                                    getSound();
                                 }
                             }
                         };
@@ -816,7 +817,7 @@
                             change_content: function(per_num, current_page) {
                                 if(hasInit){
                                     params.page = current_page;
-                                    getData();
+                                    getPic();
                                 }
                             }
                         };

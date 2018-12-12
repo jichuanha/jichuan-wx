@@ -741,6 +741,8 @@
             '                            </div>\n' +
             '                        </div>\n' +
             '                    </div>\n');
+        uploader.destroy();
+        uploadPic();
     })
     $('.res-input').on('change',function () {
         $('.last-num').html(600-parseInt($('.res-input')[0].innerText.length));
@@ -883,6 +885,7 @@
             '            <div class="upload-img res-box">\n' +
             '                <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>\n' +
             '            </div>');
+        uploadPic();
     })
     $('.less-vedio-btn').live('click',function () {
         $(this).parents('.voice-block').html('<div class="select-voice res-box left-res-box">\n' +
@@ -996,7 +999,7 @@
                         change_content: function (per_num, current_page) {
                             if (hasInit) {
                                 params.page = current_page;
-                                getData();
+                                getSound();
                             }
                         }
                     };
@@ -1040,7 +1043,7 @@
                         change_content: function(per_num, current_page) {
                             if(hasInit){
                                 params.page = current_page;
-                                getData();
+                                getPic();
                             }
                         }
                     };
@@ -1050,9 +1053,9 @@
             }
         })
     }
-
+    var uploader;
     function uploadPic() {
-        var uploader = WebUploader.create({
+        uploader = WebUploader.create({
             auto: true, // 选择文件后自动上传
             runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
             pick: {
@@ -1100,10 +1103,6 @@
         $("#myModal").modal('show');
     })
     $("#myModal").on('shown.bs.modal',function () {
-        var uploader = ''
-        try {
-            uploader.destroy();
-        }catch (e) {}
         uploader = WebUploader.create({
             auto: true, // 选择文件后自动上传
             runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
@@ -1188,25 +1187,29 @@
             if(name == 'txt'){
                 contentsArr.push({
                     content_type:contentType,
-                    content:{"content":$(this).find('.res-input').html()}
+                    content:$(this).find('.res-input').html(),
+                    media_id:''
                 })
             }
             else if(name == 'article'){
                 contentsArr.push({
                     content_type:contentType,
-                    content:JSON.parse($(this).find('.article-block .item').attr('data-para'))
+                    content:'',
+                    media_id:1
                 })
             }
             else if(name == 'img'){
                 contentsArr.push({
                     content_type:contentType,
-                    content:JSON.parse($(this).find('.img-block .item').attr('data-para'))
+                    content:'',
+                    media_id:1
                 })
             }
             else if(name == 'voice'){
                 contentsArr.push({
                     content_type:contentType,
-                    content:JSON.parse(unescape($(this).find('.voice-block .item').attr('data-para')))
+                    content:'',
+                    media_id:1
                 })
             }
         })
