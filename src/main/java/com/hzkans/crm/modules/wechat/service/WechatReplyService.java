@@ -5,6 +5,8 @@ package com.hzkans.crm.modules.wechat.service;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
+import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleContentDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyRuleDao;
@@ -41,6 +43,10 @@ public class WechatReplyService {
     @Autowired
     private WechatReplyRuleDao wechatReplyRuleDao;
 
+    @Autowired
+    private WechatMaterialDao wechatMaterialDao;
+
+
     /**
      * @param
      * @return
@@ -53,12 +59,12 @@ public class WechatReplyService {
             wechatReplyNew.setId(ruleId);
 
             WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setRuleId(ruleId);
+            wechatReplyContentDO.setWechatId(wechatId);
+            wechatReplyContentDO.setRuleId(ruleId);
 
             WechatReplyKeywordDO wechatReplyKeywordDO = new WechatReplyKeywordDO();
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setRuleId(ruleId);
+            wechatReplyKeywordDO.setWechatId(wechatId);
+            wechatReplyKeywordDO.setRuleId(ruleId);
 
             WechatReplyNew wechatReplyRule = wechatReplyRuleDao.get(wechatReplyNew);
             //把回复内容转化成对象传到前台
@@ -70,6 +76,15 @@ public class WechatReplyService {
 
             //把回复内容转化成对象传到前台
             if (CollectionUtils.isNotEmpty(wechatReplyContentS)) {
+                WechatMaterial wechatMaterial = new WechatMaterial();
+                //把素材内容传进自动回复对象中
+                for (WechatReplyContentDO temp:wechatReplyContentS) {
+                    if (MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMediaId()){
+                        wechatMaterial.setMediaId(temp.getMediaId());
+                        wechatMaterial = wechatMaterialDao.get(wechatMaterial);
+                        temp.setWechatMaterial(wechatMaterial);
+                    }
+                }
                 wechatReplyRule.setWechatReplyContentDOS(wechatReplyContentS);
             }
             //把关键词信息发送到前台
