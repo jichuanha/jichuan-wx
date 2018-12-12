@@ -182,7 +182,18 @@
             letter-spacing: 0;
             padding-left: 0;
         }
-
+        .rules-list th{
+            border: 1px solid rgba(242, 242, 242, 1);
+        }
+        .rules-list td{
+            text-align: center;
+            line-height: 50px;
+            border: 1px solid rgb(228, 228, 228);
+        }
+        .rules-list a{
+            font-size: 16px;
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -201,10 +212,11 @@
 
 <div class="rules">
     <div class="btns clearfix">
-        <input type="text" style="vertical-align: baseline"><label><a href="javascript:;" class="search-btn">搜索</a></label>
-        <a href="#" class="add-btn">新建</a>
+        <input type="text" class="search-content" style="vertical-align: baseline"><label><a href="javascript:;" class="search-btn">搜索</a></label>
+        <a href="${ctx}/wechat_reply/link_auto_res_key_new" class="add-btn">新建</a>
     </div>
     <table class="rules-list">
+        <thead>
         <tr>
             <th>规则名称</th>
             <th>关键词</th>
@@ -212,24 +224,132 @@
             <th>回复方式</th>
             <th>操作</th>
         </tr>
+        </thead>
+        <tbody>
         <tr>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a href="#"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#"> 删除 </a></td>
         </tr>
+        </tbody>
+
     </table>
 </div>
 <script>
 $(function () {
-    $('.add-btn').live('click',function () {
-        location.href = '${ctx}/wechat_reply/link_auto_res_key_new'
-    })
-    function ajaxFuc() {
+
+    $('.search-btn').live('click',function () {
         $.ajax({
-            url:'${ctxStatic}/wechat_reply/list_reply',
+            url:'${ctx}/wechat_reply/get_reply_by_keywords',
             type:'post',
             data:{
-                current_page:1
-                page_size:20,
+                keyword: $('.search-content').val(),
                 wechat_id:$.cookie().platFormId
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    ajaxFuc();
+                }
+            }
+        })
+
+    })
+    $('.delete-btn').live('click',function () {
+        layer.open({
+            // type: 2,
+            area: ['350px','160px'],
+            title: "提示",
+            maxmin: true, //开启最大化最小化按钮
+            content: "确定删除吗?" ,
+            btn: ['确定', '关闭'],
+            yes: function(index, layero){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/remove_reply',
+                    type:'post',
+                    data:{
+                        
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                        }
+                    }
+                })
+
+            },
+            cancel: function(index){
+            }
+        })
+    })
+    ajaxFuc();
+    function ajaxFuc() {
+        $.ajax({
+            url:'${ctx}/wechat_reply/list_reply_all',
+            type:'post',
+            data:{
+                wechat_id:$.cookie().platFormId
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    $('.rules-list tbody').html('');
+                    msg.data.forEach(function (el,index) {
+                        var str = '<tr><td>'+el.rule_name+'</td><td>';
+                        console.log(el.wechat_reply_keyword_d_o_s);
+                        el.wechat_reply_keyword_d_o_s.forEach(function (el2,index2) {
+                            str += el2.keyword+'(';
+                            if(el2.keyword_type == 1) {
+                                str += '半匹配';
+                            }
+                            else if(el2.keyword_type == 2){
+                                str += '全匹配';
+                            }
+                            str += ')';
+                            if(index2 != el.wechat_reply_keyword_d_o_s.length-1){
+                                str += ',';
+                            }
+                        })
+                        str += '</td><td>';
+                        el.wechat_reply_content_d_o_s.forEach(function (el3,index3) {
+                            if(el3.content_type == 0){
+                                str += '文字';
+                            }
+                            else if(el3.content_type == 1){
+                                str += '图片';
+                            }
+                            else if(el3.content_type == 2){
+                                str += '语音';
+                            }
+                            else if(el3.content_type == 4){
+                                str += '图文';
+                            }
+                            if(index3 != el.wechat_reply_content_d_o_s.length-1){
+                                str += ',';
+                            }
+                        })
+                        str += '</td><td>';
+                        if(el.reply_way == 1){
+                            str += '全部回复 ';
+                        }
+                        else if(el.reply_way == 2){
+                            str += '随机回复一条';
+                        }
+                        str += '</td><td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#"> 删除 </a></td></tr>'
+
+                        $('.rules-list tbody').append(str);
+                        <%--$('.rules-list tbody').append('<tr>' +--%>
+                            <%--'<td>'+el.rule_name+'</td>' +--%>
+                            <%--'<td></td>' +--%>
+                            <%--'<td></td>' +--%>
+                            <%--'<td></td>' +--%>
+                            <%--'<td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#" class="delete-btn" > 删除 </a></td>' +--%>
+                            <%--'</tr>');--%>
+                    })
+                }
 
             }
         })

@@ -562,7 +562,7 @@
                     <div class="content-block">
                         <ul class="res-head clearfix">
                             <li class="choose-txt active" data-name="txt" value="0">文字</li>
-                            <li value="1" data-name="article" value="1">图文</li>
+                            <li class="choose-article" value="1" data-name="article" value="1">图文</li>
                             <li class="choose-img" data-name="img" value="4">图片</li>
                             <li class="choose-voice" data-name="voice" value="2">语音</li>
                         </ul>
@@ -671,6 +671,7 @@
                 <div class="modal-body">
                     <div><label>语音名称：</label><input class="input-large" name="title" type="text" required></div>
                     <div style="display: none;"><input name="cover" class="input-large" disabled></div>
+                    <div style="display: none;"><input name="mediaId" class="input-large" disabled></div>
                     <div><label>语音文件：</label><div class="btn btn-primary" id="sound-select">选择语音</div>
                         <span id="percent" style="display: none;"></span>
                     </div>
@@ -690,6 +691,22 @@
 </div>
 
 <script>
+    var selectID = '';
+    var reply_id = '';
+    var para = GetRequest();
+    //对url的处理
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
     uploadPic();
     //切换
     $('.res-head li').live('click',function () {
@@ -745,7 +762,7 @@
         uploadPic();
     })
     $('.res-input').on('change',function () {
-        $('.last-num').html(600-parseInt($('.res-input')[0].innerText.length));
+        $(this).parent().find('.last-num').html(600-parseInt($('.res-input')[0].innerText.length));
     })
     $('body').on('focus', '[contenteditable]', function() {
         var $this = $(this);
@@ -804,7 +821,7 @@
         if(name == 'img'){
             var para = $('.pic-block .item.active').attr('data-para');
             var paraJson = JSON.parse(para);
-            $('.content-block').eq(index).find('.img-block').html('<div class="item" data-para='+para+'>' +
+            $('.content-block').eq(index).find('.img-block').html('<div class="item" data-para='+JSON.stringify(paraJson.id)+'>' +
                 '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+paraJson.cover_picture+'"/></i>' +
                 '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                 '</div>')
@@ -812,14 +829,14 @@
         else if(name == 'voice'){
             var para = $('.sound-block input[name=sound]:checked').attr('data-para');
             var paraJson = JSON.parse(para);
-            $('.content-block').eq(index).find('.voice-block').html('<p class="item" data-para='+escape(para)+' >已选择:语音名称:'+paraJson.title+'&nbsp;&nbsp;文件名称:'+paraJson.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+            $('.content-block').eq(index).find('.voice-block').html('<p class="item" data-para='+JSON.stringify(paraJson.id)+' >已选择:语音名称:'+paraJson.title+'&nbsp;&nbsp;文件名称:'+paraJson.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
 
         }
         else if(name == 'article'){
             var para = $('.article-block .item.active').attr('data-para');
             var paraJson = JSON.parse(para);
             $('.content-block').eq(index).find('.article-block').html(
-                '                        <div class="item" data-para='+para+'>' +
+                '                        <div class="item" data-para='+JSON.stringify(paraJson.id)+'>' +
                 '            <div>\n' +
                 '                <div style="font-size:20px;">' + paraJson.title + '</div>\n' +
                 '                <div>2018-12-05</div>\n' +
@@ -1067,6 +1084,10 @@
                 extensions: 'gif,jpg,jpeg,bmp,png',
                 mimeTypes: 'image/*',
             },
+            formData:{
+                fileType:1,
+                wechat_id:$.cookie('platFormId'),
+            },
             disableGlobalDnd: true, // 禁掉全局的拖拽功能。
             fileNumLimit: 1, // 验证文件总数量, 超出则不允许加入队列
             fileSizeLimit: 30 * 1024 * 1024, // 限制所有上传文件的大小
@@ -1074,23 +1095,33 @@
         });
         uploader.on('uploadSuccess',function(file,data){
             typeof data != 'object'&& (data = JSON.parse(data));
+            if(data.code!='10000'){
+                uploader.reset();
+                layer.open({
+                    content:data.msg
+                })
+                return;
+            }
+            console.log(data);
             var url = '${ctx}/wechat_material/save_material';
             var list = {
                 title:'图片',
                 wechat_id:$.cookie('platFormId'),
                 type:'1',
                 cover_picture:data.data,
+                mediaId:data.data.mediaId
             };
             $.post(url,list,function (data) {
                 typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code=='10000'){
                     // window.location.reload();
-                    $('.img-block').html('<div data-para="'+JSON.stringify(list)+'">' +
-                        '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+list.cover_picture+'"/></i>' +
+                    $('.img-block').html('<div data-para="'+JSON.stringify(list.mediaId)+'">' +
+                        '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+data.cover_picture+'"/></i>' +
                         '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                         '</div>');
 
                 }else{
+                    uploader.reset();
                     layer.open({
                         content:data.msg
                     })
@@ -1126,6 +1157,7 @@
                 $('input[name=cover]').val(data.data);
                 $('#percent').show().html('文件上传完毕');
             }else{
+                uploader.reset();
                 $('#percent').show().html(data.msg);
             }
         });
@@ -1185,30 +1217,56 @@
             var name = selectedLi.attr('data-name');
             // var contentType = selectedLi.val();
             if(name == 'txt'){
-                contentsArr.push({
-                    content_type:'0',
-                    content:$(this).find('.res-input').html()
-                })
+                if($(this).find('.res-input').html() != ''){
+                    contentsArr.push({
+                        content_type:'0',
+                        content:$(this).find('.res-input').html()
+                    })
+                }
             }
             else if(name == 'article'){
-                contentsArr.push({
-                    content_type:'4',
-                    media_id:1
-                })
+                if($(this).find('.article-block .item').attr('data-para') != ''){
+                    contentsArr.push({
+                        content_type:'4',
+                        media_id:$(this).find('.article-block .item').attr('data-para')
+                    })
+                }
+
             }
             else if(name == 'img'){
-                contentsArr.push({
-                    content_type:'1',
-                    media_id:1
-                })
+                if($(this).find('.img-block .item').attr('data-para') != ''){
+                    contentsArr.push({
+                        content_type:'1',
+                        media_id:$(this).find('.img-block .item').attr('data-para')
+                    })
+                }
             }
             else if(name == 'voice'){
-                contentsArr.push({
-                    content_type:'2',
-                    media_id:1
-                })
+                if($(this).find('.voice-block .item').attr('data-para') != ''){
+                    contentsArr.push({
+                        content_type:'2',
+                        media_id:$(this).find('.voice-block .item').attr('data-para')
+                    })
+                }
             }
         })
+        if(ruleName == ''){
+            layer.msg('请先填写规则名称');
+            return;
+        }
+        else if(contentsArr.length == 0){
+            layer.msg('请先填写回复内容');
+            return;
+        }
+        else if(keysArr.length == 0){
+            layer.msg('请先填写关键词');
+            return;
+        }
+        else if($('input[name=reply_way]:checked').val() == undefined){
+            layer.msg('请先选择回复方式');
+            return;
+        }
+
         $.ajax({
             url:'${ctx}/wechat_reply/save_reply_follow',
             type:'post',
@@ -1224,20 +1282,152 @@
             success:function (msg) {
                 var msg = JSON.parse(msg);
                 if(msg.code == 10000){
-
+                    location.href = '${ctx}/wechat_reply/link_auto_res_key'
                 }
             }
         })
     })
+    if(para.rule_id && para.rule_id != 'undefined'){
+        ajaxFuc();
+    }
+    function ajaxFuc(){
+        $.ajax({
+            url:'${ctx}/wechat_reply/get_reply_details',
+            type:'post',
+            data: {
+                rule_id: para.rule_id,
+                wechat_id: $.cookie().platFormId
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
+                    $('input[name=rule_name]').val(data.rule_name);
+                    $('input[name=reply_way][value='+data.reply_way+']').attr("checked","true");
+                    data.wechat_reply_keyword_d_o_s.forEach(function (el,index) {
+                        if(index == 0){
+                            $('.key-block .key-type').val(el.keyword_type).trigger('change');
+                            $('.key-block input[name=keywords]').val(el.keyword);
+                        }
+                        else{
+                            $('.keys-block').append('<div class="key-block">\n' +
+                                '                    <select name="key_type" class="key-type" value="'+el.keyword_type+'" style="vertical-align: top;width: 150px">\n' +
+                                '                        <option value="1">半匹配</option>\n' +
+                                '                        <option value="2">全匹配</option>\n' +
+                                '                    </select>\n' +
+                                '                    <input type="text" name="keywords" value="'+el.keyword+'">\n' +
+                                '                    <a href="javascript:;" class="add-key-btn"><img src="${ctxStatic}/images/add.png" alt=""></a>\n' +
+                                '                    <a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>\n' +
+                                '\n' +
+                                '                </div>');
+                            console.log($('.key-block').eq(index).find('.key-type'))
+                            $('.key-block').eq(index).find('.key-type').val(el.keyword_type).trigger('change');
+                            $("select").select2();
+                        }
+                        if(data.wechat_reply_keyword_d_o_s.length > 1){
+                            $.each($('.key-block'),function () {
+                                if(index != data.wechat_reply_keyword_d_o_s.length-1){
+                                    $(this).find('.add-key-btn').remove();
+                                }
+                            })
+                        }
+                    })
+                   data.wechat_reply_content_d_o_s.forEach(function (el,index) {
+                       var name = '';
+                       if(el.content_type == 0){
+                           name = 'txt';
+                       }
+                       else if(el.content_type == 1){
+                           name = 'img';
+                       }
+                       else if(el.content_type == 2){
+                           name = 'voice';
+                       }
+                       else if(el.content_type == 4){
+                           name = 'article';
+                       }
+                       if(index == 0){
+                           $('.res-head li').removeClass('active');
+                           $('.res-iframe').css('display','none');
+                           $('.choose-'+name).addClass('active');
+                           $('.res-'+name).css('display','block');
+                           if(el.content_type == 0){
+                                $('.res-input').html(el.content);
+                                $('.last-num').html(600-parseInt(el.content.length));
+                           }
+                           else if(el.content_type == 1){
+                               <%--$('.img-block').html('<div class="item" data-para='+JSON.stringify(paraJson.id)+'>' +--%>
+                                   <%--'<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+paraJson.cover_picture+'"/></i>' +--%>
+                                   <%--'<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +--%>
+                                   <%--'</div>')--%>
+                           }
+                           else if(el.content_type == 2){
 
-    $.ajax({
-        url:'${ctx}/wechat_reply/list_reply_new',
-        type:'post',
-        data:{
-            rule_id:91,
-            wechat_id:1
-        }
-    })
+                           }
+                       }
+                       else{
+                            $('.contents-block').append(' <div class="content-block">\n' +
+                                '                        <ul class="res-head clearfix">\n' +
+                                '                            <li class="choose-txt active" data-name="txt" value="0">文字</li>\n' +
+                                '                            <li class="choose-article" value="1" data-name="article" value="1">图文</li>\n' +
+                                '                            <li class="choose-img" data-name="img" value="4">图片</li>\n' +
+                                '                            <li class="choose-voice" data-name="voice" value="2">语音</li>\n' +
+                                '                        </ul>\n' +
+                                '                        <div class="res-iframe res-txt">\n' +
+                                '                            <div class="res-input" contenteditable="true"></div>\n' +
+                                '                            <div class="res-msg clearfix">\n' +
+                                '                                <span class="right-msg">还可以输入 <span class="last-num">600</span> 字，换下Enter换行</span>\n' +
+                                '                            </div>\n' +
+                                '                        </div>\n' +
+                                '                        <div class="res-iframe res-article">\n' +
+                                '                            <div class="article-block clearfix res-block">\n' +
+                                '                                <div class="select-article res-box left-res-box">\n' +
+                                '                                    <a href="javascript:;" class="select-article-btn res-upload-btn">从素材库中选择</a>\n' +
+                                '                                </div>\n' +
+                                '                            </div>\n' +
+                                '                        </div>\n' +
+                                '                        <div class="res-iframe res-img">\n' +
+                                '                            <div class="img-block clearfix res-block">\n' +
+                                '                                <div class="select-img res-box left-res-box">\n' +
+                                '                                    <a href="javascript:;" class="select-img-btn res-upload-btn">从素材库中选择</a>\n' +
+                                '                                </div>\n' +
+                                '                                <div class="upload-img res-box">\n' +
+                                '                                    <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>\n' +
+                                '                                </div>\n' +
+                                '                            </div>\n' +
+                                '                        </div>\n' +
+                                '                        <div class="res-iframe res-voice">\n' +
+                                '                            <div class="voice-block clearfix res-block">\n' +
+                                '                                <div class="select-voice res-box left-res-box">\n' +
+                                '                                    <a href="javascript:;" class="select-voice-btn res-upload-btn">从素材库中选择</a>\n' +
+                                '                                </div>\n' +
+                                '                                <div class="upload-voice res-box">\n' +
+                                '                                    <a href="javascript:;" class="upload-voice-btn res-upload-btn">上传语音</a>\n' +
+                                '                                </div>\n' +
+                                '                            </div>\n' +
+                                '                        </div>\n' +
+                                '                    </div>');
+                            var currSect = $('.content-block').eq(index)
+                           currSect.find('.res-head li').removeClass('active');
+                           currSect.find('.res-iframe').css('display','none');
+                           currSect.find('.choose-'+name).addClass('active');
+                           currSect.find('.res-'+name).css('display','block');
+                           if(el.content_type == 0){
+                               currSect.find('.res-input').html(el.content);
+                               currSect.find('.last-num').html(600-parseInt(el.content.length));
+
+                           }
+                            /*$('.res-head li').removeClass('active');
+                           $('.res-iframe').css('display','none');
+                           $('.choose-'+name).addClass('active');
+                           $('.res-'+name).css('display','block');*/
+                       }
+                   })
+                }
+
+            }
+        })
+    }
 </script>
 </body>
 </html>

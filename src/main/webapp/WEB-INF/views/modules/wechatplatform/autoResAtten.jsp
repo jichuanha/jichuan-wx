@@ -578,11 +578,11 @@
         //获取列表(是否有数据)
         function ajaxFuc() {
             $.ajax({
-                url:'${ctx}/wechat_reply/list_reply',
+                url:'${ctx}/wechat_reply/list_reply_all',
                 type:'post',
                 data:{
                     wechat_id:$.cookie().platFormId,
-                    reply_type:2
+                    rule_type:2
                 },
                 success:function (msg) {
                     var msg = JSON.parse(msg);
