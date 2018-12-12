@@ -162,8 +162,8 @@ public class WechatMaterialController extends BaseController {
 			material.setUpdator(user.getName());
 			material.setMediaId(mediaId);
 
-			materialService.save(material);
-			return ResponseUtils.getSuccessApiResponseStr(true);
+			String id = materialService.saveWechatMaterial(material);
+			return ResponseUtils.getSuccessApiResponseStr(id);
 		} catch (ServiceException e) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
 		}

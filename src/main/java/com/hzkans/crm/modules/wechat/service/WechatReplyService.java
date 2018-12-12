@@ -170,8 +170,7 @@ public class WechatReplyService {
                 List<WechatReplyKeywordDO> descList = new ArrayList<WechatReplyKeywordDO>();
                 Type type = new com.google.gson.reflect.TypeToken<List<WechatReplyKeywordDO>>() {
                 }.getType();
-                descList = (List<WechatReplyKeywordDO>) JsonUtil.parseJson(keywords,
-                        type);
+                descList = JsonUtil.parseJson(keywords, type);
                 for (WechatReplyKeywordDO wechatReplyKeywordDO : descList) {
                     wechatReplyKeywordDO.setWechatId(wechatId);
                     wechatReplyKeywordDO.setRuleId(ruleId);
