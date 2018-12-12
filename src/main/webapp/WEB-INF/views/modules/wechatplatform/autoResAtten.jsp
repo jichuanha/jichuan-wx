@@ -537,13 +537,13 @@
             else if(name == 'img'){
                 contentsArr.push({
                     content_type:1,
-                    id:selectID,
+                    material_id:selectID,
                 })
             }
             else if(name == 'voice'){
                 contentsArr.push({
                     content_type:2,
-                    id:selectID,
+                    material_id:selectID,
                 })
             }
             $.ajax({
