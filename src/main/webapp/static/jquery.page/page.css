@@ -15,7 +15,7 @@
     min-width:30px;
     background:#fff;
     border:none;
-    color:#484DA7;
+    color:#000;
     cursor:pointer;
     outline:0;
     text-align:center;
@@ -67,4 +67,7 @@
     color: #484DA7;
     border:1px solid #484DA7;
     border-radius: 5px;
+}
+.page_ctrl .to_page_num{
+    color: #484DA7;
 }

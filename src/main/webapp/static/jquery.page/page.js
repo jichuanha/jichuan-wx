@@ -20,7 +20,7 @@ function page_ctrl(data_obj) {
             current_page = 1;
         }
         data_obj.change_content(per_num, current_page);
-        var inp_val = (current_page == total_page) ? 1 : current_page + 1;
+        var inp_val = current_page;
         var append_html = '<button class="prev_page"><</button>';
         for (var i = 0; i < total_page - 1; i++) {
             if (total_page > 8 && current_page > 6 && i < current_page - 3) {
