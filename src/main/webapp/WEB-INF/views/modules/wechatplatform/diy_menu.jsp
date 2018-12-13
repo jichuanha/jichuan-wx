@@ -295,7 +295,7 @@
                     parent_id:listArr[index].id,
                     wechat_id:$.cookie('platFormId'),
                     sort:listArr[index].sub_menu.length+1,
-                    type:1,
+                    type:2,
                     name:'菜单名称',
                 };
                 $.post('${ctx}/wechat_menu/save_menu',params,function (data) {
