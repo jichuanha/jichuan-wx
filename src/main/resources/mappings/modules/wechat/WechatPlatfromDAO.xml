@@ -22,7 +22,7 @@
     </sql>
 
     <select id="getWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
-            parameterType="java.lang.Integer">
+            parameterType="java.lang.Long">
         SELECT
         <include refid="tWechatPlatformColumns"/>
         FROM t_wechat_platform a
