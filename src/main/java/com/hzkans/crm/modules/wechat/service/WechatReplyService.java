@@ -112,7 +112,7 @@ public class WechatReplyService {
     public String saveReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
             if (wechatReplyNew.getRuleType() == 2 || wechatReplyNew.getRuleType() == 3) {
-                WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.get(wechatReplyNew);
+                WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.getReply(wechatReplyNew);
                 if (null == wechatReplyNewResult) {
                     wechatReplyRuleDao.insert(wechatReplyNew);
                     return wechatReplyNew.getId();

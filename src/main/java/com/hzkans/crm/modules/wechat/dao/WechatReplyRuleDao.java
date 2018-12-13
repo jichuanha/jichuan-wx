@@ -14,5 +14,5 @@ import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
  */
 @MyBatisDao
 public interface WechatReplyRuleDao extends CrudDao<WechatReplyNew> {
-	
+    WechatReplyNew getReply(WechatReplyNew wechatReplyNew);
 }

@@ -216,9 +216,9 @@ public class WechatReplyController extends BaseController {
             String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
             String ruleId = RequestUtils.getString(request, false, "rule_id", "reply_desc is null");
+            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -228,19 +228,19 @@ public class WechatReplyController extends BaseController {
             WechatReplyNew wechatReplyNew = new WechatReplyNew();
             wechatReplyNew.setRuleType(ruleType);
             wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setStatus(status);
             wechatReplyNew.setRemarks(remarks);
             wechatReplyNew.setReplyWay(replyWay);
             wechatReplyNew.setRuleName(ruleName);
             wechatReplyNew.setId(ruleId);
+            wechatReplyNew.setStatus(status);
 
             //主信息表
             wechatReplyService.updateReplyRrule(wechatReplyNew);
             //删除所有的关键字回复内容以及关键字
             wechatReplyService.deleteReplykeywordAndContent(ruleId,wechatId);
-            //插入
+            //插入内容
             wechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
+            //插入关键字
             wechatReplyService.saveReplyKeyword(wechatId, ruleId, keywords);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
@@ -291,11 +291,15 @@ public class WechatReplyController extends BaseController {
     public String suspendReply(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
-            String ruleId = RequestUtils.getString(request, false, "rule_id", "");
+            Integer status = RequestUtils.getInt(request, "status", false, "wechat_id is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "wechat_id is null", "");
+            String ruleId = RequestUtils.getString(request, true, "rule_id", "");
 
             WechatReplyNew wechatReplyNew = new WechatReplyNew();
             wechatReplyNew.setWechatId(wechatId);
             wechatReplyNew.setId(ruleId);
+            wechatReplyNew.setStatus(status);
+            wechatReplyNew.setRuleType(ruleType);
             wechatReplyService.suspendReply(wechatReplyNew);
 
             return ResponseUtils.getSuccessApiResponseStr(true);
@@ -304,17 +308,16 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
+
     /**
      * 搜索获得自动回复信息
      * @param request
-     * @param model
-     * @param redirectAttributes
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "list_reply_by_name")
     @ResponseBody
-    public String listReplyByName(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+    public String listReplyByName(HttpServletRequest request) throws Exception {
         try {
             Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
             Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "wechat_id is null", "");
@@ -332,5 +335,7 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
+
+
 
 }
