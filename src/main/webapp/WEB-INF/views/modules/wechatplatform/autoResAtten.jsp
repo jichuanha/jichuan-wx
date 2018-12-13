@@ -388,6 +388,9 @@
         .less-key-btn img{
             width: 100%;
         }
+        #myModal{
+            display: none;
+        }
     </style>
 </head>
 <body>

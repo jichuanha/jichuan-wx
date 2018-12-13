@@ -195,6 +195,9 @@
             font-size: 16px;
             color: #000;
         }
+        /*#myModal{*/
+            /*display: none;*/
+        /*}*/
     </style>
 </head>
 <body>
@@ -213,7 +216,7 @@
 
 <div class="rules">
     <div class="btns clearfix">
-        <input type="text" class="search-content" style="vertical-align: baseline"><label><a href="javascript:;" class="search-btn">搜索</a></label>
+        <input type="text" class="search-content" placeholder="请输入规则名称" style="vertical-align: baseline"><label><a href="javascript:;" class="search-btn">搜索</a></label>
         <a href="${ctx}/wechat_reply/link_auto_res_key_new" class="add-btn">新建</a>
     </div>
     <table class="rules-list">
