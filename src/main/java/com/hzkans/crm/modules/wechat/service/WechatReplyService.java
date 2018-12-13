@@ -111,7 +111,7 @@ public class WechatReplyService {
     @Transactional(rollbackFor = Exception.class)
     public String saveReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
-            if (wechatReplyNew.getRuleType() == 2 || wechatReplyNew.getRuleType() == 3) {
+            if (!ReplyType.KEYWORD.getCode().equals(wechatReplyNew.getRuleType())){
                 WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.getReply(wechatReplyNew);
                 if (null == wechatReplyNewResult) {
                     wechatReplyRuleDao.insert(wechatReplyNew);
@@ -120,6 +120,10 @@ public class WechatReplyService {
                     return wechatReplyNewResult.getId();
                 }
             } else {
+                //判断规则名称是否存在
+                if (null != wechatReplyRuleDao.getReply(wechatReplyNew)){
+                    throw new Exception(WechatErrorEnum.NAME_IS_NOT_NULL.getDesc());
+                }
                 wechatReplyRuleDao.insert(wechatReplyNew);
                 return wechatReplyNew.getId();
             }

@@ -122,7 +122,7 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR,e.getMessage());
         }
 
     }

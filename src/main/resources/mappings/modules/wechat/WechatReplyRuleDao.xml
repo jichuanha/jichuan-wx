@@ -187,6 +187,9 @@
 			<if test="ruleType != null and ruleType != ''">
 				AND a.rule_type = #{ruleType}
 			</if>
+			<if test="ruleName != null and ruleName != ''">
+				AND a.rule_name = #{ruleName}
+			</if>
 		</where>
 	</select>
 </mapper>
