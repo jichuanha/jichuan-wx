@@ -486,7 +486,8 @@
         }
         .img-choosed{
             display: inline-block;
-            height: 300px;
+            max-height: 300px;
+            max-width: 800px;
         }
         .img-choosed img{
             height: 100%;
@@ -1228,7 +1229,7 @@
                 if($(this).find('.article-block .item').attr('data-para') != ''){
                     contentsArr.push({
                         content_type:'4',
-                        media_id:$(this).find('.article-block .item').attr('data-para')
+                        material_id:$(this).find('.article-block .item').attr('data-para')
                     })
                 }
 
@@ -1237,7 +1238,7 @@
                 if($(this).find('.img-block .item').attr('data-para') != ''){
                     contentsArr.push({
                         content_type:'1',
-                        media_id:$(this).find('.img-block .item').attr('data-para')
+                        material_id:$(this).find('.img-block .item').attr('data-para')
                     })
                 }
             }
@@ -1245,7 +1246,7 @@
                 if($(this).find('.voice-block .item').attr('data-para') != ''){
                     contentsArr.push({
                         content_type:'2',
-                        media_id:$(this).find('.voice-block .item').attr('data-para')
+                        material_id:$(this).find('.voice-block .item').attr('data-para')
                     })
                 }
             }
@@ -1292,19 +1293,20 @@
     }
     function ajaxFuc(){
         $.ajax({
-            url:'${ctx}/wechat_reply/get_reply_details',
+            url:'${ctx}/wechat_reply/list_reply_all',
             type:'post',
             data: {
                 rule_id: para.rule_id,
+                rule_type:1,
                 wechat_id: $.cookie().platFormId
             },
             success:function (msg) {
                 var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     var data = msg.data;
-                    $('input[name=rule_name]').val(data.rule_name);
-                    $('input[name=reply_way][value='+data.reply_way+']').attr("checked","true");
-                    data.wechat_reply_keyword_d_o_s.forEach(function (el,index) {
+                    $('input[name=rule_name]').val(data[0].rule_name);
+                    $('input[name=reply_way][value='+data[0].reply_way+']').attr("checked","true");
+                    data[0].wechat_reply_keyword_d_o_s.forEach(function (el,index) {
                         if(index == 0){
                             $('.key-block .key-type').val(el.keyword_type).trigger('change');
                             $('.key-block input[name=keywords]').val(el.keyword);
@@ -1324,15 +1326,15 @@
                             $('.key-block').eq(index).find('.key-type').val(el.keyword_type).trigger('change');
                             $("select").select2();
                         }
-                        if(data.wechat_reply_keyword_d_o_s.length > 1){
+                        if(data[0].wechat_reply_keyword_d_o_s.length > 1){
                             $.each($('.key-block'),function () {
-                                if(index != data.wechat_reply_keyword_d_o_s.length-1){
+                                if(index != data[0].wechat_reply_keyword_d_o_s.length-1){
                                     $(this).find('.add-key-btn').remove();
                                 }
                             })
                         }
                     })
-                   data.wechat_reply_content_d_o_s.forEach(function (el,index) {
+                   data[0].wechat_reply_content_d_o_s.forEach(function (el,index) {
                        var name = '';
                        if(el.content_type == 0){
                            name = 'txt';
@@ -1356,13 +1358,27 @@
                                 $('.last-num').html(600-parseInt(el.content.length));
                            }
                            else if(el.content_type == 1){
-                               <%--$('.img-block').html('<div class="item" data-para='+JSON.stringify(paraJson.id)+'>' +--%>
-                                   <%--'<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+paraJson.cover_picture+'"/></i>' +--%>
-                                   <%--'<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +--%>
-                                   <%--'</div>')--%>
+
+                               $('.img-block').html('<div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+el.wechat_material.cover_picture+'"/></i>' +
+                                   '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
+                                   '</div>')
                            }
                            else if(el.content_type == 2){
-
+                               $('.voice-block').html('<p class="item" data-para='+JSON.stringify(el.wechat_material.id)+' >已选择:语音名称:'+el.wechat_material.title+'&nbsp;&nbsp;文件名称:'+el.wechat_material.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                           }
+                           else if(el.content_type == 4){
+                               $('.article-block').html(
+                                   '                        <div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '            <div>\n' +
+                                   '                <div style="font-size:20px;">' + el.wechat_material.title + '</div>\n' +
+                                   '                <div>2018-12-05</div>\n' +
+                                   '            </div>\n' +
+                                   '            <img src="//yiyezi.yyzws.com/ex/' + el.wechat_material.cover_picture + '">\n' +
+                                   '            <p class="desc">' + el.wechat_material.brief + '</p>\n' +
+                                   '            <div><span class="floatL">阅读原文</span><span class="floatR"><i class="icon-chevron-right"></i></span></div>\n' +
+                                   '        </div>' +
+                                   '            <a href="javascript:;" class="less-article-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>')
                            }
                        }
                        else{
@@ -1415,6 +1431,26 @@
                            if(el.content_type == 0){
                                currSect.find('.res-input').html(el.content);
                                currSect.find('.last-num').html(600-parseInt(el.content.length));
+
+                           }
+                           else if(el.content_type == 1){
+                               currSect.find('.img-block').html('<div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+el.wechat_material.cover_picture+'"/></i>' +
+                                   '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
+                                   '</div>')
+                           }
+                           else if(el.content_type == 4){
+                               currSect.find('.article-block').html(
+                                   '                        <div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '            <div>\n' +
+                                   '                <div style="font-size:20px;">' + el.wechat_material.title + '</div>\n' +
+                                   '                <div>2018-12-05</div>\n' +
+                                   '            </div>\n' +
+                                   '            <img src="//yiyezi.yyzws.com/ex/' + el.wechat_material.cover_picture + '">\n' +
+                                   '            <p class="desc">' + el.wechat_material.brief + '</p>\n' +
+                                   '            <div><span class="floatL">阅读原文</span><span class="floatR"><i class="icon-chevron-right"></i></span></div>\n' +
+                                   '        </div>' +
+                                   '            <a href="javascript:;" class="less-article-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>')
 
                            }
                             /*$('.res-head li').removeClass('active');

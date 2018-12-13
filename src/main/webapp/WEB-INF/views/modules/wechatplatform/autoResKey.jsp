@@ -189,6 +189,7 @@
             text-align: center;
             line-height: 50px;
             border: 1px solid rgb(228, 228, 228);
+            font-size: 16px;
         }
         .rules-list a{
             font-size: 16px;
@@ -291,7 +292,8 @@ $(function () {
             url:'${ctx}/wechat_reply/list_reply_all',
             type:'post',
             data:{
-                wechat_id:$.cookie().platFormId
+                wechat_id:$.cookie().platFormId,
+                rule_type:1
             },
             success:function (msg) {
                 var msg = JSON.parse(msg);
