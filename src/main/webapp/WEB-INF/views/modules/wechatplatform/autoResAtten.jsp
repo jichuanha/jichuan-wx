@@ -503,6 +503,45 @@
 </div>
 <script>
     $(function () {
+        $('#switch').live('click',function () {
+            if($(this).attr('checked')){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/suspend_reply',
+                    type:'post',
+                    data:{
+                        wechat_id:$.cookie().platFormId,
+                        status:1,
+                        rule_type:3
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                        }
+                    }
+                })
+            }
+            else{
+                $.ajax({
+                    url:'${ctx}/wechat_reply/suspend_reply',
+                    type:'post',
+                    data:{
+                        wechat_id:$.cookie().platFormId,
+                        status:0,
+                        rule_type:3
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                        }
+                    }
+                })
+            }
+            // if($(this).checked){
+            //
+            // })
+        })
         var selectID = '';
         var reply_id = '';
         ajaxFuc();
@@ -665,7 +704,9 @@
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
                             layer.open({content:'删除成功！'});
-                            window.location.reload();
+                            setTimeout(function () {
+                                window.location.reload();
+                            },1000)
                             // ajaxFuc();
                         }
                         else{

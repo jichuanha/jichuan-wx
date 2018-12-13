@@ -720,6 +720,20 @@
         $(this).parent().parent().find('.res-'+$(this).attr('data-name')).css('display','block');
     })
     $('.add-content-btn').live('click',function () {
+        var lastBlock = $('.content-block:last');
+        var name = lastBlock.find('.res-head li.active').attr('data-name');
+        if(name == 'txt'){
+            if(lastBlock.find('.res-input').html() == ''){
+                layer.msg('请先输入回复内容');
+                return;
+            }
+        }
+        else{
+            if(lastBlock.find('.item').length == 0){
+                layer.msg('请先选择回复内容');
+                return;
+            }
+        }
         var index = $('.content-block').length;
             $('.contents-block').append('                    <div class="content-block">\n' +
             '                        <ul class="res-head clearfix">\n' +
