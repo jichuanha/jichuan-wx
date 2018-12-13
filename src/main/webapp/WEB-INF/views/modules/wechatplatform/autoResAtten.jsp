@@ -378,6 +378,7 @@
         }
         .img-choosed img{
             /*height: 300px;*/
+            max-width: 200px;
         }
         .less-key-btn{
             display: inline-block;
@@ -571,7 +572,7 @@
             // }
             // else{
             //     layer.msg('请先输入回复内容');
-            // }
+            }
         });
         //获取列表(是否有数据)
         function ajaxFuc() {
