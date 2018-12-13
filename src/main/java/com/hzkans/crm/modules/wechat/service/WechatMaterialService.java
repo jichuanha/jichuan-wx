@@ -9,7 +9,9 @@ import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
+import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +47,7 @@ public class WechatMaterialService extends CrudService<WechatMaterialDao, Wechat
 			wechatMaterialDao.insert(material);
 			return material.getId();
 		} catch (Exception e) {
+			logger.error("saveWechatMaterial error",e);
 			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
 		}
 	}
@@ -53,5 +56,17 @@ public class WechatMaterialService extends CrudService<WechatMaterialDao, Wechat
 	public void delete(WechatMaterial material) {
 		super.delete(material);
 	}
-	
+
+
+	public List<WechatMaterial> getMatetialByRuleType(WechatReplyNew wechatReplyNew) {
+		TradeUtil.isAllNull(wechatReplyNew);
+		List<WechatMaterial> wechatMaFromWhere = null;
+		try {
+			wechatMaFromWhere = wechatMaterialDao.getWechatMaFromWhere(wechatReplyNew);
+		} catch (Exception e) {
+			logger.error("getMatetialByRuleType error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+		return wechatMaFromWhere;
+	}
 }

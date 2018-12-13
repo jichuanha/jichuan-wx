@@ -1,6 +1,7 @@
 package com.hzkans.crm.modules.wechat.service;
 
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 
 import java.util.List;
 
@@ -11,14 +12,16 @@ import java.util.List;
  * Time:17:47
  */
 public interface WechatPlatfromService {
-    WechatPlatfromDO getWechatPlatformById(Long id) throws Exception;
+    WechatPlatfrom getWechatPlatformById(Long id) throws Exception;
 
-    void addWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception;
+    void addWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception;
 
-    void updateWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception;
+    void updateWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception;
 
     void removeWechatPlatform(Long id) throws Exception;
 
-    List<WechatPlatfromDO> listWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception;
+    List<WechatPlatfrom> listWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception;
+
+    WechatPlatfrom getWechatPlatform(WechatPlatfrom wechatPlatfrom) throws ServiceException;
 
 }

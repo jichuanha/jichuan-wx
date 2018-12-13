@@ -1,8 +1,9 @@
 package com.hzkans.crm.modules.wechat.service.impl;
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
      * @throws Exception
      */
     @Override
-    public WechatPlatfromDO getWechatPlatformById(Long id) throws Exception {
+    public WechatPlatfrom getWechatPlatformById(Long id) throws Exception {
         try {
             return wechatPlatfromDAO.getWechatPlatformById(id);
         } catch (Exception e) {
@@ -40,38 +41,38 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
 
     /**
      * 添加微信公众号
-     * @param wechatPlatfromDO
+     * @param wechatPlatfrom
      * @return
      * @throws Exception
      */
     @Override
-    public void addWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
+    public void addWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception {
 
-        WechatPlatfromDO wechatPlatfromDO1 = new WechatPlatfromDO();
-        wechatPlatfromDO1.setName(wechatPlatfromDO.getName());
-        List<WechatPlatfromDO> wechatPlatfromDOS = null;
+        WechatPlatfrom wechatPlatfrom1 = new WechatPlatfrom();
+        wechatPlatfrom1.setName(wechatPlatfrom.getName());
+        List<WechatPlatfrom> wechatPlatfroms = null;
 
         //判断是否存在这位微信公众号名称
         try {
-            wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO1);
+            wechatPlatfroms = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfrom1);
         } catch (Exception e) {
             log.error("getWechatPlatforms error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
         }
-        if (CollectionUtils.isNotEmpty(wechatPlatfromDOS)) {
+        if (CollectionUtils.isNotEmpty(wechatPlatfroms)) {
             throw new Exception(ResponseEnum.B_E_ALERADY_EXIST.getMsg());
         }
 
         //判断是否插入微信公众号绑定信息
-        if (wechatPlatfromDO.getAppId() != null || wechatPlatfromDO.getAppSecret() != null
-                || wechatPlatfromDO.getToken() != null){
-            wechatPlatfromDO.setBindingFlag(1);
+        if (wechatPlatfrom.getAppId() != null || wechatPlatfrom.getAppSecret() != null
+                || wechatPlatfrom.getToken() != null){
+            wechatPlatfrom.setBindingFlag(1);
         }else {
-            wechatPlatfromDO.setBindingFlag(0);
+            wechatPlatfrom.setBindingFlag(0);
         }
 
         try {
-            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromDAO.insertWechatPlatform(wechatPlatfrom);
         } catch (Exception e) {
             log.error("insertWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_FAILED_TO_ADD.getMsg());
@@ -81,13 +82,13 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
 
     /**
      * 修改微信公众号
-     * @param wechatPlatfromDO
+     * @param wechatPlatfrom
      * @throws Exception
      */
     @Override
-    public void updateWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
+    public void updateWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception {
         try {
-            wechatPlatfromDAO.updateWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromDAO.updateWechatPlatform(wechatPlatfrom);
         } catch (Exception e) {
             log.error("updateWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_MODIFY_ERROR.getMsg());
@@ -111,19 +112,32 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
 
     /**
      * 获取所有的公众号
-     * @param wechatPlatfromDO
+     * @param wechatPlatfrom
      * @return
      * @throws Exception
      */
     @Override
-    public List<WechatPlatfromDO> listWechatPlatform(WechatPlatfromDO wechatPlatfromDO) throws Exception {
+    public List<WechatPlatfrom> listWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception {
         try {
-            List<WechatPlatfromDO> wechatPlatfromDOS;
-            wechatPlatfromDOS = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfromDO);
-            return wechatPlatfromDOS;
+            List<WechatPlatfrom> wechatPlatfroms;
+            wechatPlatfroms = wechatPlatfromDAO.getWechatPlatforms(wechatPlatfrom);
+            return wechatPlatfroms;
         } catch (Exception e) {
             log.error("selectAllWechatPlatform error", e);
             throw new Exception(ResponseEnum.B_E_RESULT_IS_NULL.getMsg());
         }
+    }
+
+    @Override
+    public WechatPlatfrom getWechatPlatform(WechatPlatfrom wechatPlatfrom) throws ServiceException {
+        TradeUtil.isAllNull(wechatPlatfrom);
+        WechatPlatfrom platfrom = null;
+        try {
+            platfrom = wechatPlatfromDAO.selectWechatPlatform(wechatPlatfrom);
+        } catch (Exception e) {
+            log.error("getWechatPlatform error",e);
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+        }
+        return platfrom;
     }
 }

@@ -1,7 +1,5 @@
 package com.hzkans.crm.modules.wechat.constants;
 
-import com.hzkans.crm.common.utils.StringUtils;
-import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
 
 /**
  * @author jc

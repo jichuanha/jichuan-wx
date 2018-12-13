@@ -6,7 +6,7 @@ package com.hzkans.crm.modules.wechat.dao;
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 
 import java.util.List;
 
@@ -16,15 +16,17 @@ import java.util.List;
  * @version 2018-11-26
  */
 @MyBatisDao
-public interface WechatPlatfromDAO extends CrudDao<WechatPlatfromDO> {
-    WechatPlatfromDO getWechatPlatformById(Long id);
+public interface WechatPlatfromDAO extends CrudDao<WechatPlatfrom> {
+    WechatPlatfrom getWechatPlatformById(Long id);
 
-    int insertWechatPlatform(WechatPlatfromDO wechatPlatfromDO);
+    int insertWechatPlatform(WechatPlatfrom wechatPlatfrom);
 
-    void updateWechatPlatform(WechatPlatfromDO wechatPlatfromDO);
+    void updateWechatPlatform(WechatPlatfrom wechatPlatfrom);
 
     void removeWechatPlatform(Long id);
 
-    List<WechatPlatfromDO> getWechatPlatforms(WechatPlatfromDO wechatPlatfromDO);
+    List<WechatPlatfrom> getWechatPlatforms(WechatPlatfrom wechatPlatfrom);
+
+    WechatPlatfrom selectWechatPlatform(WechatPlatfrom wechatPlatfrom);
 
 }

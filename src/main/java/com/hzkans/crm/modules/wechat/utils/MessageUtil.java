@@ -1,10 +1,12 @@
 package com.hzkans.crm.modules.wechat.utils;
 
+import com.hzkans.crm.modules.wechat.message.ImageMessage;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import org.apache.poi.ss.formula.functions.T;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -51,6 +53,31 @@ public class MessageUtil {
         return map;
     }
 
+    /*private static XStream xstream = new XStream(new XppDriver() {
+        public HierarchicalStreamWriter createWriter(Writer out) {
+            return new PrettyPrintWriter(out) {
+                // 对所有xml节点的转换都增加CDATA标记
+                boolean cdata = true;
+
+                @SuppressWarnings("rawtypes")
+                public void startNode(String name, Class clazz) {
+                    super.startNode(name, clazz);
+                }
+
+                protected void writeText(QuickWriter writer, String text) {
+                    if (cdata) {
+                        writer.write("<![CDATA[");
+                        writer.write(text);
+                        writer.write("]]>");
+                    } else {
+                        writer.write(text);
+                    }
+                }
+            };
+        }
+    });*/
+
+
     /**
      * 扩展xstream，使其支持CDATA块
      */
@@ -84,6 +111,12 @@ public class MessageUtil {
             };
         }
     });
+
+
+    public static <T>  String messageToXml(T t) {
+        xstream.alias("xml", t.getClass());
+        return xstream.toXML(t);
+    }
 
 
 }

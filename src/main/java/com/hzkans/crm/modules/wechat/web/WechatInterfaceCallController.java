@@ -9,7 +9,7 @@ import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.modules.wechat.constants.MenuType;
 import com.hzkans.crm.modules.wechat.constants.WechatMenu;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.CustomMenuService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
@@ -51,7 +51,7 @@ public class WechatInterfaceCallController {
     public String syMenu2Wechat(HttpServletRequest request, HttpServletResponse response) {
         Long wechatId = RequestUtils.getLong(request, "wechat_id", "wechat_id is null");
         List<CustomMainMenuDTO> allCustomMenu = null;
-        WechatPlatfromDO wechatPlatform = null;
+        WechatPlatfrom wechatPlatform = null;
         try {
             allCustomMenu = customMenuService.getAllCustomMenu(wechatId);
             //获取该公众号的appid和appsecret
@@ -88,7 +88,7 @@ public class WechatInterfaceCallController {
      * @param wechatPlatform
      * @return
      */
-    private String syMenu(List<CustomMainMenuDTO> allCustomMenu, WechatPlatfromDO wechatPlatform) {
+    private String syMenu(List<CustomMainMenuDTO> allCustomMenu, WechatPlatfrom wechatPlatform) {
         //创建最外层
         Map<String, List<WechatMenu>> listMap = new HashMap<>();
         List<WechatMenu> menuList = new ArrayList<>();
@@ -156,18 +156,4 @@ public class WechatInterfaceCallController {
     }
 
 
-
-    public static void main(String[] args) {
-        String accessToken = getAccessToken(WechatCofig.APPID, WechatCofig.APPSECRET);
-        System.out.println(accessToken);
-    }
-
-    public static String getAccessToken(String appId, String appSecret) {
-
-        String url = WechatCofig.GET_ACCESS_TOKEN.replace("APPID", appId).replace("APPSECRET", appSecret);
-        String data = HttpRequestUtil.
-                HttpsDefaultExecute(HttpRequestUtil.GET_METHOD, url, "", "", 0, "false");
-        JSONObject jsonObject = JSONObject.parseObject(data);
-        return jsonObject.getString("access_token");
-    }
 }

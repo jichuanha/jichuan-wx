@@ -8,7 +8,7 @@ import com.hzkans.crm.common.utils.EhCacheUtils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.SpringContextHolder;
 import com.hzkans.crm.modules.wechat.dao.WechatPlatfromDAO;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +29,11 @@ public class WechatUtils {
 	private static WechatPlatfromDAO wechatPlatfromDAO = SpringContextHolder.getBean(WechatPlatfromDAO.class);
 
 
-	public static WechatPlatfromDO getWechatPlatform(Long id){
+	public static WechatPlatfrom getWechatPlatform(Long id){
 		if (null != id){
 			return wechatPlatfromDAO.getWechatPlatformById(id);
 		}else {
-			return new WechatPlatfromDO();
+			return new WechatPlatfrom();
 		}
 	}
 

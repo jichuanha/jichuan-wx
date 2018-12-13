@@ -2,17 +2,18 @@ package com.hzkans.crm.modules.wechat.message;
 
 public class BaseMessage {
 
-    //开发者微信号
-    private String ToUserName;
+
     //发送方帐号（一个OpenID）
+    private String ToUserName;
+    //开发者微信号
     private String FromUserName;
     // 消息创建时间 （整型）
-    private long CreateTime;
+    private Long CreateTime;
     // 消息类型(event 代表事件)
     private String MsgType;
 
     // 消息id，64位整型
-    private long MsgId;
+    private Long MsgId;
 
     public String getToUserName() {
         return ToUserName;
@@ -30,11 +31,11 @@ public class BaseMessage {
         FromUserName = fromUserName;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return CreateTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         CreateTime = createTime;
     }
 
@@ -46,11 +47,11 @@ public class BaseMessage {
         MsgType = msgType;
     }
 
-    public long getMsgId() {
+    public Long getMsgId() {
         return MsgId;
     }
 
-    public void setMsgId(long msgId) {
+    public void setMsgId(Long msgId) {
         MsgId = msgId;
     }
 }

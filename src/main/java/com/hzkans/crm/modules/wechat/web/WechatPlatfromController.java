@@ -15,7 +15,6 @@ import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
-import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
 import com.hzkans.crm.modules.wechat.utils.WechatCofig;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -86,11 +85,11 @@ public class WechatPlatfromController extends BaseController {
         try {
             Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
 
-            WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(id);
-            model.addAttribute("id", wechatPlatfromDO.getId());
-            model.addAttribute("name", wechatPlatfromDO.getName());
-            model.addAttribute("mainPart", wechatPlatfromDO.getMainPart());
-            model.addAttribute("wechat_no", wechatPlatfromDO.getWechatNo());
+            WechatPlatfrom wechatPlatfrom = wechatPlatfromService.getWechatPlatformById(id);
+            model.addAttribute("id", wechatPlatfrom.getId());
+            model.addAttribute("name", wechatPlatfrom.getName());
+            model.addAttribute("mainPart", wechatPlatfrom.getMainPart());
+            model.addAttribute("wechat_no", wechatPlatfrom.getWechatNo());
             return "modules/wechatmanage/editShop";
         } catch (Exception e) {
             logger.error("selectWechatPlatformById is error", e);
@@ -120,17 +119,17 @@ public class WechatPlatfromController extends BaseController {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
             }
 
-            WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
-            wechatPlatfromDO.setName(name);
-            wechatPlatfromDO.setCreateBy(user.getName());
-            wechatPlatfromDO.setUpdateBy(user.getName());
-            wechatPlatfromDO.setMainPart(mainPart);
-            wechatPlatfromDO.setAppSecret(appSecret);
-            wechatPlatfromDO.setToken(token);
-            wechatPlatfromDO.setAppId(appId);
-            wechatPlatfromDO.setWechatNo(wechatNo);
+            WechatPlatfrom wechatPlatfrom = new WechatPlatfrom();
+            wechatPlatfrom.setName(name);
+            wechatPlatfrom.setCreateBy(user.getName());
+            wechatPlatfrom.setUpdateBy(user.getName());
+            wechatPlatfrom.setMainPart(mainPart);
+            wechatPlatfrom.setAppSecret(appSecret);
+            wechatPlatfrom.setToken(token);
+            wechatPlatfrom.setAppId(appId);
+            wechatPlatfrom.setWechatNo(wechatNo);
 
-            wechatPlatfromService.addWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromService.addWechatPlatform(wechatPlatfrom);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("addWechatPlatform is error", e);
@@ -156,11 +155,11 @@ public class WechatPlatfromController extends BaseController {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT, ResponseEnum.B_E_SESSION_TIMEOUT.getMsg());
             }
 
-            WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
-            wechatPlatfromDO.setMainPart(newMainPart);
-            wechatPlatfromDO.setId(id);
-            wechatPlatfromDO.setUpdateBy(user.getName());
-            wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
+            WechatPlatfrom wechatPlatfrom = new WechatPlatfrom();
+            wechatPlatfrom.setMainPart(newMainPart);
+            wechatPlatfrom.setId(id);
+            wechatPlatfrom.setUpdateBy(user.getName());
+            wechatPlatfromService.updateWechatPlatform(wechatPlatfrom);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("selectWechatPlatformById is error", e);
@@ -197,8 +196,8 @@ public class WechatPlatfromController extends BaseController {
     @ResponseBody
     public String getAllWechatPlatform() throws Exception {
         try {
-            List<WechatPlatfromDO> allWechatPlatform;
-            allWechatPlatform = wechatPlatfromService.listWechatPlatform(new WechatPlatfromDO());
+            List<WechatPlatfrom> allWechatPlatform;
+            allWechatPlatform = wechatPlatfromService.listWechatPlatform(new WechatPlatfrom());
             return ResponseUtils.getSuccessApiResponseStr(allWechatPlatform);
         } catch (Exception e) {
             logger.error("selectWechatPlatformById is error",e);
@@ -224,16 +223,16 @@ public class WechatPlatfromController extends BaseController {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT, ResponseEnum.B_E_SESSION_TIMEOUT.getMsg());
             }
 
-            WechatPlatfromDO wechatPlatfromDO = new WechatPlatfromDO();
-            wechatPlatfromDO.setId(id);
-            wechatPlatfromDO.setUpdateBy(user.getName());
-            wechatPlatfromDO.setAppSecret(appSecret);
-            wechatPlatfromDO.setToken(token);
-            wechatPlatfromDO.setToken(appId);
+            WechatPlatfrom wechatPlatfrom = new WechatPlatfrom();
+            wechatPlatfrom.setId(id);
+            wechatPlatfrom.setUpdateBy(user.getName());
+            wechatPlatfrom.setAppSecret(appSecret);
+            wechatPlatfrom.setToken(token);
+            wechatPlatfrom.setToken(appId);
             //绑定状态为1
-            wechatPlatfromDO.setBindingFlag(1);
+            wechatPlatfrom.setBindingFlag(1);
 
-            wechatPlatfromService.updateWechatPlatform(wechatPlatfromDO);
+            wechatPlatfromService.updateWechatPlatform(wechatPlatfrom);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("bindingWechatPlatform is error", e);
@@ -274,7 +273,7 @@ public class WechatPlatfromController extends BaseController {
             file.transferTo(newFile);
             wxOSSClient.uploadFile(UPLOAD_EX,newPath,realPath);
             //上传到微信素材
-            WechatPlatfromDO wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
+            WechatPlatfrom wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
             logger.info("wechatPlatform {}", JsonUtil.toJson(wechat));
 
             String url = WechatCofig.UPLOAD_MEDIA

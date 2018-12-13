@@ -1,6 +1,7 @@
 package com.hzkans.crm.modules.wechat.web;
 
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
+import com.hzkans.crm.modules.wechat.service.WechatInfoService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wechat.utils.MessageUtil;
 import com.hzkans.crm.modules.wechat.utils.WechatUtils;
@@ -32,6 +33,8 @@ public class AcceptEventPushController{
 
     @Autowired
     private WechatPlatfromService wechatPlatfromService;
+    @Autowired
+    private WechatInfoService wechatInfoService;
 
 
     @RequestMapping(value="/api.do",method = RequestMethod.GET)
@@ -51,7 +54,7 @@ public class AcceptEventPushController{
             logger.info("[{}] echostr:{}",echostr);
             PrintWriter out = response.getWriter();
 
-            WechatPlatfromDO wechatPlatformById = wechatPlatfromService.getWechatPlatformById(12L);
+            WechatPlatfrom wechatPlatformById = wechatPlatfromService.getWechatPlatformById(12L);
             // 通过检验signature对请求进行校验，若校成功则原样返回echostr，表示接入成功，否则接入失败
             if (WechatUtils.checkSignature(signature, timestamp, nonce,wechatPlatformById.getToken())) {
                 out.print(echostr);
@@ -71,11 +74,13 @@ public class AcceptEventPushController{
 
         try {
             Map<String, String> requestMap = MessageUtil.parseXml(request);
-
+            String result = wechatInfoService.messageDeal(requestMap);
+            PrintWriter writer = response.getWriter();
+            writer.print(result);
+            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
     }
 }

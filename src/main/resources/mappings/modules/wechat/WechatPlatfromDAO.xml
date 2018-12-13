@@ -21,7 +21,7 @@
     <sql id="tWechatPlatformJoins">
     </sql>
 
-    <select id="getWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
+    <select id="getWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom"
             parameterType="java.lang.Long">
         SELECT
         <include refid="tWechatPlatformColumns"/>
@@ -31,8 +31,8 @@
     </select>
 
 
-    <select id="getWechatPlatforms" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO"
-            parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+    <select id="getWechatPlatforms" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom"
+            parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom">
         SELECT
         <include refid="tWechatPlatformColumns"/>
         FROM t_wechat_platform a
@@ -48,7 +48,20 @@
 
     </select>
 
-    <insert id="insertWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+    <select id="selectWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom"
+            resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom" >
+        SELECT
+        <include refid="tWechatPlatformColumns"/>
+        FROM t_wechat_platform a
+        <where>
+            <if test="wechatNo != null">
+                and a.wechat_no = #{wechatNo}
+            </if>
+            and a.del_flag = 0
+        </where>
+    </select>
+
+    <insert id="insertWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom">
 		INSERT INTO t_wechat_platform(
 			name,
 			main_part,
@@ -78,7 +91,7 @@
 		)
 	</insert>
 
-    <update id="updateWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO">
+    <update id="updateWechatPlatform" parameterType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom">
         UPDATE t_wechat_platform
         <set>
             <if test="mainPart != null and mainPart != ''">

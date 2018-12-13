@@ -7,13 +7,18 @@ package com.hzkans.crm.modules.wechat.message;
  */
 public class ImageMessage extends BaseMessage {
 
-    private String MediaId;
+    private Image Image;
 
-    public String getMediaId() {
-        return MediaId;
+    public Image getImage() {
+        return Image;
     }
 
-    public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+    public void setImage(Image image) {
+        this.Image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "return ImageMessage [Image= + Image + ];";
     }
 }

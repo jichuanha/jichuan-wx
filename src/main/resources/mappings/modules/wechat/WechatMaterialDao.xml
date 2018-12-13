@@ -23,13 +23,14 @@
 	<sql id="base_query_sql">
 		a.title AS "title",
 		a.cover_picture AS "coverPicture",
-		a.content AS "content",
 		a.brief AS "brief",
 		a.uri AS "uri",
 		a.type AS "type",
 		a.article_uri AS "articleUri",
 		a.media_id AS "mediaId",
-		rr.reply_way AS ""
+		rr.reply_way AS "replyWay",
+		rr.status AS "status",
+		rc.content AS "content",
 	</sql>
 	
 	<sql id="wechatMaterialJoins">
@@ -46,7 +47,7 @@
 			t_wechat_material a
 		WHERE
 			rr.id = rc.rule_id
-		AND rc.media_id = a.id
+		AND rc.material_id = a.id
 		AND rr.wechat_id = #{wechatId}
 		AND rr.rule_type = #{ruleType}
 		AND rr.deleted = 0

@@ -165,6 +165,7 @@ public class WechatMaterialController extends BaseController {
 			String id = materialService.saveWechatMaterial(material);
 			return ResponseUtils.getSuccessApiResponseStr(id);
 		} catch (ServiceException e) {
+			logger.error("saveMaterial error",e);
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR);
 		}
 	}

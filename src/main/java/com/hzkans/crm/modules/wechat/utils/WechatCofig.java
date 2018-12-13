@@ -33,6 +33,12 @@ public class WechatCofig {
     public static final String DEL_MEDIA =
             "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=ACCESS_TOKEN";
 
+    /** 获取永久素材*/
+    public static final String GET_MEDIA =
+            "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=ACCESS_TOKEN";
+
+
+
 
 
 }

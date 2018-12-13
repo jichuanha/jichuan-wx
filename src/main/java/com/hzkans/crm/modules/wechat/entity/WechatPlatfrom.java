@@ -15,7 +15,7 @@ import java.util.Date;
  * @author dtm
  * @version 2018-11-26
  */
-public class WechatPlatfromDO implements Serializable {
+public class WechatPlatfrom implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;
