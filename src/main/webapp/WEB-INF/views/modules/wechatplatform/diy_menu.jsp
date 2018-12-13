@@ -355,6 +355,11 @@
                 $('input[name=url]').val(data.uri);
             }
             $('input[name=sort]').val(data.sort);
+            if(editIndex.level===2){
+                $('#menu').attr('disabled',true);
+            }else{
+                $('#menu').attr('disabled',false);
+            }
         }
         initEvent();
     })
