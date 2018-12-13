@@ -21,7 +21,7 @@ function page_ctrl(data_obj) {
         }
         data_obj.change_content(per_num, current_page);
         var inp_val = current_page;
-        var append_html = '<button class="prev_page"><i class="icon-chevron-left"></i></button>';
+        var append_html = '<button class="prev_page"></button>';
         for (var i = 0; i < total_page - 1; i++) {
             if (total_page > 8 && current_page > 6 && i < current_page - 3) {
                 if (i < 2) {
@@ -52,7 +52,7 @@ function page_ctrl(data_obj) {
         } else {
             append_html += '<button class="page_num">' + (i + 1) + '</button>';
         }
-        append_html += '<button class="next_page"><i class="icon-chevron-right"></i></button><span class="page_total"></span><input class="input_page_num" type="text" value="' + inp_val + '"><span class="page_text">页</span><button class="to_page_num">跳转</button>';
+        append_html += '<button class="next_page"></button><span class="page_total"></span><input class="input_page_num" type="text" value="' + inp_val + '"><span class="page_text">页</span><button class="to_page_num">跳转</button>';
         $(obj_box).children('.page_ctrl').append(append_html);
         if (current_page == 1) {
             $(obj_box + ' .page_ctrl .prev_page').attr('disabled', 'disabled').addClass('btn_dis');
