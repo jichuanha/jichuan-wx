@@ -377,7 +377,8 @@
             height: 300px;
         }
         .img-choosed img{
-            height: 300px;
+            /*height: 300px;*/
+            max-width: 200px;
         }
         .less-key-btn{
             display: inline-block;
@@ -482,6 +483,7 @@
                 <div class="modal-body">
                     <div><label>语音名称：</label><input class="input-large" name="title" type="text" required></div>
                     <div style="display: none;"><input name="cover" class="input-large" disabled></div>
+                    <div style="display: none;"><input name="mediaId" class="input-large" disabled></div>
                     <div><label>语音文件：</label><div class="btn btn-primary" id="sound-select">选择语音</div>
                         <span id="percent" style="display: none;"></span>
                     </div>
@@ -501,6 +503,47 @@
 </div>
 <script>
     $(function () {
+        $('#switch').live('click',function () {
+            if($(this).attr('checked')){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/suspend_reply',
+                    type:'post',
+                    data:{
+                        wechat_id:$.cookie().platFormId,
+                        status:1,
+                        rule_type:2
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                        }
+                    }
+                })
+            }
+            else{
+                $.ajax({
+                    url:'${ctx}/wechat_reply/suspend_reply',
+                    type:'post',
+                    data:{
+                        wechat_id:$.cookie().platFormId,
+                        status:0,
+                        rule_type:2
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                        }
+                    }
+                })
+            }
+            // if($(this).checked){
+            //
+            // })
+        })
+        var selectID = '';
+        var reply_id = '';
         ajaxFuc();
         uploadPic();
         $('.res-head li').live('click',function () {
@@ -522,6 +565,54 @@
                 $this.trigger('change');
             }
         });
+        $('.review-btn').live('click',function () {
+            var name = $('.res-head li.active').attr('data-name');
+            var contentsArr = [];
+            if(name == 'txt'){
+                contentsArr.push({
+                    content_type:0,
+                    content:$('.res-input').html()
+                })
+            }
+            else if(name == 'img'){
+                contentsArr.push({
+                    content_type:1,
+                    material_id:selectID,
+                })
+            }
+            else if(name == 'voice'){
+                contentsArr.push({
+                    content_type:2,
+                    material_id:selectID,
+                })
+            }
+            // if(contentsArr[0].content != undefined || contentsArr[0].material_id != ''){
+            $.ajax({
+                url:'${ctx}/wechat_reply/save_reply_new',
+                type:'post',
+                data:{
+                    status:$('#switch').prop('checked')?1:0,
+                    rule_type:2,
+                    content_all:JSON.stringify(contentsArr),
+                    reply_way:1,
+                    wechat_id:$.cookie().platFormId
+                },
+                success:function (data) {{
+                    var data = JSON.parse(data);
+                    if(data.code == 10000){
+                        layer.open({content:'保存成功！'})
+                        ajaxFuc();
+                    }else{
+                        layer.open({content:data.msg})
+                    }
+                }
+                }
+            })
+            // }
+            // else{
+            //     layer.msg('请先输入回复内容');
+            // }
+        });
         //获取列表(是否有数据)
         function ajaxFuc() {
             $.ajax({
@@ -529,93 +620,45 @@
                 type:'post',
                 data:{
                     wechat_id:$.cookie().platFormId,
-                    // wechat_id:10,
-                    reply_type:2
+                    rule_type:2
                 },
                 success:function (msg) {
                     var msg = JSON.parse(msg);
-                    if(msg.data.list.length > 0){
+                    if(msg.code == 10000 && msg.data.length > 0){
+                        var data = msg.data[0].wechat_reply_content_d_o_s[0];
+                        $('.res-head li').removeClass('active');
+                        $('.res-iframe').css('display','none');
+                        if(data.content_type == 0){
+                            $('.choose-txt').addClass('active');
+                            $('.res-txt').css('display','block');
+                            $('.res-input').html(data.content).attr('data-para',data.rule_id);
+                        }
+                        else if(data.content_type == 1){
+                            $('.choose-img').addClass('active');
+                            $('.res-img').css('display','block');
+                            $('.img-block').html('<div class="item" data-para='+data.rule_id+'>' +
+                                '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+data.wechat_material.cover_picture+'"/></i>' +
+                                '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
+                                '</div>')
+                        }
+                        else if(data.content_type == 2){
+                            $('.choose-voice').addClass('active');
+                            $('.res-voice').css('display','block');
+                            $('.voice-block').html('<p class="item" data-para='+data.rule_id+'>已选择:语音名称:'+data.wechat_material.title+'&nbsp;&nbsp;文件名称:'+data.wechat_material.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
 
-                    }
-                    else{
+                        }
 
                     }
                 }
             })
         }
 
+
         var acceptImg = {
             title: 'Images',
             extensions: 'gif,jpg,jpeg,bmp,png',
             mimeTypes: 'image/*'
         };
-        // uploadFile($('.upload-img-btn'),acceptImg,2,1)
-        //上传方法
-        function uploadFile(selector,acceptImg,reply_type,content_type) {
-            var uploader = WebUploader.create({
-                auto: true, // 选择文件后自动上传
-                runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
-                pick: {
-                    id: selector, // 按钮元素
-                    multiple: false // 是否支持文件多选，false表示只能选一个
-                },
-                formData:{id:1},
-                server: '${ctx}/wechat_reply/upload', // 上传文件的接口（替换成你们后端给的接口路径）
-                accept: acceptImg,
-                disableGlobalDnd: true, // 禁掉全局的拖拽功能。
-                fileNumLimit: 1, // 验证文件总数量, 超出则不允许加入队列
-                fileSizeLimit: 30 * 1024 * 1024, // 限制所有上传文件的大小
-                fileSingleSizeLimit: 30 * 1024 * 1024 // 限制单个上传文件的大小
-            });
-
-            // 当有文件被添加进队列的时候
-            uploader.on( 'fileQueued', function( file ) {
-            });
-            uploader.on( 'uploadBeforeSend', function( block, data ) {
-                // block为分块数据。
-
-                // file为分块对应的file对象。
-                var file = block.file;
-
-
-                // 修改data可以控制发送哪些携带数据。
-                data.reply_type = reply_type;
-                data.content_type = content_type;
-            });
-
-            // 上传成功
-            uploader.on('uploadSuccess', function(file, response) {
-                //hideBatchDialog();
-                if (response.code === 10000) {
-                    // 只要文件上传成功就可以了直接请求检测接口
-
-                } else {
-                    layer.msg(response.msg);
-                }
-            });
-
-            // 上传失败
-            uploader.on('uploadError', function(file) {
-                alert('上传失败');
-            });
-
-            // 上传完成（不论成功或失败都会执行）
-            uploader.on( 'uploadComplete', function( file ) {
-            });
-
-            // 上传错误
-            uploader.on('error', function(status) {
-                var errorTxt = '';
-                if(status == 'Q_TYPE_DENIED') {
-                    errorTxt = '文件类型错误';
-                } else if(status == 'Q_EXCEED_SIZE_LIMIT') {
-                    errorTxt = '文件大小超出限制，请控制在30M以内哦';
-                } else {
-                    errorTxt = '其他错误';
-                }
-                layer.msg('提示:'+ errorTxt);
-            });
-        }
 
         $('.select-img-btn').live('click',function () {
             getPic();
@@ -636,6 +679,44 @@
                 $(this).addClass('active');
             }
         })
+        $('.delete-btn').live('click',function () {
+            var name = $('.res-head li.active').attr('data-name');
+            var para = '';
+            if(name == 'txt'){
+                para = $('.res-input').attr('data-para');
+            }
+            else if(name == 'img'){
+                para = $('.img-block .item').attr('data-para');
+            }
+            else if(name == 'voice'){
+                para = $('.voice-block .item').attr('data-para');
+            }
+            if(para != undefined){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/remove_reply',
+                    type:'post',
+                    data:{
+                        rule_id:para,
+                        wechat_id:$.cookie().platFormId,
+                        rule_type:2
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            layer.open({content:'删除成功！'});
+                            setTimeout(function () {
+                                window.location.reload();
+                            },1000)
+                            // ajaxFuc();
+                        }
+                        else{
+                            layer.msg(msg.msg);
+                        }
+                    }
+
+                })
+            }
+        })
         $('.choose-mater').live('click',function () {
             $.each($('.res-head li'),function () {
                 if($(this).hasClass('active')){
@@ -643,7 +724,8 @@
                     if(name == 'img'){
                         var para = $('.pic-block .item.active').attr('data-para');
                         var paraJson = JSON.parse(para);
-                        $('.img-block').html('<div data-para="'+para+'">' +
+                        selectID = paraJson.id;
+                        $('.img-block').html('<div class="item" data-para='+para+'>' +
                             '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+paraJson.cover_picture+'"/></i>' +
                             '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                             '</div>')
@@ -651,7 +733,8 @@
                     else if(name == 'voice'){
                         var para = $('.sound-block input[name=sound]:checked').attr('data-para');
                         var paraJson = JSON.parse(para);
-                        $('.voice-block').html('<p data-para="'+para+'">已选择:语音名称:'+paraJson.title+'&nbsp;&nbsp;文件名称:'+paraJson.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                        selectID = paraJson.id;
+                        $('.voice-block').html('<p class="item" data-para='+escape(para)+'>已选择:语音名称:'+paraJson.title+'&nbsp;&nbsp;文件名称:'+paraJson.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                     }
                     $('#myModalArtcle').modal('hide');
                 }
@@ -680,7 +763,6 @@
             wechat_id: $.cookie('platFormId'),
         };
 
-        var listArr = [];
         var count = 0;
         var btnType = '';
         var editIndex = 0;
@@ -694,7 +776,6 @@
                 data: params,
                 success: function (data) {
                     typeof data != 'object' && (data = JSON.parse(data));
-                    listArr = listArr.concat(data.data.list);
                     count = data.data.count;
                     var _html = [];
                     data.data.list.forEach(function (item, index) {
@@ -722,7 +803,7 @@
                             current_page: '1',
                             change_content: function (per_num, current_page) {
                                 if (hasInit) {
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getArtcleData();
                                 }
                             }
@@ -742,7 +823,6 @@
                 data: params,
                 success: function (data) {
                     typeof data != 'object' && (data = JSON.parse(data));
-                    listArr = listArr.concat(data.data.list);
                     count = data.data.count;
                     var _html = '';
                     _html += '<table class="sound-block"><tr>' +
@@ -772,7 +852,7 @@
                             current_page: '1',
                             change_content: function (per_num, current_page) {
                                 if (hasInit) {
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getSound();
                                 }
                             }
@@ -797,7 +877,6 @@
                 data:params,
                 success:function(data){
                     typeof data != 'object'&& (data = JSON.parse(data));
-                    listArr = listArr.concat(data.data.list);
                     count = data.data.count;
                     var _html=[];
                     data.data.list.forEach(function(item,index){
@@ -816,7 +895,7 @@
                             current_page: '1',
                             change_content: function(per_num, current_page) {
                                 if(hasInit){
-                                    params.page = current_page;
+                                    params.current_page = current_page;
                                     getPic();
                                 }
                             }
@@ -832,6 +911,10 @@
             var uploader = WebUploader.create({
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                    fileType:1,
+                    wechat_id:$.cookie('platFormId'),
+                },
                 pick: {
                     id: '.upload-img-btn', // 按钮元素
                     multiple: false // 是否支持文件多选，false表示只能选一个
@@ -848,43 +931,57 @@
             });
             uploader.on('uploadSuccess',function(file,data){
                 typeof data != 'object'&& (data = JSON.parse(data));
+                if(data.code!='10000'){
+                    uploader.reset();
+                    layer.open({
+                        content:data.msg
+                    })
+                    return;
+                }
                 var url = '${ctx}/wechat_material/save_material';
                 var list = {
                     title:'图片',
                     wechat_id:$.cookie('platFormId'),
                     type:'1',
-                    cover_picture:data.data,
+                    cover_picture:data.data.path,
+                    mediaId:data.data.mediaId,
                 };
                 $.post(url,list,function (data) {
                     typeof data != 'object'&& (data = JSON.parse(data));
                     if(data.code=='10000'){
-                        // window.location.reload();
-                        console.log(1);
-                        $('.img-block').html('<div data-para="'+JSON.stringify(list)+'">' +
+                        selectID = data.data;
+                        $('.img-block').html('<div class="item" data-para='+JSON.stringify(list)+'>' +
                             '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+list.cover_picture+'"/></i>' +
                             '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                             '</div>');
 
                     }else{
+                        uploader.reset();
                         layer.open({
                             content:data.msg
                         })
                     }
                 })
             });
+            uploader.on('uploadError',function () {
+                uploader.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
         }
 
         $('.upload-voice-btn').live('click',function () {
             $("#myModal").modal('show');
         })
         $("#myModal").on('shown.bs.modal',function () {
-            var uploader = ''
-            try {
-                uploader.destroy();
-            }catch (e) {}
-            uploader = WebUploader.create({
+            var uploaderVedio = WebUploader.create({
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                    fileType:3,
+                    wechat_id:$.cookie('platFormId'),
+                },
                 pick: {
                     id: '#sound-select', // 按钮元素
                     multiple: false // 是否支持文件多选，false表示只能选一个
@@ -899,17 +996,19 @@
                 fileSizeLimit: 30 * 1024 * 1024, // 限制所有上传文件的大小
                 fileSingleSizeLimit: 30 * 1024 * 1024,// 限制单个上传文件的大小
             });
-            uploader.on('uploadSuccess',function(file,data){
+            uploaderVedio.on('uploadSuccess',function(file,data){
                 typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code==10000){
-                    $('input[name=cover]').val(data.data);
+                    $('input[name=cover]').val(data.data.path);
+                    $('input[name=mediaId]').val(data.data.mediaId);
                     $('#percent').show().html('文件上传完毕');
                 }else{
+                    uploaderVedio.reset();
                     $('#percent').show().html(data.msg);
                 }
             });
 
-            uploader.on( 'uploadProgress', function( file, percentage ) {
+            uploaderVedio.on( 'uploadProgress', function( file, percentage ) {
                 if(percentage!=1){
                     var per = percentage.toFixed(4)*100;
                     $('#percent').show().html('上传进度:'+per+'%');
@@ -917,6 +1016,12 @@
                     $('#percent').show().html('文件处理中');
                 }
             });
+            uploaderVedio.on('uploadError',function () {
+                uploaderVedio.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
             $("#sound-form").validate({
                 submitHandler:function(){
                     if(!$('input[name="cover"]').val()){
@@ -931,11 +1036,13 @@
                         wechat_id:$.cookie('platFormId'),
                         type:'3',
                         cover_picture:$('input[name="cover"]').val(),
+                        mediaId:$('input[name="mediaId"]').val(),
                     };
                     $.post(url,list,function (data) {
                         typeof data != 'object'&& (data = JSON.parse(data));
                         if(data.code=='10000'){
-                            $('.voice-block').html('<p data-para="'+JSON.stringify(list)+'">已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                            selectID = data.data;
+                            $('.voice-block').html('<p class="item" data-para='+escape(JSON.stringify(list))+'>已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                             $('#myModal').modal('hide');
                         }else{
                             layer.open({
