@@ -29,7 +29,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
      * @throws Exception
      */
     @Override
-    public WechatPlatfromDO getWechatPlatformById(Integer id) throws Exception {
+    public WechatPlatfromDO getWechatPlatformById(Long id) throws Exception {
         try {
             return wechatPlatfromDAO.getWechatPlatformById(id);
         } catch (Exception e) {
@@ -100,7 +100,7 @@ public class WechatPlatfromServiceImpl implements WechatPlatfromService {
      * @throws Exception
      */
     @Override
-    public void removeWechatPlatform(Integer id) throws Exception {
+    public void removeWechatPlatform(Long id) throws Exception {
         try {
             wechatPlatfromDAO.removeWechatPlatform(id);
         } catch (Exception e) {

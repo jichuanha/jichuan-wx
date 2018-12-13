@@ -54,7 +54,7 @@ public class CustomMenuServiceImpl implements CustomMenuService {
     }
 
     @Override
-    public Boolean deleteCustomMenu(Long id, Integer wechatId) throws Exception {
+    public Boolean deleteCustomMenu(Long id, Long wechatId) throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("id",id);
         map.put("wechatId",wechatId);
@@ -70,7 +70,7 @@ public class CustomMenuServiceImpl implements CustomMenuService {
     }
 
     @Override
-    public List<CustomMainMenuDTO> getCustomMenu(Integer wechatId) throws Exception {
+    public List<CustomMainMenuDTO> getCustomMenu(Long wechatId) throws Exception {
 
         List<CustomMainMenuDTO> customMainMenuDTOS = Collections.EMPTY_LIST;
         try {
@@ -159,7 +159,7 @@ public class CustomMenuServiceImpl implements CustomMenuService {
 
 
     @Override
-    public List<CustomMenuDO> selectParentMenu(Integer wechatId) throws Exception {
+    public List<CustomMenuDO> selectParentMenu(Long wechatId) throws Exception {
         try {
             List<CustomMenuDO> list = customMenuDAO.selectParentMenu(wechatId);
             if (CollectionUtils.isEmpty(list)) {
@@ -188,7 +188,7 @@ public class CustomMenuServiceImpl implements CustomMenuService {
     }
 
     @Override
-    public List<CustomMainMenuDTO> getAllCustomMenu(Integer wechatId) throws ServiceException {
+    public List<CustomMainMenuDTO> getAllCustomMenu(Long wechatId) throws ServiceException {
         List<CustomMainMenuDTO> customMainMenuDTOS = new ArrayList<>();;
         try {
             //获取所有的菜单信息

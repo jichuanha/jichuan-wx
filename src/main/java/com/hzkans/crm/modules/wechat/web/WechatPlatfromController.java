@@ -84,7 +84,7 @@ public class WechatPlatfromController extends BaseController {
     @RequestMapping(value = "/link_update")
     public String gotoUpdate(HttpServletRequest request, Model model) throws Exception {
         try {
-            Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+            Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
 
             WechatPlatfromDO wechatPlatfromDO = wechatPlatfromService.getWechatPlatformById(id);
             model.addAttribute("id", wechatPlatfromDO.getId());
@@ -148,7 +148,7 @@ public class WechatPlatfromController extends BaseController {
     @ResponseBody
     public String updateWechatPlatform(HttpServletRequest request) throws Exception {
         try {
-            Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+            Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
             String newMainPart = RequestUtils.getString(request, true, "new_main_part", "new_main_part is null");
 
             User user = UserUtils.getUser();
@@ -178,7 +178,7 @@ public class WechatPlatfromController extends BaseController {
     @ResponseBody
     public String deleteWechatPlatform(HttpServletRequest request) throws Exception {
         try {
-            Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+            Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
 
             wechatPlatfromService.removeWechatPlatform(id);
             return ResponseUtils.getSuccessApiResponseStr(true);
@@ -214,7 +214,7 @@ public class WechatPlatfromController extends BaseController {
     @RequestMapping(value = "/binding_wechat_latform")
     public String bindingWechatPlatform(HttpServletRequest request){
         try {
-            Integer id = RequestUtils.getInt(request, "id", false, "id is null", "");
+            Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
             String appSecret = RequestUtils.getString(request, false, "app_secret", "app_secret is null");
             String token = RequestUtils.getString(request, false, "token", "token is null");
             String appId = RequestUtils.getString(request, false, "app_id", "token is null");
@@ -251,7 +251,7 @@ public class WechatPlatfromController extends BaseController {
     @ResponseBody
     public String uploadImg(HttpServletRequest request, HttpServletResponse response) {
 
-        Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
+        Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "id is null", "");
         Integer type = RequestUtils.getInt(request, "fileType", "fileType is null");
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.getMessageTypeEnum(type);
         if(null == messageTypeEnum) {

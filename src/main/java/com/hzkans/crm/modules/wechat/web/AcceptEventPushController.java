@@ -51,7 +51,7 @@ public class AcceptEventPushController{
             logger.info("[{}] echostr:{}",echostr);
             PrintWriter out = response.getWriter();
 
-            WechatPlatfromDO wechatPlatformById = wechatPlatfromService.getWechatPlatformById(12);
+            WechatPlatfromDO wechatPlatformById = wechatPlatfromService.getWechatPlatformById(12L);
             // 通过检验signature对请求进行校验，若校成功则原样返回echostr，表示接入成功，否则接入失败
             if (WechatUtils.checkSignature(signature, timestamp, nonce,wechatPlatformById.getToken())) {
                 out.print(echostr);

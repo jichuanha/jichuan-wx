@@ -6,7 +6,7 @@ package com.hzkans.crm.modules.wechat.service;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
-import com.hzkans.crm.modules.wechat.constants.ReplyType;
+import com.hzkans.crm.modules.wechat.constants.ReplyTypeEnum;
 import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
 import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
 import com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao;
@@ -48,60 +48,6 @@ public class WechatReplyService {
     @Autowired
     private WechatMaterialDao wechatMaterialDao;
 
-
-    /**
-     * @param
-     * @return
-     */
-    public WechatReplyNew getFollowedOrImmeReply(Integer wechatId, String ruleId) throws Exception {
-
-        try {
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setId(ruleId);
-
-            WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
-            wechatReplyContentDO.setWechatId(wechatId);
-            wechatReplyContentDO.setRuleId(ruleId);
-
-            WechatReplyKeywordDO wechatReplyKeywordDO = new WechatReplyKeywordDO();
-            wechatReplyKeywordDO.setWechatId(wechatId);
-            wechatReplyKeywordDO.setRuleId(ruleId);
-
-            WechatReplyNew wechatReplyRule = wechatReplyRuleDao.get(wechatReplyNew);
-            //把回复内容转化成对象传到前台
-            if (null == wechatReplyRule) {
-                throw new Exception(ResponseEnum.B_E_RESULT_IS_NULL.getMsg());
-            }
-            List<WechatReplyContentDO> wechatReplyContentS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
-            List<WechatReplyKeywordDO> wechatReplyKeywordS = wechatReplyKeywordDao.findList(wechatReplyKeywordDO);
-
-            logger.info("[{}] wechatReplyContentS",JsonUtil.toJson(wechatReplyContentS));
-            //把回复内容转化成对象传到前台
-            if (CollectionUtils.isNotEmpty(wechatReplyContentS)) {
-                WechatMaterial wechatMaterial = new WechatMaterial();
-                //把素材内容传进自动回复对象中
-                for (WechatReplyContentDO temp:wechatReplyContentS) {
-                    if (MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMaterialId()){
-                        wechatMaterial.setMediaId(temp.getMaterialId());
-                        wechatMaterial = wechatMaterialDao.get(wechatMaterial);
-                        temp.setWechatMaterial(wechatMaterial);
-                    }
-                }
-                wechatReplyRule.setWechatReplyContentDOS(wechatReplyContentS);
-            }
-            //把关键词信息发送到前台
-            if (CollectionUtils.isNotEmpty(wechatReplyKeywordS)) {
-                wechatReplyRule.setWechatReplyKeywordDOS(wechatReplyKeywordS);
-            }
-
-            return wechatReplyRule;
-        } catch (Exception e) {
-            logger.error("getFollowedOrImmeReply is errpr", e);
-            throw new Exception(ResponseEnum.DATEBASE_QUERY_ERROR.getMsg());
-        }
-    }
-
     /**
      * 添加自动回复主表
      *
@@ -111,7 +57,7 @@ public class WechatReplyService {
     @Transactional(rollbackFor = Exception.class)
     public String saveReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
-            if (!ReplyType.KEYWORD.getCode().equals(wechatReplyNew.getRuleType())){
+            if (!ReplyTypeEnum.KEYWORD.getCode().equals(wechatReplyNew.getRuleType())){
                 WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.getReply(wechatReplyNew);
                 if (null == wechatReplyNewResult) {
                     wechatReplyRuleDao.insert(wechatReplyNew);
@@ -142,7 +88,7 @@ public class WechatReplyService {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void saveReplyContent(Integer wechatId, String ruleId, String content,
+    public void saveReplyContent(Long wechatId, String ruleId, String content,
                                  Integer ruleType) throws Exception {
         try {
             //把Json内容转成对象
@@ -157,7 +103,7 @@ public class WechatReplyService {
                     wechatReplyContentDO.setRuleId(ruleId);
                 }
                 //如果为被关注回复以及收到信息回复则判断是否有数据
-                if (ruleType == 2 || ruleType == 3) {
+                if (ReplyTypeEnum.FOLLOW.getCode().equals(ruleType) || ReplyTypeEnum.RECEIVED.getCode().equals(ruleType)) {
                     WechatReplyContentDO wechatReplyContentDO = wechatReplyRuleContentDao.getContent(descList.get(0));
                     logger.info("wechatReplyContentDO[{}]", JsonUtil.toJson(wechatReplyContentDO));
                     if (null == wechatReplyContentDO) {
@@ -187,7 +133,7 @@ public class WechatReplyService {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void saveReplyKeyword(Integer wechatId, String ruleId, String keywords) throws Exception {
+    public void saveReplyKeyword(Long wechatId, String ruleId, String keywords) throws Exception {
         try {
             if (!keywords.isEmpty()) {
                 List<WechatReplyKeywordDO> descList = new ArrayList<WechatReplyKeywordDO>();
@@ -214,10 +160,10 @@ public class WechatReplyService {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteReply(String ruleId, Integer wechatId, Integer ruleType) throws Exception {
+    public void deleteReply(String ruleId, Long wechatId, Integer ruleType) throws Exception {
         try {
             WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
-            if (ReplyType.FOLLOW.getCode().equals(ruleType) || ReplyType.RECEIVED.getCode().equals(ruleType)){
+            if (ReplyTypeEnum.FOLLOW.getCode().equals(ruleType) || ReplyTypeEnum.RECEIVED.getCode().equals(ruleType)){
                 WechatReplyNew wechatReplyNew = new WechatReplyNew();
                 wechatReplyNew.setWechatId(wechatId);
                 wechatReplyNew.setRuleType(ruleType);
@@ -225,7 +171,7 @@ public class WechatReplyService {
                 wechatReplyContentDO.setWechatId(wechatId);
                 wechatReplyContentDO.setRuleId(wechatReplyNewTemp.getId());
                 wechatReplyRuleContentDao.delete(wechatReplyContentDO);
-            }else if (ruleType == 1) {
+            }else{
                 //如果是删除关键字则要删除主表以及关键词表的信息
                 wechatReplyContentDO.setRuleId(ruleId);
                 wechatReplyContentDO.setWechatId(wechatId);
@@ -257,7 +203,7 @@ public class WechatReplyService {
      * @throws Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteReplykeywordAndContent(String ruleId, Integer wechatId) throws Exception {
+    public void deleteReplykeywordAndContent(String ruleId, Long wechatId) throws Exception {
         try {
             WechatReplyContentDO wechatReplyContentDO = new WechatReplyContentDO();
             wechatReplyContentDO.setRuleId(ruleId);

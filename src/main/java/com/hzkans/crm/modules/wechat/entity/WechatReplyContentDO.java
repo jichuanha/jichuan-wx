@@ -16,7 +16,7 @@ import java.util.List;
 public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 
 	private static final long serialVersionUID = 1L;
-	private Integer wechatId;		// 微信ID
+	private Long wechatId;		// 微信ID
 	private String ruleId;		// 规则ID
 	private String creator;		// 创建者
 	private String updator;		// 修改者
@@ -58,11 +58,11 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		this.materialId = materialId;
 	}
 
-	public Integer getWechatId() {
+	public Long getWechatId() {
 		return wechatId;
 	}
 
-	public void setWechatId(Integer wechatId) {
+	public void setWechatId(Long wechatId) {
 		this.wechatId = wechatId;
 	}
 

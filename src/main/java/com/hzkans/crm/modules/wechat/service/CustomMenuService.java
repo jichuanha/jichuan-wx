@@ -34,7 +34,7 @@ public interface CustomMenuService {
 	 * @return
 	 * @throws Exception
 	 */
-	Boolean deleteCustomMenu(Long id,Integer wechatId) throws Exception;
+	Boolean deleteCustomMenu(Long id,Long wechatId) throws Exception;
 
 	/**
 	 * 自定义菜单列表
@@ -42,7 +42,7 @@ public interface CustomMenuService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<CustomMainMenuDTO> getCustomMenu(Integer wechatId) throws Exception;
+	List<CustomMainMenuDTO> getCustomMenu(Long wechatId) throws Exception;
 
 	/**
 	 * 获取所有的一级菜单
@@ -50,7 +50,7 @@ public interface CustomMenuService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<CustomMenuDO> selectParentMenu(Integer wechatId) throws Exception;
+	List<CustomMenuDO> selectParentMenu(Long wechatId) throws Exception;
 
 	/**
 	 * 自定义菜单详情
@@ -66,6 +66,6 @@ public interface CustomMenuService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<CustomMainMenuDTO> getAllCustomMenu(Integer wechatId) throws ServiceException;
+	List<CustomMainMenuDTO> getAllCustomMenu(Long wechatId) throws ServiceException;
 
 }

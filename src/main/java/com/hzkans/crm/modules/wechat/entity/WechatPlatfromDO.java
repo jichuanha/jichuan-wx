@@ -18,7 +18,7 @@ import java.util.Date;
 public class WechatPlatfromDO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private Integer id;
+	private Long id;
 	private String name;		// 公众号名称
 	private String mainPart;		// 公众号主体
 	private String createBy;	// 创建者
@@ -72,15 +72,15 @@ public class WechatPlatfromDO implements Serializable {
 		this.bindingFlag = bindingFlag;
 	}
 
-	public Integer getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getCreateBy() {
+    public String getCreateBy() {
 		return createBy;
 	}
 

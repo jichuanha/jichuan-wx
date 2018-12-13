@@ -19,7 +19,7 @@ import java.util.List;
 public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 
 	private static final long serialVersionUID = 1L;
-	private Integer wechatId;		// 微信ID
+	private Long wechatId;		// 微信ID
 	private String ruleId;		// 规则ID
 	private Integer keywordType;		// 关键词类型： 0-半匹配  1-全匹配
 	private String keyword;		// 关键词
@@ -81,11 +81,11 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 		this.wechatReplyKeywordDOS = wechatReplyKeywordDOS;
 	}
 
-	public Integer getWechatId() {
+	public Long getWechatId() {
 		return wechatId;
 	}
 
-	public void setWechatId(Integer wechatId) {
+	public void setWechatId(Long wechatId) {
 		this.wechatId = wechatId;
 	}
 

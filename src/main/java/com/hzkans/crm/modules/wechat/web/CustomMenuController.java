@@ -47,7 +47,7 @@ public class CustomMenuController {
     @ResponseBody
     public String getCustomMenuList(HttpServletRequest request) {
         try {
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
+            Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "id is null", "");
 
             List<CustomMainMenuDTO> customMenuDTOList = customMenuService.getCustomMenu(wechatId);
             return ResponseUtils.getSuccessApiResponseStr(customMenuDTOList);
@@ -142,7 +142,7 @@ public class CustomMenuController {
     @ResponseBody
     public String removeCustomMenu(HttpServletRequest request) {
         Long id = RequestUtils.getLong(request, "id", false, "id is null", "");
-        Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+        Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
         try {
             Boolean flag = customMenuService.deleteCustomMenu(id, wechatId);
             return ResponseUtils.getSuccessApiResponseStr(flag);
@@ -163,7 +163,7 @@ public class CustomMenuController {
     @ResponseBody
     public String getMainMenu(HttpServletRequest request) throws Exception {
         try {
-            Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+            Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
 
             List<CustomMenuDO> customMenuDOList = customMenuService.selectParentMenu(wechatId);
             return ResponseUtils.getSuccessApiResponseStr(customMenuDOList);

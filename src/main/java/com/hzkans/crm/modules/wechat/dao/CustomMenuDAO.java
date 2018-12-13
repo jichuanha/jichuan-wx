@@ -15,9 +15,9 @@ public interface CustomMenuDAO {
 
 	CustomMenuDO select(CustomMenuDO record);
 
-	List<CustomMenuDO> selectchildMenu(Integer wechatId);
+	List<CustomMenuDO> selectchildMenu(Long wechatId);
 
-	List<CustomMenuDO> selectParentMenu(Integer wechatId);
+	List<CustomMenuDO> selectParentMenu(Long wechatId);
 
 	List<CustomMenuDO> selectChildMenu(Long parentId);
 

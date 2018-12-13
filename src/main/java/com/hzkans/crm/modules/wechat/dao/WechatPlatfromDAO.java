@@ -17,13 +17,13 @@ import java.util.List;
  */
 @MyBatisDao
 public interface WechatPlatfromDAO extends CrudDao<WechatPlatfromDO> {
-    WechatPlatfromDO getWechatPlatformById(Integer id);
+    WechatPlatfromDO getWechatPlatformById(Long id);
 
     int insertWechatPlatform(WechatPlatfromDO wechatPlatfromDO);
 
     void updateWechatPlatform(WechatPlatfromDO wechatPlatfromDO);
 
-    void removeWechatPlatform(Integer id);
+    void removeWechatPlatform(Long id);
 
     List<WechatPlatfromDO> getWechatPlatforms(WechatPlatfromDO wechatPlatfromDO);
 

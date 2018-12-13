@@ -29,7 +29,7 @@ public class WechatUtils {
 	private static WechatPlatfromDAO wechatPlatfromDAO = SpringContextHolder.getBean(WechatPlatfromDAO.class);
 
 
-	public static WechatPlatfromDO getWechatPlatform(Integer id){
+	public static WechatPlatfromDO getWechatPlatform(Long id){
 		if (null != id){
 			return wechatPlatfromDAO.getWechatPlatformById(id);
 		}else {

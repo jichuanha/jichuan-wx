@@ -5,7 +5,7 @@ package com.hzkans.crm.modules.wechat.constants;
  * @description 微信菜单类型
  * @create 2018/12/11
  */
-public enum ReplyType {
+public enum ReplyTypeEnum {
 
     KEYWORD(1, "KEYWORD"),
     FOLLOW(2, "FOLLOW"),
@@ -24,7 +24,7 @@ public enum ReplyType {
         return desc;
     }
 
-    private ReplyType(Integer code, String desc) {
+    private ReplyTypeEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }

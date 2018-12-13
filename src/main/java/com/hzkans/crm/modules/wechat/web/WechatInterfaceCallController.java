@@ -49,7 +49,7 @@ public class WechatInterfaceCallController {
     @RequestMapping("syMenu")
     @ResponseBody
     public String syMenu2Wechat(HttpServletRequest request, HttpServletResponse response) {
-        Integer wechatId = RequestUtils.getInt(request, "wechat_id", "wechat_id is null");
+        Long wechatId = RequestUtils.getLong(request, "wechat_id", "wechat_id is null");
         List<CustomMainMenuDTO> allCustomMenu = null;
         WechatPlatfromDO wechatPlatform = null;
         try {
