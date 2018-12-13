@@ -34,7 +34,7 @@
     color:#5e5e5e
 }
 .page_ctrl .btn_dis:hover {
-    background:#eee;
+    /*background:#eee;*/
     color:#5e5e5e
 }
 .page_ctrl .current_page {
@@ -63,11 +63,20 @@
 }
 .page_ctrl .prev_page,
 .page_ctrl .next_page{
-    background: none;
     color: #484DA7;
     border:1px solid #484DA7;
     border-radius: 5px;
+    height: 20px;
 }
+.page_ctrl .prev_page{
+    background: url("../images/page-prev.png") no-repeat center center;
+    background-size: 50%;
+}
+.page_ctrl .next_page{
+    background: url("../images/page-next.png") no-repeat center center;
+    background-size: 50%;
+}
+
 .page_ctrl .to_page_num{
     color: #484DA7;
 }

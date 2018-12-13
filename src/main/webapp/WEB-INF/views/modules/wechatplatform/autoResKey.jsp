@@ -227,81 +227,66 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><a href="#"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#"> 删除 </a></td>
-        </tr>
         </tbody>
 
     </table>
 </div>
 <script>
 $(function () {
-
+    $('#switch').live('click',function () {
+        if($(this).attr('checked')){
+            $.ajax({
+                url:'${ctx}/wechat_reply/suspend_reply',
+                type:'post',
+                data:{
+                    wechat_id:$.cookie().platFormId,
+                    status:1,
+                    rule_type:1
+                },
+                success:function (msg) {
+                    var msg = JSON.parse(msg);
+                    if(msg.code == 10000){
+                        ajaxFuc();
+                    }
+                }
+            })
+        }
+        else{
+            $.ajax({
+                url:'${ctx}/wechat_reply/suspend_reply',
+                type:'post',
+                data:{
+                    wechat_id:$.cookie().platFormId,
+                    status:0,
+                    rule_type:1
+                },
+                success:function (msg) {
+                    var msg = JSON.parse(msg);
+                    if(msg.code == 10000){
+                        ajaxFuc();
+                    }
+                }
+            })
+        }
+        // if($(this).checked){
+        //
+        // })
+    })
     $('.search-btn').live('click',function () {
         $.ajax({
-            url:'${ctx}/wechat_reply/get_reply_by_keywords',
+            url:'${ctx}/wechat_reply/list_reply_by_name',
             type:'post',
             data:{
-                keyword: $('.search-content').val(),
-                wechat_id:$.cookie().platFormId
-            },
-            success:function (msg) {
-                var msg = JSON.parse(msg);
-                if(msg.code == 10000){
-                    ajaxFuc();
-                }
-            }
-        })
-
-    })
-    $('.delete-btn').live('click',function () {
-        layer.open({
-            // type: 2,
-            area: ['350px','160px'],
-            title: "提示",
-            maxmin: true, //开启最大化最小化按钮
-            content: "确定删除吗?" ,
-            btn: ['确定', '关闭'],
-            yes: function(index, layero){
-                $.ajax({
-                    url:'${ctx}/wechat_reply/remove_reply',
-                    type:'post',
-                    data:{
-                        
-                    },
-                    success:function (msg) {
-                        var msg = JSON.parse(msg);
-                        if(msg.code == 10000){
-                            ajaxFuc();
-                        }
-                    }
-                })
-
-            },
-            cancel: function(index){
-            }
-        })
-    })
-    ajaxFuc();
-    function ajaxFuc() {
-        $.ajax({
-            url:'${ctx}/wechat_reply/list_reply_all',
-            type:'post',
-            data:{
+                rule_name: $('.search-content').val(),
                 wechat_id:$.cookie().platFormId,
                 rule_type:1
             },
             success:function (msg) {
                 var msg = JSON.parse(msg);
-                if(msg.code == 10000){
+                if(msg.code == 10000 && msg.data.length > 0){
                     $('.rules-list tbody').html('');
                     msg.data.forEach(function (el,index) {
                         var str = '<tr><td>'+el.rule_name+'</td><td>';
-                        console.log(el.wechat_reply_keyword_d_o_s);
                         el.wechat_reply_keyword_d_o_s.forEach(function (el2,index2) {
                             str += el2.keyword+'(';
                             if(el2.keyword_type == 1) {
@@ -340,17 +325,161 @@ $(function () {
                         else if(el.reply_way == 2){
                             str += '随机回复一条';
                         }
-                        str += '</td><td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#"> 删除 </a></td></tr>'
+                        str += '</td><td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - ';
+                        if(el.status == 1){
+                            str += '<a href="#" class="pause-btn" data-para="'+el.id+'"> 暂停 </a>';
+                        }
+                        else if(el.status == 0){
+                            str += '<a href="#" class="continue-btn" data-para="'+el.id+'"> 开始 </a>';
+                        }
+                        str += '- <a href="#" class="delete-btn" data-para="'+el.id+'"> 删除 </a></td></tr>'
 
                         $('.rules-list tbody').append(str);
-                        <%--$('.rules-list tbody').append('<tr>' +--%>
-                            <%--'<td>'+el.rule_name+'</td>' +--%>
-                            <%--'<td></td>' +--%>
-                            <%--'<td></td>' +--%>
-                            <%--'<td></td>' +--%>
-                            <%--'<td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - <a href="#"> 暂停 </a> - <a href="#" class="delete-btn" > 删除 </a></td>' +--%>
-                            <%--'</tr>');--%>
                     })
+                }
+                else{
+                    $('.rules-list tbody').html('<tr><td colspan="5">暂无信息</td></tr>');
+                }
+            }
+        })
+
+    })
+    $('.delete-btn').live('click',function () {
+        var id = $(this).attr('data-para');
+        layer.open({
+            area: ['350px','160px'],
+            title: "提示",
+            maxmin: true, //开启最大化最小化按钮
+            content: "确定删除吗?" ,
+            btn: ['确定', '关闭'],
+            yes: function(index, layero){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/remove_reply',
+                    type:'post',
+                    data:{
+                        rule_id:id,
+                        wechat_id:$.cookie().platFormId,
+                        rule_type:1
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                            layer.close(index);
+                        }
+                    }
+                })
+
+            },
+            cancel: function(index){
+            }
+        })
+    })
+    $('.pause-btn').live('click',function () {
+        var id = $(this).attr('data-para');
+        statusHandle('确认暂停吗?',0,id)
+    })
+    $('.continue-btn').live('click',function () {
+        var id = $(this).attr('data-para');
+        statusHandle('确认继续吗?',1,id)
+    })
+    function statusHandle(content,status,id){
+        layer.open({
+            area: ['350px','160px'],
+            title: "提示",
+            maxmin: true, //开启最大化最小化按钮
+            content: content ,
+            btn: ['确定', '关闭'],
+            yes: function(index, layero){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/suspend_reply',
+                    type:'post',
+                    data:{
+                        rule_id:id,
+                        wechat_id:$.cookie().platFormId,
+                        status:status
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            ajaxFuc();
+                            layer.close(index);
+                        }
+                    }
+                })
+
+            },
+            cancel: function(index){
+            }
+        })
+    }
+    ajaxFuc();
+    function ajaxFuc() {
+        $.ajax({
+            url:'${ctx}/wechat_reply/list_reply_all',
+            type:'post',
+            data:{
+                wechat_id:$.cookie().platFormId,
+                rule_type:1
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000 && msg.data.length > 0){
+                    $('.rules-list tbody').html('');
+                    msg.data.forEach(function (el,index) {
+                        var str = '<tr><td>'+el.rule_name+'</td><td>';
+                        el.wechat_reply_keyword_d_o_s.forEach(function (el2,index2) {
+                            str += el2.keyword+'(';
+                            if(el2.keyword_type == 1) {
+                                str += '半匹配';
+                            }
+                            else if(el2.keyword_type == 2){
+                                str += '全匹配';
+                            }
+                            str += ')';
+                            if(index2 != el.wechat_reply_keyword_d_o_s.length-1){
+                                str += ',';
+                            }
+                        })
+                        str += '</td><td>';
+                        el.wechat_reply_content_d_o_s.forEach(function (el3,index3) {
+                            if(el3.content_type == 0){
+                                str += '文字';
+                            }
+                            else if(el3.content_type == 1){
+                                str += '图片';
+                            }
+                            else if(el3.content_type == 2){
+                                str += '语音';
+                            }
+                            else if(el3.content_type == 4){
+                                str += '图文';
+                            }
+                            if(index3 != el.wechat_reply_content_d_o_s.length-1){
+                                str += ',';
+                            }
+                        })
+                        str += '</td><td>';
+                        if(el.reply_way == 1){
+                            str += '全部回复 ';
+                        }
+                        else if(el.reply_way == 2){
+                            str += '随机回复一条';
+                        }
+                        str += '</td><td><a href="${ctx}/wechat_reply/link_auto_res_key_new?rule_id='+el.id+'"> 编辑 </a> - ';
+                        if(el.status == 1){
+                            str += '<a href="#" class="pause-btn" data-para="'+el.id+'"> 暂停 </a>';
+                        }
+                        else if(el.status == 0){
+                            str += '<a href="#" class="continue-btn" data-para="'+el.id+'"> 开始 </a>';
+                        }
+                        str += '- <a href="#" class="delete-btn" data-para="'+el.id+'"> 删除 </a></td></tr>'
+
+                        $('.rules-list tbody').append(str);
+                    })
+                }
+                else{
+                   $('.rules-list tbody').html('<tr><td colspan="5">暂无信息</td></tr>');
                 }
 
             }

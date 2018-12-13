@@ -588,7 +588,7 @@
                                     <a href="javascript:;" class="select-img-btn res-upload-btn">从素材库中选择</a>
                                 </div>
                                 <div class="upload-img res-box">
-                                    <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>
+                                    <a href="javascript:;" class="upload-img-btn upload-img-btn0 res-upload-btn">上传图片</a>
                                 </div>
                             </div>
                         </div>
@@ -710,7 +710,7 @@
         }
         return theRequest;
     }
-    uploadPic();
+    uploadPic(0);
     //切换
     $('.res-head li').live('click',function () {
         // $('.res-head li').removeClass('active');
@@ -720,7 +720,8 @@
         $(this).parent().parent().find('.res-'+$(this).attr('data-name')).css('display','block');
     })
     $('.add-content-btn').live('click',function () {
-        $('.contents-block').append('                    <div class="content-block">\n' +
+        var index = $('.content-block').length;
+            $('.contents-block').append('                    <div class="content-block">\n' +
             '                        <ul class="res-head clearfix">\n' +
             '                            <li class="choose-txt active" data-name="txt" value="0">文字</li>\n' +
             '                            <li value="1" data-name="article" value="1">图文</li>\n' +
@@ -746,7 +747,7 @@
             '                                    <a href="javascript:;" class="select-img-btn res-upload-btn">从素材库中选择</a>\n' +
             '                                </div>\n' +
             '                                <div class="upload-img res-box">\n' +
-            '                                    <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>\n' +
+            '                                    <a href="javascript:;" class="upload-img-btn upload-img-btn'+index+' res-upload-btn">上传图片</a>\n' +
             '                                </div>\n' +
             '                            </div>\n' +
             '                        </div>\n' +
@@ -761,8 +762,7 @@
             '                            </div>\n' +
             '                        </div>\n' +
             '                    </div>\n');
-        uploader.destroy();
-        uploadPic();
+        uploadPic(index);
     })
     $('.res-input').on('change',function () {
         $(this).parent().find('.last-num').html(600-parseInt($('.res-input')[0].innerText.length));
@@ -899,13 +899,14 @@
         $('#myModalArtcle').modal('show').attr('data-name','voice').attr('data-index',index);
     })
     $('.less-img-btn').live('click',function () {
+        var index = $('.content-block').index($(this).parents('.content-block'));
         $(this).parents('.img-block').html('<div class="select-img res-box left-res-box">\n' +
             '                <a href="javascript:;" class="select-img-btn res-upload-btn">从素材库中选择</a>\n' +
             '            </div>\n' +
             '            <div class="upload-img res-box">\n' +
-            '                <a href="javascript:;" class="upload-img-btn res-upload-btn">上传图片</a>\n' +
+            '                <a href="javascript:;" class="upload-img-btn upload-img-btn'+index+' res-upload-btn">上传图片</a>\n' +
             '            </div>');
-        uploadPic();
+        uploadPic(index);
     })
     $('.less-vedio-btn').live('click',function () {
         $(this).parents('.voice-block').html('<div class="select-voice res-box left-res-box">\n' +
@@ -1073,13 +1074,14 @@
             }
         })
     }
-    var uploader;
-    function uploadPic() {
+
+    function uploadPic(index) {
+        var uploader;
         uploader = WebUploader.create({
             auto: true, // 选择文件后自动上传
             runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
             pick: {
-                id: '.upload-img-btn', // 按钮元素
+                id: '.upload-img-btn'+index, // 按钮元素
                 multiple: false // 是否支持文件多选，false表示只能选一个
             },
             server: '${ctx}/wechat/upload', // 上传文件的接口（替换成你们后端给的接口路径）
@@ -1097,6 +1099,7 @@
             fileSingleSizeLimit: 30 * 1024 * 1024,// 限制单个上传文件的大小
         });
         uploader.on('uploadSuccess',function(file,data){
+            console.log(file);
             typeof data != 'object'&& (data = JSON.parse(data));
             if(data.code!='10000'){
                 uploader.reset();
@@ -1118,7 +1121,7 @@
                 typeof data != 'object'&& (data = JSON.parse(data));
                 if(data.code=='10000'){
                     // window.location.reload();
-                    $('.img-block').html('<div data-para='+JSON.stringify(data.data)+'>' +
+                    $('.img-block').eq(index).html('<div data-para='+JSON.stringify(data.data)+'>' +
                         '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+list.cover_picture+'"/></i>' +
                         '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                         '</div>');
@@ -1134,9 +1137,11 @@
     }
 
     $('.upload-voice-btn').live('click',function () {
-        $("#myModal").modal('show');
+        var index  = $('.content-block').index($(this).parents('.content-block'));
+        $("#myModal").modal('show').attr('data-index',index);
     })
     $("#myModal").on('shown.bs.modal',function () {
+        var uploader;
         uploader = WebUploader.create({
             auto: true, // 选择文件后自动上传
             runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
@@ -1197,7 +1202,8 @@
                 $.post(url,list,function (data) {
                     typeof data != 'object'&& (data = JSON.parse(data));
                     if(data.code=='10000'){
-                        $('.voice-block').html('<p data-para='+JSON.stringify(data.data)+'>已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                        var index = $('#myModal').attr('data-index');
+                        $('.voice-block').eq(index).html('<p data-para='+JSON.stringify(data.data)+'>已选择:语音名称:'+list.title+'&nbsp;&nbsp;文件名称:'+list.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                         $('#myModal').modal('hide');
                     }else{
                         layer.open({
@@ -1275,9 +1281,14 @@
             layer.msg('请先选择回复方式');
             return;
         }
-
+        if(para.rule_id && para.rule_id != 'undefined'){
+            var ajaxUrl = '${ctx}/wechat_reply/update_reply_keyword';
+        }
+        else{
+            var ajaxUrl = '${ctx}/wechat_reply/save_reply_follow';
+        }
         $.ajax({
-            url:'${ctx}/wechat_reply/save_reply_follow',
+            url:ajaxUrl,
             type:'post',
             data:{
                 status:1,
@@ -1286,7 +1297,8 @@
                 content_all:JSON.stringify(contentsArr),
                 reply_way:$('input[name=reply_way]:checked').val(),
                 keywords:JSON.stringify(keysArr),
-                wechat_id:$.cookie().platFormId
+                wechat_id:$.cookie().platFormId,
+                rule_id:para.rule_id
             },
             success:function (msg) {
                 var msg = JSON.parse(msg);
