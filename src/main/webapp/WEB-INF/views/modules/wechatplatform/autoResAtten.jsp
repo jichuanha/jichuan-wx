@@ -585,7 +585,7 @@
                 },
                 success:function (msg) {
                     var msg = JSON.parse(msg);
-                    if(msg.code == 10000){
+                    if(msg.code == 10000 && msg.data.length > 0){
                         var data = msg.data[0].wechat_reply_content_d_o_s[0];
                         $('.res-head li').removeClass('active');
                         $('.res-iframe').css('display','none');
@@ -665,7 +665,7 @@
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
                             layer.open({content:'删除成功！'});
-                            // location.reload();
+                            window.location.reload();
                             // ajaxFuc();
                         }
                         else{
