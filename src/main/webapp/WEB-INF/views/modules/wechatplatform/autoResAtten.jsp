@@ -546,35 +546,32 @@
                     material_id:selectID,
                 })
             }
-            $.ajax({
-                url:'${ctx}/wechat_reply/save_reply_new',
-                type:'post',
-                data:{
-                    status:$('#switch').prop('checked')?1:0,
-                    rule_type:3,
-                    content_all:JSON.stringify(contentsArr),
-                    reply_way:1,
-                    wechat_id:$.cookie().platFormId
-                },
-                success:function (data) {{
-                    var data = JSON.parse(data);
-                    if(data.code == 10000){
-                        layer.open({content:'保存成功！'})
-                        ajaxFuc();
-                    }else{
-                        layer.open({content:data.msg})
+            // if(contentsArr[0].content != undefined || contentsArr[0].material_id != ''){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/save_reply_new',
+                    type:'post',
+                    data:{
+                        status:$('#switch').prop('checked')?1:0,
+                        rule_type:3,
+                        content_all:JSON.stringify(contentsArr),
+                        reply_way:1,
+                        wechat_id:$.cookie().platFormId
+                    },
+                    success:function (data) {{
+                        var data = JSON.parse(data);
+                        if(data.code == 10000){
+                            layer.open({content:'保存成功！'})
+                            ajaxFuc();
+                        }else{
+                            layer.open({content:data.msg})
+                        }
                     }
-                   }
-                }
-            })
-        });
-        $('.delete-btn').live('click',function(){
-            if(reply_id ===''){
-                return;
+                    }
+                })
+            // }
+            // else{
+            //     layer.msg('请先输入回复内容');
             }
-            $.post('${ctx}/wechat_reply/remove_reply',{},function (data) {
-                
-            })
         });
         //获取列表(是否有数据)
         function ajaxFuc() {
@@ -643,10 +640,40 @@
             }
         })
         $('.delete-btn').live('click',function () {
-            $.ajax({
-                url:'${ctx}/remove_reply',
+            var name = $('.res-head li.active').attr('data-name');
+            var para = '';
+            if(name == 'txt'){
+                para = $('.res-input').attr('data-para');
+            }
+            else if(name == 'img'){
+                para = $('.img-block .item').attr('data-para');
+            }
+            else if(name == 'voice'){
+                para = $('.voice-block .item').attr('data-para');
+            }
+            if(para != undefined){
+                $.ajax({
+                    url:'${ctx}/wechat_reply/remove_reply',
+                    type:'post',
+                    data:{
+                        rule_id:para,
+                        wechat_id:$.cookie().platFormId,
+                        rule_type:3
+                    },
+                    success:function (msg) {
+                        var msg = JSON.parse(msg);
+                        if(msg.code == 10000){
+                            layer.open({content:'删除成功！'});
+                            // location.reload();
+                            // ajaxFuc();
+                        }
+                        else{
+                            layer.msg(msg.msg);
+                        }
+                    }
 
-            })
+                })
+            }
         })
         $('.choose-mater').live('click',function () {
             $.each($('.res-head li'),function () {
