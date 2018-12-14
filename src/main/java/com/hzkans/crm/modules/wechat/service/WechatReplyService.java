@@ -210,12 +210,12 @@ public class WechatReplyService {
     public void deleteReplykeywordAndContent(WechatReplyNew wechatReplyNew) throws Exception {
         try {
             WechatReplyContent wechatReplyContentDO = new WechatReplyContent();
-            wechatReplyContentDO.setRuleId(wechatReplyNew.getRuleId());
+            wechatReplyContentDO.setRuleId(wechatReplyNew.getId());
             wechatReplyContentDO.setWechatId(wechatReplyNew.getWechatId());
             wechatReplyRuleContentDao.delete(wechatReplyContentDO);
 
             WechatReplyKeyword wechatReplyKeywordDO = new WechatReplyKeyword();
-            wechatReplyKeywordDO.setRuleId(wechatReplyNew.getRuleId());
+            wechatReplyKeywordDO.setRuleId(wechatReplyNew.getId());
             wechatReplyKeywordDO.setWechatId(wechatReplyNew.getWechatId());
             wechatReplyKeywordDao.delete(wechatReplyKeywordDO);
         } catch (Exception e) {
@@ -252,9 +252,10 @@ public class WechatReplyService {
     public List<WechatReplyNew> listWechatReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
             List<WechatReplyNew> wechatReplyNewList = wechatReplyRuleDao.findList(wechatReplyNew);
-            WechatReplyKeyword wechatReplyKeywordDO = new WechatReplyKeyword();
-            WechatReplyContent wechatReplyContentDO = new WechatReplyContent();
+
             for (WechatReplyNew wechatReplytemp:wechatReplyNewList) {
+                WechatReplyKeyword wechatReplyKeywordDO = new WechatReplyKeyword();
+                WechatReplyContent wechatReplyContentDO = new WechatReplyContent();
                 //查询关键词
                 wechatReplyKeywordDO.setRuleId(wechatReplytemp.getId());
                 wechatReplyKeywordDO.setWechatId(wechatReplytemp.getWechatId());
@@ -268,10 +269,11 @@ public class WechatReplyService {
                 wechatReplyContentDO.setWechatId(wechatReplytemp.getWechatId());
                 List<WechatReplyContent> wechatReplyContentDOS = wechatReplyRuleContentDao.findList(wechatReplyContentDO);
                 if (CollectionUtils.isNotEmpty(wechatReplyContentDOS)){
-                    WechatMaterial wechatMaterial = new WechatMaterial();
+
                     //把素材内容传进自动回复对象中
                     for (WechatReplyContent temp:wechatReplyContentDOS) {
                         if (!MessageTypeEnum.TEXT.getSign().equals(temp.getContentType()) && null != temp.getMaterialId()){
+                            WechatMaterial wechatMaterial = new WechatMaterial();
                             wechatMaterial.setId(temp.getMaterialId());
                             wechatMaterial = wechatMaterialDao.get(wechatMaterial);
                             logger.info("[{}]wechatMaterial ",JsonUtil.toJson(wechatMaterial));
