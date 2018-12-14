@@ -1299,7 +1299,7 @@
             var ajaxUrl = '${ctx}/wechat_reply/update_reply_keyword';
         }
         else{
-            var ajaxUrl = '${ctx}/wechat_reply/save_reply_follow';
+            var ajaxUrl = '${ctx}/wechat_reply/save_reply_new';
         }
         console.log(contentsArr);0
         $.ajax({
