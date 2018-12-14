@@ -57,7 +57,7 @@ public class WechatMaterialController extends BaseController {
 			Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
 			Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 			Integer type = RequestUtils.getInt(request, "type", true, "id is null", "");
-			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
+			Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "id is null", "");
 
 			if (start == null || start == 0) {
 				start = 1;
@@ -97,7 +97,7 @@ public class WechatMaterialController extends BaseController {
 			String brief = RequestUtils.getString(request, true, "brief", "brief is null");
 			String uri = RequestUtils.getString(request, true, "uri", "uri is null");
 			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
-			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
+			Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "id is null", "");
 
 			User user = UserUtils.getUser();
 			if (null == user){
@@ -139,7 +139,7 @@ public class WechatMaterialController extends BaseController {
 			String uri = RequestUtils.getString(request, true, "uri", "uri is null");
 			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
 			Integer type = RequestUtils.getInt(request, "type", false, "type is null", "");
-			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "wechat_id is null", "");
+			Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "id is null", "");
 			String mediaId = RequestUtils.getString(request, "mediaId");
 			User user = UserUtils.getUser();
 			if (null == user){

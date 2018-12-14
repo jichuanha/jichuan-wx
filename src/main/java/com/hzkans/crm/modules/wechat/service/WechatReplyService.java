@@ -69,6 +69,7 @@ public class WechatReplyService {
                     wechatReplyNew.setId(wechatReplyNewResult.getId());
                     wechatReplyRuleDao.update(wechatReplyNew);
 
+                    //只需要添加内容表信息
                     saveReplyContent(wechatReplyNew);
                     return wechatReplyNew;
                 }
@@ -77,9 +78,11 @@ public class WechatReplyService {
                 if (null != wechatReplyRuleDao.getReply(wechatReplyNew)){
                     throw new Exception(WechatErrorEnum.NAME_IS_NOT_NULL.getDesc());
                 }
+                //添加主表信息
                 wechatReplyRuleDao.insert(wechatReplyNew);
                 //添加内容以及关键字
                 saveReplyContent(wechatReplyNew);
+
                 saveReplyKeyword(wechatReplyNew);
                 return wechatReplyNew;
             }
@@ -115,14 +118,22 @@ public class WechatReplyService {
                 if (ReplyTypeEnum.FOLLOW.getCode().equals(ruleType) || ReplyTypeEnum.RECEIVED.getCode().equals(ruleType)) {
                     WechatReplyContent wechatReplyContentDO = wechatReplyRuleContentDao.getContent(contentList.get(0));
                     logger.info("wechatReplyContentDO[{}]", JsonUtil.toJson(wechatReplyContentDO));
+                    WechatReplyContent wechatReplyContent = contentList.get(0);
+
+                    if(wechatReplyContent.getContentType().equals(MessageTypeEnum.TEXT.getSign())){
+                        saveMaterial(wechatReplyContent);
+                    }
                     if (null == wechatReplyContentDO) {
-                        wechatReplyRuleContentDao.insert(contentList.get(0));
+                        wechatReplyRuleContentDao.insert(wechatReplyContent);
                     } else {
-                        contentList.get(0).setId(wechatReplyContentDO.getId());
-                        wechatReplyRuleContentDao.update(contentList.get(0));
+                        wechatReplyContent.setId(wechatReplyContentDO.getId());
+                        wechatReplyRuleContentDao.update(wechatReplyContent);
                     }
                 } else {
                     for (WechatReplyContent wechatReplyContentDO : contentList) {
+                        if(wechatReplyContentDO.getContentType().equals(MessageTypeEnum.TEXT.getSign())){
+                            saveMaterial(wechatReplyContentDO);
+                        }
                         logger.info("[{}]wechatReplyContentDO ",JsonUtil.toJson(wechatReplyContentDO));
                         wechatReplyRuleContentDao.insert(wechatReplyContentDO);
                     }
@@ -263,7 +274,6 @@ public class WechatReplyService {
                 if (CollectionUtils.isNotEmpty(wechatReplyKeywordDOS)){
                     wechatReplytemp.setWechatReplyKeywordDOS(wechatReplyKeywordDOS);
                 }
-
                 //查询回复内容
                 wechatReplyContentDO.setRuleId(wechatReplytemp.getId());
                 wechatReplyContentDO.setWechatId(wechatReplytemp.getWechatId());
@@ -305,5 +315,31 @@ public class WechatReplyService {
             throw new Exception(WechatErrorEnum.SUSPEND_IS_ERROR.getDesc());
         }
     }
+
+
+    /**
+     * 添加文本内容时   同时添加素材添加素材
+     * @param wechatReplyContent
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public WechatReplyContent saveMaterial(WechatReplyContent wechatReplyContent) throws Exception {
+        try {
+            WechatMaterial wechatMaterial = new WechatMaterial();
+            wechatMaterial.setTitle("文字内容");
+            wechatMaterial.setType(wechatReplyContent.getContentType());
+            wechatMaterial.setWechatId(wechatReplyContent.getWechatId());
+            wechatMaterial.setContent(wechatReplyContent.getContent());
+            wechatMaterialDao.insert(wechatMaterial);
+            wechatReplyContent.setMaterialId(wechatMaterial.getId());
+            return wechatReplyContent;
+        } catch (Exception e) {
+            logger.error("listWechatReply is errpr", e);
+            throw new Exception(WechatErrorEnum.SUSPEND_IS_ERROR.getDesc());
+        }
+    }
+
+
+
 
 }

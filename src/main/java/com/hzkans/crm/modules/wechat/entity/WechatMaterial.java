@@ -25,7 +25,7 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 	private String creator;		// creator
 	private String updator;		// updator
 	private Integer deleted;		// 0.存在1.删除
-	private Integer wechatId;		// wechat_id
+	private Long wechatId;		// wechat_id
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
 	private String articleUri;
@@ -149,11 +149,11 @@ public class WechatMaterial extends DataEntity<WechatMaterial> {
 		this.deleted = deleted;
 	}
 
-	public Integer getWechatId() {
+	public Long getWechatId() {
 		return wechatId;
 	}
 
-	public void setWechatId(Integer wechatId) {
+	public void setWechatId(Long wechatId) {
 		this.wechatId = wechatId;
 	}
 

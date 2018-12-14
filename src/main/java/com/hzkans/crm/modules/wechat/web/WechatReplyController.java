@@ -203,18 +203,6 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setRuleName(ruleName);
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
 
-            //先把初始状态为1 为关闭     0-关闭回复 1.开启回复
-            Integer status = 0;
-            for (WechatReplyNew wechatReplyNewTemp:wechatReplyNewList) {
-                if (!wechatReplyNewTemp.getStatus().equals(status)){
-                    status = 1;
-                }
-            }
-
-            Map<String, Object> map = new HashMap<>(2);
-            map.put("wechatReplyNewList",wechatReplyNewList);
-            map.put("status",status);
-
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
