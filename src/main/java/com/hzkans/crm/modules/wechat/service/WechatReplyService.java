@@ -58,15 +58,15 @@ public class WechatReplyService {
     public WechatReplyNew saveReply(WechatReplyNew wechatReplyNew) throws Exception {
         try {
             if (!ReplyTypeEnum.KEYWORD.getCode().equals(wechatReplyNew.getRuleType())){
-                WechatReplyNew wechatReplyNewResult = wechatReplyRuleDao.getReply(wechatReplyNew);
-                if (null == wechatReplyNewResult) {
+                List<WechatReplyNew> wechatReplyNewResult = wechatReplyRuleDao.listReply(wechatReplyNew);
+                if (CollectionUtils.isEmpty(wechatReplyNewResult)) {
                     wechatReplyRuleDao.insert(wechatReplyNew);
 
                     //只需要添加内容表信息
                     saveReplyContent(wechatReplyNew);
                     return wechatReplyNew;
                 } else {
-                    wechatReplyNew.setId(wechatReplyNewResult.getId());
+                    wechatReplyNew.setId(wechatReplyNewResult.get(0).getId());
                     wechatReplyRuleDao.update(wechatReplyNew);
 
                     //只需要添加内容表信息
@@ -75,7 +75,7 @@ public class WechatReplyService {
                 }
             } else {
                 //判断规则名称是否存在
-                if (null != wechatReplyRuleDao.getReply(wechatReplyNew)){
+                if (CollectionUtils.isNotEmpty(wechatReplyRuleDao.listReply(wechatReplyNew))){
                     throw new Exception(WechatErrorEnum.NAME_IS_NOT_NULL.getDesc());
                 }
                 //添加主表信息

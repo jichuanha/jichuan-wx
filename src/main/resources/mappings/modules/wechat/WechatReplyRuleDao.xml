@@ -174,7 +174,7 @@
 	</update>
 
 
-	<select id="getReply" resultType="WechatReplyNew">
+	<select id="listReply" resultType="WechatReplyNew">
 		SELECT
 		<include refid="wechatReplyRuleColumns"/>
 		FROM t_wx_reply_rule a

@@ -7,6 +7,8 @@ import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 
+import java.util.List;
+
 /**
  * 微信自动回复规则DAO接口
  * @author dtm
@@ -14,6 +16,6 @@ import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
  */
 @MyBatisDao
 public interface WechatReplyRuleDao extends CrudDao<WechatReplyNew> {
-    WechatReplyNew getReply(WechatReplyNew wechatReplyNew);
+    List<WechatReplyNew> listReply(WechatReplyNew wechatReplyNew);
 
 }
