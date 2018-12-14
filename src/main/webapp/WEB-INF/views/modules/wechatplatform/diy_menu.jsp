@@ -138,6 +138,9 @@
                 data:params,
                 success:function(data){
                     typeof data != 'object'&& (data = JSON.parse(data));
+                    if(data.code!=10000){
+                        layer.open({content:data.msg});
+                    }
                     data.data.forEach(function(item,index){
                         if(item.menu_level==1){
                             item.sub_menu = [];
