@@ -519,7 +519,12 @@
                     success:function (msg) {
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
-                            ajaxFuc();
+                            // ajaxFuc();
+                            $('.res-content').css('display','block');
+                            $('.res-btn').css('display','block');
+                        }
+                        else{
+                            layer.msg(msg.msg);
                         }
                     }
                 })
@@ -536,7 +541,12 @@
                     success:function (msg) {
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
-                            ajaxFuc();
+                            // ajaxFuc();
+                            $('.res-content').css('display','none');
+                            $('.res-btn').css('display','none');
+                        }
+                        else{
+                            layer.msg(msg.msg);
                         }
                     }
                 })
@@ -628,29 +638,44 @@
                 success:function (msg) {
                     var msg = JSON.parse(msg);
                     if(msg.code == 10000 && msg.data.length > 0){
-                        var data = msg.data[0].wechat_reply_content_d_o_s[0];
-                        $('.res-head li').removeClass('active');
-                        $('.res-iframe').css('display','none');
-                        if(data.content_type == 0){
-                            $('.choose-txt').addClass('active');
-                            $('.res-txt').css('display','block');
-                            $('.res-input').html(data.content).attr('data-para',data.rule_id);
+                        var data = msg.data[0];
+                        if(data.status == 0){
+                            $('#switch').attr('checked',false);
+                            $('.res-content').css('display','none');
+                            $('.res-btn').css('display','none');
                         }
-                        else if(data.content_type == 1){
-                            $('.choose-img').addClass('active');
-                            $('.res-img').css('display','block');
-                            $('.img-block').html('<div class="item" data-para='+data.rule_id+'>' +
-                                '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+data.wechat_material.cover_picture+'"/></i>' +
-                                '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
-                                '</div>')
-                        }
-                        else if(data.content_type == 2){
-                            $('.choose-voice').addClass('active');
-                            $('.res-voice').css('display','block');
-                            $('.voice-block').html('<p class="item" data-para='+data.rule_id+'>已选择:语音名称:'+data.wechat_material.title+'&nbsp;&nbsp;文件名称:'+data.wechat_material.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                        else if(data.status == 1){
+                            $('#switch').attr('checked',true);
+                            $('.res-content').css('display','block');
+                            $('.res-btn').css('display','block');
+                            var content = data.wechat_reply_content_d_o_s[0];
+                            $('.res-head li').removeClass('active');
+                            $('.res-iframe').css('display','none');
+                            if(content.content_type == 0){
+                                $('.choose-txt').addClass('active');
+                                $('.res-txt').css('display','block');
+                                $('.res-input').html(content.content).attr('data-para',content.rule_id);
+                            }
+                            else if(content.content_type == 1){
+                                $('.choose-img').addClass('active');
+                                $('.res-img').css('display','block');
+                                $('.img-block').html('<div class="item" data-para='+content.rule_id+'>' +
+                                    '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+content.wechat_material.cover_picture+'"/></i>' +
+                                    '<a href="javascript:;" class="less-key-btn less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
+                                    '</div>')
+                            }
+                            else if(content.content_type == 2){
+                                $('.choose-voice').addClass('active');
+                                $('.res-voice').css('display','block');
+                                $('.voice-block').html('<p class="item" data-para='+content.rule_id+'>已选择:语音名称:'+content.wechat_material.title+'&nbsp;&nbsp;文件名称:'+content.wechat_material.cover_picture+'<a href="javascript:;" class="less-key-btn less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
 
+                            }
                         }
-
+                    }
+                    else if(msg.data.length == 0){
+                        $('#switch').attr('checked',false);
+                        $('.res-content').css('display','none');
+                        $('.res-btn').css('display','none');
                     }
                 }
             })

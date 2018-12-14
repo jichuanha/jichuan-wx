@@ -365,40 +365,55 @@ $(function () {
             success:function (msg) {
                 var msg = JSON.parse(msg);
                 if(msg.code == 10000 && msg.data.length > 0){
+                    $('#switch').attr('checked',false);
                     $('.rules-list tbody').html('');
                     msg.data.forEach(function (el,index) {
+                        if(el.status == 1){
+                            $('#switch').attr('checked',true);
+                        }
                         var str = '<tr><td>'+el.rule_name+'</td><td>';
-                        el.wechat_reply_keyword_d_o_s.forEach(function (el2,index2) {
-                            str += el2.keyword+'(';
-                            if(el2.keyword_type == 1) {
-                                str += '半匹配';
-                            }
-                            else if(el2.keyword_type == 2){
-                                str += '全匹配';
-                            }
-                            str += ')';
-                            if(index2 != el.wechat_reply_keyword_d_o_s.length-1){
-                                str += ',';
-                            }
-                        })
+                        if(el.wechat_reply_keyword_d_o_s){
+                            el.wechat_reply_keyword_d_o_s.forEach(function (el2,index2) {
+                                str += el2.keyword+'(';
+                                if(el2.keyword_type == 1) {
+                                    str += '半匹配';
+                                }
+                                else if(el2.keyword_type == 2){
+                                    str += '全匹配';
+                                }
+                                str += ')';
+                                if(index2 != el.wechat_reply_keyword_d_o_s.length-1){
+                                    str += ',';
+                                }
+                            })
+                        }
+                        else{
+                            str += '';
+                        }
+
                         str += '</td><td>';
-                        el.wechat_reply_content_d_o_s.forEach(function (el3,index3) {
-                            if(el3.content_type == 0){
-                                str += '文字';
-                            }
-                            else if(el3.content_type == 1){
-                                str += '图片';
-                            }
-                            else if(el3.content_type == 2){
-                                str += '语音';
-                            }
-                            else if(el3.content_type == 4){
-                                str += '图文';
-                            }
-                            if(index3 != el.wechat_reply_content_d_o_s.length-1){
-                                str += ',';
-                            }
-                        })
+                        if(el.wechat_reply_content_d_o_s){
+                            el.wechat_reply_content_d_o_s.forEach(function (el3,index3) {
+                                if(el3.content_type == 0){
+                                    str += '文字';
+                                }
+                                else if(el3.content_type == 1){
+                                    str += '图片';
+                                }
+                                else if(el3.content_type == 2){
+                                    str += '语音';
+                                }
+                                else if(el3.content_type == 4){
+                                    str += '图文';
+                                }
+                                if(index3 != el.wechat_reply_content_d_o_s.length-1){
+                                    str += ',';
+                                }
+                            })
+                        }
+                        else{
+                            str += '';
+                        }
                         str += '</td><td>';
                         if(el.reply_way == 1){
                             str += '全部回复 ';
