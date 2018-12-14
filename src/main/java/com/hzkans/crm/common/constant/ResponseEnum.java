@@ -99,7 +99,7 @@ public enum ResponseEnum {
     B_E_ALERADY_EXIST(41010, 0, "微信公众号名称已存在"),
     DATEBASE_QUERY_ERROR(41011,0,"数据库查询失败"),
     B_E_FAILED_TO_GET(41012, 0, "活动查询失败"),
-    B_E_REQUIRED_NOT_FILLED(41013, 0, "有必填选项未填"),
+    B_E_REQUIRED_NOT_FILLED(41013, 0, "必填选项不能为空"),
     B_E_ACTIVITY_EXIST(41014, 0, "活动名重复，请更改活动名"),
     B_E_UPDATE_STATUS_FAIL(41015, 0, "更改状态失败"),
     B_E_SHOP_EXIST(41016, 0, "店铺已存在"),

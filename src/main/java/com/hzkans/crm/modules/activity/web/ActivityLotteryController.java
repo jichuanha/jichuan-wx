@@ -12,7 +12,9 @@ import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
+import com.hzkans.crm.modules.sys.entity.Dict;
 import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.service.DictService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 幸运抽奖活动Controller
@@ -36,6 +39,9 @@ public class ActivityLotteryController extends BaseController {
 
 	@Autowired
 	private ActivityLotteryService activityLotteryService;
+
+	@Autowired
+	private DictService dictService;
 
 	@RequestMapping(value = "saveLottery")
 	public String saveLottery() {
@@ -81,7 +87,6 @@ public class ActivityLotteryController extends BaseController {
 		}.getType();
 
 		List<ActivityLottery.LotteryPrize> activityPrizeList = JsonUtil.parseJson(content, type);
-		logger.info("[{}]activityPrizeList:{}", JsonUtil.toJson(activityPrizeList));
 		if (activityPrizeList == null) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.P_E_PARAM_ISNULL);
 		}
@@ -253,4 +258,29 @@ public class ActivityLotteryController extends BaseController {
 		}
 	}
 
+	/**
+	 * 获取奖品类型列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/prizeTypeList")
+	@ResponseBody
+	public String activityTypeList(HttpServletRequest request) {
+		try {
+			//从字典管理中查询活动类型
+			Map<String,String> prizeMap = new LinkedHashMap<>();
+			List<Dict> dictList = dictService.findListByType("prize_type");
+			if (CollectionUtils.isNotEmpty(dictList)){
+				for (Dict dict : dictList){
+					prizeMap.put(dict.getValue(),dict.getLabel());
+				}
+			}
+			logger.info("[{}]prizeMap:{}",JsonUtil.toJson(ResponseUtils.getSuccessApiResponseStr(prizeMap)));
+
+			return ResponseUtils.getSuccessApiResponseStr(prizeMap);
+		} catch (Exception e) {
+			logger.error("findList is error",e);
+			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_FAILED_TO_GET);
+		}
+	}
 }
