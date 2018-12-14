@@ -3,18 +3,19 @@
  */
 package com.hzkans.crm.modules.activity.service;
 
-import java.util.List;
-
+import com.hzkans.crm.common.persistence.Page;
+import com.hzkans.crm.common.service.CrudService;
+import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.modules.activity.dao.ActivityLotteryDao;
 import com.hzkans.crm.modules.activity.dao.ActivityPrizeDao;
-import com.hzkans.crm.modules.activity.entity.ActivityPrize;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.common.persistence.Page;
-import com.hzkans.crm.common.service.CrudService;
-import com.hzkans.crm.modules.activity.entity.ActivityLottery;
-import com.hzkans.crm.modules.activity.dao.ActivityLotteryDao;
+import java.util.List;
 
 /**
  * 幸运抽奖活动Service
@@ -25,13 +26,35 @@ import com.hzkans.crm.modules.activity.dao.ActivityLotteryDao;
 @Transactional(readOnly = false)
 public class ActivityLotteryService extends CrudService<ActivityLotteryDao, ActivityLottery> {
 
-
 	@Autowired
 	private ActivityPrizeDao activityPrizeDao;
 
 	@Override
 	public ActivityLottery get(String id) {
 		return super.get(id);
+	}
+
+	/**
+	 * 获取幸运抽奖活动详情
+	 * @param id
+	 * @return
+	 */
+	public ActivityLottery getLottery(String id) {
+		try {
+			ActivityLottery activityLottery = get(id);
+
+			if (null != activityLottery){
+				String lotteryId = activityLottery.getId();
+				ActivityLottery.LotteryPrize lotteryPrize = new ActivityLottery.LotteryPrize();
+				lotteryPrize.setLotteryId(Long.valueOf(lotteryId));
+				List<ActivityLottery.LotteryPrize> lotteryPrizeList = activityPrizeDao.findList(lotteryPrize);
+				activityLottery.setLotteryPrizeList(lotteryPrizeList);
+            }
+			return activityLottery;
+		} catch (NumberFormatException e) {
+			logger.error("getLottery error",e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -44,10 +67,42 @@ public class ActivityLotteryService extends CrudService<ActivityLotteryDao, Acti
 		return super.findPage(page, activityLottery);
 	}
 
-	@Override
-	@Transactional(readOnly = false)
-	public void save(ActivityLottery activityLottery) {
-		super.save(activityLottery);
+	/**
+	 * 获取幸运抽奖活动列表
+	 * @param page
+	 * @param activityLottery
+	 * @return
+	 */
+	public Page<ActivityLottery> findPageLottery(Page<ActivityLottery> page, ActivityLottery activityLottery) {
+		Page<ActivityLottery> activityLotteryPage = findPage(page, activityLottery);
+		if (CollectionUtils.isNotEmpty(activityLotteryPage.getList())){
+			for (ActivityLottery activityLottery1 : activityLotteryPage.getList()){
+				String lotteryId = activityLottery1.getId();
+				ActivityLottery.LotteryPrize lotteryPrize = new ActivityLottery.LotteryPrize();
+				lotteryPrize.setLotteryId(Long.valueOf(lotteryId));
+				List<ActivityLottery.LotteryPrize> lotteryPrizeList = activityPrizeDao.findList(lotteryPrize);
+				activityLottery1.setLotteryPrizeList(lotteryPrizeList);
+			}
+		}
+		return activityLotteryPage;
+	}
+
+	/**
+	 * 新增幸运抽奖活动
+	 * @param activityLottery
+	 */
+	@Transactional(rollbackFor = ServiceException.class)
+	public void saveLottery(ActivityLottery activityLottery) {
+		save(activityLottery);
+		List<ActivityLottery.LotteryPrize> lotteryPrizeList = activityLottery.getLotteryPrizeList();
+		logger.info("[{}]lotteryPrizeList:{}", JsonUtil.toJson(lotteryPrizeList));
+		String lotteryId = activityLottery.getId();
+		if (CollectionUtils.isNotEmpty(lotteryPrizeList)) {
+			for (ActivityLottery.LotteryPrize lotteryPrize : lotteryPrizeList) {
+				lotteryPrize.setLotteryId(Long.valueOf(lotteryId));
+				activityPrizeDao.insert(lotteryPrize);
+			}
+		}
 	}
 
 	@Override
@@ -55,5 +110,4 @@ public class ActivityLotteryService extends CrudService<ActivityLotteryDao, Acti
 	public void delete(ActivityLottery activityLottery) {
 		super.delete(activityLottery);
 	}
-
 }

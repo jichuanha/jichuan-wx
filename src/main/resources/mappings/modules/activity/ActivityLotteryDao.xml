@@ -31,21 +31,21 @@
 	<sql id="activityLotteryJoins">
 	</sql>
     
-	<select id="get" resultType="ActivityLottery">
+	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery">
 		SELECT 
 			<include refid="activityLotteryColumns"/>
 		FROM t_activity_lottery a
 		<include refid="activityLotteryJoins"/>
-		WHERE a.id = #{id}
+		WHERE a.id = #{id} and a.del_flag = "0"
 	</select>
 	
-	<select id="findList" resultType="ActivityLottery">
+	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery">
 		SELECT 
 			<include refid="activityLotteryColumns"/>
 		FROM t_activity_lottery a
 		<include refid="activityLotteryJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = "0"
 			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
@@ -79,9 +79,6 @@
 			<if test="shopNo != null and shopNo != ''">
 				AND a.shop_no = #{shopNo}
 			</if>
-			<if test="delFlag != null and delFlag != ''">
-				AND a.del_flag = #{delFlag}
-			</if>
 			<if test="wechatPlatformId != null">
 				AND a.wechat_platform_id = #{wechatPlatformId}
 			</if>
@@ -96,7 +93,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="ActivityLottery">
+	<select id="findAllList" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery">
 		SELECT 
 			<include refid="activityLotteryColumns"/>
 		FROM t_activity_lottery a
@@ -166,7 +163,7 @@
 			now()
 		)
 	</insert>
-	
+
 	<update id="update">
 		UPDATE t_activity_lottery SET 	
 			status = #{status},

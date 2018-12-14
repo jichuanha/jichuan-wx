@@ -17,7 +17,7 @@
 	<sql id="activityPrizeJoins">
 	</sql>
     
-	<select id="get" resultType="ActivityPrize">
+	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery$LotteryPrize">
 		SELECT 
 			<include refid="activityPrizeColumns"/>
 		FROM t_activity_prize a
@@ -25,7 +25,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="ActivityPrize">
+	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery$LotteryPrize">
 		SELECT 
 			<include refid="activityPrizeColumns"/>
 		FROM t_activity_prize a
@@ -55,7 +55,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="ActivityPrize">
+	<select id="findAllList" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery$LotteryPrize">
 		SELECT 
 			<include refid="activityPrizeColumns"/>
 		FROM t_activity_prize a

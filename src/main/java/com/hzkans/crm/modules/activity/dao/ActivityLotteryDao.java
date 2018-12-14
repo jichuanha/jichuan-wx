@@ -14,5 +14,5 @@ import com.hzkans.crm.modules.activity.entity.ActivityLottery;
  */
 @MyBatisDao
 public interface ActivityLotteryDao extends CrudDao<ActivityLottery> {
-	
+
 }

@@ -3,33 +3,24 @@
  */
 package com.hzkans.crm.modules.activity.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.utils.*;
-import com.hzkans.crm.modules.activity.entity.Activity;
-import com.hzkans.crm.modules.activity.entity.ActivityPrize;
-import com.hzkans.crm.modules.activity.service.ActivityPrizeService;
-import com.hzkans.crm.modules.sys.entity.User;
-import com.hzkans.crm.modules.sys.utils.UserUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.hzkans.crm.common.config.Global;
 import com.hzkans.crm.common.persistence.Page;
+import com.hzkans.crm.common.utils.DateUtil;
+import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.common.utils.RequestUtils;
+import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
+import com.hzkans.crm.modules.sys.entity.User;
+import com.hzkans.crm.modules.sys.utils.UserUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,15 +37,12 @@ public class ActivityLotteryController extends BaseController {
 	@Autowired
 	private ActivityLotteryService activityLotteryService;
 
-	@Autowired
-	private ActivityPrizeService activityPrizeService;
-
 	@RequestMapping(value = "saveLottery")
 	public String saveLottery() {
 		return "modules/activity/activity-lottery-new";
 	}
 
-	@RequestMapping(value = "getLottery")
+	@RequestMapping(value = "getLotteryList")
 	public String getLotteryList() {
 		return "modules/activity/activity-lottery-list";
 	}
@@ -89,11 +77,11 @@ public class ActivityLotteryController extends BaseController {
 		String content = RequestUtils.getString(request, false, "content",
 				"content is null");
 
-		Type type = new com.google.gson.reflect.TypeToken<List<ActivityPrize>>() {
+		Type type = new com.google.gson.reflect.TypeToken<List<ActivityLottery.LotteryPrize>>() {
 		}.getType();
 
-		List<ActivityPrize> activityPrizeList = JsonUtil.parseJson(content, type);
-
+		List<ActivityLottery.LotteryPrize> activityPrizeList = JsonUtil.parseJson(content, type);
+		logger.info("[{}]activityPrizeList:{}", JsonUtil.toJson(activityPrizeList));
 		if (activityPrizeList == null) {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.P_E_PARAM_ISNULL);
 		}
@@ -122,11 +110,13 @@ public class ActivityLotteryController extends BaseController {
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_ACTIVITY_EXIST);
 		}
 
-		//比例总和要为1
+		//比例总和要为1,不为1则给出提示
 		Double rate = 0.0;
-		for (ActivityPrize activityPrize : activityPrizeList){
+		for (ActivityLottery.LotteryPrize activityPrize : activityPrizeList){
 			Double prizeRate = activityPrize.getPrizeRate();
-			rate += prizeRate;
+			if (null != prizeRate) {
+				rate += prizeRate;
+			}
 		}
 		if (rate > 1){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RATE_IS_BIGGER);
@@ -136,37 +126,29 @@ public class ActivityLotteryController extends BaseController {
 
 		//添加活动
 		try {
-			//获取user
-			User user = UserUtils.getUser();
 			activityLottery.setActivityType(activityType);
 			activityLottery.setActiveDate(DateUtil.parse(activeDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activityLottery.setInactiveDate(DateUtil.parse(inactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activityLottery.setOrderActiveDate(DateUtil.parse(orderActiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activityLottery.setOrderInactiveDate(DateUtil.parse(orderInactiveDate, DateUtil.NORMAL_DATETIME_PATTERN));
 			activityLottery.setIsFollow(isFollow);
-
+			activityLottery.setAuditType(auditType);
+			activityLottery.setTextAuditType(textAuditType);
 			//若totalOrder没传，则表示不限制
 			if (null == totalOrder){
 				activityLottery.setTotalOrder(0);
 			}
-
 			activityLottery.setShopName(shopName);
 			activityLottery.setShopNo(shopNo);
 			activityLottery.setTemplateLink(templateLink);
 			activityLottery.setStatus(0);
+
+			//获取user
+			User user = UserUtils.getUser();
 			activityLottery.setCreateBy(user.getCreateBy());
 			activityLottery.setUpdateBy(user.getUpdateBy());
-			activityLotteryService.save(activityLottery);
-
-			//往活动奖品表中添加此活动相对应的奖品类型
-			for (ActivityPrize activityPrize : activityPrizeList){
-				if (null != activityLottery) {
-					activityPrize.setLotteryId(Long.valueOf(activityLottery.getId()));
-				}
-				activityPrize.setCreateBy(user.getCreateBy());
-				activityPrize.setUpdateBy(user.getUpdateBy());
-				activityPrizeService.save(activityPrize);
-			}
+			activityLottery.setLotteryPrizeList(activityPrizeList);
+			activityLotteryService.saveLottery(activityLottery);
 			return ResponseUtils.getSuccessApiResponseStr(true);
 		} catch (Exception e) {
 			logger.error("save activity lottery is error",e);
@@ -223,27 +205,7 @@ public class ActivityLotteryController extends BaseController {
 			}
 
 			//分页获取活动列表
-			Page<ActivityLottery> page = activityLotteryService.findPage(activityLotteryPage,activityLottery);
-
-			//将此活动的奖品类型保存到activityLottery中
-			if (null != page){
-				List<ActivityLottery> activityLotteryList = page.getList();
-				List<ActivityLottery> activityLotteryList1 = new ArrayList<>();
-				if (CollectionUtils.isNotEmpty(activityLotteryList)){
-					for (ActivityLottery activityLottery1 : activityLotteryList){
-						//将此活动的奖品类型保存到activityLottery中
-						if (null != activityLottery1) {
-							String id = activityLottery1.getId();
-							ActivityPrize activityPrize = new ActivityPrize();
-							activityPrize.setLotteryId(Long.valueOf(id));
-							List<ActivityPrize> activityPrizeList = activityPrizeService.findList(activityPrize);
-							activityLottery1.setActivityPrizeList(activityPrizeList);
-							activityLotteryList1.add(activityLottery1);
-						}
-					}
-				}
-				page.setList(activityLotteryList1);
-			}
+			Page<ActivityLottery> page = activityLotteryService.findPageLottery(activityLotteryPage,activityLottery);
 			return ResponseUtils.getSuccessApiResponseStr(page);
 		} catch (Exception e) {
 			logger.error("findPage is error",e);
@@ -262,15 +224,7 @@ public class ActivityLotteryController extends BaseController {
 
 		String id = RequestUtils.getString(request,false,"id","id is null");
 		try {
-			ActivityLottery activityLottery = activityLotteryService.get(id);
-
-			//将此活动的奖品类型保存到activityLottery中
-			ActivityPrize activityPrize = new ActivityPrize();
-			if (null != activityLottery) {
-				activityPrize.setLotteryId(Long.valueOf(activityLottery.getId()));
-				List<ActivityPrize> activityPrizeList = activityPrizeService.findList(activityPrize);
-				activityLottery.setActivityPrizeList(activityPrizeList);
-			}
+			ActivityLottery activityLottery = activityLotteryService.getLottery(id);
 			return ResponseUtils.getSuccessApiResponseStr(activityLottery);
 		} catch (Exception e) {
 			logger.error("get activity lottery detail is error",e);
