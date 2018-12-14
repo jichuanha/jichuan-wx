@@ -24,7 +24,7 @@
 }
 .page_ctrl button:hover {
     /*background:#484DA7;*/
-    color:#484DA7;
+    color:#3f51b5;
     font-weight: 600;
 }
 .page_ctrl .btn_dis {
@@ -38,19 +38,21 @@
     color:#5e5e5e
 }
 .page_ctrl .current_page {
-    color:#484DA7;
+    color:#3f51b5;
     font-weight: 600;
+    font-size: 18px;
 }
 .page_ctrl .input_page_num {
-    width:30px;
+    width:40px;
     margin:0 3px;
     padding:0;
     text-align:center;
     background:#fff;
-    border:1px solid #484DA7;
+    border:1px solid #3f51b5;
     color:#5e5e5e;
     outline:0;
     border-radius: 5px;
+    margin-left: 15px;
 }
 .page_ctrl .page_total,.page_ctrl .page_text {
     color:#2b2b2b;
@@ -63,10 +65,10 @@
 }
 .page_ctrl .prev_page,
 .page_ctrl .next_page{
-    color: #484DA7;
-    border:1px solid #484DA7;
+    color: #3f51b5;
+    border:1px solid #3f51b5;
     border-radius: 5px;
-    height: 20px;
+    height: 30px;
 }
 .page_ctrl .prev_page{
     background: url("../images/page-prev.png") no-repeat center center;
@@ -78,5 +80,10 @@
 }
 
 .page_ctrl .to_page_num{
-    color: #484DA7;
+    color: #3f51b5;
+}
+.page_ctrl .page_num{
+    padding: 0;
+    margin: 0;
+    min-width: 25px;
 }

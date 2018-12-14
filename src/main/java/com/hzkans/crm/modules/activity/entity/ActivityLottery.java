@@ -37,21 +37,50 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 	private String shopName;		// 店铺名称
 	private String shopNo;		// 店铺编号
 	private String templateLink;		// 模板url
-	private List<ActivityPrize> activityPrizeList;
+	private List<LotteryPrize> lotteryPrizeList;
 	public ActivityLottery() {
 		super();
 	}
 
+	public static class LotteryPrize extends DataEntity<ActivityLottery.LotteryPrize>{
+		private Long lotteryId;		// 幸运抽奖活动id
+		private String prizeName;		// 奖品名称
+		private Double prizeRate;		// 奖品比例
+
+		public Long getLotteryId() {
+			return lotteryId;
+		}
+
+		public void setLotteryId(Long lotteryId) {
+			this.lotteryId = lotteryId;
+		}
+
+		public String getPrizeName() {
+			return prizeName;
+		}
+
+		public void setPrizeName(String prizeName) {
+			this.prizeName = prizeName;
+		}
+
+		public Double getPrizeRate() {
+			return prizeRate;
+		}
+
+		public void setPrizeRate(Double prizeRate) {
+			this.prizeRate = prizeRate;
+		}
+	}
 	public ActivityLottery(String id){
 		super(id);
 	}
 
-	public List<ActivityPrize> getActivityPrizeList() {
-		return activityPrizeList;
+	public List<LotteryPrize> getLotteryPrizeList() {
+		return lotteryPrizeList;
 	}
 
-	public void setActivityPrizeList(List<ActivityPrize> activityPrizeList) {
-		this.activityPrizeList = activityPrizeList;
+	public void setLotteryPrizeList(List<LotteryPrize> lotteryPrizeList) {
+		this.lotteryPrizeList = lotteryPrizeList;
 	}
 
 	@Length(min=1, max=255, message="活动名称长度必须介于 1 和 255 之间")
@@ -228,7 +257,7 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 				", shopName='" + shopName + '\'' +
 				", shopNo='" + shopNo + '\'' +
 				", templateLink='" + templateLink + '\'' +
-				", activityPrizeList=" + activityPrizeList +
+				", activityPrizeList=" + lotteryPrizeList +
 				'}';
 	}
 }

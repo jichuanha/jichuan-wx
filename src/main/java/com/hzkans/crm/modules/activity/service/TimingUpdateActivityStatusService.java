@@ -76,6 +76,9 @@ public class TimingUpdateActivityStatusService {
                     Integer orderCount = _activity.getOrderCount();
                     Long totalAmount = _activity.getTotalAmount();
 
+                    // 订单不能超过最大限制数
+                    // 总金额不能超过限制金额
+                    // 为正在进行中的活动
                     Boolean boo = ((0 != maxOrderLimit && maxOrderLimit < orderCount)
                             || (0L != totalAmount && totalAmount < (perAmount * orderCount)))
                             && ActivityStatusEnum.ACTIVING.getCode().equals(status);

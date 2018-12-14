@@ -5,7 +5,7 @@ package com.hzkans.crm.modules.activity.dao;
 
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
-import com.hzkans.crm.modules.activity.entity.ActivityPrize;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 
 /**
  * 奖品类型DAO接口
@@ -13,6 +13,6 @@ import com.hzkans.crm.modules.activity.entity.ActivityPrize;
  * @version 2018-12-11
  */
 @MyBatisDao
-public interface ActivityPrizeDao extends CrudDao<ActivityPrize> {
+public interface ActivityPrizeDao extends CrudDao<ActivityLottery.LotteryPrize> {
 
 }

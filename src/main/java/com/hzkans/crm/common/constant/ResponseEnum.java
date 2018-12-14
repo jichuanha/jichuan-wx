@@ -100,14 +100,14 @@ public enum ResponseEnum {
     DATEBASE_QUERY_ERROR(41011,0,"数据库查询失败"),
     B_E_FAILED_TO_GET(41012, 0, "活动查询失败"),
     B_E_REQUIRED_NOT_FILLED(41013, 0, "有必填选项未填"),
-    B_E_ACTIVITY_EXIST(41014, 0, "活动已存在"),
+    B_E_ACTIVITY_EXIST(41014, 0, "活动名重复，请更改活动名"),
     B_E_UPDATE_STATUS_FAIL(41015, 0, "更改状态失败"),
     B_E_SHOP_EXIST(41016, 0, "店铺已存在"),
     B_E_PER_MUST_LOWER_TOTAL(41017, 0, "单笔金额不能大于返利总额"),
     B_E_ACTIVITY_TYPE_EXIST(41018, 0, "活动类型已存在"),
     B_E_BING_EXIST(41019, 0, "此活动与此公众号已绑定"),
-    B_E_RATE_IS_BIGGER(41020, 0, "比例总和超过1，请重新设置"),
-    B_E_RATE_IS_SMALLER(41021, 0, "比例总和不到1，请重新设置"),
+    B_E_RATE_IS_BIGGER(41020, 0, "获奖比例总和超过1，请重新设置"),
+    B_E_RATE_IS_SMALLER(41021, 0, "获奖比例总和不到1，请重新设置"),
 
     /**
      * 商品模板文件类异常
