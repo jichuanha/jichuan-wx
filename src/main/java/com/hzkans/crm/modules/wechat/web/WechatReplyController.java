@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -58,7 +60,7 @@ public class WechatReplyController extends BaseController {
 
 
     /**
-     * 添加自动回复信息--被关注回复，收到信息回复
+     * 添加自动回复信息
      *
      * @param request
      * @param model
@@ -68,60 +70,16 @@ public class WechatReplyController extends BaseController {
      */
     @RequestMapping(value = "save_reply_new")
     @ResponseBody
-    public String saveReplynew(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
-        try {
-            String remarks = RequestUtils.getString(request, true, "remarks", "");
-            String content = RequestUtils.getString(request, true, "content_all", "");
-            Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
-            Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", false, "reply_type is null", "");
-
-            User user = UserUtils.getUser();
-            if (null == user) {
-                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_SESSION_TIMEOUT);
-            }
-            WechatReplyNew wechatReplyNew = new WechatReplyNew();
-            wechatReplyNew.setRuleType(ruleType);
-            wechatReplyNew.setWechatId(wechatId);
-            wechatReplyNew.setStatus(status);
-            wechatReplyNew.setRemarks(remarks);
-            wechatReplyNew.setReplyWay(replyWay);
-
-            //插入主表信息 以及获取id
-            String ruleId = wechatReplyService.saveReply(wechatReplyNew);
-
-            wechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
-            return ResponseUtils.getSuccessApiResponseStr(true);
-        } catch (Exception e) {
-            logger.error("saveReplynew is error", e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR,e.getMessage());
-        }
-
-    }
-
-    /**
-     * 添加自动回复信息--关键字回复
-     *
-     * @param request
-     * @param model
-     * @param redirectAttributes
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "save_reply_follow")
-    @ResponseBody
-    public String saveReplyFollow(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+    public String saveReply(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
         try {
             String remarks = RequestUtils.getString(request, true, "remarks", "");
             String keywords = RequestUtils.getString(request, true, "keywords", "");
             String content = RequestUtils.getString(request, true, "content_all", "");
-            String ruleName = RequestUtils.getString(request, false, "rule_name", "reply_desc is null");
+            String ruleName = RequestUtils.getString(request, true, "rule_name", "reply_desc is null");
             Integer replyWay = RequestUtils.getInt(request, "reply_way", false, "reply_way is null", "");
             Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
-            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "reply_type is null", "");
-            Integer status = RequestUtils.getInt(request, "status", true, "reply_type is null", "");
+            Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
+            Integer status = RequestUtils.getInt(request, "status", false, "reply_type is null", "");
 
             User user = UserUtils.getUser();
             if (null == user) {
@@ -135,14 +93,12 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setRemarks(remarks);
             wechatReplyNew.setReplyWay(replyWay);
             wechatReplyNew.setRuleName(ruleName);
+            wechatReplyNew.setContent(content);
+            wechatReplyNew.setKeyword(keywords);
 
             //插入主表信息 以及获取id
-            String ruleId = wechatReplyService.saveReply(wechatReplyNew);
+             wechatReplyService.saveReply(wechatReplyNew);
 
-            //插入
-            wechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-
-            wechatReplyService.saveReplyKeyword(wechatId, ruleId, keywords);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
@@ -164,7 +120,11 @@ public class WechatReplyController extends BaseController {
             Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
             Integer ruleType = RequestUtils.getInt(request, "rule_type", false, "reply_type is null", "");
 
-            wechatReplyService.deleteReply(ruleId,wechatId,ruleType);
+            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+            wechatReplyNew.setId(ruleId);
+            wechatReplyNew.setWechatId(wechatId);
+            wechatReplyNew.setRuleType(ruleType);
+            wechatReplyService.deleteReply(wechatReplyNew);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (ServiceException e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.DATEBASE_SAVE_ERROR,e.getMessage());
@@ -207,15 +167,11 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setRuleName(ruleName);
             wechatReplyNew.setId(ruleId);
             wechatReplyNew.setStatus(status);
+            wechatReplyNew.setContent(content);
+            wechatReplyNew.setKeyword(keywords);
 
             //主信息表
             wechatReplyService.updateReplyRrule(wechatReplyNew);
-            //删除所有的关键字回复内容以及关键字
-            wechatReplyService.deleteReplykeywordAndContent(ruleId,wechatId);
-            //插入内容
-            wechatReplyService.saveReplyContent(wechatId, ruleId, content, ruleType);
-            //插入关键字
-            wechatReplyService.saveReplyKeyword(wechatId, ruleId, keywords);
             return ResponseUtils.getSuccessApiResponseStr(true);
         } catch (Exception e) {
             logger.error("saveReplynew is error", e);
@@ -246,6 +202,18 @@ public class WechatReplyController extends BaseController {
             wechatReplyNew.setId(ruleId);
             wechatReplyNew.setRuleName(ruleName);
             List<WechatReplyNew> wechatReplyNewList= wechatReplyService.listWechatReply(wechatReplyNew);
+
+            //先把初始状态为1 为关闭     0-关闭回复 1.开启回复
+            Integer status = 0;
+            for (WechatReplyNew wechatReplyNewTemp:wechatReplyNewList) {
+                if (!wechatReplyNewTemp.getStatus().equals(status)){
+                    status = 1;
+                }
+            }
+
+            Map<String, Object> map = new HashMap<>(2);
+            map.put("wechatReplyNewList",wechatReplyNewList);
+            map.put("status",status);
 
             return ResponseUtils.getSuccessApiResponseStr(wechatReplyNewList);
         } catch (Exception e) {
@@ -284,6 +252,9 @@ public class WechatReplyController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
     }
+
+
+
 
 
 }

@@ -13,19 +13,18 @@ import java.util.List;
  * @author dtm
  * @version 2018-12-05
  */
-public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
+public class WechatReplyKeyword extends DataEntity<WechatReplyKeyword> {
 
 	private static final long serialVersionUID = 1L;
 	private Long wechatId;		// 微信ID
 	private String ruleId;		// 规则ID
+	private Integer keywordType;		// 关键词类型： 0-半匹配  1-全匹配
+	private String keyword;		// 关键词
 	private String creator;		// 创建者
 	private String updator;		// 修改者
 	private Integer deleted;		// 0.存在1.删除
-	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
-	private String content;		// 回复消息内容
-	private String materialId;
 
-	WechatMaterial wechatMaterial;
+	List<WechatMaterial> wechatMaterials;
 
 	List<Keyword> keywords;
 
@@ -50,14 +49,6 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		}
 	}
 
-	public String getMaterialId() {
-		return materialId;
-	}
-
-	public void setMaterialId(String materialId) {
-		this.materialId = materialId;
-	}
-
 	public Long getWechatId() {
 		return wechatId;
 	}
@@ -72,6 +63,22 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 
 	public void setRuleId(String ruleId) {
 		this.ruleId = ruleId;
+	}
+
+	public Integer getKeywordType() {
+		return keywordType;
+	}
+
+	public void setKeywordType(Integer keywordType) {
+		this.keywordType = keywordType;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 	public String getCreator() {
@@ -98,28 +105,12 @@ public class WechatReplyContentDO extends DataEntity<WechatReplyContentDO> {
 		this.deleted = deleted;
 	}
 
-	public Integer getContentType() {
-		return contentType;
+	public List<WechatMaterial> getWechatMaterials() {
+		return wechatMaterials;
 	}
 
-	public void setContentType(Integer contentType) {
-		this.contentType = contentType;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public WechatMaterial getWechatMaterial() {
-		return wechatMaterial;
-	}
-
-	public void setWechatMaterial(WechatMaterial wechatMaterial) {
-		this.wechatMaterial = wechatMaterial;
+	public void setWechatMaterials(List<WechatMaterial> wechatMaterials) {
+		this.wechatMaterials = wechatMaterials;
 	}
 
 	public List<Keyword> getKeywords() {

@@ -93,9 +93,9 @@ public class WechatMaterialController extends BaseController {
 			String id = RequestUtils.getString(request, false, "id", "id is null");
 			String title = RequestUtils.getString(request, true, "title", "app_secret is null");
 			String coverPicture = RequestUtils.getString(request, true, "cover_picture", "token is null");
-			String content = RequestUtils.getString(request, true, "content", "token is null");
-			String brief = RequestUtils.getString(request, true, "brief", "token is null");
-			String uri = RequestUtils.getString(request, true, "uri", "token is null");
+			String content = RequestUtils.getString(request, true, "content", "content is null");
+			String brief = RequestUtils.getString(request, true, "brief", "brief is null");
+			String uri = RequestUtils.getString(request, true, "uri", "uri is null");
 			String articleUri = RequestUtils.getString(request, true, "article_uri", "article_uri is null");
 			Integer wechatId = RequestUtils.getInt(request, "wechat_id", false, "id is null", "");
 

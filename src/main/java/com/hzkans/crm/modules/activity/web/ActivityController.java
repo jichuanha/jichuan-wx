@@ -19,8 +19,6 @@ import com.hzkans.crm.modules.sys.entity.Dict;
 import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.service.DictService;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO;
-import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -19,7 +19,7 @@
     <sql id="wechatReplyRuleContentJoins">
     </sql>
 
-    <select id="get" resultType="WechatReplyContentDO">
+    <select id="get" resultType="WechatReplyContent">
         SELECT
         <include refid="wechatReplyRuleContentColumns"/>
         FROM t_wx_reply_rule_content a
@@ -38,8 +38,8 @@
         </where>
     </select>
 
-    <select id="getContent" resultType="com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO"
-            parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyContentDO">
+    <select id="getContent" resultType="com.hzkans.crm.modules.wechat.entity.WechatReplyContent"
+            parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyContent">
         SELECT
         <include refid="wechatReplyRuleContentColumns"/>
         FROM t_wx_reply_rule_content a
@@ -54,7 +54,7 @@
             </if>
         </where>
     </select>
-    <select id="findList" resultType="WechatReplyContentDO">
+    <select id="findList" resultType="WechatReplyContent">
         SELECT
         <include refid="wechatReplyRuleContentColumns"/>
         FROM t_wx_reply_rule_content a
@@ -90,7 +90,7 @@
         </choose>
     </select>
 
-    <select id="findAllList" resultType="WechatReplyContentDO">
+    <select id="findAllList" resultType="WechatReplyContent">
         SELECT
         <include refid="wechatReplyRuleContentColumns"/>
         FROM t_wx_reply_rule_content a

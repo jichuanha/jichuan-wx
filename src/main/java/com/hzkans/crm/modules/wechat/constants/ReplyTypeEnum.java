@@ -9,8 +9,7 @@ public enum ReplyTypeEnum {
 
     KEYWORD(1, "KEYWORD"),
     FOLLOW(2, "FOLLOW"),
-    RECEIVED(3, "RECEIVED")
-    ;
+    RECEIVED(3, "RECEIVED");
 
     private Integer code;
 

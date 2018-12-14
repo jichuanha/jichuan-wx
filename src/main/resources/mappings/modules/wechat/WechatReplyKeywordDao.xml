@@ -18,7 +18,7 @@
 	<sql id="wechatReplyKeywordJoins">
 	</sql>
     
-	<select id="get" resultType="WechatReplyKeywordDO">
+	<select id="get" resultType="WechatReplyKeyword">
 		SELECT 
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a
@@ -26,7 +26,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="WechatReplyKeywordDO">
+	<select id="findList" resultType="WechatReplyKeyword">
 		SELECT 
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a
@@ -59,7 +59,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="WechatReplyKeywordDO">
+	<select id="findAllList" resultType="WechatReplyKeyword">
 		SELECT 
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a

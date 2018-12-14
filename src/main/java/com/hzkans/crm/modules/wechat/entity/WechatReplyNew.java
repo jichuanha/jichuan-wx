@@ -4,10 +4,7 @@
 package com.hzkans.crm.modules.wechat.entity;
 
 import com.hzkans.crm.common.persistence.DataEntity;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 
@@ -33,9 +30,9 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 	private Integer contentType;		// 回复消息内容类型：0.文字回复1.图片 2-语音 3-视频 4-图文 5-自定义
 	private String content;		// 回复消息内容
 
-	List<WechatReplyContentDO> wechatReplyContentDOS;
+	List<WechatReplyContent> wechatReplyContentDOS;
 
-	List<WechatReplyKeywordDO> wechatReplyKeywordDOS;
+	List<WechatReplyKeyword> wechatReplyKeywordDOS;
 
 	List<Keywords> keywords;		// 关键词
 	List<ReplyContent> replyContents;		// 回复内容
@@ -65,19 +62,19 @@ public class WechatReplyNew extends DataEntity<WechatReplyNew> {
 		private String content;
 	}
 
-	public List<WechatReplyContentDO> getWechatReplyContentDOS() {
+	public List<WechatReplyContent> getWechatReplyContentDOS() {
 		return wechatReplyContentDOS;
 	}
 
-	public void setWechatReplyContentDOS(List<WechatReplyContentDO> wechatReplyContentDOS) {
+	public void setWechatReplyContentDOS(List<WechatReplyContent> wechatReplyContentDOS) {
 		this.wechatReplyContentDOS = wechatReplyContentDOS;
 	}
 
-	public List<WechatReplyKeywordDO> getWechatReplyKeywordDOS() {
+	public List<WechatReplyKeyword> getWechatReplyKeywordDOS() {
 		return wechatReplyKeywordDOS;
 	}
 
-	public void setWechatReplyKeywordDOS(List<WechatReplyKeywordDO> wechatReplyKeywordDOS) {
+	public void setWechatReplyKeywordDOS(List<WechatReplyKeyword> wechatReplyKeywordDOS) {
 		this.wechatReplyKeywordDOS = wechatReplyKeywordDOS;
 	}
 

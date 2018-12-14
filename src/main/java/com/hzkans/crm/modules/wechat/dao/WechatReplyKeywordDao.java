@@ -5,8 +5,7 @@ package com.hzkans.crm.modules.wechat.dao;
 
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
-import com.hzkans.crm.modules.wechat.entity.WechatReplyKeywordDO;
-import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
+import com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword;
 
 /**
  * 微信自动回复关键词DAO接口
@@ -14,7 +13,7 @@ import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
  * @version 2018-12-10
  */
 @MyBatisDao
-public interface WechatReplyKeywordDao extends CrudDao<WechatReplyKeywordDO> {
+public interface WechatReplyKeywordDao extends CrudDao<WechatReplyKeyword> {
 
 	
 }
