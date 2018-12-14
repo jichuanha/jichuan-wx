@@ -1301,6 +1301,7 @@
         else{
             var ajaxUrl = '${ctx}/wechat_reply/save_reply_follow';
         }
+        console.log(contentsArr);0
         $.ajax({
             url:ajaxUrl,
             type:'post',
@@ -1317,7 +1318,7 @@
             success:function (msg) {
                 var msg = JSON.parse(msg);
                 if(msg.code == 10000){
-                    location.href = '${ctx}/wechat_reply/link_auto_res_key'
+                    <%--location.href = '${ctx}/wechat_reply/link_auto_res_key'--%>
                 }
             }
         })
@@ -1393,17 +1394,17 @@
                            }
                            else if(el.content_type == 1){
 
-                               $('.img-block').html('<div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                               $('.img-block').html('<div class="item" data-para='+JSON.stringify(el.rule_id)+'>' +
                                    '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+el.wechat_material.cover_picture+'"/></i>' +
                                    '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                                    '</div>')
                            }
                            else if(el.content_type == 2){
-                               $('.voice-block').html('<p class="item" data-para='+JSON.stringify(el.wechat_material.id)+' >已选择:语音名称:'+el.wechat_material.title+'&nbsp;&nbsp;文件名称:'+el.wechat_material.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
+                               $('.voice-block').html('<p class="item" data-para='+JSON.stringify(el.rule_id)+' >已选择:语音名称:'+el.wechat_material.title+'&nbsp;&nbsp;文件名称:'+el.wechat_material.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                            }
                            else if(el.content_type == 4){
                                $('.article-block').html(
-                                   '                        <div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '                        <div class="item" data-para='+JSON.stringify(el.rule_id)+'>' +
                                    '            <div>\n' +
                                    '                <div style="font-size:20px;">' + el.wechat_material.title + '</div>\n' +
                                    '                <div>2018-12-05</div>\n' +
@@ -1468,14 +1469,16 @@
 
                            }
                            else if(el.content_type == 1){
-                               currSect.find('.img-block').html('<div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                               currSect.find('.img-block').html('<div class="item" data-para='+JSON.stringify(el.rule_id)+'>' +
                                    '<i class="img-choosed"><img src="//yiyezi.yyzws.com/ex/'+el.wechat_material.cover_picture+'"/></i>' +
                                    '<a href="javascript:;" class="less-img-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>' +
                                    '</div>')
+                           }else if(el.content_type == 2){
+                               currSect.find('.voice-block').html('<p class="item" data-para='+JSON.stringify(el.rule_id)+' >已选择:语音名称:'+el.wechat_material.title+'&nbsp;&nbsp;文件名称:'+el.wechat_material.cover_picture+'<a href="javascript:;" class="less-vedio-btn"><img src="${ctxStatic}/images/less.png" alt=""></a></p>');
                            }
                            else if(el.content_type == 4){
                                currSect.find('.article-block').html(
-                                   '                        <div class="item" data-para='+JSON.stringify(el.wechat_material.id)+'>' +
+                                   '                        <div class="item" data-para='+JSON.stringify(el.rule_id)+'>' +
                                    '            <div>\n' +
                                    '                <div style="font-size:20px;">' + el.wechat_material.title + '</div>\n' +
                                    '                <div>2018-12-05</div>\n' +
@@ -1487,10 +1490,6 @@
                                    '            <a href="javascript:;" class="less-article-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>')
 
                            }
-                            /*$('.res-head li').removeClass('active');
-                           $('.res-iframe').css('display','none');
-                           $('.choose-'+name).addClass('active');
-                           $('.res-'+name).css('display','block');*/
                        }
                    })
                 }
