@@ -58,7 +58,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param wechatId
 	 * @return
 	 */
-	public PagePara<JoinActivity> listJoinActivityPage(PagePara<JoinActivity> pagePara, Integer wechatId) {
+	public PagePara<JoinActivity> listJoinActivityPage(PagePara<JoinActivity> pagePara, Long wechatId) {
 		TradeUtil.isAllNull(pagePara);
 		PagePara<JoinActivity> para = null;
 		try {

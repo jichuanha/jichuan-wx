@@ -256,6 +256,8 @@ public class WechatPlatfromController extends BaseController {
         if(null == messageTypeEnum) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MATE_TYPE_ERROR);
         }
+        Map<String, Object> resultMap = new HashMap<>();
+        JSONObject object = null;
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("file");
@@ -286,15 +288,18 @@ public class WechatPlatfromController extends BaseController {
             if(newFile.exists()) {
                 newFile.delete();
             }
-            JSONObject object = JSONObject.parseObject(result);
-            Map<String, Object> resultMap = new HashMap<>();
+            object = JSONObject.parseObject(result);
             resultMap.put("path", newPath);
             resultMap.put("mediaId", object.get("media_id"));
-            logger.info(" resultMap {}",JsonUtil.toJson(resultMap));
-            return ResponseUtils.getSuccessApiResponseStr(resultMap);
         } catch (Exception e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
+        Object errmsg = object.get("errmsg");
+        if(errmsg != null) {
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_WEHCAT_NUM_ERROR);
+        }
+        logger.info(" resultMap {}",JsonUtil.toJson(resultMap));
+        return ResponseUtils.getSuccessApiResponseStr(resultMap);
 
     }
 

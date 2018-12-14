@@ -17,7 +17,7 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	private static final long serialVersionUID = 1L;
 	private String wechatId;		// wechat_id
 	private String openId;		// open_id
-	private String deleted;		// deleted
+	private Integer deleted;		// deleted
 	private String unionId;		// union_id
 	private String sign;		// 0 -未更新  1-已更新
 	
@@ -46,16 +46,15 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	public void setOpenId(String openId) {
 		this.openId = openId;
 	}
-	
-	@Length(min=1, max=4, message="deleted长度必须介于 1 和 4 之间")
-	public String getDeleted() {
+
+	public Integer getDeleted() {
 		return deleted;
 	}
 
-	public void setDeleted(String deleted) {
+	public void setDeleted(Integer deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Length(min=1, max=255, message="union_id长度必须介于 1 和 255 之间")
 	public String getUnionId() {
 		return unionId;

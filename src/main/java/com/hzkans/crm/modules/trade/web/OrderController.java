@@ -92,7 +92,7 @@ public class OrderController extends BaseController {
 		//页面类型 1:订单列表  2:订单审核
 		Integer pageType = RequestUtils.getInt(request, "page_type", "");
 		//这个字段是
-		Integer wechatId = RequestUtils.getInt(request, "wechat_id", "");
+		Long wechatId = RequestUtils.getLong(request, "wechat_id", "");
 
 		//非必传参数
 		String actName = RequestUtils.getString(request, "act_name");
@@ -134,6 +134,7 @@ public class OrderController extends BaseController {
 			joinActivity.setPlatformType(platformType);
 			joinActivity.setShopNo(shopNo);
 			joinActivity.setOrderSn(orderSn);
+			joinActivity.setWechatId(wechatId);
 			pagePara.setData(joinActivity);
 			pagePara.setCurrentPage((currentPage-1)*pageSize);
 			pagePara.setPageSize(pageSize);

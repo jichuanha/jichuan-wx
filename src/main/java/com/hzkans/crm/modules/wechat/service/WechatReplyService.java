@@ -4,7 +4,9 @@
 package com.hzkans.crm.modules.wechat.service;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import com.hzkans.crm.modules.wechat.constants.ReplyTypeEnum;
 import com.hzkans.crm.modules.wechat.constants.WechatErrorEnum;
@@ -340,6 +342,41 @@ public class WechatReplyService {
     }
 
 
+
+
+    /**
+     * 根据关键字获取主表id(关键字表和规则主表关联)
+     * @param keyword
+     * @return
+     */
+    public List<WechatReplyNew> getWechatReplyByKeyWord(WechatReplyKeyword keyword) {
+        TradeUtil.isAllNull(keyword);
+        List<WechatReplyNew> wechatReplyNews = null;
+        try {
+            wechatReplyNews = wechatReplyRuleDao.selectReplyRule(keyword);
+        } catch (Exception e) {
+            logger.error("getWechatReplyByKeyWord error",e);
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+        }
+        return wechatReplyNews;
+    }
+
+    /**
+     * 查询规则主表(通用查)
+     * @param replyNew
+     * @return
+     */
+    public List<WechatReplyNew> getWechatReplys(WechatReplyNew replyNew) {
+        TradeUtil.isAllNull(replyNew);
+        List<WechatReplyNew> reply = null;
+        try {
+            reply = wechatReplyRuleDao.listReply(replyNew);
+        } catch (Exception e) {
+            logger.error("getWechatReplys error",e);
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+        }
+        return reply;
+    }
 
 
 }
