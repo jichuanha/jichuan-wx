@@ -70,14 +70,14 @@
 					or (#{inactiveDate} > a.active_date AND a.inactive_date > #{inactiveDate})
 				</if>)
 			</if>
-			<if test="isFollow != null and isFollow != ''">
+			<if test="isFollow != null">
 				AND a.is_follow = #{isFollow}
 			</if>
-			<if test="auditType != null and auditType != ''">
+			<if test="auditType != null">
 				AND a.audit_type = #{auditType}
 			</if>
 			<if test="shopNo != null and shopNo != ''">
-				AND a.shop_no = #{shopNo}
+				AND a.shop_no LIKE concat('%',#{shopNo},'%')
 			</if>
 			<if test="wechatPlatformId != null">
 				AND a.wechat_platform_id = #{wechatPlatformId}
