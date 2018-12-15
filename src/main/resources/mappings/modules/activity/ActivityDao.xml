@@ -35,7 +35,7 @@
 	<sql id="activityJoins">
 	</sql>
     
-	<select id="get" resultType="Activity">
+	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.Activity">
 		SELECT 
 			<include refid="activityColumns"/>
 		FROM t_activity a
@@ -43,7 +43,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Activity">
+	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.Activity">
 		SELECT 
 			<include refid="activityColumns"/>
 		FROM t_activity a
@@ -94,7 +94,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Activity">
+	<select id="findAllList" resultType="com.hzkans.crm.modules.activity.entity.Activity">
 		SELECT 
 			<include refid="activityColumns"/>
 		FROM t_activity a

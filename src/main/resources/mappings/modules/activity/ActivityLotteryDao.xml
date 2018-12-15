@@ -55,7 +55,7 @@
 			<if test="activityType != null and activityType != ''">
 				AND a.activity_type = #{activityType}
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null">
 				AND a.status = #{status}
 			</if>
 			<if test="activeDate != null or inactiveDate != null">

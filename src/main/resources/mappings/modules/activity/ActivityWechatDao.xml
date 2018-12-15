@@ -16,7 +16,7 @@
 	<sql id="activityWechatJoins">
 	</sql>
     
-	<select id="get" resultType="ActivityWechat">
+	<select id="get" resultType="com.hzkans.crm.modules.activity.entity.ActivityWechat">
 		SELECT 
 			<include refid="activityWechatColumns"/>
 		FROM t_activity_wechat a
@@ -24,7 +24,7 @@
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="ActivityWechat">
+	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.ActivityWechat">
 		SELECT 
 			<include refid="activityWechatColumns"/>
 		FROM t_activity_wechat a
@@ -54,7 +54,7 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="ActivityWechat">
+	<select id="findAllList" resultType="com.hzkans.crm.modules.activity.entity.ActivityWechat">
 		SELECT 
 			<include refid="activityWechatColumns"/>
 		FROM t_activity_wechat a

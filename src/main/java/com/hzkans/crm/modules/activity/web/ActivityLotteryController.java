@@ -174,6 +174,7 @@ public class ActivityLotteryController extends BaseController {
 		Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
 		Long wechatPlatformId = RequestUtils.getLong(request, "wechat_platform_id", true, "wechat_platform_id is " +
 				"null", "");
+		Integer isFollow = RequestUtils.getInt(request,"is_follow",true,"is_follow is null","");
 		String name = RequestUtils.getString(request, true, "name", "");
 		String shopNo = RequestUtils.getString(request, true, "shop_no", "");
 		Integer status = RequestUtils.getInt(request,"status",true,"","");
@@ -198,6 +199,7 @@ public class ActivityLotteryController extends BaseController {
 			activityLottery.setAuditType(auditType);
 			activityLottery.setTextAuditType(textAuditType);
 			activityLottery.setName(name);
+			activityLottery.setIsFollow(isFollow);
 			activityLottery.setShopNo(shopNo);
 			activityLottery.setActivityType(activityType);
 			activityLottery.setWechatPlatformId(wechatPlatformId);

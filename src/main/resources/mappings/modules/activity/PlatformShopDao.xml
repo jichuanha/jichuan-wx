@@ -12,7 +12,7 @@
 	</sql>
 	<sql id="activityJoins">
 	</sql>
-	<select id="findList" resultType="platformShop">
+	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.PlatformShop">
 		SELECT 
 			<include refid="activityColumns"/>
 		FROM t_platform_shop a
