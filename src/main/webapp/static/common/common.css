@@ -43,6 +43,8 @@
     color: #000;
     padding-left: 0;
     padding-right: 0;
+    height: 34px;
+    line-height: 34px;
 }
 .nav-tabs>.active>a, .nav-tabs>.active>a:hover, .nav-tabs>.active>a:focus{
     border-top: none;
