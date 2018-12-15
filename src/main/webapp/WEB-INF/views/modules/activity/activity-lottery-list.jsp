@@ -354,7 +354,7 @@
                         var data = msg.data;
                         $.each(data,function (index,value) {
                             value.forEach(function (el,indexshop) {
-                                $('#shop_no').append('<option value="'+el.shop+'">'+el.platform_name+el.shop_name+'</option>');
+                                $('#shop_no').append('<option value="'+el.id+'">'+el.platform_name+el.shop_name+'</option>');
                             })
 
                         })
@@ -513,6 +513,7 @@
                             searchVal = $('#'+el.id).val();
                         }
                         else{
+                            console.log($('#'+el.id).find("option:selected"))
                             searchVal = $('#'+el.id).find("option:selected").text();
                         }
                         $('.search-box').append('<span class="search-cond">'+el.name+':'+searchVal+'<i class="search-close"><img src="${ctxStatic}/images/search-close.png" alt=""></i><input type="hidden" data-pram="'+el.id+'"></span>')

@@ -211,7 +211,7 @@
                 auto: true, // 选择文件后自动上传
                 runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
                 formData:{
-                    fileType:1,
+                    fileType:0,
                     wechat_id:$.cookie('platFormId'),
                 },
                 pick: {

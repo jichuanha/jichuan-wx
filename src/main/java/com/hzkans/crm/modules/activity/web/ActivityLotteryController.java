@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,16 +117,18 @@ public class ActivityLotteryController extends BaseController {
 		}
 
 		//比例总和要为1,不为1则给出提示
-		Double rate = 0.0;
+		BigDecimal rate = new BigDecimal("0");
 		for (ActivityLottery.LotteryPrize activityPrize : activityPrizeList){
 			Double prizeRate = activityPrize.getPrizeRate();
 			if (null != prizeRate) {
-				rate += prizeRate;
+                logger.info("[{}]prizeRate:{}",JsonUtil.toJson(prizeRate));
+				rate = rate.add(new BigDecimal(prizeRate.toString()));
 			}
 		}
-		if (rate > 1){
+        logger.info("[{}]rate:{}",JsonUtil.toJson(rate));
+		if (rate.doubleValue() > 1){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RATE_IS_BIGGER);
-		}else if (rate < 1){
+		}else if (rate.doubleValue() < 1){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RATE_IS_SMALLER);
 		}
 
