@@ -11,6 +11,15 @@ public class NewsMessage extends BaseMessage {
 
     private String ArticleCount;
     private List<Article> Articles;
+    private Article article;
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
 
     public String getArticleCount() {
         return ArticleCount;

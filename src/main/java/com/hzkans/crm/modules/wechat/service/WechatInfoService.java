@@ -1,9 +1,11 @@
 package com.hzkans.crm.modules.wechat.service;
 
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.CacheUtils;
 import com.hzkans.crm.modules.wechat.constants.ReplyTypeEnum;
 import com.hzkans.crm.modules.wechat.entity.*;
 import com.hzkans.crm.modules.wechat.message.*;
+import com.hzkans.crm.modules.wechat.utils.WechatCofig;
 import org.springframework.transaction.annotation.Transactional;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
@@ -30,6 +32,8 @@ public class WechatInfoService {
 
     private Logger logger = LoggerFactory.getLogger(WechatInfoService.class);
 
+    private static final String URL = "http://yiyezi.yyzws.com/ex/";
+
 
     @Autowired
     private MemberAssociationService memberAssociationService;
@@ -47,12 +51,14 @@ public class WechatInfoService {
      */
     public String messageDeal(Map<String, String> requestMap) {
         //默认返回参数
-        String resultXml = "success";
+        String resultXml = "";
         logger.info("requestMap {}", JsonUtil.toJson(requestMap));
         String msgType = requestMap.get("MsgType");
         String wechatNo = requestMap.get("ToUserName");
         String openId = requestMap.get("FromUserName");
         String createTime = requestMap.get("CreateTime");
+        String msgId = requestMap.get("MsgId");
+        String mediaId = requestMap.get("MediaId");
         try {
             //根据wechatNo获取对应的数据库id
             WechatPlatfrom platfrom = new WechatPlatfrom();
@@ -104,26 +110,57 @@ public class WechatInfoService {
                     case EventMessage.EVENT_TYPE_CLICK :
                         String eventKey = requestMap.get("EventKey");
                         //根据关键字获取主表id,再根据主表id获取素材内容
-                        WechatReplyKeyword keyword = new WechatReplyKeyword();
-                        keyword.setKeyword(eventKey);
-                        keyword.setWechatId(wechatId);
-                        List<WechatReplyNew> keyWords = wechatReplyService.getWechatReplyByKeyWord(keyword);
-                        if(CollectionUtils.isEmpty(keyWords)) {
-                            break;
-                        }
-                        //如果关键字对应多个规则,只选取最近添加的一条
-                        WechatReplyNew aNew1 = keyWords.get(0);
-                        List<WechatMaterial> matetial = wechatMaterialService.getMatetialByRuleType(aNew1);
-                        logger.info(" matetials {}",JsonUtil.toJson(matetial));
+                        resultXml = keyWordDeal(wechatId, eventKey, wechatNo, openId);
                         break;
 
                 }
+            }else if (MessageTypeEnum.TEXT.getCode().equals(msgType)) {
+                //如果是文本内容的消息
+                String content = requestMap.get("Content");
+                MessageRecord record = new MessageRecord();
+                record.setMsgId(msgId);
+                record.setMsgType(msgType);
+                record.setContent(content);
+                record.setToUserName(wechatNo);
+                record.setFromUserName(openId);
+                record.setMediaId(mediaId);
+                //判断该回复是否已经处理过
+                MessageRecord messageRecord = (MessageRecord) CacheUtils.get(WechatCofig.EHCACHE, msgId);
+                if(null != messageRecord) {
+                    return resultXml;
+                }
+                memberAssociationService.saveMessageRecord(record);
+                CacheUtils.get(WechatCofig.EHCACHE, msgId, record);
+                resultXml = keyWordDeal(wechatId, content, wechatNo, openId);
             }
         } catch (ServiceException e) {
             e.printStackTrace();
         }
         logger.info("resultXML  {}",JsonUtil.toJson(resultXml));
         return resultXml;
+    }
+
+    /**
+     * 关键字处理
+     * @param wechatId
+     * @param keyWord
+     * @param wechatNo
+     * @param openId
+     * @return
+     */
+    private String keyWordDeal(Long wechatId, String keyWord, String wechatNo, String openId) {
+        WechatReplyKeyword keyword = new WechatReplyKeyword();
+        keyword.setKeyword(keyWord);
+        keyword.setWechatId(wechatId);
+        List<WechatReplyNew> keyWords = wechatReplyService.getWechatReplyByKeyWord(keyword);
+        if(CollectionUtils.isEmpty(keyWords)) {
+            return "";
+        }
+        //如果关键字对应多个规则,只选取最近添加的一条
+        WechatReplyNew aNew1 = keyWords.get(0);
+        List<WechatMaterial> matetial = wechatMaterialService.getMatetialByRuleType(aNew1);
+        logger.info(" matetials {}",JsonUtil.toJson(matetial));
+        return dealType(matetial.get(0), wechatNo, openId);
     }
 
 
@@ -177,12 +214,13 @@ public class WechatInfoService {
                 newsMessage.setArticleCount("1");
                 List<Article> articles = new ArrayList<>();
                 Article article = new Article();
-                article.setPicUrl(wechatMaterial.getCoverPicture());
+                article.setPicUrl(URL+wechatMaterial.getCoverPicture());
                 article.setTitle(wechatMaterial.getTitle());
                 article.setDescription(wechatMaterial.getBrief());
                 article.setUrl(wechatMaterial.getUri());
+                articles.add(article);
                 newsMessage.setArticles(articles);
-                logger.info(" voiceMessage {}",JsonUtil.toJson(newsMessage));
+                logger.info(" newsMessage {}",JsonUtil.toJson(newsMessage));
                 return MessageUtil.messageToXml(newsMessage);
             default:
                 return "";

@@ -100,8 +100,9 @@
 	
 	<update id="update">
 		UPDATE t_member_association SET
-			deleted = 1,
-			sign = 1
+			deleted = #{deleted},
+			sign = 1,
+			update_date = now()
 		WHERE open_id = #{openId}
 	</update>
 	
@@ -109,5 +110,12 @@
 		DELETE FROM t_member_association
 		WHERE id = #{id}
 	</update>
+
+	<insert id="insertMessageRecord" parameterType="com.hzkans.crm.modules.wechat.entity.MessageRecord" >
+		INSERT INTO t_message_record
+		(msg_id, content, msg_type, media_id, to_user_name, from_user_name , create_date, update_date)
+		VALUES
+		(#{msgId}, #{content}, #{msgType}, #{mediaId}, #{toUserName}, #{fromUserName}, now(), now())
+	</insert>
 	
 </mapper>

@@ -28,9 +28,7 @@
 		a.type AS "type",
 		a.article_uri AS "articleUri",
 		a.media_id AS "mediaId",
-		rr.reply_way AS "replyWay",
-		rr.status AS "status",
-		rc.content AS "content",
+		rc.content AS "content"
 	</sql>
 	
 	<sql id="wechatMaterialJoins">
@@ -42,16 +40,14 @@
 		SELECT
 			<include refid="base_query_sql" />
 		FROM
-			t_wx_reply_rule rr,
 			t_wx_reply_rule_content rc,
 			t_wechat_material a
 		WHERE
-			rr.id = rc.rule_id
-		AND rc.material_id = a.id
-		AND rr.wechat_id = #{wechatId}
-		AND rr.rule_type = #{ruleType}
-		AND rr.deleted = 0
+			rc.material_id = a.id
+		AND rc.rule_id = #{id}
 		AND a.deleted = 0
+		AND rc.deleted = 0
+		order by rc.create_date desc
 	</select>
     
 	<select id="get" resultType="WechatMaterial">

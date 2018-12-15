@@ -274,33 +274,34 @@ public class WechatPlatfromController extends BaseController {
             //先保存到本地,在上传到阿里云,最后删除本地文件
             file.transferTo(newFile);
             wxOSSClient.uploadFile(UPLOAD_EX,newPath,realPath);
-            //上传到微信素材
-            WechatPlatfrom wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
-            logger.info("wechatPlatform {}", JsonUtil.toJson(wechat));
+            //上传到微信素材(只有上传是图片和语音类型走,图文中图片的上传不走这个接口)
+            if(MessageTypeEnum.IMAGE.getSign().equals(type) || MessageTypeEnum.VOICE.getSign().equals(type)) {
+                WechatPlatfrom wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
+                logger.info("wechatPlatform {}", JsonUtil.toJson(wechat));
 
-            String url = WechatCofig.UPLOAD_MEDIA
-                    .replace("ACCESS_TOKEN", WechatUtils.getAccessToken(wechat.getAppId(), wechat.getAppSecret()))
-                    .replace("TYPE",  messageTypeEnum.getCode());
+                String url = WechatCofig.UPLOAD_MEDIA
+                        .replace("ACCESS_TOKEN", WechatUtils.getAccessToken(wechat.getAppId(), wechat.getAppSecret()))
+                        .replace("TYPE",  messageTypeEnum.getCode());
 
-            String result = HttpRequestUtil.uploadMaterial(newFile, MessageTypeEnum.IMAGE.getCode(), url, "",
-                    "", "", 0, "false");
-            logger.info(" result : {}",result);
+                String result = HttpRequestUtil.uploadMaterial(newFile, MessageTypeEnum.IMAGE.getCode(), url, "",
+                        "", "", 0, "false");
+                logger.info(" result : {}",result);
+                object = JSONObject.parseObject(result);
+                Object errmsg = object.get("errmsg");
+                if(errmsg != null) {
+                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_WEHCAT_NUM_ERROR);
+                }
+                resultMap.put("mediaId", object.get("media_id"));
+            }
             if(newFile.exists()) {
                 newFile.delete();
             }
-            object = JSONObject.parseObject(result);
             resultMap.put("path", newPath);
-            resultMap.put("mediaId", object.get("media_id"));
+            logger.info(" resultMap {}",JsonUtil.toJson(resultMap));
+            return ResponseUtils.getSuccessApiResponseStr(resultMap);
         } catch (Exception e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
-        Object errmsg = object.get("errmsg");
-        if(errmsg != null) {
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_WEHCAT_NUM_ERROR);
-        }
-        logger.info(" resultMap {}",JsonUtil.toJson(resultMap));
-        return ResponseUtils.getSuccessApiResponseStr(resultMap);
-
     }
 
 }

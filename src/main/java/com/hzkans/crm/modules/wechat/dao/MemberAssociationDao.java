@@ -6,6 +6,7 @@ package com.hzkans.crm.modules.wechat.dao;
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
+import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 
 /**
  * 微信关注DAO接口
@@ -14,5 +15,6 @@ import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
  */
 @MyBatisDao
 public interface MemberAssociationDao extends CrudDao<MemberAssociation> {
-	
+
+    int insertMessageRecord(MessageRecord messageRecord);
 }
