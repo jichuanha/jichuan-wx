@@ -17,30 +17,7 @@
         a:hover{
             text-decoration: none;
         }
-        .my-nav-tabs{
-            background-color: #F7F7F7;
-            /*padding-left: 20px;*/
-            margin-left: 10px;
-            /*position: fixed;*/
-        }
-        .my-nav-tabs li{
-            float: left;
-            font-size: 16px;
-            line-height: 3;
-            margin: 0 30px;
-            padding: 0 20px;
-            text-align: center;
-            color: #000;
-        }
-        .my-nav-tabs li a{
-            color: #000;
-        }
-        .my-nav-tabs li.active a{
-            border-bottom: 5px solid #3F51B5;
-        }
-        .my-nav-tabs li a:hover{
-            background-color: #F7F7F7;
-        }
+
         .h3-title{
             font-size: 16px;
             color: #000;
@@ -243,7 +220,7 @@
     </style>
 </head>
 <body>
-<ul class="nav my-nav-tabs clearfix">
+<ul class="nav my-nav-tabs nav-tabs clearfix">
     <li><a href="${ctx}/activity/activity/activity-list">活动列表</a></li>
     <li class="active"><a href="${ctx}/trade/order/order_list">订单列表</a></li>
     <li><a href="${ctx}/trade/order/order_review">订单审核</a></li>
@@ -352,8 +329,18 @@
         //带上活动类型参数
         var paraStr = '?activity_type='+para.activity_type;
         $.each($('.my-nav-tabs li a'),function (index,selector) {
-            var oldHref = $(selector).attr('href');
-            $(selector).attr('href',oldHref+paraStr);
+            if(para.activity_type == 2 ){
+                if(index == 0){
+                    $(this).attr('href','${ctx}/activity/activityLottery/getLotteryList'+paraStr);
+                }
+                else if(index == 2){
+                    $(this).remove();
+                }
+            }
+            else{
+                var oldHref = $(selector).attr('href');
+                $(selector).attr('href',oldHref+paraStr);
+            }
         })
         //获取店铺信息
         $.ajax({

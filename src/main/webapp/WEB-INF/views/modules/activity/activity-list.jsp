@@ -7,8 +7,8 @@
 	<title>活动列表</title>
 	<meta name="decorator" content="default"/>
 	<%--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">--%>
-	<link rel="stylesheet" href="${ctxStatic}/page.my.css">
-	<script src="${ctxStatic}/page.my.js"></script>
+	<link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
+	<script src="${ctxStatic}/jquery.page/page.js"></script>
 	<style>
 		.h3-title{
 			font-size: 16px;
@@ -214,34 +214,11 @@
 			vertical-align: text-top;
 			margin-left: 2px;
 		}
-		.my-nav-tabs{
-			background-color: #F7F7F7;
-			/*padding-left: 20px;*/
-			margin-left: 10px;
-		}
-		.my-nav-tabs li{
-			float: left;
-			font-size: 16px;
-			line-height: 3;
-			margin: 0 30px;
-			padding: 0 20px;
-			text-align: center;
-			color: #000;
-		}
-		.my-nav-tabs li a{
-			color: #000;
-		}
-		.my-nav-tabs li.active a{
-			border-bottom: 5px solid #3F51B5;
-		}
-		.my-nav-tabs li a:hover{
-			background-color: #F7F7F7;
-		}
 	</style>
 
 </head>
 <body>
-<ul class="nav my-nav-tabs clearfix">
+<ul class="nav my-nav-tabs nav-tabs clearfix">
 	<li class="active"><a href="${ctx}/activity/activity/activity-list">活动列表</a></li>
 	<li><a href="${ctx}/trade/order/order_list">订单列表</a></li>
 	<li><a href="${ctx}/trade/order/order_review">订单审核</a></li>
@@ -249,8 +226,6 @@
 <div class="wrap">
 	<div class="wrap-header">
 		<form id="searchForm"  class="form-search">
-			<input id="current_page" name="current_page" type="hidden" value="1"/>
-			<input id="page_size" name="page_size" type="hidden" value="10"/>
 			<ul class="ul-form">
 				<li><label>活动名称：</label>
 					<input type="text" name="name" class="mid-input" id="name">
@@ -293,7 +268,6 @@
 			</ul>
 		</form>
 	</div>
-	<input id="pageCount" type="hidden" value=""/>
 	<p class="h3-title search-box"><span class="activity-type"><i class="h3-deco"></i></span></p>
 	<div class="activity-lists">
 		<ul class="lists-title clearfix">
@@ -310,14 +284,16 @@
 		</div>
 
 	</div>
-	<div class="pagination">
-		<ul>
-		</ul>
-	</div>
+	<div id="pagenation"></div>
 </div>
 <script>
     $(function () {
-        console.log($.cookie())
+        var params = {
+            current_page:1,
+            page_size:10,
+            wechat_platform_id:$.cookie('platFormId'),
+        };
+        var hasInit = false;
         var para = GetRequest(); //url参数
         var activityType = {}; //活动类型数据
         //获取活动类型参数
@@ -326,7 +302,7 @@
             type:'post',
             async:false,
             success:function (msg) {
-                var msg = strToJson(msg);
+                var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     activityType = msg.data;
                     $('.search-box').html('<span class="activity-type"><i class="h3-deco"></i>'+activityType[para.activity_type]+'</span>');
@@ -344,7 +320,7 @@
             url:'platformShopList',
             type:'POST',
             success:function (msg) {
-                var msg = strToJson(msg);
+                var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     var data = msg.data;
                     $.each(data,function (index,value) {
@@ -358,28 +334,19 @@
         })
         //获取列表
         ajaxFuc();
-        function ajaxFuc(nextPage){
-            var dataObject = {};
+        function ajaxFuc(){
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
-                dataObject[item.name] = item.value;
+                params[item.name] = item.value;
             });
-            if(nextPage != null){
-                dataObject.current_page = nextPage;
-                nextPageSec = nextPage;
-            }
-            else{
-                dataObject.current_page = 1;
-                nextPageSec = 1;
-            }
-            dataObject.activity_type = para.activity_type;
-            dataObject.wechat_platform_id = $.cookie().platFormId;
+
+            params.activity_type = para.activity_type;
             $.ajax({
                 url:"activityList",
                 type:"post",
-				data:dataObject,
+				data:params,
                 success:function (msg) {
-                    var msg = strToJson(msg);
+                    var msg = JSON.parse(msg);
                     var data = msg.data;
                     $('.lists-show').html('');
                     var shopName;
@@ -432,7 +399,7 @@
 						}
 
                         shopNameArr = [];
-						shopName  = strToJson(el.shop_name);
+						shopName  = JSON.parse(el.shop_name);
                         $.each(shopName,function (key,value) {
 							values = value.split(',');
 							values.forEach(function (el) {
@@ -444,9 +411,22 @@
                         listShowEach += '<li class="mycol-15">'+(el.max_order_limit == 0?"-":el.max_order_limit)+' / '+el.order_count+'</li><li class="mycol-15">'+(el.total_amount == 0?"-":"¥ "+el.total_amount/100)+' / ¥ '+(el.order_count*el.per_amount/100)+'</li></ul>';
 						$('.lists-show').append(listShowEach);
                     })
-                    $('#current_page').val(nextPageSec);
-                    $('#pageCount').val(data.count);
-                    pageList(10,nextPageSec);
+                    if(!hasInit){
+                        var obj = {
+                            obj_box: '#pagenation',
+                            total_item: data.count,
+                            per_num: params.page_size,
+                            current_page: params.current_page,
+                            change_content: function(per_num, current_page) {
+                                if(hasInit){
+                                    params.current_page = current_page;
+                                    ajaxFuc();
+                                }
+                            }
+                        };
+                        page_ctrl(obj);
+                        hasInit=true;
+                    }
                 }
             })
 		}
@@ -570,7 +550,7 @@
                     type:type
                 },
                 success:function (msg) {
-                    var msg = strToJson(msg);
+                    var msg = JSON.parse(msg);
                     if(msg.code == 10000){
                         ajaxFuc();
                     }

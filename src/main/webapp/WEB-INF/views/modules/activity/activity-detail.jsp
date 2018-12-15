@@ -8,8 +8,8 @@
 	<meta name="decorator" content="default"/>
 	<script src="${ctxStatic}/clipboard.js"></script>
 	<script src="${ctxStatic}/layer/layer.js"></script>
-	<link rel="stylesheet" href="${ctxStatic}/page.my.css">
-	<script src="${ctxStatic}/page.my.js"></script>
+	<link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
+	<script src="${ctxStatic}/jquery.page/page.js"></script>
 
 	<style>
 		.activity-title{
@@ -134,6 +134,9 @@
 			display: inline-block;
 			margin-left: 40px;
 		}
+		.page_ctrl .input_page_num{
+			height: 28px;
+		}
 	</style>
 </head>
 <body>
@@ -151,10 +154,6 @@
 	<ul class="join-shop">
 
 	</ul>
-	<input id="current_page" name="current_page" type="hidden" value="1"/>
-	<input id="page_size" name="page_size" type="hidden" value="10"/>
-	<input id="pageCount" type="hidden" value=""/>
-
 	<h3>订单列表</h3>
 	<div class="order-lists">
 		<ul class="lists-title clearfix">
@@ -172,14 +171,18 @@
 
 		</div>
 	</div>
-    <div class="pagination">
-        <ul>
-        </ul>
-    </div>
+	<div id="pagenation"></div>
+
 </div>
 
 <script>
 $(function () {
+    var params = {
+        current_page:1,
+        page_size:10,
+        wechat_platform_id:$.cookie('platFormId'),
+    };
+    var hasInit = false;
     var para = GetRequest();
     var activityType = {};
     // 获取活动类型列表
@@ -188,7 +191,7 @@ $(function () {
 		type:'post',
 		async:false,
 		success:function (msg) {
-			var msg = strToJson(msg);
+			var msg = JSON.parse(msg);
 			if(msg.code == 10000){
                 activityType = msg.data;
 			}
@@ -203,7 +206,7 @@ $(function () {
 		    id:para.id
 		},
 		success:function (msg) {
-			var msg = strToJson(msg);
+			var msg = JSON.parse(msg);
 			if(msg.code == 10000){
 			    var data = msg.data;
 			    var baseStr = '<li><i class="import-deco">*</i>活动名称： '+data.name+'</li>';
@@ -246,7 +249,7 @@ $(function () {
                     marketStr += '<li><i class="import-deco">*</i>人工审核： 是</li>'
                 }
 			    $('.market-type').html(marketStr);
-                var shopName = strToJson(data.shop_name);
+                var shopName = JSON.parse(data.shop_name);
                 $.each(shopName,function (key,value) {
                     $('.join-shop').append('<li>'+key+'： '+value+'</li>');
                 })
@@ -255,21 +258,17 @@ $(function () {
 	})
     //获取订单列表
     ajaxFuc();
-    function ajaxFuc(nextPageSec) {
-        var dataObject = {};
-        dataObject.act_type = para.activity_type;
-        dataObject.current_page = $('#current_page').val();
-        dataObject.page_size = $('#page_size').val();
-        dataObject.page_type = 1;
-        dataObject.act_name = para.act_name;
-        dataObject.wechat_platform_id = $.cookie().platFormId;
+    function ajaxFuc() {
+        params.act_type = para.activity_type;
+        params.page_type = 1;
+        params.act_name = para.act_name;
 
         $.ajax({
             url:'${ctx}/trade/order/orderListDate',
             type:'post',
-            data:dataObject,
+            data:params,
             success:function (msg) {
-                var msg = strToJson(msg);
+                var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     var data = msg.data;
                     $('.lists-show').html('');
@@ -309,9 +308,22 @@ $(function () {
                         listStr += '</ul>';
                     })
                     $('.lists-show').html(listStr);
-                    $('#current_page').val(nextPageSec);
-                    $('#pageCount').val(data.count);
-                    pageList(10,nextPageSec);
+                    if(!hasInit){
+                        var obj = {
+                            obj_box: '#pagenation',
+                            total_item: data.count,
+                            per_num: params.page_size,
+                            current_page: params.current_page,
+                            change_content: function(per_num, current_page) {
+                                if(hasInit){
+                                    params.current_page = current_page;
+                                    ajaxFuc();
+                                }
+                            }
+                        };
+                        page_ctrl(obj);
+                        hasInit=true;
+                    }
                 }
             }
         })
