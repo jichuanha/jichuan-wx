@@ -1318,7 +1318,10 @@
             success:function (msg) {
                 var msg = JSON.parse(msg);
                 if(msg.code == 10000){
-                    <%--location.href = '${ctx}/wechat_reply/link_auto_res_key'--%>
+                    location.href = '${ctx}/wechat_reply/link_auto_res_key'
+                }
+                else{
+                    layer.msg(msg.msg);
                 }
             }
         })
