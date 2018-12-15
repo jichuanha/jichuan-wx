@@ -290,8 +290,8 @@
 				<li><label><span class="requ-span">*</span>强制关注：</label>
 					<select name="is_follow" id="is_follow" class="mid-input">
 						<option value=""></option>
-						<option value="1">需要</option>
-						<option value="2">不需要</option>
+						<option value="0">需要</option>
+						<option value="1">不需要</option>
 					</select>
 				</li>
 				<li><label><span class="requ-span">*</span>返利渠道：</label>

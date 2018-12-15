@@ -385,10 +385,10 @@
                             listShowEach += '<li class="mycol-10"></li>'
                         }
                         if(el.is_follow == '0'){
-                            listShowEach += '<li class="mycol-10">否</li>'
+                            listShowEach += '<li class="mycol-10">是</li>'
 						}
 						else{
-                            listShowEach += '<li class="mycol-10">是</li>'
+                            listShowEach += '<li class="mycol-10">否</li>'
                         }
                         listShowEach += '<li class="mycol-10">'+el.name+'</li>'
                         if(el.rebate_channel == 1){

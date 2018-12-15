@@ -260,10 +260,11 @@
 							<option value="3">已结束</option>
 						</select>
 					</li>
-					<li><label>强制关联：</label>
-						<select name="rebate_type" id="rebate_type" class="mid-input">
+					<li><label>强制关注：</label>
+						<select name="is_follow" id="is_follow" class="mid-input">
 							<option value="">请选择</option>
-							<option value="1">固定金额</option>
+							<option value="0">是</option>
+							<option value="1">否</option>
 						</select>
 					</li>
 					<li>
@@ -294,7 +295,7 @@
 		<div class="activity-lists">
 			<ul class="lists-title clearfix">
 				<li class="mycol-10">活动状态</li>
-				<li class="mycol-10">强制关联</li>
+				<li class="mycol-10">强制关注</li>
 				<li class="mycol-10">活动名称</li>
 				<li class="mycol-15">奖品设置</li>
 				<li class="mycol-25">参与店铺</li>
@@ -412,10 +413,10 @@
                                 listShowEach += '<li class="mycol-10"></li>'
                             }
                             if(el.is_follow == '0'){
-                                listShowEach += '<li class="mycol-10">否</li>'
+                                listShowEach += '<li class="mycol-10">是</li>'
                             }
                             else{
-                                listShowEach += '<li class="mycol-10">是</li>'
+                                listShowEach += '<li class="mycol-10">否</li>'
                             }
                             listShowEach += '<li class="mycol-10">'+el.name+'</li>'
                             // if(el.rebate_channel == 1){
@@ -474,9 +475,9 @@
                 type:'select',
                 id:'status'
             },{
-                name:'返利类型',
+                name:'强制关注',
                 type:'select',
-                id:'rebate_type'
+                id:'is_follow'
             },{
                 name:'开始时间',
                 type:'input',
