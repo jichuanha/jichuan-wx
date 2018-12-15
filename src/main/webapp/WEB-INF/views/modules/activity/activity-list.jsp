@@ -325,7 +325,7 @@
                     var data = msg.data;
                     $.each(data,function (index,value) {
                         value.forEach(function (el,indexshop) {
-                            $('#shop_no').append('<option value="'+el.shop+'">'+el.platform_name+el.shop_name+'</option>');
+                            $('#shop_no').append('<option value="'+el.id+'">'+el.platform_name+el.shop_name+'</option>');
                         })
 
                     })
