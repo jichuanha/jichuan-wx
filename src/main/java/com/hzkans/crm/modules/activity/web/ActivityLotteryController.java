@@ -278,8 +278,6 @@ public class ActivityLotteryController extends BaseController {
 					prizeMap.put(dict.getValue(),dict.getLabel());
 				}
 			}
-			logger.info("[{}]prizeMap:{}",JsonUtil.toJson(ResponseUtils.getSuccessApiResponseStr(prizeMap)));
-
 			return ResponseUtils.getSuccessApiResponseStr(prizeMap);
 		} catch (Exception e) {
 			logger.error("findList is error",e);

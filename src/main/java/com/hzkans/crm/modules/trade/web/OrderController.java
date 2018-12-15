@@ -75,6 +75,24 @@ public class OrderController extends BaseController {
 		return "modules/order/order-review";
 	}
 
+	/**
+	 * 幸运抽奖订单列表
+	 * @return
+	 */
+	@RequestMapping("/order_lottery_list")
+	public String orderLotteryListPage() {
+		return "modules/order/order-lottery-list";
+	}
+
+	/**
+	 * 幸运抽奖订单详情
+	 * @return
+	 */
+	@RequestMapping("/order_lottery_detail")
+	public String orderLotteryDetailPage() {
+		return "modules/order/order-lottery-detail";
+	}
+
 
 	/**
 	 * 活动管理中的订单列表和订单管理
