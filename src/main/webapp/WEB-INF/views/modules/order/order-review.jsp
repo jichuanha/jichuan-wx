@@ -8,8 +8,8 @@
     <meta name="decorator" content="default"/>
     <%--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">--%>
     <script src="${ctxStatic}/layer/layer.js"></script>
-    <link rel="stylesheet" href="${ctxStatic}/page.my.css">
-    <script src="${ctxStatic}/page.my.js"></script>
+    <link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
+    <script src="${ctxStatic}/jquery.page/page.js"></script>
     <style>
         a{
             color: #3E55BD;
@@ -360,10 +360,7 @@
 
         </div>
     </div>
-    <div class="pagination">
-        <ul>
-        </ul>
-    </div>
+    <div id="pagenation"></div>
     <p class="btns-p">
         <a href="#" id="btnPassAll" class="review-btn">通过</a>
         <a href="#" id="btnRefuseAll" class="review-btn">拒绝</a>
@@ -373,6 +370,12 @@
 
 <script>
     $(function () {
+        var params = {
+            current_page:1,
+            page_size:10,
+            wechat_id:$.cookie('platFormId'),
+        };
+        var hasInit = false;
         var para = GetRequest();//url参数
         var shopStr = {};//店铺参数
         var activityType = {}; //活动类型数据
@@ -382,7 +385,7 @@
             type:'post',
             async:false,
             success:function (msg) {
-                var msg = strToJson(msg);
+                var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     activityType = msg.data;
                     $('.activity-type').html('<i class="h3-deco"></i>'+activityType[para.activity_type]);
@@ -400,7 +403,7 @@
             url:'${ctx}/activity/activity/platformShopList',
             type:'post',
             success:function (msg) {
-                var msg = strToJson(msg);
+                var msg = JSON.parse(msg);
                 if(msg.code == 10000){
                     var data = msg.data;
                     $.each(data,function (index,value) {
@@ -662,66 +665,6 @@
             }
 
         })
-        // /分页跳转方法
-//         下一页点击事件
-        $('.nextli').live('click',function () {
-            currPage = $('#current_page').val();
-            nextPage = parseInt(currPage) + 1;
-            pageCount  = $('#pageCount').val();
-            pageNum = $('#page_size').val();
-            //当前页码 小于 总数/一页数
-            if(currPage >= Math.ceil(pageCount/pageNum)){
-                return;
-            }
-            else{
-                ajaxFuc(nextPage);
-            }
-        })
-// //    上一页点击事件
-        $('.prevli').live('click',function () {
-            currPage = $('#current_page').val();
-            if(currPage < 2){
-                return;
-            }
-            else{
-                nextPage = currPage - 1;
-                ajaxFuc(nextPage);
-            }
-        })
-//    某一页点击事件
-        $('.page-lis').live('click',function () {
-            nextPage = $(this).children().html();
-            ajaxFuc(nextPage);
-        })
-//    input回车跳转事件
-        $('.curr-page').live('keyup',function (event) {
-            if(event.keyCode == 13){
-                nextPage = $(this).val();
-                if (nextPage != '' && !isNaN(nextPage)) {
-                    ajaxFuc(nextPage);
-                }
-                else{
-                    $.alert({
-                        title: '提示',
-                        content: '请检查后重新输入!'
-                    });
-                    return;
-                }
-            }
-        })
-        $('.btn-link').live('click',function () {
-            nextPage = $('.curr-page').val();
-            if (nextPage != '' && !isNaN(nextPage)) {
-                ajaxFuc(nextPage);
-            }
-            else{
-                $.alert({
-                    title: '提示',
-                    content: '请检查后重新输入!'
-                });
-                return;
-            }
-        })
         function orderHandle(id,status,message){
             $.ajax({
                 url:'orderAudit',
@@ -732,7 +675,7 @@
                     message:message
                 },
                 success:function (msg) {
-                    var msg = strToJson(msg);
+                    var msg = JSON.parse(msg);
                     if(msg.code == 10000){
                         ajaxFuc();
                     }
@@ -788,30 +731,19 @@
                 shopValue[i].checked = flag
             }
         })
-        function ajaxFuc(nextPage) {
-            var dataObject = {};
+        function ajaxFuc() {
             dataSer = ($("#searchForm").serializeArray());
             $.each(dataSer,function(i,item){
-                dataObject[item.name] = item.value;
+                params[item.name] = item.value;
             });
-            dataObject.page_type = 2;
-            if(nextPage != null){
-                dataObject.current_page = nextPage;
-                nextPageSec = nextPage;
-            }
-            else{
-                dataObject.current_page = 1;
-                nextPageSec = 1;
-            }
-            dataObject.act_type = para.activity_type;
-            //待改 公众号
-            dataObject.wechat_id = $.cookie().platFormId;
+            params.page_type = 2;
+            params.act_type = para.activity_type;
             $.ajax({
                 url:'orderListDate',
                 type:'post',
-                data:dataObject,
+                data:params,
                 success:function (msg) {
-                    var msg = strToJson(msg);
+                    var msg = JSON.parse(msg);
                     if(msg.code == 10000){
                         var data = msg.data;
                         $('.lists-show').html('');
@@ -854,9 +786,22 @@
                             listStr += '</ul>';
                         })
                         $('.lists-show').html(listStr);
-                        $('#current_page').val(nextPageSec);
-                        $('#pageCount').val(data.count);
-                        pageList(10,nextPageSec);
+                        if(!hasInit){
+                            var obj = {
+                                obj_box: '#pagenation',
+                                total_item: data.count,
+                                per_num: params.page_size,
+                                current_page: params.current_page,
+                                change_content: function(per_num, current_page) {
+                                    if(hasInit){
+                                        params.current_page = current_page;
+                                        ajaxFuc();
+                                    }
+                                }
+                            };
+                            page_ctrl(obj);
+                            hasInit=true;
+                        }
                     }
                 }
             })

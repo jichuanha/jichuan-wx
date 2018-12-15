@@ -211,36 +211,13 @@
 			vertical-align: text-top;
 			margin-left: 2px;
 		}
-		.my-nav-tabs{
-			background-color: #F7F7F7;
-			/*padding-left: 20px;*/
-			margin-left: 10px;
-		}
-		.my-nav-tabs li{
-			float: left;
-			font-size: 16px;
-			line-height: 3;
-			margin: 0 30px;
-			padding: 0 20px;
-			text-align: center;
-			color: #000;
-		}
-		.my-nav-tabs li a{
-			color: #000;
-		}
-		.my-nav-tabs li.active a{
-			border-bottom: 5px solid #3F51B5;
-		}
-		.my-nav-tabs li a:hover{
-			background-color: #F7F7F7;
-		}
 	</style>
 
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/activity/activityLottery/activityLottery">活动列表</a></li>
-		<li><a href="${ctx}/trade/order/order_list">订单列表</a></li>
+		<li class="active"><a href="${ctx}/activity/activityLottery/getLotteryList">活动列表</a></li>
+		<li><a href="${ctx}/trade/order/order_lottery_list">订单列表</a></li>
 	</ul>
 	<div class="wrap">
 		<div class="wrap-header">
@@ -295,12 +272,11 @@
 		<div class="activity-lists">
 			<ul class="lists-title clearfix">
 				<li class="mycol-10">活动状态</li>
-				<li class="mycol-10">强制关注</li>
+				<li class="mycol-15">强制关注</li>
 				<li class="mycol-10">活动名称</li>
-				<li class="mycol-15">奖品设置</li>
+				<li class="mycol-25">奖品设置</li>
 				<li class="mycol-25">参与店铺</li>
 				<li class="mycol-15">活动订单</li>
-				<li class="mycol-15">活动金额</li>
 			</ul>
 			<div class="lists-show">
 
@@ -413,10 +389,10 @@
                                 listShowEach += '<li class="mycol-10"></li>'
                             }
                             if(el.is_follow == '0'){
-                                listShowEach += '<li class="mycol-10">是</li>'
+                                listShowEach += '<li class="mycol-15">是</li>'
                             }
                             else{
-                                listShowEach += '<li class="mycol-10">否</li>'
+                                listShowEach += '<li class="mycol-15">否</li>'
                             }
                             listShowEach += '<li class="mycol-10">'+el.name+'</li>'
                             // if(el.rebate_channel == 1){
@@ -425,7 +401,7 @@
                             // else{
                             //     listShowEach += '<li class="mycol-15"></li>';
                             // }
-                            listShowEach += '<li class="mycol-15">'
+                            listShowEach += '<li class="mycol-25">'
 							el.lottery_prize_list.forEach(function (prizeEl,prizeIndex) {
                                 listShowEach += prizeEl.prize_name + '('+ prizeEl.prize_rate*100 +'%)';
                                 if(prizeIndex != el.lottery_prize_list.length-1){
@@ -443,7 +419,7 @@
                             })
                             shopNameStr = shopNameArr.join(',');
                             listShowEach += '<li class="mycol-25" title="'+shopNameStr+'">'+shopNameStr+'</li>';
-                            listShowEach += '<li class="mycol-15">'+(el.max_order_limit == 0?"-":el.max_order_limit)+' / '+el.order_count+'</li><li class="mycol-15">'+(el.total_amount == 0?"-":"¥ "+el.total_amount/100)+' / ¥ '+(el.order_count*el.per_amount/100)+'</li></ul>';
+                            listShowEach += '<li class="mycol-15">'+(el.total_order == 0?"-":el.total_order)+' / '+el.order_count+'</li></ul>';
                             $('.lists-show').append(listShowEach);
                         })
                         if(!hasInit){
