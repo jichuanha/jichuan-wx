@@ -35,7 +35,7 @@
             and menuLevel = #{menuLevel}
         </if>
     </select>
-    <select id="selectParentMenu" resultMap="BaseResultMap" parameterType="int">
+    <select id="selectParentMenu" resultMap="BaseResultMap" parameterType="long">
         select
         <include refid="Base_Column_List"/>
         from t_wechat_custom_menu
@@ -48,12 +48,12 @@
         <include refid="Base_Column_List"/>
         from t_wechat_custom_menu
         where deleted = 0
-        and parent_id = #{parentId,jdbcType=BIGINT}
+        and parent_id = #{parentId}
         order by sort asc
     </select>
 
 
-    <select id="selectchildMenu" resultMap="BaseResultMap" parameterType="int">
+    <select id="selectchildMenu" resultMap="BaseResultMap" parameterType="long">
         select
         <include refid="Base_Column_List"/>
         from t_wechat_custom_menu
