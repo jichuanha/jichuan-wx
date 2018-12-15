@@ -86,15 +86,27 @@
 		}
 		.mycol-5{
 			width: 5%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 		}
 		.mycol-10{
 			width: 10%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 		}
 		.mycol-15{
 			width: 15%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 		}
 		.mycol-20{
 			width: 20%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
 		}
 		.lists-title li{
 			background-color: #F7F7F7;
@@ -180,7 +192,7 @@ $(function () {
     var params = {
         current_page:1,
         page_size:10,
-        wechat_platform_id:$.cookie('platFormId'),
+        wechat_id:$.cookie('platFormId'),
     };
     var hasInit = false;
     var para = GetRequest();

@@ -325,7 +325,7 @@
                     var data = msg.data;
                     $.each(data,function (index,value) {
                         value.forEach(function (el,indexshop) {
-                            $('#shop_no').append('<option value="'+el.shop+'">'+el.shop_name+'</option>');
+                            $('#shop_no').append('<option value="'+el.shop+'">'+el.platform_name+el.shop_name+'</option>');
                         })
 
                     })
@@ -355,7 +355,7 @@
                     var shopNameStr = '';
 					data.list.forEach(function (el,index) {
 					    var listShowEach = '';
-                        listShowEach += '<p><span class="list-time">'+el.active_date+' - '+el.inactive_date+'</span>';
+                        listShowEach += '<p><span class="list-time">活动时间:'+el.active_date+' - '+el.inactive_date+'</span>';
 						listShowEach += '<i class="list-right">';
 						if(el.status == 1){
                             listShowEach += '<span class="activity-pause">暂停</span>';

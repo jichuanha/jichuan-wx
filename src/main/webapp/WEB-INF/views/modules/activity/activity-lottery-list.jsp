@@ -260,7 +260,7 @@
 							<option value="3">已结束</option>
 						</select>
 					</li>
-					<li><label>返利类型：</label>
+					<li><label>强制关联：</label>
 						<select name="rebate_type" id="rebate_type" class="mid-input">
 							<option value="">请选择</option>
 							<option value="1">固定金额</option>
@@ -275,7 +275,7 @@
 						<input id="inactive_date" name="inactive_date" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
 					</li>
-					<li><label>所属店铺：</label>
+					<li><label>参与店铺：</label>
 						<select name="shop_no" id="shop_no" class="mid-input">
 							<option value="">请选择</option>
 						</select>
@@ -353,7 +353,7 @@
                         var data = msg.data;
                         $.each(data,function (index,value) {
                             value.forEach(function (el,indexshop) {
-                                $('#shop_no').append('<option value="'+el.shop+'">'+el.shop_name+'</option>');
+                                $('#shop_no').append('<option value="'+el.shop+'">'+el.platform_name+el.shop_name+'</option>');
                             })
 
                         })
@@ -369,7 +369,7 @@
                 });
                 params.activity_type = para.activity_type;
                 $.ajax({
-                    url:"${ctx}/activity/activity/activityList",
+                    url:"${ctx}/activity/activityLottery/activityLotteryList",
                     type:"post",
                     data:params,
                     success:function (msg) {
@@ -382,7 +382,7 @@
                         var shopNameStr = '';
                         data.list.forEach(function (el,index) {
                             var listShowEach = '';
-                            listShowEach += '<p><span class="list-time">'+el.active_date+' - '+el.inactive_date+'</span>';
+                            listShowEach += '<p><span class="list-time">活动时间:'+el.active_date+' - '+el.inactive_date+'</span>';
                             listShowEach += '<i class="list-right">';
                             if(el.status == 1){
                                 listShowEach += '<span class="activity-pause">暂停</span>';
@@ -393,7 +393,7 @@
                             if(el.status != 3){
                                 listShowEach += '<span class="activity-cancel">取消</span>';
                             }
-                            listShowEach += '<a href="activity-detail?id='+el.id+'&activity_type='+para.activity_type+'&act_name='+el.name+'" class="activity-detail">活动详情</a>' +
+                            listShowEach += '<a href="${ctx}/activity/activityLottery/getLotteryDetail?id='+el.id+'&activity_type='+para.activity_type+'&act_name='+el.name+'" class="activity-detail">活动详情</a>' +
                                 '<input type="hidden" value="'+el.id+'"></i></p>';
                             listShowEach += '<ul class="activity-list clearfix">';
                             if(el.status == 0){
@@ -418,13 +418,20 @@
                                 listShowEach += '<li class="mycol-10">是</li>'
                             }
                             listShowEach += '<li class="mycol-10">'+el.name+'</li>'
-                            if(el.rebate_channel == 1){
-                                listShowEach += '<li class="mycol-15">红包领取</li>'
-                            }
-                            else{
-                                listShowEach += '<li class="mycol-15"></li>';
-                            }
-
+                            // if(el.rebate_channel == 1){
+                            //     listShowEach += '<li class="mycol-15">红包领取</li>'
+                            // }
+                            // else{
+                            //     listShowEach += '<li class="mycol-15"></li>';
+                            // }
+                            listShowEach += '<li class="mycol-15">'
+							el.lottery_prize_list.forEach(function (prizeEl,prizeIndex) {
+                                listShowEach += prizeEl.prize_name + '('+ prizeEl.prize_rate*100 +'%)';
+                                if(prizeIndex != el.lottery_prize_list.length-1){
+                                    listShowEach += ',';
+								}
+                            })
+							listShowEach += '</li>';
                             shopNameArr = [];
                             shopName  = JSON.parse(el.shop_name);
                             $.each(shopName,function (key,value) {

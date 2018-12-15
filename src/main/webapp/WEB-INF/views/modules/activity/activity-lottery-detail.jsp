@@ -1,166 +1,396 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
-	<title>幸运抽奖活动管理</title>
-	<meta name="decorator" content="default"/>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			//$("#name").focus();
-			$("#inputForm").validate({
-				submitHandler: function(form){
-					loading('正在提交，请稍等...');
-					form.submit();
-				},
-				errorContainer: "#messageBox",
-				errorPlacement: function(error, element) {
-					$("#messageBox").text("输入有误，请先更正。");
-					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
-						error.appendTo(element.parent().parent());
-					} else {
-						error.insertAfter(element);
-					}
-				}
-			});
-		});
-	</script>
+    <title>活动列表</title>
+    <meta name="decorator" content="default"/>
+    <script src="${ctxStatic}/clipboard.js"></script>
+    <script src="${ctxStatic}/layer/layer.js"></script>
+    <link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
+    <script src="${ctxStatic}/jquery.page/page.js"></script>
+
+    <style>
+        .activity-title{
+            font-size: 17px;
+            padding: 10px 20px;
+            border-bottom: 1px solid #F2F2F2;
+        }
+        .activity-title a{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 30px;
+        }
+        .activity-title i img{
+            width: 100%;
+        }
+        h3{
+            font-size: 16px;
+            background-color: #F7F7F7;
+            line-height: 3.5;
+            padding: 0 3%;
+            width: 90%;
+            margin: 0 auto;
+            /*border: 1px solid #eee;*/
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #8E8E8E;
+            font-weight: 400;
+        }
+        .base-info,.join-shop,.market-type,.przie-type{
+            list-style: none;
+            width: 90%;
+            margin: 0 auto;
+            padding: 0 3%;
+
+
+        }
+        .base-info li{
+            font-size: 15px;
+            line-height: 2.5;
+            position: relative;
+
+        }
+        .import-deco{
+            display: inline-block;
+            color: red;
+            position: absolute;
+            top: 0;
+            left: -15px;
+        }
+        .market-type li{
+            width: 33%;
+            float: left;
+            font-size: 15px;
+            line-height: 2.5;
+            position: relative;
+        }
+        .join-shop li,.przie-type li{
+            font-size: 15px;
+            line-height: 2.5;
+        }
+        .order-lists{
+            width: 96%;
+            margin: 0 auto;
+
+        }
+        .order-lists ul{
+            list-style: none;
+        }
+        .order-lists ul li{
+            float: left;
+            text-align: center;
+            font-size: 14px;
+        }
+        .mycol-5{
+            width: 5%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .mycol-10{
+            width: 10%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .mycol-15{
+            width: 15%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .mycol-20{
+            width: 20%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .lists-title li{
+            background-color: #F7F7F7;
+            line-height: 3;
+            text-align: center;
+        }
+        .order-lists p{
+            background-color: #F7F7F7;
+            line-height: 3;
+            margin-top: 10px;
+            border: 1px solid #F0F0F0;
+            margin-bottom: 0;
+            color: #AAAAAA;
+        }
+        .order-lists ul{
+            list-style: none;
+            margin: 0;
+        }
+        .order-list li{
+            float: left;
+            text-align: center;
+            border-bottom: 1px solid rgb(228, 228, 228);
+            border-left: 1px solid rgb(228, 228, 228);
+            line-height: 3;
+            height: 40px;
+            box-sizing: border-box;
+        }
+        .list-right{
+            float: right;
+            margin-right: 20px;
+        }
+        .order-detail{
+            color: #485891;
+            font-style: normal;
+        }
+        .start-time,.receive-time{
+            display: inline-block;
+            margin-left: 40px;
+        }
+        .page_ctrl .input_page_num{
+            height: 28px;
+        }
+    </style>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/activity/activityLottery/">幸运抽奖活动列表</a></li>
-		<li class="active"><a href="${ctx}/activity/activityLottery/form?id=${activityLottery.id}">幸运抽奖活动<shiro:hasPermission name="activity:activityLottery:edit">${not empty activityLottery.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="activity:activityLottery:edit">查看</shiro:lacksPermission></a></li>
-	</ul><br/>
-	<form:form id="inputForm" modelAttribute="activityLottery" action="${ctx}/activity/activityLottery/save" method="post" class="form-horizontal">
-		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">活动名称：</label>
-			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">活动类型：</label>
-			<div class="controls">
-				<form:input path="activityType" htmlEscape="false" maxlength="8" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">活动状态 ：0- 未开始  1-进行中 2-暂停 3-已结束：</label>
-			<div class="controls">
-				<form:input path="status" htmlEscape="false" maxlength="4" class="input-xlarge  digits"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">活动有效开始时间：</label>
-			<div class="controls">
-				<input name="activeDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityLottery.activeDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">活动失效时间：</label>
-			<div class="controls">
-				<input name="inactiveDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityLottery.inactiveDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">订单时效时间：</label>
-			<div class="controls">
-				<input name="orderActiveDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityLottery.orderActiveDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">订单时效时间：</label>
-			<div class="controls">
-				<input name="orderInactiveDate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${activityLottery.orderInactiveDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">公众号id：</label>
-			<div class="controls">
-				<form:input path="wechatPlatformId" htmlEscape="false" maxlength="20" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">url：</label>
-			<div class="controls">
-				<form:input path="url" htmlEscape="false" maxlength="255" class="input-xlarge "/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">关注类型  0 -需要 1-不需要：</label>
-			<div class="controls">
-				<form:input path="isFollow" htmlEscape="false" maxlength="1" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">验证方式 ： 1-手机号：</label>
-			<div class="controls">
-				<form:input path="auditType" htmlEscape="false" maxlength="4" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">短信校验 0：否  1：是：</label>
-			<div class="controls">
-				<form:input path="textAuditType" htmlEscape="false" maxlength="4" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">限制订单总数量 0表示不限制：</label>
-			<div class="controls">
-				<form:input path="totalOrder" htmlEscape="false" maxlength="63" class="input-xlarge  digits"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">版本号：</label>
-			<div class="controls">
-				<form:input path="version" htmlEscape="false" maxlength="20" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">店铺名称：</label>
-			<div class="controls">
-				<form:input path="shopName" htmlEscape="false" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">店铺编号：</label>
-			<div class="controls">
-				<form:input path="shopNo" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">模板url：</label>
-			<div class="controls">
-				<form:input path="templateLink" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="form-actions">
-			<shiro:hasPermission name="activity:activityLottery:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
-		</div>
-	</form:form>
+<div class="wrap">
+    <p class="activity-title"><a href="javascript:history.back(-1)"><img src="${ctxStatic}/images/prev-btn.png" alt=""></a>活动详情</p>
+    <h3>基本类型</h3>
+    <ul class="base-info">
+
+    </ul>
+    <h3>营销类型</h3>
+    <ul class="market-type clearfix">
+
+    </ul>
+    <h3>奖品设置</h3>
+    <ul class="przie-type">
+
+    </ul>
+    <h3>参与店铺</h3>
+    <ul class="join-shop">
+
+    </ul>
+    <h3>订单列表</h3>
+    <div class="order-lists">
+        <ul class="lists-title clearfix">
+            <li class="mycol-10">订单状态</li>
+            <li class="mycol-10">绑定状态</li>
+            <li class="mycol-10">店铺平台</li>
+            <li class="mycol-15">所属店铺</li>
+            <li class="mycol-15">订单编号</li>
+            <li class="mycol-10">买家姓名</li>
+            <li class="mycol-10">收货手机号</li>
+            <li class="mycol-10">活动金额</li>
+            <li class="mycol-10">评价截图</li>
+        </ul>
+        <div class="lists-show">
+
+        </div>
+    </div>
+    <div id="pagenation"></div>
+
+</div>
+
+<script>
+    $(function () {
+        var params = {
+            current_page:1,
+            page_size:10,
+            wechat_id:$.cookie('platFormId'),
+        };
+        var hasInit = false;
+        var para = GetRequest();
+        var activityType = {};
+        // 获取活动类型列表
+        $.ajax({
+            url:'${ctx}/activity/activity/activityTypeList',
+            type:'post',
+            async:false,
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    activityType = msg.data;
+                }
+            }
+        })
+        //获取活动详情相关信息
+        $.ajax({
+            url:'activityLotteryDetail',
+            type:'POST',
+            async:false,
+            data:{
+                id:para.id
+            },
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
+                    var baseStr = '<li><i class="import-deco">*</i>活动名称： '+data.name+'</li>';
+                    if(data.status == 0){
+                        baseStr += '<li>活动状态： 未开始</li>'
+                    }
+                    else if(data.status == 1){
+                        baseStr += '<li>活动状态： 进行中</li>'
+                    }
+                    else if(data.status == 2){
+                        baseStr += '<li>活动状态： 暂停</li>'
+                    }
+                    else if(data.status == 3){
+                        baseStr += '<li>活动状态： 已结束</li>'
+                    }
+                    baseStr += '<li><i class="import-deco">*</i>活动类型： '+activityType[data.activity_type]+'</li>'
+                    baseStr += '<li>有效时间： '+data.active_date+' 至 '+data.inactive_date+'</li>';
+                    baseStr += '<li>订单时效： '+data.order_active_date+' 至 '+data.order_inactive_date+'</li>';
+                    baseStr += '<li>URL链接： <input type="text" name="real_name" id="url" style="width: 422px" readonly="readonly" value="'+data.url+'">' +
+                        '<a href="#" class="copy-btn" data-clipboard-target="#url"> 复制</a>' +
+                        '</li>';
+
+                    $('.base-info').html(baseStr);
+                    var marketStr = '';
+                    if(data.audit_type == 1){
+                        marketStr += '<li><i class="import-deco">*</i>校验方式： 手机号</li>';
+                    }
+                    else{
+                        marketStr += '<li><i class="import-deco">*</i>校验方式： 无</li>';
+                    }
+                    if(data.text_audit_type == 0){
+                        marketStr += '<li><i class="import-deco">*</i>短信校验： 否</li>';
+                    }
+                    else{
+                        marketStr += '<li><i class="import-deco">*</i>短信检验： 是</li>';
+                    }
+                    if(data.is_follow == 0){
+                        marketStr += '<li><i class="import-deco">*</i>强制关注： 是</li>';
+                    }
+                    else{
+                        marketStr += '<li><i class="import-deco">*</i>强制关注： 否</li>';
+                    }
+                    marketStr += '<li>活动订单： '+(data.max_order_limit == 0?"-":data.max_order_limit)+' / '+data.order_count+'</li>';
+                    marketStr += '<li>活动金额： '+(data.total_amount == 0?"-":"¥ "+data.total_amount/100)+' / ¥ '+(data.order_count*data.per_amount/100)+'</li>';
+                    $('.market-type').html(marketStr);
+                    var prizeStr = '';
+                    data.lottery_prize_list.forEach(function (el,index) {
+                        prizeStr += '<li>奖品类型'+(index+1)+':'+el.prize_name+' —— 获奖比例 :'+(el.prize_rate*100)+'%</li>'
+                    })
+                    $('.przie-type').html(prizeStr);
+                    var shopName = JSON.parse(data.shop_name);
+                    $.each(shopName,function (key,value) {
+                        $('.join-shop').append('<li>'+key+'： '+value+'</li>');
+                    })
+                }
+            }
+        })
+        //获取订单列表
+        ajaxFuc();
+        function ajaxFuc() {
+            params.act_type = para.activity_type;
+            params.page_type = 1;
+            params.act_name = para.act_name;
+
+            $.ajax({
+                url:'${ctx}/trade/order/orderListDate',
+                type:'post',
+                data:params,
+                success:function (msg) {
+                    var msg = JSON.parse(msg);
+                    if(msg.code == 10000){
+                        var data = msg.data;
+                        $('.lists-show').html('');
+                        var listStr = '';
+                        data.list.forEach(function (el,index) {
+                            listStr += '<p class="clearfix"><span class="status-name">';
+                            if(el.act_status == 0){
+                                listStr += '未开始';
+                            }
+                            else if(el.act_status == 1){
+                                listStr += '进行中';
+                            }
+                            else if(el.act_status == 2){
+                                listStr += '暂停';
+                            }
+                            else if(el.act_status == 3){
+                                listStr += '已结束';
+                            }
+                            listStr += '_'+el.act_name+'</span><span class="start-time">下单时间:'+el.pay_data+'</span>';
+                            if(el.draw_date){
+                                listStr += '<span class="receive-time">领取时间:'+el.draw_date+'</span>';
+                            }
+                            listStr += ' <i class="list-right">' +
+                                '<a href="${ctx}/trade/order/order_detail?id='+el.id+'&activity_type='+para.activity_type+'" class="order-detail">订单详情</a>' +
+                                '<input type="hidden" value="'+el.id+'">' +
+                                '</i>';
+                            listStr += ' <ul class="order-list clearfix">';
+                            listStr += '<li class="mycol-10">'+el.status_str+'</li>';
+                            listStr += '<li class="mycol-10">'+el.attention_str+'</li>';
+                            listStr += '<li class="mycol-10">'+el.platform_name+'</li>';
+                            listStr += '<li class="mycol-15">'+el.shop_name+'</li>';
+                            listStr += '<li class="mycol-15">'+el.order_sn+'</li>';
+                            listStr += '<li class="mycol-10" title="'+el.member_name+'">'+el.member_name+'</li>';
+                            listStr += '<li class="mycol-10">'+el.mobile+'</li>';
+                            listStr += '<li class="mycol-10">¥ '+el.act_money+'</li>';
+                            listStr += '<li class="mycol-10"><a class="img_ifram" href="#" data-src="'+el.picture_url+'">点击查看</a></li>';
+                            listStr += '</ul>';
+                        })
+                        $('.lists-show').html(listStr);
+                        if(!hasInit){
+                            var obj = {
+                                obj_box: '#pagenation',
+                                total_item: data.count,
+                                per_num: params.page_size,
+                                current_page: params.current_page,
+                                change_content: function(per_num, current_page) {
+                                    if(hasInit){
+                                        params.current_page = current_page;
+                                        ajaxFuc();
+                                    }
+                                }
+                            };
+                            page_ctrl(obj);
+                            hasInit=true;
+                        }
+                    }
+                }
+            })
+        }
+        //复制事件
+        var clipboard = new ClipboardJS('.copy-btn');
+        clipboard.on('success', function(e) {
+            layer.msg('已复制到粘贴板上');
+        });
+        clipboard.on('error', function(e) {
+            console.log(e);
+        });
+
+        //点击查看图片
+        $(".wrap").on("click",".img_ifram", function(){
+            var src = $(this).attr("data-src");
+            $('#preview-layer').remove();
+            $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
+            layer.open({
+                type: 1,
+                closeBtn: 1,
+                title: "信息",
+                area: '640px',
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: $('#preview-layer')
+            });
+        })
+        //对url的处理
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for(var i = 0; i < strs.length; i ++) {
+                    theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+    })
+
+</script>
 </body>
 </html>
