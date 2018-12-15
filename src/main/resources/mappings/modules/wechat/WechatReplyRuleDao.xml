@@ -174,13 +174,14 @@
 	</update>
 
 
-	<select id="listReply" resultType="WechatReplyNew">
+	<select id="listReply" resultType="com.hzkans.crm.modules.wechat.entity.WechatReplyNew"
+			parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyNew">
 		SELECT
 		<include refid="wechatReplyRuleColumns"/>
 		FROM t_wx_reply_rule a
-		<include refid="wechatReplyRuleJoins"/>
 		<where>
 			a.deleted =0
+			AND a.status = 1
 			<if test="wechatId != null and wechatId != ''">
 				AND a.wechat_id = #{wechatId}
 			</if>
@@ -191,5 +192,22 @@
 				AND a.rule_name = #{ruleName}
 			</if>
 		</where>
+	</select>
+
+	<select id="selectReplyRule" resultType="com.hzkans.crm.modules.wechat.entity.WechatReplyNew"
+			parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword">
+		SELECT
+			<include refid="wechatReplyRuleColumns" />
+		FROM
+			t_wx_reply_keyword rk,
+			t_wx_reply_rule a
+		WHERE
+			a.id = rk.rule_id
+		AND a.wechat_id = #{wechatId}
+		AND a.deleted = 0
+		AND a.`status` = 1
+		AND rk.keyword = #{keyword}
+		AND rk.del_flag = 0
+		ORDER BY a.create_date desc
 	</select>
 </mapper>

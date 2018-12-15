@@ -8,6 +8,7 @@ import java.util.List;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,24 @@ public class MemberAssociationService{
 		}
 
 	}
+
+	/**
+	 * 保存顾客发送的消息
+	 * @param messageRecord
+	 */
+	public void saveMessageRecord(MessageRecord messageRecord) {
+		TradeUtil.isAllNull(messageRecord);
+		try {
+			memberAssociationDao.insertMessageRecord(messageRecord);
+		} catch (Exception e) {
+			logger.error("saveMessageRecord error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
+
+
+	}
+
+
+
 
 }

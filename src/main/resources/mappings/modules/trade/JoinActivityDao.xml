@@ -75,6 +75,9 @@
 			<if test="data.actStatus != null">
 				AND b.status = #{data.actStatus}
 			</if>
+			<if test="data.wechatId != null">
+				AND b.wechat_platform_id = #{data.wechatId}
+			</if>
 			<if test="data.startDate != null and data.endDate != null">
 				AND  <![CDATA[a.pay_data BETWEEN #{data.startDate} and #{data.endDate}]]>
 			</if>
