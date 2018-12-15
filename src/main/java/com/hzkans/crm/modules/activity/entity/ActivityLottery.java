@@ -37,6 +37,7 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 	private String shopName;		// 店铺名称
 	private String shopNo;		// 店铺编号
 	private String templateLink;		// 模板url
+	private Integer orderCount;
 	private List<LotteryPrize> lotteryPrizeList;
 	public ActivityLottery() {
 		super();
@@ -71,6 +72,15 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 			this.prizeRate = prizeRate;
 		}
 	}
+
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
+	}
+
 	public ActivityLottery(String id){
 		super(id);
 	}
