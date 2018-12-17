@@ -26,6 +26,6 @@ public interface WxApiObserver extends BaseApiObserver {
      * @param keyword
      * @return
      */
-    List<WechatMaterial> getAttentionMaterial(WechatReplyKeyword keyword);
+    List<WechatMaterial> getAttentionMaterial(WechatReplyKeyword keyword) throws Exception;
 
 }

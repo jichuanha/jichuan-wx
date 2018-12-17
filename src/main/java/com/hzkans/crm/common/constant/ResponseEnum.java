@@ -84,6 +84,8 @@ public enum ResponseEnum {
     B_E_SECOND_MENU_ERROR(40038,0,"二级菜单超出5个限制数"),
     B_E_MATE_TYPE_ERROR(40039,0,"传递的类型异常"),
     B_E_WEHCAT_NUM_ERROR(40040,0,"超过10次上传限制"),
+    KEYWORD_NO_REPLY_CONTENT(40041,0,"该关键字不存在"),
+
     /**
      * 添加失败
      */

@@ -30,7 +30,7 @@
 		<if test="id != null and id != ''">
 			AND a.id = #{id}
 		</if>
-		<if test="wechatId != null and wechatId != ''">
+		<if test="wechatId != null ">
 			AND a.wechat_id = #{wechatId}
 		</if>
 		<if test="status != null and status != ''">

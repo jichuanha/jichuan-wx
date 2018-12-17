@@ -49,7 +49,22 @@
 		AND rc.deleted = 0
 		order by rc.create_date desc
 	</select>
-    
+
+	<select id="listMaterialByRuleId" resultType="com.hzkans.crm.modules.wechat.entity.WechatMaterial"
+			parameterType="com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword" >
+		SELECT
+		<include refid="base_query_sql" />
+		FROM
+		t_wx_reply_rule_content rc,
+		t_wechat_material a
+		WHERE
+		rc.material_id = a.id
+		AND rc.rule_id = #{ruleId}
+		AND a.deleted = 0
+		AND rc.deleted = 0
+		order by rc.create_date desc
+	</select>
+
 	<select id="get" resultType="WechatMaterial">
 		SELECT 
 			<include refid="wechatMaterialColumns"/>

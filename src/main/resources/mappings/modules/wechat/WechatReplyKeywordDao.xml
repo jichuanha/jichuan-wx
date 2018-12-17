@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao">
-    
+
 	<sql id="wechatReplyKeywordColumns">
 		a.id AS "id",
 		a.wechat_id AS "wechatId",
@@ -14,20 +14,31 @@
 		a.update_date AS "updateDate",
 		a.del_flag AS "delFlag"
 	</sql>
-	
+
 	<sql id="wechatReplyKeywordJoins">
 	</sql>
-    
+
 	<select id="get" resultType="WechatReplyKeyword">
-		SELECT 
+		SELECT
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a
 		<include refid="wechatReplyKeywordJoins"/>
-		WHERE a.id = #{id}
+		<where>
+		    a.deleted =0
+		    <if test="id != null and id != ''">
+			  AND a.id = #{id}
+		    </if>
+		    <if test="wechatId != null ">
+			  AND a.wechat_id = #{wechatId}
+		    </if>
+			<if test="keyword != null ">
+			  AND a.keyword = #{keyword}
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="findList" resultType="WechatReplyKeyword">
-		SELECT 
+		SELECT
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a
 		<include refid="wechatReplyKeywordJoins"/>
@@ -58,15 +69,15 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="WechatReplyKeyword">
-		SELECT 
+		SELECT
 			<include refid="wechatReplyKeywordColumns"/>
 		FROM t_wx_reply_keyword a
 		<include refid="wechatReplyKeywordJoins"/>
 		<where>
 			a.del_flag = 0
-		</where>		
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -76,7 +87,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO t_wx_reply_keyword(
 			wechat_id,
@@ -96,7 +107,7 @@
 			0
 		)
 	</insert>
-	
+
 	<update id="update">
 		UPDATE t_wx_reply_keyword SET 	
 			wechat_id = #{wechatId},
@@ -108,7 +119,7 @@
 			del_flag = #{delFlag}
 		WHERE id = #{id}
 	</update>
-	
+
 	<update id="delete">
 		UPDATE t_wx_reply_keyword SET del_flag = 1
 		<where>
@@ -124,5 +135,5 @@
 		</where>
 
 	</update>
-	
+
 </mapper>

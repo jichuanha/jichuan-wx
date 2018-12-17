@@ -378,5 +378,4 @@ public class WechatReplyService {
         return reply;
     }
 
-
 }

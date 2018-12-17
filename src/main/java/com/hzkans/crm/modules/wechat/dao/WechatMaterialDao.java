@@ -6,6 +6,7 @@ package com.hzkans.crm.modules.wechat.dao;
 import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
+import com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public interface WechatMaterialDao extends CrudDao<WechatMaterial> {
     int insert(WechatReplyNew wechatReplyNew);
 
     List<WechatMaterial> getWechatMaFromWhere(WechatReplyNew wechatReplyNew);
-	
+
+    List<WechatMaterial> listMaterialByRuleId(WechatReplyKeyword wechatReplyKeyword);
+
 }
