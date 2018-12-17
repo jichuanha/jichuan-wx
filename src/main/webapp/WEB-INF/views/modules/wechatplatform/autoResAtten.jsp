@@ -519,7 +519,7 @@
                     success:function (msg) {
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
-                            // ajaxFuc();
+                            ajaxFuc();
                             $('.res-content').css('display','block');
                             $('.res-btn').css('display','block');
                         }
@@ -644,7 +644,7 @@
                             $('.res-content').css('display','none');
                             $('.res-btn').css('display','none');
                         }
-                        else if(data.status == 1){
+                        else if(data.status == 1 && data.wechat_reply_content_d_o_s){
                             $('#switch').attr('checked',true);
                             $('.res-content').css('display','block');
                             $('.res-btn').css('display','block');
