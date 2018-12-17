@@ -79,10 +79,7 @@ public class WechatInfoService {
                         association.setCreateDate(new Date());
                         association.setUpdateDate(new Date());
                         memberAssociationService.save(association);
-                        //获取回复内容
-                        WechatReplyNew aNew = new WechatReplyNew();
-                        aNew.setWechatId(wechatId);
-                        aNew.setRuleType(ReplyTypeEnum.RECEIVED.getCode());
+
                         //获取主表id,然后根据主表id获取素材内容
                         WechatReplyNew replyNew = new WechatReplyNew();
                         replyNew.setWechatId(wechatId);
@@ -94,6 +91,7 @@ public class WechatInfoService {
                         //关注回复只会有一条规则
                         WechatReplyNew replyNew1 = wechatReplys.get(0);
                         List<WechatMaterial> matetials = wechatMaterialService.getMatetialByRuleType(replyNew1);
+
                         logger.info(" matetials {}",JsonUtil.toJson(matetials));
                         //根据素材的类型决定回复方法
                         resultXml = dealType(matetials.get(0), wechatNo, openId);
@@ -130,13 +128,14 @@ public class WechatInfoService {
                     return resultXml;
                 }
                 memberAssociationService.saveMessageRecord(record);
-                CacheUtils.get(WechatCofig.EHCACHE, msgId, record);
+                CacheUtils.put(WechatCofig.EHCACHE, msgId, record);
                 resultXml = keyWordDeal(wechatId, content, wechatNo, openId);
             }
         } catch (ServiceException e) {
             e.printStackTrace();
         }
         logger.info("resultXML  {}",JsonUtil.toJson(resultXml));
+
         return resultXml;
     }
 

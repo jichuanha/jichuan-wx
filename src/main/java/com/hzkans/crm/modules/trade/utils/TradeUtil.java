@@ -72,7 +72,6 @@ public class TradeUtil {
      * @param target
      * @param <T>
      * @return
-     * @throws AgentException
      */
     public static <T,V> V  twoObjectTransforms(T source,Class<V> target) throws Exception{
         isNull(source);

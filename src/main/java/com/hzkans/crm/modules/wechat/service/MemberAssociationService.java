@@ -1,9 +1,6 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
 package com.hzkans.crm.modules.wechat.service;
 
-import java.util.List;
+
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hzkans.crm.common.persistence.Page;
-import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
 import com.hzkans.crm.modules.wechat.dao.MemberAssociationDao;
 
