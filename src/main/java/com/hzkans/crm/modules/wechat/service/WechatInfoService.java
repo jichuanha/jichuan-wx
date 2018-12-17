@@ -6,6 +6,7 @@ import com.hzkans.crm.modules.wechat.constants.ReplyTypeEnum;
 import com.hzkans.crm.modules.wechat.entity.*;
 import com.hzkans.crm.modules.wechat.message.*;
 import com.hzkans.crm.modules.wechat.utils.WechatCofig;
+import com.hzkans.crm.modules.wxapi.WxApiObserver;
 import org.springframework.transaction.annotation.Transactional;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
@@ -43,6 +44,8 @@ public class WechatInfoService {
     private WechatPlatfromService wechatPlatfromService;
     @Autowired
     private WechatReplyService wechatReplyService;
+    @Autowired
+    private WxApiObserver wxApiObserver;
 
     /**
      * 微信消息处理
@@ -84,15 +87,11 @@ public class WechatInfoService {
                         WechatReplyNew replyNew = new WechatReplyNew();
                         replyNew.setWechatId(wechatId);
                         replyNew.setRuleType(ReplyTypeEnum.RECEIVED.getCode());
-                        List<WechatReplyNew> wechatReplys = wechatReplyService.getWechatReplys(replyNew);
-                        if(CollectionUtils.isEmpty(wechatReplys)) {
+                        List<WechatMaterial> matetials = wxApiObserver.getAttentionMaterial(replyNew);
+                        logger.info(" matetials {}",JsonUtil.toJson(matetials));
+                        if(CollectionUtils.isEmpty(matetials)) {
                             break;
                         }
-                        //关注回复只会有一条规则
-                        WechatReplyNew replyNew1 = wechatReplys.get(0);
-                        List<WechatMaterial> matetials = wechatMaterialService.getMatetialByRuleType(replyNew1);
-
-                        logger.info(" matetials {}",JsonUtil.toJson(matetials));
                         //根据素材的类型决定回复方法
                         resultXml = dealType(matetials.get(0), wechatNo, openId);
                         break;
@@ -147,19 +146,16 @@ public class WechatInfoService {
      * @param openId
      * @return
      */
-    private String keyWordDeal(Long wechatId, String keyWord, String wechatNo, String openId) {
+    private String keyWordDeal(Long wechatId, String keyWord, String wechatNo, String openId) throws ServiceException{
         WechatReplyKeyword keyword = new WechatReplyKeyword();
         keyword.setKeyword(keyWord);
         keyword.setWechatId(wechatId);
-        List<WechatReplyNew> keyWords = wechatReplyService.getWechatReplyByKeyWord(keyword);
-        if(CollectionUtils.isEmpty(keyWords)) {
+        List<WechatMaterial> material = wxApiObserver.getKeyWordMaterial(keyword);
+        logger.info(" matetials {}",JsonUtil.toJson(material));
+        if(CollectionUtils.isEmpty(material)) {
             return "";
         }
-        //如果关键字对应多个规则,只选取最近添加的一条
-        WechatReplyNew aNew1 = keyWords.get(0);
-        List<WechatMaterial> matetial = wechatMaterialService.getMatetialByRuleType(aNew1);
-        logger.info(" matetials {}",JsonUtil.toJson(matetial));
-        return dealType(matetial.get(0), wechatNo, openId);
+        return dealType(material.get(0), wechatNo, openId);
     }
 
 

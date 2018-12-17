@@ -57,7 +57,7 @@ public class WxApiObserverImpl implements WxApiObserver {
     }
 
     @Override
-    public List<WechatMaterial> getAttentionMaterial(WechatReplyKeyword keyword) throws Exception {
+    public List<WechatMaterial> getKeyWordMaterial(WechatReplyKeyword keyword) throws ServiceException {
         TradeUtil.isAllNull(keyword);
         List<WechatMaterial> wechatMaterials = null;
 

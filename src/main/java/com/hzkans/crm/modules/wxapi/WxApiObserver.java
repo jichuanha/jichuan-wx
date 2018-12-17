@@ -1,9 +1,11 @@
 package com.hzkans.crm.modules.wxapi;
 
 
+import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
  * @description
  * @create 2018/12/17
  */
+@Service
 public interface WxApiObserver extends BaseApiObserver {
 
     /**
@@ -26,6 +29,6 @@ public interface WxApiObserver extends BaseApiObserver {
      * @param keyword
      * @return
      */
-    List<WechatMaterial> getAttentionMaterial(WechatReplyKeyword keyword) throws Exception;
+    List<WechatMaterial> getKeyWordMaterial(WechatReplyKeyword keyword) throws ServiceException;
 
 }
