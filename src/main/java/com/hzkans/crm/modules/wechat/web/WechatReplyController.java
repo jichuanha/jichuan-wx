@@ -11,6 +11,7 @@ import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.wechat.entity.*;
 import com.hzkans.crm.modules.wechat.service.WechatReplyService;
+import com.hzkans.crm.modules.wxapi.WxApiObserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,9 @@ public class WechatReplyController extends BaseController {
 
     @Autowired
     private WechatReplyService wechatReplyService;
+
+    @Autowired
+    private WxApiObserver wxApiObserver;
 
     @RequestMapping(value = "/link_auto_res_atten")
     public String autoResAtten() {
@@ -241,6 +245,54 @@ public class WechatReplyController extends BaseController {
         }
     }
 
+//
+//    /**
+//     * 暂停关键词回复
+//     * @param request
+//     * @param model
+//     * @param redirectAttributes
+//     * @return
+//     * @throws Exception
+//     */
+//    @RequestMapping(value = "test1")
+//    @ResponseBody
+//    public String test1(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+//        try {
+//            Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
+//            Integer ruleType = RequestUtils.getInt(request, "rule_type", true, "wechat_id is null", "");
+//
+//            WechatReplyNew wechatReplyNew = new WechatReplyNew();
+//            wechatReplyNew.setWechatId(wechatId);
+//            wechatReplyNew.setRuleType(ruleType);
+//
+//            List<WechatMaterial> list = wxApiObserver.getAttentionMaterial(wechatReplyNew);
+//
+//            return ResponseUtils.getSuccessApiResponseStr(list);
+//        } catch (Exception e) {
+//            logger.error("saveReplynew is error", e);
+//            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+//        }
+//    }
+//
+//    @RequestMapping(value = "test2")
+//    @ResponseBody
+//    public String test2(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) throws Exception {
+//        try {
+//            Long wechatId = RequestUtils.getLong(request, "wechat_id", false, "wechat_id is null", "");
+//            String keyword = RequestUtils.getString(request, true, "keyword", "");
+//
+//            WechatReplyKeyword wechatReplyKeyword = new WechatReplyKeyword();
+//            wechatReplyKeyword.setWechatId(wechatId);
+//            wechatReplyKeyword.setKeyword(keyword);
+//
+//            List<WechatMaterial> list = wxApiObserver.getKeyWordMaterial(wechatReplyKeyword);
+//
+//            return ResponseUtils.getSuccessApiResponseStr(list);
+//        } catch (Exception e) {
+//            logger.error("saveReplynew is error", e);
+//            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+//        }
+//    }
 
 
 

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.*;
  * @author chenggm
  * @create 2017-02-22 17:32
  **/
-
+@Service
 public class CustomMenuServiceImpl implements CustomMenuService {
 
     private static final Logger logger = LoggerFactory

@@ -6,8 +6,4 @@
 
 
 	<!--<bean id="mainWebClient" class="com.hanshu.mainweb.client.impl.MainWebClientImpl" />-->
-	<bean id="changePasswordService" class="com.hzkans.crm.modules.sys.service.impl.ChangePasswordServiceImpl"/>
-	<bean id="wechatPlatfromService" class="com.hzkans.crm.modules.wechat.service.impl.WechatPlatfromServiceImpl"/>
-	<bean id="CustomMenuService" class="com.hzkans.crm.modules.wechat.service.impl.CustomMenuServiceImpl"/>
-
 </beans>
