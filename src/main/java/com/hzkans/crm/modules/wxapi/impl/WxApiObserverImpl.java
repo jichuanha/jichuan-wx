@@ -44,7 +44,7 @@ public class WxApiObserverImpl implements WxApiObserver {
             List<WechatReplyNew> wechatReplys = wechatReplyService.getWechatReplys(wechatReplyNew);
 
             matetials = new ArrayList<>();
-            if(CollectionUtils.isEmpty(wechatReplys)) {
+            if (CollectionUtils.isEmpty(wechatReplys)) {
                 return matetials;
             }
 
@@ -52,7 +52,7 @@ public class WxApiObserverImpl implements WxApiObserver {
             WechatReplyNew replyNew1 = wechatReplys.get(0);
             matetials = wechatMaterialService.getMatetialByRuleType(replyNew1);
         } catch (Exception e) {
-            logger.error("getAttentionMaterial error",e);
+            logger.error("getAttentionMaterial error", e);
             throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
         }
         return matetials;
@@ -61,13 +61,29 @@ public class WxApiObserverImpl implements WxApiObserver {
     @Override
     public List<WechatMaterial> getKeyWordMaterial(WechatReplyKeyword keyword) throws ServiceException {
         TradeUtil.isAllNull(keyword);
-        List<WechatMaterial> wechatMaterials = null;
+        List<WechatReplyNew> keyWords = null;
 
         try {
-            wechatMaterials= wechatMaterialService.listMaterialByRuleId(keyword);
+            keyWords = wechatReplyService.getWechatReplyByKeyWord(keyword);
         } catch (Exception e) {
-            logger.error("getAttentionMaterial error",e);
+            logger.error("getAttentionMaterial error", e);
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
         }
-        return wechatMaterials;
+
+        //判断是否存在关键字
+        if (CollectionUtils.isEmpty(keyWords)) {
+            throw new ServiceException(ResponseEnum.KEYWORD_NO_REPLY_CONTENT.getMsg());
+        }
+
+        //如果关键字对应多个规则,只选取最近添加的一条
+        WechatReplyNew aNew1 = keyWords.get(0);
+        List<WechatMaterial> matetial = null;
+        try {
+            matetial = wechatMaterialService.getMatetialByRuleType(aNew1);
+        } catch (Exception e) {
+            logger.error("getAttentionMaterial error", e);
+            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+        }
+        return matetial;
     }
 }

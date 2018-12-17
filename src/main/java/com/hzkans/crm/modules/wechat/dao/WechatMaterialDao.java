@@ -23,6 +23,6 @@ public interface WechatMaterialDao extends CrudDao<WechatMaterial> {
 
     List<WechatMaterial> getWechatMaFromWhere(WechatReplyNew wechatReplyNew);
 
-    List<WechatMaterial> listMaterialByRuleId(WechatReplyKeyword wechatReplyKeyword);
+
 
 }

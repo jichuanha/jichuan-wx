@@ -75,31 +75,4 @@ public class WechatMaterialService extends CrudService<WechatMaterialDao, Wechat
 		return wechatMaFromWhere;
 	}
 
-	public List<WechatMaterial> listMaterialByRuleId(WechatReplyKeyword keyword) throws Exception {
-		TradeUtil.isAllNull(keyword);
-
-        List<WechatMaterial> wechatMaterials = null;
-
-        WechatReplyKeyword wechatReplyKeyword = null;
-        try {
-            wechatReplyKeyword = wechatReplyKeywordDao.get(keyword);
-        } catch (Exception e) {
-            logger.error("getWechatReplyByKeyWord error",e);
-            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
-        }
-
-        //判断是否存在该关键字
-        if(null == wechatReplyKeyword){
-            throw new Exception(ResponseEnum.KEYWORD_NO_REPLY_CONTENT.getMsg());
-        }
-
-        try {
-            wechatMaterials = wechatMaterialDao.listMaterialByRuleId(wechatReplyKeyword);
-        } catch (Exception e) {
-            logger.error("getWechatReplyByKeyWord error",e);
-            throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
-        }
-
-        return wechatMaterials;
-	}
 }
