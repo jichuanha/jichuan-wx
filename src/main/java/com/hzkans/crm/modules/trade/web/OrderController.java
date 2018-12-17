@@ -114,6 +114,7 @@ public class OrderController extends BaseController {
 
 		//非必传参数
 		String actName = RequestUtils.getString(request, "act_name");
+		String mobile = RequestUtils.getString(request, "mobile");
 		Integer actStatus = RequestUtils.getInt(request, "act_status", "");
 		String startData = RequestUtils.getString(request, "start_data");
 		String endData = RequestUtils.getString(request, "end_data");
@@ -138,6 +139,7 @@ public class OrderController extends BaseController {
 			joinActivity.setActName(actName);
 			joinActivity.setActStatus(actStatus);
 			joinActivity.setRebateType(rebateType);
+			joinActivity.setMobile(mobile);
 			//如果是订单审核页面,只需要查询为审核状态的订单
 			if(PageTypeEnum.ORDER_AUDIT.getCode().equals(pageType)) {
 				joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());
@@ -218,6 +220,28 @@ public class OrderController extends BaseController {
 			return ResponseUtils.getSuccessApiResponseStr(orderDetail);
 		} catch (ServiceException e) {
 			logger.error("orderDetail error",e);
+			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
+		}
+	}
+
+	/**
+	 * 获取参加幸运抽奖活动订单详情
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/orderLotteryDetail")
+	@ResponseBody
+	public String orderLotteryDetail(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = RequestUtils.getInt(request, "id", "id is null", "");
+        Integer wechatId = RequestUtils.getInt(request, "wechat_id",
+				"wechat_id is null", "");
+
+		try {
+			Map<String, Object> orderLotteryDetail = joinActivityService.getOrderLotteryDetail(id, wechatId);
+			return ResponseUtils.getSuccessApiResponseStr(orderLotteryDetail);
+		} catch (ServiceException e) {
+			logger.error("orderLotteryDetail error",e);
 			return ResponseUtils.getFailApiResponseStr(e.getCode(), e.getServiceMessage());
 		}
 	}

@@ -10,6 +10,7 @@
 		a.act_type AS "actType",
 		a.act_name AS "actName",
 		a.status AS "status",
+		a.mobile AS "mobile",
 		a.message AS "message",
 		a.picture_url AS "pictureUrl",
 		a.auditor AS "auditor",
@@ -31,6 +32,7 @@
 		a.act_type AS "actType",
 		a.act_name AS "actName",
 		a.status AS "status",
+		a.mobile AS "mobile",
 		a.message AS "message",
 		a.picture_url AS "pictureUrl",
 		a.auditor AS "auditor",
@@ -39,6 +41,26 @@
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
 		b.per_amount AS "actMoney",
+		b.status AS "actStatus"
+	</sql>
+
+	<sql id="joinActivity1">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.order_sn AS "orderSn",
+		a.act_id AS "actId",
+		a.act_type AS "actType",
+		a.act_name AS "actName",
+		a.status AS "status",
+		a.mobile AS "mobile",
+		a.message AS "message",
+		a.picture_url AS "pictureUrl",
+		a.auditor AS "auditor",
+		a.pay_data AS "payData",
+		a.update_date AS "updateDate",
+		a.platform_type AS "platformType",
+		a.shop_no AS "shopNo",
+		a.award AS "award",
 		b.status AS "actStatus"
 	</sql>
 
@@ -56,6 +78,9 @@
 			</if>
 			<if test="data.pictureUrl != null and data.pictureUrl != ''">
 				AND a.picture_url = #{data.pictureUrl}
+			</if>
+			<if test="data.mobile != null and data.mobile != ''">
+				AND a.mobile = #{data.mobile}
 			</if>
 			<if test="data.auditor != null">
 				AND a.auditor = #{data.auditor}
@@ -182,6 +207,7 @@
 			act_type,
 			act_name,
 			status,
+			mobile,
 			message,
 			picture_url,
 			auditor,
@@ -196,6 +222,7 @@
 			#{actType},
 			#{actName},
 			#{status},
+			#{mobile},
 			#{message},
 			#{pictureUrl},
 			#{auditor},
@@ -235,6 +262,22 @@
 	<select id="selectJoinActivityPageCount" parameterType="com.hzkans.crm.common.persistence.PagePara" resultType="int">
 		SELECT count(*)
 		FROM t_join_activity a, t_activity b
+		<include refid="base_where" />
+	</select>
+
+	<select id="selectJoinActivityLotteryPage" resultType="com.hzkans.crm.modules.trade.entity.JoinActivity"
+			parameterType="com.hzkans.crm.common.persistence.PagePara">
+		SELECT <include refid="joinActivity1"/>
+		FROM t_join_activity a, t_activity_lottery b
+		<include refid="base_where" />
+		<if test="currentPage != null and pageSize != null">
+			limit #{currentPage},#{pageSize}
+		</if>
+	</select>
+	<select id="selectJoinActivityLotteryPageCount" parameterType="com.hzkans.crm.common.persistence.PagePara"
+			resultType="int">
+		SELECT count(*)
+		FROM t_join_activity a, t_activity_lottery b
 		<include refid="base_where" />
 	</select>
 
