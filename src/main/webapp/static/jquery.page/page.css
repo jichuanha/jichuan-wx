@@ -53,6 +53,7 @@
     outline:0;
     border-radius: 5px;
     margin-left: 15px;
+    height: 28px;
 }
 .page_ctrl .page_total,.page_ctrl .page_text {
     color:#2b2b2b;
