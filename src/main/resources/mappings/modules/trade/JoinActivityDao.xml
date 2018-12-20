@@ -267,4 +267,15 @@
 		</where>
 	</update>
 
+	<select id="selectMobileNumByopenId" parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity"
+			resultType="int">
+		SELECT
+			count(DISTINCT mobile)
+		FROM
+			t_join_activity
+		WHERE
+			open_id = #{openId}
+			and act_id = #{actId}
+	</select>
+
 </mapper>

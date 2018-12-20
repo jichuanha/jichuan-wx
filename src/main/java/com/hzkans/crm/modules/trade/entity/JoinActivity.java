@@ -49,7 +49,16 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private String wechatNo;
 	private Integer rebateType; //返利类型
 	private Long wechatId;
+	private String openId;
 
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
 
 	public Long getWechatId() {
 		return wechatId;

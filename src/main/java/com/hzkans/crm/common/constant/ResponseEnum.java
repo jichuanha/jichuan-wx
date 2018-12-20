@@ -85,7 +85,8 @@ public enum ResponseEnum {
     B_E_MATE_TYPE_ERROR(40039,0,"传递的类型异常"),
     B_E_WEHCAT_NUM_ERROR(40040,0,"超过10次上传限制"),
     KEYWORD_NO_REPLY_CONTENT(40041,0,"该关键字不存在"),
-
+    B_E_MOBILE_SEND_MESSAGE_ERROR(40042,0,"手机发送验证码失败"),
+    B_E_MOBILE_VERIFY_CODE_ERROR(40043, 0, "验证码有误!"),
     /**
      * 添加失败
      */

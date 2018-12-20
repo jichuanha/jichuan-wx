@@ -129,4 +129,27 @@
 		WHERE id = #{id}
 	</update>
 
+	<select id="selectMembers" resultType="com.hzkans.crm.modules.wechat.entity.MemberAssociation"
+			parameterType="com.hzkans.crm.modules.wechat.entity.MemberAssociation">
+		SELECT
+		<include refid="memberAssociationColumns"/>
+		FROM t_member_association a
+		<where>
+			<if test="openId != null">
+				AND a.open_id = #{openId}
+			</if>
+			<if test="wechatId != null">
+				AND a.wechat_id = #{wechatId}
+			</if>
+			<if test="mobile != null">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="unionId != null">
+				AND a.union_id = #{unionId}
+			</if>
+		</where>
+
+
+	</select>
+	
 </mapper>

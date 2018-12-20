@@ -177,6 +177,32 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 
 	}
 
+	/**
+	 * 查询该账号一个活动输入的手机号数量
+	 * @param joinActivity
+	 * @return
+	 */
+	public int queryImportMobileNum(JoinActivity joinActivity) throws ServiceException{
+		TradeUtil.isAllNull(joinActivity);
+		int count = 0;
+		try {
+			count = joinActivityDao.selectMobileNumByopenId(joinActivity);
+		} catch (Exception e) {
+			logger.error("queryImportMobileNum error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+
+		return count;
+	}
+
+
+	public void joinActivity() {
+
+
+
+	}
+
+
 	private JoinActivity initParameter(String wechatId, JoinActivity ja) throws ServiceException{
 		try {
 			//获取店铺和平台名称

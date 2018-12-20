@@ -23,7 +23,17 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	private Integer deleted;		// deleted
 	private String unionId;		// union_id
 	private String sign;		// 0 -未更新  1-已更新
-	
+	private String mobile;
+
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	public MemberAssociation() {
 		super();
 	}

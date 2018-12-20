@@ -20,4 +20,6 @@ public interface JoinActivityDao extends CrudDao<JoinActivity> {
     int selectJoinActivityPageCount(PagePara<JoinActivity> pagePara);
 
     int updateJoinActivityStatus(JoinActivity activity);
+
+    int selectMobileNumByopenId(JoinActivity activity);
 }
