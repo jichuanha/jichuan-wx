@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.wechat.utils;
+package com.hzkans.crm.modules.wxapi.constants;
 
 /**
  * @author jc

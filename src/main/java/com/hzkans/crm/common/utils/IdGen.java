@@ -3,15 +3,14 @@
  */
 package com.hzkans.crm.common.utils;
 
-import org.activiti.engine.impl.cfg.IdGenerator;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.UUID;
+
 
 /**
  * 封装各种生成唯一性ID算法的工具类.
@@ -20,7 +19,7 @@ import java.util.UUID;
  */
 @Service
 @Lazy(false)
-public class IdGen implements IdGenerator, SessionIdGenerator {
+public class IdGen implements SessionIdGenerator {
 
 	private static SecureRandom random = new SecureRandom();
 	
@@ -50,7 +49,6 @@ public class IdGen implements IdGenerator, SessionIdGenerator {
 	/**
 	 * Activiti ID 生成
 	 */
-	@Override
 	public String getNextId() {
 		return IdGen.uuid();
 	}

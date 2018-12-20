@@ -32,6 +32,6 @@
 
 	<!-- 微信缓存 -->
 	<cache name="wechatCache" maxEntriesLocalHeap="1000" eternal="false" overflowToDisk="true"
-		   diskPersistent="true" statistics="true" timeToLiveSeconds="6000"/>
+		   diskPersistent="true" statistics="true" timeToLiveSeconds="7200"/>
     	
 </ehcache>

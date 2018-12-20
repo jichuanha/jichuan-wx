@@ -12,6 +12,7 @@ import java.util.List;
  * Time:17:47
  */
 public interface WechatPlatfromService {
+
     WechatPlatfrom getWechatPlatformById(Long id) throws Exception;
 
     void addWechatPlatform(WechatPlatfrom wechatPlatfrom) throws Exception;

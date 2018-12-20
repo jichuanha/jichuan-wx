@@ -15,7 +15,7 @@
   <function>
     <description>根据id获取微信公众号对象</description>
     <name>getWechatPlatform</name>
-    <function-class>com.hzkans.crm.modules.wechat.utils.WechatUtils</function-class>
+    <function-class>com.hzkans.crm.modules.wxapi.utils.WechatUtils</function-class>
     <function-signature>com.hzkans.crm.modules.wechat.entity.WechatPlatfromDO getWechatPlatform(java.lang.Long)</function-signature>
     <example>${wechat:getWechatPlatform(id)}</example>
   </function>

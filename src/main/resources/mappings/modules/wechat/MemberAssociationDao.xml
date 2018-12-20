@@ -129,11 +129,4 @@
 		WHERE id = #{id}
 	</update>
 
-	<insert id="insertMessageRecord" parameterType="com.hzkans.crm.modules.wechat.entity.MessageRecord" >
-		INSERT INTO t_message_record
-		(msg_id, content, msg_type, media_id, to_user_name, from_user_name , create_date, update_date)
-		VALUES
-		(#{msgId}, #{content}, #{msgType}, #{mediaId}, #{toUserName}, #{fromUserName}, now(), now())
-	</insert>
-	
 </mapper>

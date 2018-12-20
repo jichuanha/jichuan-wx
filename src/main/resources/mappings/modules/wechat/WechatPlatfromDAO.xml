@@ -18,15 +18,11 @@
 		a.wechat_no AS "wechatNo"
 	</sql>
 
-    <sql id="tWechatPlatformJoins">
-    </sql>
-
     <select id="getWechatPlatformById" resultType="com.hzkans.crm.modules.wechat.entity.WechatPlatfrom"
             parameterType="java.lang.Long">
         SELECT
         <include refid="tWechatPlatformColumns"/>
         FROM t_wechat_platform a
-        <include refid="tWechatPlatformJoins"/>
         WHERE a.id = #{id}
     </select>
 

@@ -3,21 +3,19 @@
  */
 package com.hzkans.crm.modules.wechat.service;
 
-import java.util.List;
-
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import com.hzkans.crm.modules.wechat.dao.WechatReplyKeywordDao;
+import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
-import com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
+
+import java.util.List;
 
 /**
  * 微信公众号素材库Service
@@ -25,23 +23,23 @@ import com.hzkans.crm.modules.wechat.dao.WechatMaterialDao;
  * @version 2018-12-04
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(readOnly = true)
 public class WechatMaterialService extends CrudService<WechatMaterialDao, WechatMaterial> {
 
 	@Autowired
 	private WechatMaterialDao wechatMaterialDao;
 
-	@Autowired
-	private WechatReplyKeywordDao wechatReplyKeywordDao;
-
+	@Override
 	public WechatMaterial get(String id) {
 		return super.get(id);
 	}
 
+	@Override
 	public List<WechatMaterial> findList(WechatMaterial material) {
 		return super.findList(material);
 	}
 
+	@Override
 	public Page<WechatMaterial> findPage(Page<WechatMaterial> page, WechatMaterial material) {
 		return super.findPage(page, material);
 	}
@@ -57,6 +55,7 @@ public class WechatMaterialService extends CrudService<WechatMaterialDao, Wechat
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = false)
 	public void delete(WechatMaterial material) {
 		super.delete(material);

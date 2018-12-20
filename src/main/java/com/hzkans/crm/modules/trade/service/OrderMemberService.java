@@ -1,19 +1,13 @@
 package com.hzkans.crm.modules.trade.service;
 
-import java.util.List;
-
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.common.service.ServiceException;
-import com.hzkans.crm.modules.trade.entity.Order;
+import com.hzkans.crm.modules.trade.dao.OrderMemberDao;
+import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import com.hzkans.crm.modules.trade.entity.OrderMember;
-import com.hzkans.crm.modules.trade.dao.OrderMemberDao;
 
 /**
  * 会员信息表Service

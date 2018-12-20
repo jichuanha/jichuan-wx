@@ -1,9 +1,6 @@
 package com.hzkans.crm.modules.wechat.web;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
@@ -15,19 +12,21 @@ import com.hzkans.crm.modules.sys.entity.User;
 import com.hzkans.crm.modules.sys.utils.UserUtils;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
+import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
-import com.hzkans.crm.modules.wechat.utils.WechatCofig;
-import com.hzkans.crm.modules.wechat.utils.WechatUtils;
+import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
+import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
+import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -276,11 +275,10 @@ public class WechatPlatfromController extends BaseController {
             wxOSSClient.uploadFile(UPLOAD_EX,newPath,realPath);
             //上传到微信素材(只有上传是图片和语音类型走,图文中图片的上传不走这个接口)
             if(MessageTypeEnum.IMAGE.getSign().equals(type) || MessageTypeEnum.VOICE.getSign().equals(type)) {
-                WechatPlatfrom wechat = wechatPlatfromService.getWechatPlatformById(wechatId);
-                logger.info("wechatPlatform {}", JsonUtil.toJson(wechat));
-
+                String accessToken  = WechatUtils.getAccessToken(wechatPlatfromService,wechatId);
+                logger.info("accessToken:"+accessToken);
                 String url = WechatCofig.UPLOAD_MEDIA
-                        .replace("ACCESS_TOKEN", WechatUtils.getAccessToken(wechat.getAppId(), wechat.getAppSecret()))
+                        .replace("ACCESS_TOKEN", accessToken)
                         .replace("TYPE",  messageTypeEnum.getCode());
 
                 String result = HttpRequestUtil.uploadMaterial(newFile, MessageTypeEnum.IMAGE.getCode(), url, "",

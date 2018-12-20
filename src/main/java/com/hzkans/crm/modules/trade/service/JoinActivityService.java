@@ -19,7 +19,6 @@ import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,14 +1,10 @@
-package com.hzkans.crm.modules.wechat.utils;
+package com.hzkans.crm.modules.wxapi.utils;
 
-import com.hzkans.crm.modules.wechat.message.Article;
-import com.hzkans.crm.modules.wechat.message.ImageMessage;
-import com.hzkans.crm.modules.wechat.message.NewsMessage;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import org.apache.poi.ss.formula.functions.T;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -24,7 +20,7 @@ import java.util.Map;
  *  消息处理工具类
  * Created by lizg on 2017/2/22.
  */
-public class MessageUtil {
+public class MessageUtils {
 
     /**
      * 解析微信发来的请求（XML）
@@ -36,7 +32,7 @@ public class MessageUtil {
     @SuppressWarnings("unchecked")
     public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
         // 将解析结果存储在HashMap中
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>(16);
         // 从request中取得输入流
         InputStream inputStream = request.getInputStream();
         // 读取输入流
@@ -48,37 +44,13 @@ public class MessageUtil {
         List<Element> elementList = root.elements();
 
         // 遍历所有子节点
-        for (Element e : elementList)
+        for (Element e : elementList) {
             map.put(e.getName(), e.getText());
+        }
         // 释放资源
         inputStream.close();
         return map;
     }
-
-    /*private static XStream xstream = new XStream(new XppDriver() {
-        public HierarchicalStreamWriter createWriter(Writer out) {
-            return new PrettyPrintWriter(out) {
-                // 对所有xml节点的转换都增加CDATA标记
-                boolean cdata = true;
-
-                @SuppressWarnings("rawtypes")
-                public void startNode(String name, Class clazz) {
-                    super.startNode(name, clazz);
-                }
-
-                protected void writeText(QuickWriter writer, String text) {
-                    if (cdata) {
-                        writer.write("<![CDATA[");
-                        writer.write(text);
-                        writer.write("]]>");
-                    } else {
-                        writer.write(text);
-                    }
-                }
-            };
-        }
-    });*/
-
 
     /**
      * 扩展xstream，使其支持CDATA块
@@ -90,6 +62,7 @@ public class MessageUtil {
                 boolean cdata = true;
                 String createTime = "";
                 String msgId = "";
+                @Override
                 @SuppressWarnings("unchecked")
                 public void startNode(String name, Class clazz) {
                     if(name!=null&&(name.equals("CreateTime") || name.equals("MsgId"))){
@@ -101,6 +74,7 @@ public class MessageUtil {
                     }
                     super.startNode(name, clazz);
                 }
+                @Override
                 protected void writeText(QuickWriter writer, String text) {
                     if (cdata &&(!createTime.equals("CreateTime") || !msgId.equals("MsgId"))) {
                         writer.write("<![CDATA[");
@@ -118,18 +92,6 @@ public class MessageUtil {
     public static <T>  String messageToXml(T t) {
         xstream.alias("xml", t.getClass());
         return xstream.toXML(t);
-    }
-
-    /**
-     * 图文消息对象转换成xml
-     *
-     * @param newsMessage 图文消息对象
-     * @return xml
-     */
-    public static String messageToXml(NewsMessage newsMessage) {
-        xstream.alias("xml", newsMessage.getClass());
-        xstream.alias("item", new Article().getClass());
-        return xstream.toXML(newsMessage);
     }
 
 }
