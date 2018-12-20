@@ -9,9 +9,12 @@ import com.hzkans.crm.common.utils.PriceUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
 import com.hzkans.crm.modules.activity.entity.Activity;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
+import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
 import com.hzkans.crm.modules.activity.service.ActivityService;
 import com.hzkans.crm.modules.activity.service.PlatformShopService;
+import com.hzkans.crm.modules.activity.utils.LotteryUtil;
 import com.hzkans.crm.modules.trade.constants.AttentionEnum;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.entity.Order;
@@ -26,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.dao.JoinActivityDao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 活动订单管理Service
@@ -50,6 +50,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
     private OrderMemberService orderMemberService;
 	@Autowired
 	private ActivityService activityService;
+	@Autowired
+	private ActivityLotteryService activityLotteryService;
 
 	/**
 	 * 获取参加活动订单信息集合
@@ -245,5 +247,61 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
 		}
 	}
+	/**
+	 * 抽奖
+	 * @param id
+	 * @return
+	 * @throws ServiceException
+	 */
+	public JoinActivity lottery(Integer id) throws ServiceException{
 
+		try {
+			JoinActivity joinActivity = new JoinActivity();
+			joinActivity.setId(id.toString());
+			//从抽奖活动列表中获取活动id
+			JoinActivity joinActivity1 = get(id.toString());
+			Integer actId = joinActivity1.getActId();
+
+			//从此活动中获取奖品概率
+			ActivityLottery activityLottery = activityLotteryService.getLottery
+					(actId.toString());
+			List<ActivityLottery.LotteryPrize> lotteryPrizeList =
+					activityLottery.getLotteryPrizeList();
+			ActivityLottery.LotteryPrize lotteryPrize = null;
+			if (CollectionUtils.isNotEmpty(lotteryPrizeList)){
+				Collections.sort(lotteryPrizeList, new Comparator<ActivityLottery.LotteryPrize>
+						() {
+					//按集合中的奖品概率升序排列
+					@Override
+					public int compare(ActivityLottery.LotteryPrize o1,
+									   ActivityLottery.LotteryPrize o2) {
+						if(o1.getPrizeRate() > o2.getPrizeRate()){
+							return 1;
+						}
+						if(o1.getPrizeRate().equals(o2.getPrizeRate())){
+							return 0;
+						}
+						return -1;
+					}
+				});
+				lotteryPrize = LotteryUtil.lottery(lotteryPrizeList);
+			}
+			joinActivity.setAward(lotteryPrize.getPrizeName());
+			joinActivity.setStatus(5);
+			switch (lotteryPrize.getPrizeName()){
+				case "2元红包":
+					joinActivity.setPictureUrl("");
+					break;
+				case "5元红包":
+					joinActivity.setPictureUrl("");
+					break;
+				default:
+			}
+			joinActivityDao.updateJoinActivityById(joinActivity);
+			return joinActivity;
+		} catch (Exception e) {
+			logger.error("lottery error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
+	}
 }
