@@ -98,11 +98,29 @@
 		)
 	</insert>
 	
-	<update id="update">
-		UPDATE t_member_association SET
-			deleted = #{deleted},
+	<update id="update" parameterType="com.hzkans.crm.modules.wechat.entity.MemberAssociation">
+		UPDATE t_member_association
+		<set>
 			sign = 1,
-			update_date = now()
+			update_date = now(),
+			<if test="deleted ! = null">
+				deleted = #{deleted},
+			</if>
+			<if test="nickName != null">
+				nick_name = #{nickName},
+			</if>
+			<if test="sex ! = null">
+				sex = #{sex},
+			</if>
+			<if test="headUrl != null">
+				head_url = #{headUrl},
+			</if>
+			<if test="unionId != null">
+				union_id = #{unionId},
+			</if>
+		</set>
+
+
 		WHERE open_id = #{openId}
 	</update>
 	

@@ -17,6 +17,9 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	private static final long serialVersionUID = 1L;
 	private String wechatId;		// wechat_id
 	private String openId;		// open_id
+	private String nickName;
+	private Integer sex;
+	private String headUrl;
 	private Integer deleted;		// deleted
 	private String unionId;		// union_id
 	private String sign;		// 0 -未更新  1-已更新
@@ -29,7 +32,30 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 		super(id);
 	}
 
-	@Length(min=0, max=255, message="wechat_id长度必须介于 0 和 255 之间")
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public String getHeadUrl() {
+		return headUrl;
+	}
+
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
+	}
+
 	public String getWechatId() {
 		return wechatId;
 	}
@@ -37,8 +63,7 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	public void setWechatId(String wechatId) {
 		this.wechatId = wechatId;
 	}
-	
-	@Length(min=1, max=255, message="open_id长度必须介于 1 和 255 之间")
+
 	public String getOpenId() {
 		return openId;
 	}
@@ -55,7 +80,6 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 		this.deleted = deleted;
 	}
 
-	@Length(min=1, max=255, message="union_id长度必须介于 1 和 255 之间")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -63,8 +87,7 @@ public class MemberAssociation extends DataEntity<MemberAssociation> {
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-	
-	@Length(min=1, max=4, message="0 -未更新  1-已更新长度必须介于 1 和 4 之间")
+
 	public String getSign() {
 		return sign;
 	}

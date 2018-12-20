@@ -37,7 +37,20 @@ public class WechatCofig {
     public static final String GET_MEDIA =
             "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=ACCESS_TOKEN";
 
+    /** 根据前端返回的code换取token,然后拉取用户信息的三个接口*/
 
+    /** 根据code获取access_token*/
+    public static final String GET_CODE_ACCESS_TOKEN =
+            "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+
+    /** 校验access_token的有效性*/
+    public static final String CHECK_ACCESS_TOKEN =
+            "https://api.weixin.qq.com/sns/auth?access_token=ACCESS_TOKEN&openid=OPENID";
+
+
+    /** 拉取用户信息*/
+    public static final String GET_USER_INFO =
+            "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
 
 
