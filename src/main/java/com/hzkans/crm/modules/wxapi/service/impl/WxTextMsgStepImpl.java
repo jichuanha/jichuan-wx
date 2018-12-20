@@ -4,7 +4,6 @@ import com.hzkans.crm.common.utils.CacheUtils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 import com.hzkans.crm.modules.wechat.service.GetWxReplyMaterialService;
-import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.service.BaseApiObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
-
- * @Description:    文本内容消息回复实现类
-
- * @Author:  lizg
-
+ * @Description: 文本内容消息回复实现类
+ * @Author: lizg
  * @CreateDate:
-
- * @Version:        1.0
-
+ * @Version: 1.0
  */
 public class WxTextMsgStepImpl implements BaseApiObserver {
 
@@ -28,7 +22,7 @@ public class WxTextMsgStepImpl implements BaseApiObserver {
 
     private GetWxReplyMaterialService getWxReplyMaterialService;
 
-    public WxTextMsgStepImpl (GetWxReplyMaterialService getWxReplyMaterialService) {
+    public WxTextMsgStepImpl(GetWxReplyMaterialService getWxReplyMaterialService) {
         this.getWxReplyMaterialService = getWxReplyMaterialService;
 
     }
@@ -47,9 +41,9 @@ public class WxTextMsgStepImpl implements BaseApiObserver {
         String content = requestMap.get("Content");
 
         //判断该回复是否已经处理过
-        MessageRecord messageRecord = (MessageRecord) CacheUtils.get(WechatCofig.EHCACHE, msgId);
+        MessageRecord messageRecord = (MessageRecord) CacheUtils.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, msgId);
         logger.info("[{}] messageRecord:{}", JsonUtil.toJson(messageRecord));
-        if(null != messageRecord) {
+        if (null != messageRecord) {
             return resultXml;
         }
 
@@ -61,11 +55,11 @@ public class WxTextMsgStepImpl implements BaseApiObserver {
         record.setFromUserName(openId);
         record.setMediaId(mediaId);
 
-        CacheUtils.put(WechatCofig.EHCACHE, msgId, record);
+        CacheUtils.put(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, msgId, record);
         try {
-            resultXml = getWxReplyMaterialService.keyWordDeal(Long.parseLong(wechatId),content,wechatNo,openId);
-        }catch (Exception e) {
-          logger.error("text keyWordDeal is error:",e);
+            resultXml = getWxReplyMaterialService.keyWordDeal(Long.parseLong(wechatId), content, wechatNo, openId);
+        } catch (Exception e) {
+            logger.error("text keyWordDeal is error:", e);
         }
 
         return resultXml;

@@ -4,7 +4,6 @@ package com.hzkans.crm.modules.wxapi.utils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.wxapi.constants.SignType;
-import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -312,7 +311,7 @@ public class HttpRequestUtil {
      * @return
      */
     public boolean isPayResultNotifySignatureValid(Map<String, String> reqData,String key) throws Exception {
-        String signTypeInData = reqData.get(WechatCofig.FIELD_SIGN_TYPE);
+        String signTypeInData = reqData.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.FIELD_SIGN_TYPE);
         SignType signType;
         if (signTypeInData == null) {
             signType = SignType.MD5;
@@ -322,10 +321,10 @@ public class HttpRequestUtil {
             if (signTypeInData.length() == 0) {
                 signType = SignType.MD5;
             }
-            else if (WechatCofig.MD5.equals(signTypeInData)) {
+            else if (com.hzkans.crm.modules.wechat.utils.WechatCofig.MD5.equals(signTypeInData)) {
                 signType = SignType.MD5;
             }
-            else if (WechatCofig.HMACSHA256.equals(signTypeInData)) {
+            else if (com.hzkans.crm.modules.wechat.utils.WechatCofig.HMACSHA256.equals(signTypeInData)) {
                 signType = SignType.HMACSHA256;
             }
             else {
@@ -345,10 +344,10 @@ public class HttpRequestUtil {
      * @throws Exception
      */
     public static boolean isSignatureValid(Map<String, String> data, String key, SignType signType) throws Exception {
-        if (!data.containsKey(WechatCofig.FIELD_SIGN) ) {
+        if (!data.containsKey(com.hzkans.crm.modules.wechat.utils.WechatCofig.FIELD_SIGN) ) {
             return false;
         }
-        String sign = data.get(WechatCofig.FIELD_SIGN);
+        String sign = data.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.FIELD_SIGN);
         return generateSignature(data, key, signType).equals(sign);
     }
 
@@ -367,7 +366,7 @@ public class HttpRequestUtil {
         Arrays.sort(keyArray);
         StringBuilder sb = new StringBuilder();
         for (String k : keyArray) {
-            if (k.equals(WechatCofig.FIELD_SIGN)) {
+            if (k.equals(com.hzkans.crm.modules.wechat.utils.WechatCofig.FIELD_SIGN)) {
                 continue;
             }
             if (data.get(k).trim().length() > 0) // 参数值为空，则不参与签名

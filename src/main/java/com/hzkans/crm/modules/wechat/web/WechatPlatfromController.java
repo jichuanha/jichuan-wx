@@ -14,7 +14,6 @@ import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
 import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -277,7 +276,7 @@ public class WechatPlatfromController extends BaseController {
             if(MessageTypeEnum.IMAGE.getSign().equals(type) || MessageTypeEnum.VOICE.getSign().equals(type)) {
                 String accessToken  = WechatUtils.getAccessToken(wechatPlatfromService,wechatId);
                 logger.info("accessToken:"+accessToken);
-                String url = WechatCofig.UPLOAD_MEDIA
+                String url = com.hzkans.crm.modules.wechat.utils.WechatCofig.UPLOAD_MEDIA
                         .replace("ACCESS_TOKEN", accessToken)
                         .replace("TYPE",  messageTypeEnum.getCode());
 

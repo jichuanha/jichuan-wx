@@ -11,7 +11,6 @@ import com.hzkans.crm.modules.wechat.constants.WechatMenu;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
 import com.hzkans.crm.modules.wechat.service.CustomMenuService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
 import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -142,7 +141,7 @@ public class WechatInterfaceCallController {
 
         logger.info("listMpa {}",JsonUtil.toJson(listMap));
         String accessToken = WechatUtils.getAccessToken(wechatPlatfromService,wechatId);
-        String url = WechatCofig.CREATE_MENU.replace("ACCESS_TOKEN", accessToken);
+        String url = com.hzkans.crm.modules.wechat.utils.WechatCofig.CREATE_MENU.replace("ACCESS_TOKEN", accessToken);
         String data = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, url,
                 JsonUtil.toJson(listMap), "", 0, "false");
         JSONObject jsonObject = JSONObject.parseObject(data);

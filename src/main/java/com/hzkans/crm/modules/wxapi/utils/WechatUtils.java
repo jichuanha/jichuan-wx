@@ -13,7 +13,6 @@ import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.message.*;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,12 +107,12 @@ public class WechatUtils {
 	public static String getAccessToken(WechatPlatfromService wechatPlatfromService,Long wechatId) {
 
 		String token = Global.getConfig("wx.token");
-		WechatPlatfrom wechatPlatfrom = (WechatPlatfrom)EhCacheUtils.get(WechatCofig.EHCACHE,token);
+		WechatPlatfrom wechatPlatfrom = (WechatPlatfrom)EhCacheUtils.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE,token);
 		if (null == wechatPlatfrom) {
 			try {
 				 wechatPlatfrom =  wechatPlatfromService.getWechatPlatformById(wechatId);
 				if (null != wechatPlatfrom) {
-					EhCacheUtils.put(WechatCofig.EHCACHE,token, wechatPlatfrom);
+					EhCacheUtils.put(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE,token, wechatPlatfrom);
 				}
 			} catch (Exception e) {
 				logger.error("getWechatPlatformById is error",e);
@@ -122,16 +121,16 @@ public class WechatUtils {
 
 		String appId = wechatPlatfrom.getAppId();
 		String appSecret = wechatPlatfrom.getAppSecret();
-		Object result = EhCacheUtils.get(WechatCofig.EHCACHE, appId);
+		Object result = EhCacheUtils.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, appId);
 		logger.info("result {}",result);
 		if(null != result) {
 			return (String) result;
 		}
-		String url = WechatCofig.GET_ACCESS_TOKEN.replace("APPID", appId).replace("APPSECRET", appSecret);
+		String url = com.hzkans.crm.modules.wechat.utils.WechatCofig.GET_ACCESS_TOKEN.replace("APPID", appId).replace("APPSECRET", appSecret);
 		String data = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.GET_METHOD,url,"","",0,"false");
 		JSONObject jsonObject = JSONObject.parseObject(data);
 		String accessToken = jsonObject.getString("access_token");
-		EhCacheUtils.put(WechatCofig.EHCACHE, appId, accessToken);
+		EhCacheUtils.put(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, appId, accessToken);
 		return accessToken;
 	}
 
