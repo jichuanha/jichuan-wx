@@ -9,12 +9,11 @@ import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.modules.wechat.constants.MenuType;
 import com.hzkans.crm.modules.wechat.constants.WechatMenu;
 import com.hzkans.crm.modules.wechat.entity.CustomMainMenuDTO;
-import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.CustomMenuService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
-import com.hzkans.crm.modules.wechat.utils.HttpRequestUtil;
-import com.hzkans.crm.modules.wechat.utils.WechatCofig;
-import com.hzkans.crm.modules.wechat.utils.WechatUtils;
+import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
+import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
+import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +50,8 @@ public class WechatInterfaceCallController {
     public String syMenu2Wechat(HttpServletRequest request, HttpServletResponse response) {
         Long wechatId = RequestUtils.getLong(request, "wechat_id", "wechat_id is null");
         List<CustomMainMenuDTO> allCustomMenu = null;
-        WechatPlatfrom wechatPlatform = null;
         try {
             allCustomMenu = customMenuService.getAllCustomMenu(wechatId);
-            //获取该公众号的appid和appsecret
-            wechatPlatform = wechatPlatfromService.getWechatPlatformById(wechatId);
         } catch (Exception e) {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
         }
@@ -69,7 +65,7 @@ public class WechatInterfaceCallController {
         }
         //将菜单同步到微信公众号
         try {
-            String bizCode = syMenu(allCustomMenu, wechatPlatform);
+            String bizCode = syMenu(allCustomMenu,wechatId);
             if(!bizCode.equals("0")) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
             }
@@ -85,12 +81,11 @@ public class WechatInterfaceCallController {
     /**
      * 同步菜单的方法
      * @param allCustomMenu
-     * @param wechatPlatform
      * @return
      */
-    private String syMenu(List<CustomMainMenuDTO> allCustomMenu, WechatPlatfrom wechatPlatform) {
+    private String syMenu(List<CustomMainMenuDTO> allCustomMenu,Long wechatId) {
         //创建最外层
-        Map<String, List<WechatMenu>> listMap = new HashMap<>();
+        Map<String, List<WechatMenu>> listMap = new HashMap<>(16);
         List<WechatMenu> menuList = new ArrayList<>();
         //遍历数据,按照微信规则匹配数据
         for (CustomMainMenuDTO dto : allCustomMenu) {
@@ -146,7 +141,7 @@ public class WechatInterfaceCallController {
         listMap.put("button",menuList);
 
         logger.info("listMpa {}",JsonUtil.toJson(listMap));
-        String accessToken = WechatUtils.getAccessToken(wechatPlatform.getAppId(), wechatPlatform.getAppSecret());
+        String accessToken = WechatUtils.getAccessToken(wechatPlatfromService,wechatId);
         String url = WechatCofig.CREATE_MENU.replace("ACCESS_TOKEN", accessToken);
         String data = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, url,
                 JsonUtil.toJson(listMap), "", 0, "false");

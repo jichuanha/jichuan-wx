@@ -1,14 +1,16 @@
-package com.hzkans.crm.modules.wxapi.impl;
+package com.hzkans.crm.modules.wechat.service.impl;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.entity.WechatMaterial;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyKeyword;
 import com.hzkans.crm.modules.wechat.entity.WechatReplyNew;
+import com.hzkans.crm.modules.wechat.service.GetWxReplyMaterialService;
 import com.hzkans.crm.modules.wechat.service.WechatMaterialService;
 import com.hzkans.crm.modules.wechat.service.WechatReplyService;
-import com.hzkans.crm.modules.wxapi.WxApiObserver;
+import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +20,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IDEA
- *
- * @author:dengtm
- * @Date:2018/12/17
- * @Time:14:17
- */
 @Service
-public class WxApiObserverImpl implements WxApiObserver {
-    private static final Logger logger = LoggerFactory.getLogger(WxApiObserverImpl.class);
+public class GetWxReplyMaterialServiceImpl implements GetWxReplyMaterialService {
+
+    private static final Logger logger = LoggerFactory.getLogger(GetWxReplyMaterialServiceImpl.class);
 
     @Autowired
     private WechatMaterialService wechatMaterialService;
@@ -85,5 +81,18 @@ public class WxApiObserverImpl implements WxApiObserver {
             throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
         }
         return matetial;
+    }
+
+    @Override
+    public String keyWordDeal(Long wechatId, String keyWord, String wechatNo, String openId) throws ServiceException {
+        WechatReplyKeyword keyword = new WechatReplyKeyword();
+        keyword.setKeyword(keyWord);
+        keyword.setWechatId(wechatId);
+        List<WechatMaterial> material = getKeyWordMaterial(keyword);
+        logger.info(" matetials {}", JsonUtil.toJson(material));
+        if(CollectionUtils.isEmpty(material)) {
+            return "";
+        }
+        return WechatUtils.dealType(material.get(0), wechatNo, openId);
     }
 }

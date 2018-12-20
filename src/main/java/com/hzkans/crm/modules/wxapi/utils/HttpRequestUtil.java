@@ -1,9 +1,10 @@
-package com.hzkans.crm.modules.wechat.utils;
+package com.hzkans.crm.modules.wxapi.utils;
 
 
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
-import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
+import com.hzkans.crm.modules.wxapi.constants.SignType;
+import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -462,12 +463,13 @@ public class HttpRequestUtil {
 
             StringBuffer sb = new StringBuffer();
 
-            while ((len = resp.read(data)) > -1)
+            while ((len = resp.read(data)) > -1) {
                 sb.append(new String(data, 0, len, "utf-8"));
+            }
             resp.close();
             result = sb.toString();
         } catch (IOException e) {
-            //....
+          logger.error("uploadMaterial is error:",e);
         }
 
         return result;
