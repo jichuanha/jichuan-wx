@@ -1,4 +1,4 @@
-package com.hzkans.crm.modules.wechat.web;
+package com.hzkans.crm.modules.wxapi.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.utils.JsonUtil;
