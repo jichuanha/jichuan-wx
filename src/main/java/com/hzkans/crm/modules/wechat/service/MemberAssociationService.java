@@ -1,15 +1,21 @@
 package com.hzkans.crm.modules.wechat.service;
 
+
+
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import com.hzkans.crm.modules.wechat.dao.MemberAssociationDao;
-import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
+import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
+import com.hzkans.crm.modules.wechat.dao.MemberAssociationDao;
+
+import java.util.List;
 
 /**
  * 微信关注Service
@@ -44,5 +50,26 @@ public class MemberAssociationService{
 		}
 
 	}
+
+	/**
+	 * 根据条件获取信息(通用查)
+	 * @param memberAssociation
+	 * @return
+	 */
+	public List<MemberAssociation> getMessageAttentionInfo(MemberAssociation memberAssociation) throws ServiceException{
+		TradeUtil.isAllNull(memberAssociation);
+		List<MemberAssociation> memberAssociations = null;
+		try {
+			memberAssociations = memberAssociationDao.selectMembers(memberAssociation);
+		} catch (Exception e) {
+			logger.error("getMessageAttentionInfo error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+
+		return memberAssociations;
+	}
+
+
+
 
 }
