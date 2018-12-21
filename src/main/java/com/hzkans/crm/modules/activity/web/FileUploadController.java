@@ -3,6 +3,7 @@ package com.hzkans.crm.modules.activity.web;
 import com.google.common.collect.Maps;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.RequestUtils;
 import com.hzkans.crm.common.utils.ResponseUtils;
 import com.hzkans.crm.common.utils.WxOSSClient;
 import com.hzkans.crm.modules.activity.entity.ImageVO;
@@ -134,7 +135,14 @@ public class FileUploadController extends BaseUpload {
     public String getUploadImgList(HttpServletRequest request) throws ServiceException {
         try {
             List<String> ossImageList =  wxOSSClient.listFiles(EXTERNAL_ROOT);
-
+            Integer start = RequestUtils.getInt(request, "current_page", true, "", "");
+            Integer count = RequestUtils.getInt(request, "page_size", true, "", "");
+            if (start == null || start == 0) {
+                start = 1;
+            }
+            if (count == null || count == 0) {
+                count = 20;
+            }
             List<ImageVO> imageVOList = Collections.EMPTY_LIST;
             if (CollectionUtils.isNotEmpty(ossImageList)) {
                 imageVOList  = new ArrayList<>();
@@ -153,12 +161,52 @@ public class FileUploadController extends BaseUpload {
                     }
                 }
             }
-            return ResponseUtils.getSuccessApiResponseStr(imageVOList);
+
+            Map map = page(imageVOList,start,count);
+            return ResponseUtils.getSuccessApiResponseStr(map);
         } catch (Exception e) {
             log.error("getUploadImgList is error...", e);
             return ResponseUtils.getFailApiResponseStr(
                     ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
         }
     }
-      
+    /**
+     * 分页
+     *
+     * @param result
+     * @param start
+     * @param count
+     * @return
+     */
+    private Map page(List<ImageVO> result, Integer start, Integer count) {
+        Map agentMap = new HashMap<>();
+        Integer totalCount;
+        if (count != null) {
+            if (CollectionUtils.isNotEmpty(result) && result.size() > 0) {
+                //总记录数
+                totalCount = result.size();
+
+                //分页起始下标
+                Integer fromIndex = (start - 1) * count;
+
+                //分页结束下标
+                //totalCount * 1.0 比较小数位；
+                //如果非最后一页，就取数组当前页最后下标；如果最后一页，取终点下标，终点下标即数组长度值
+                int toIndex = (start < (totalCount * 1.0 / count))
+                        ? (start * count) : totalCount;
+
+                List<ImageVO> _result = new ArrayList<>();
+                for (int i = fromIndex; i < toIndex; i++) {
+                    _result.add(result.get(i));
+                }
+
+                agentMap.put("result", _result);
+                agentMap.put("totalCount", totalCount);
+            } else {
+                agentMap.put("result", new ArrayList<>());
+                agentMap.put("totalCount", 0);
+            }
+        }
+        return agentMap;
+    }
 }
