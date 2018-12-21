@@ -20,6 +20,7 @@
 				${adminPath}/login = authc
 				${adminPath}/logout = logout
 				${adminPath}/changePassword/** = anon
+				${frontPath}/mobile/lottery/** = anon
 				${adminPath}/** = user
 				/act/editor/** = user
 				/ReportServer/** = user

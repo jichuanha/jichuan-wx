@@ -40,7 +40,7 @@ import java.util.List;
  * @version 2018-12-20
  */
 @Controller
-@RequestMapping(value = "${adminPath}/mobile/lottery")
+@RequestMapping(value = "${frontPath}/mobile/lottery")
 public class LotteryRecordController extends BaseController {
 
 	@Autowired
@@ -54,7 +54,11 @@ public class LotteryRecordController extends BaseController {
 
 		return null;
 	}
-	
+	@RequestMapping(value = "/link_lottery")
+	public String link_lottery_test() {
+		return "modules/mobile/lottery";
+	}
+
 	@RequestMapping(value = "lottery")
 	@ResponseBody
 	public String lottery(HttpServletRequest request) {
