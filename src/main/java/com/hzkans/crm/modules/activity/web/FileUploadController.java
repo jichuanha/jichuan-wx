@@ -35,7 +35,7 @@ import java.util.*;
  */
 
 @Controller
-@RequestMapping(value = "${frontPath}/activity/activityLottery")
+@RequestMapping(value = "${adminPath}/activity/activityLottery")
 public class FileUploadController extends BaseUpload {
 
 	private static final Logger log = LoggerFactory
