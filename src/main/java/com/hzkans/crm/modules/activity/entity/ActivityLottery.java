@@ -46,6 +46,7 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 		private Long lotteryId;		// 幸运抽奖活动id
 		private String prizeName;		// 奖品名称
 		private Double prizeRate;		// 奖品比例
+		private String pictureUrl;		// 图片地址
 
 		public Long getLotteryId() {
 			return lotteryId;
@@ -69,6 +70,14 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 
 		public void setPrizeRate(Double prizeRate) {
 			this.prizeRate = prizeRate;
+		}
+
+		public String getPictureUrl() {
+			return pictureUrl;
+		}
+
+		public void setPictureUrl(String pictureUrl) {
+			this.pictureUrl = pictureUrl;
 		}
 	}
 	public ActivityLottery(String id){

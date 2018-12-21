@@ -288,15 +288,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			}
 			joinActivity.setAward(lotteryPrize.getPrizeName());
 			joinActivity.setStatus(5);
-			switch (lotteryPrize.getPrizeName()){
-				case "2元红包":
-					joinActivity.setPictureUrl("");
-					break;
-				case "5元红包":
-					joinActivity.setPictureUrl("");
-					break;
-				default:
-			}
+			joinActivity.setPictureUrl(lotteryPrize.getPictureUrl());
+
 			joinActivityDao.updateJoinActivityById(joinActivity);
 			return joinActivity;
 		} catch (Exception e) {
