@@ -4,6 +4,7 @@ import com.hzkans.crm.common.utils.CacheUtils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 import com.hzkans.crm.modules.wechat.service.GetWxReplyMaterialService;
+import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.service.BaseApiObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class WxTextMsgStepImpl implements BaseApiObserver {
         String content = requestMap.get("Content");
 
         //判断该回复是否已经处理过
-        MessageRecord messageRecord = (MessageRecord) CacheUtils.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, msgId);
+        MessageRecord messageRecord = (MessageRecord) CacheUtils.get(WechatCofig.EHCACHE, msgId);
         logger.info("[{}] messageRecord:{}", JsonUtil.toJson(messageRecord));
         if (null != messageRecord) {
             return resultXml;
@@ -55,7 +56,7 @@ public class WxTextMsgStepImpl implements BaseApiObserver {
         record.setFromUserName(openId);
         record.setMediaId(mediaId);
 
-        CacheUtils.put(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, msgId, record);
+        CacheUtils.put(WechatCofig.EHCACHE, msgId, record);
         try {
             resultXml = getWxReplyMaterialService.keyWordDeal(Long.parseLong(wechatId), content, wechatNo, openId);
         } catch (Exception e) {

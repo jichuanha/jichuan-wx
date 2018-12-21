@@ -8,6 +8,7 @@ import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.GetWxReplyMaterialService;
 import com.hzkans.crm.modules.wechat.service.MemberAssociationService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
+import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.service.BaseApiObserver;
 import com.hzkans.crm.modules.wxapi.service.WxApiObserver;
 import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
@@ -47,7 +48,7 @@ public class WxApiObserverImpl implements WxApiObserver {
 
         String wechatNo = requestMap.get("ToUserName");
         logger.info("wechatNo:", wechatNo);
-        Long wechatId = (Long) CacheUtils.get(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, wechatNo);
+        Long wechatId = (Long) CacheUtils.get(WechatCofig.EHCACHE, wechatNo);
         if (null == wechatId) {
 
             //根据wechatNo获取对应的数据库id
@@ -59,7 +60,7 @@ public class WxApiObserverImpl implements WxApiObserver {
                 return resultXml;
             }
             wechatId = wechatPlatform.getId();
-            CacheUtils.put(com.hzkans.crm.modules.wechat.utils.WechatCofig.EHCACHE, wechatNo, wechatId);
+            CacheUtils.put(WechatCofig.EHCACHE, wechatNo, wechatId);
         }
 
         requestMap.put("wechatId", String.valueOf(wechatId));
@@ -83,7 +84,7 @@ public class WxApiObserverImpl implements WxApiObserver {
     @Override
     public Map<String, Object> getUserInfo(String code, String appId, String appSecret) throws Exception {
         logger.info("code {}", code);
-        String accUrl = com.hzkans.crm.modules.wechat.utils.WechatCofig.GET_CODE_ACCESS_TOKEN.replace("APPID", appId)
+        String accUrl = WechatCofig.GET_CODE_ACCESS_TOKEN.replace("APPID", appId)
                 .replace("SECRET", appSecret).replace("CODE", code);
         //根据code换取access_token
         String accResult = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, accUrl,
@@ -96,7 +97,7 @@ public class WxApiObserverImpl implements WxApiObserver {
         }
 
         //校验access_token的有效性
-        String checkUrl = com.hzkans.crm.modules.wechat.utils.WechatCofig.CHECK_ACCESS_TOKEN.replace("ACCESS_TOKEN", accessToken)
+        String checkUrl = WechatCofig.CHECK_ACCESS_TOKEN.replace("ACCESS_TOKEN", accessToken)
                 .replace("OPENID", openId);
         String checkResult = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, checkUrl,
                 "", "", 0, "false");
@@ -107,7 +108,7 @@ public class WxApiObserverImpl implements WxApiObserver {
         }
 
         //根据access_token获取用户信息
-        String infoUrl = com.hzkans.crm.modules.wechat.utils.WechatCofig.GET_USER_INFO.replace("ACCESS_TOKEN", accessToken)
+        String infoUrl = WechatCofig.GET_USER_INFO.replace("ACCESS_TOKEN", accessToken)
                 .replace("OPENID", openId);
         String infoResult = HttpRequestUtil.HttpsDefaultExecute(HttpRequestUtil.POST_METHOD, infoUrl,
                 "", "", 0, "false");
