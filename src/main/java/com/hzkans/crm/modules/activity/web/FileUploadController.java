@@ -145,10 +145,12 @@ public class FileUploadController extends BaseUpload {
                     if (i > 500) {
                         break;
                     }
-                    String image =file.substring(3);
-                    ImageVO imageVO = new ImageVO();
-                    imageVO.setImage(image);
-                    imageVOList.add(imageVO);
+                    if (!".mp3".equals(file.substring((file.length() - 4),file.length()))) {
+                        String image = file.substring(3);
+                        ImageVO imageVO = new ImageVO();
+                        imageVO.setImage(image);
+                        imageVOList.add(imageVO);
+                    }
                 }
             }
             return ResponseUtils.getSuccessApiResponseStr(imageVOList);
