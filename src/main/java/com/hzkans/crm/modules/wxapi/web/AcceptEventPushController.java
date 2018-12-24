@@ -146,9 +146,12 @@ public class AcceptEventPushController {
             String openId = (String) userInfo.get("openid");
             //判断需不需要验证码
             boolean codeFlg = false; //默认不需要验证码
-            int currentNum = (int) CacheUtils.get(openId+WechatUtils.MAX_NUM);
+            Integer currentNum = (Integer) CacheUtils.get(openId+WechatUtils.MAX_NUM);
+            if(null == currentNum) {
+                currentNum = 0;
+            }
             logger.info("currentNum {}",currentNum);
-            if(currentNum > WechatUtils.MAX_NUM) {
+            if(currentNum >= WechatUtils.MAX_NUM) {
                 codeFlg = true;
             }
             //判断有没有绑定
