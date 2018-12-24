@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2018/12/20
  */
 @Controller
-@RequestMapping("/message")
+@RequestMapping("${frontPath}/message")
 public class SendMessageController extends BaseController{
 
     private final static Logger logger = LoggerFactory.getLogger(SendMessageController.class);

@@ -264,8 +264,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			QueryResult result = new QueryResult();
 			result.setMobile(mobile);
 			//判断是否要绑定手机号
-			Integer needCode = queryResult.getNeedCode();
-			if(NeedCodeEnum.NEED.getCode().equals(needCode)) {
+			if(queryResult.getCodeFlg()) {
                 //openId绑定手机号
                 MemberAssociation association = new MemberAssociation();
                 association.setMobile(queryResult.getMobile());
@@ -284,18 +283,38 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 				return result;
 			}
 			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult.getOpenId());
-			joinActivityDao.insertAllJoinActivity(joinActivities);
+			saveAllResult(joinActivities);
 			//1.2 将查询的订单状态修改
-			Order order = new Order();
+            List<Long> ids = getIds(list);
+            Order order = new Order();
 			order.setStatus(OrderStatusEnum.HAS_JOIN_ACT.getCode());
-			order.setIds(getIds(list));
+			order.setIds(ids);
 			orderService.updateOrder(order);
+			result.setIds(ids);
 			return result;
 		} catch (Exception e) {
 			logger.error("joinActivity error",e);
 			throw new ServiceException(ResponseEnum.B_E_JOIN_ACTIVITY_ERROR);
 		}
 
+	}
+
+	/**
+	 * 保存数据
+	 * @param joinActivities
+	 */
+	public void saveAllResult(List<JoinActivity> joinActivities) {
+		TradeUtil.isAllNull(joinActivities);
+		try {
+			if(joinActivities.size() > 1) {
+                joinActivityDao.insertAllJoinActivity(joinActivities);
+            }else {
+                joinActivityDao.insert(joinActivities.get(0));
+            }
+		} catch (Exception e) {
+			logger.error("saveAllResult error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
 	}
 
 	private List<Long> getIds(List<Order> list) {

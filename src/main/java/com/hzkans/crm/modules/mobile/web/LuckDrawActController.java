@@ -78,11 +78,14 @@ public class LuckDrawActController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, message);
         }
         //获取根据不同手机号查询的次数
-        int currentNum = (int) CacheUtils.get(openId+MAX_NUM);
+        Integer currentNum = (Integer) CacheUtils.get(openId+MAX_NUM);
         logger.info("currentNum {}",currentNum);
-        if(currentNum > MAX_NUM) {
+        if(currentNum == null) {
+            currentNum = 0;
+        }
+        if(currentNum >= MAX_NUM) {
             //当数量大于4次时,会返回提示走验证码,当带着验证码来的时候,还会再走这个方法,防止出现重复返回问题
-            queryResult.setNeedCode(NeedCodeEnum.NEED.getCode());
+            queryResult.setCodeFlg(true);
             String cache = (String) CacheUtils.get("wechatCache", mobile+MAX_NUM);
             if(StringUtils.isEmpty(cache)) {
                 CacheUtils.put("wechatCache", mobile+MAX_NUM, mobile);

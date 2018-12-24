@@ -13,7 +13,7 @@ public class QueryResult implements Serializable{
     private static final long serialVersionUID = 1L;
 
     //是否需要验证码 (1:需要 2:不需要)
-    private Integer needCode = 2;
+    private Boolean codeFlg = false;
     private Integer drawNum;
     private String mobile;
     private List<Long> ids;
@@ -37,12 +37,12 @@ public class QueryResult implements Serializable{
         this.actId = actId;
     }
 
-    public Integer getNeedCode() {
-        return needCode;
+    public Boolean getCodeFlg() {
+        return codeFlg;
     }
 
-    public void setNeedCode(Integer needCode) {
-        this.needCode = needCode;
+    public void setCodeFlg(Boolean codeFlg) {
+        this.codeFlg = codeFlg;
     }
 
     public Integer getDrawNum() {

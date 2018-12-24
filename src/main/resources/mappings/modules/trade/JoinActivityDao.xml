@@ -200,34 +200,11 @@
 	
 	<insert id="insert">
 		INSERT INTO t_join_activity(
-			order_id,
-			order_sn,
-			act_id,
-			act_type,
-			act_name,
-			status,
-			mobile,
-			message,
-			picture_url,
-			auditor,
-			pay_data,
-			create_date,
-			update_date
-		) VALUES (
-			#{orderId},
-			#{orderSn},
-			#{actId},
-			#{actType},
-			#{actName},
-			#{status},
-			#{mobile},
-			#{message},
-			#{pictureUrl},
-			#{auditor},
-			#{payData},
-			#{createDate},
-			#{updateDate}
-		)
+			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
+			act_name, pay_data, create_date, update_date
+		) VALUES
+		(#{mobile}, #{openId}, #{orderId}, #{orderSn}, #{platformType}, #{shopNo},
+			#{actId}, #{actType}, #{actName}, #{payData}, now(), now())
 	</insert>
 
 	<insert id="insertAllJoinActivity" parameterType="list" >
@@ -235,6 +212,7 @@
 			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
 			act_name, pay_data, create_date, update_date
 		) VALUES
+
 		<foreach collection="list" separator="," open="(" close=")" item="item" index="index">
 			(#{item.mobile}, #{item.openId}, #{item.orderId}, #{item.orderSn}, #{item.platformType}, #{item.shopNo},
 			#{item.actId}, #{item.actType}, #{item.actName}, #{item.payData}, now(), now())

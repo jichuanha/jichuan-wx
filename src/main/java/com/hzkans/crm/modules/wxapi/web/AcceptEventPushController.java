@@ -160,8 +160,8 @@ public class AcceptEventPushController {
             if(!StringUtils.isEmpty(mobile)) {
                 boundFlg = true;
             }
-            userInfo.put("codeFlg", codeFlg);
-            userInfo.put("boundFlg", boundFlg);
+            userInfo.put("code_flg", codeFlg);
+            userInfo.put("bound_flg", boundFlg);
             userInfo.put("mobile", mobile);
             //将信息更新到数据库
             MemberAssociation association = new MemberAssociation();
