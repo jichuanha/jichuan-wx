@@ -12,7 +12,11 @@ public enum  JoinActivityStatusEnum {
     PERSONAL_AGREE(1, "人工审核同意"),
     PERSONAL_DISAGREE(2, "人工审核不同意"),
     SYS_AGREE(3, "系统自动审核同意"),
-    SYS_DISAGREE(4, "系统自动审核不同意");
+    SYS_DISAGREE(4, "系统自动审核不同意"),
+    LOTTERYED(5, "已抽奖"),
+    SEND_SUCCESS(6, "发放成功"),
+    SEND_FAIL(7, "发放失败"),
+    ;
 
     private Integer code;
     private String desc;

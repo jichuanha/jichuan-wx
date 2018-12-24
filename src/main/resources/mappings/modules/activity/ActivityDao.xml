@@ -42,6 +42,14 @@
 		<include refid="activityJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="getActivity" resultType="com.hzkans.crm.modules.activity.entity.Activity">
+		SELECT
+			<include refid="activityColumns"/>
+		FROM t_activity a
+		<include refid="activityJoins"/>
+		WHERE a.id = #{id} and a.activity_type= #{activityType}
+	</select>
 	
 	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.Activity">
 		SELECT 

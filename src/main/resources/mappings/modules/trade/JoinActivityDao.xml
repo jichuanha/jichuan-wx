@@ -307,6 +307,9 @@
 			<if test="pictureUrl != null and pictureUrl != ''">
 				picture_url = #{pictureUrl},
 			</if>
+			<if test="award != null and award != ''">
+				award = #{award},
+			</if>
 			<if test="awardGrantStatus != null">
 				award_grant_status = #{awardGrantStatus}
 			</if>

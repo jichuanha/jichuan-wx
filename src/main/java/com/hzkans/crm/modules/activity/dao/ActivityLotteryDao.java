@@ -7,6 +7,8 @@ import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 
+import java.util.Map;
+
 /**
  * 幸运抽奖活动DAO接口
  * @author wsh
@@ -14,5 +16,5 @@ import com.hzkans.crm.modules.activity.entity.ActivityLottery;
  */
 @MyBatisDao
 public interface ActivityLotteryDao extends CrudDao<ActivityLottery> {
-
+    ActivityLottery getActivityLottery(Map map);
 }

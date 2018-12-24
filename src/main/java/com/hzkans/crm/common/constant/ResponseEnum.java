@@ -89,6 +89,7 @@ public enum ResponseEnum {
     B_E_MOBILE_VERIFY_CODE_ERROR(40043, 0, "验证码有误!"),
     B_E_GET_DRAWNUM_ERROR(40044, 0, "获取抽奖次数异常!"),
     B_E_JOIN_ACTIVITY_ERROR(40045, 0, "参加活动异常!"),
+    B_E_HAS_ON_THE_PRIZE_ERROR(40046, 0, "您已抽过奖!"),
     /**
      * 添加失败
      */

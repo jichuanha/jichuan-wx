@@ -48,6 +48,7 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 		private String prizeName;		// 奖品名称
 		private Double prizeRate;		// 奖品比例
 		private String pictureUrl;		// 图片地址
+		private Integer sortNo;		// 奖品编号
 
 		public Long getLotteryId() {
 			return lotteryId;
@@ -79,6 +80,14 @@ public class ActivityLottery extends DataEntity<ActivityLottery> {
 
 		public void setPictureUrl(String pictureUrl) {
 			this.pictureUrl = pictureUrl;
+		}
+
+		public Integer getSortNo() {
+			return sortNo;
+		}
+
+		public void setSortNo(Integer sortNo) {
+			this.sortNo = sortNo;
 		}
 	}
 

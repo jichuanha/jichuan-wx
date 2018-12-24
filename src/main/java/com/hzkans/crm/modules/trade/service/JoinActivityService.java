@@ -8,6 +8,7 @@ import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.PriceUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.activity.constants.ActivityStatusEnum;
+import com.hzkans.crm.modules.activity.dao.ActivityPrizeDao;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.entity.PlatformShop;
@@ -45,6 +46,8 @@ import java.util.*;
 @Transactional(rollbackFor = ServiceException.class)
 public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivity> {
 
+	@Autowired
+	private ActivityPrizeDao activityPrizeDao;
 	@Autowired
 	private JoinActivityDao joinActivityDao;
 	@Autowired
@@ -473,17 +476,22 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	}
 	/**
 	 * 抽奖
-	 * @param id
+	 * @param joinActivity
 	 * @return
 	 * @throws ServiceException
 	 */
-	public JoinActivity lottery(Integer id) throws ServiceException{
+	public JoinActivity lottery(JoinActivity joinActivity) throws ServiceException{
+
+		//从抽奖活动列表中获取活动id
+		JoinActivity joinActivity1 = get(joinActivity);
+//		Integer status = joinActivity1.getStatus();
+//		if (JoinActivityStatusEnum.LOTTERYED.getCode().equals(status)
+//				|| JoinActivityStatusEnum.SEND_SUCCESS.getCode().equals(status)
+//				|| JoinActivityStatusEnum.SEND_FAIL.getCode().equals(status)){
+//			throw new ServiceException(ResponseEnum.B_E_HAS_ON_THE_PRIZE_ERROR);
+//		}
 
 		try {
-			JoinActivity joinActivity = new JoinActivity();
-			joinActivity.setId(id.toString());
-			//从抽奖活动列表中获取活动id
-			JoinActivity joinActivity1 = get(id.toString());
 			Long actId = joinActivity1.getActId();
 
 			//从此活动中获取奖品概率
@@ -514,10 +522,12 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			joinActivity.setStatus(5);
 			switch (lotteryPrize.getPrizeName()){
 				case "2元红包":
-					joinActivity.setPictureUrl("");
+					joinActivity.setPictureUrl(lotteryPrize.getPictureUrl());
+					joinActivity.setSortNo(2);
 					break;
 				case "5元红包":
-					joinActivity.setPictureUrl("");
+					joinActivity.setPictureUrl(lotteryPrize.getPictureUrl());
+					joinActivity.setSortNo(5);
 					break;
 				default:
 			}
@@ -526,6 +536,33 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		} catch (Exception e) {
 			logger.error("lottery error",e);
 			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
+	}
+	/**
+	 *
+	 * @param activityLottery
+	 * @return
+	 */
+	public List<ActivityLottery.LotteryPrize> getLotteryPrize(ActivityLottery activityLottery) {
+		try {
+			ActivityLottery activityLottery1 = activityLotteryService.get(activityLottery);
+			String lotteryId = activityLottery1.getId();
+			ActivityLottery.LotteryPrize lotteryPrize = new ActivityLottery.LotteryPrize();
+			lotteryPrize.setLotteryId(Long.valueOf(lotteryId));
+			List<ActivityLottery.LotteryPrize> lotteryPrizeList = activityPrizeDao.findList(lotteryPrize);
+			if (CollectionUtils.isNotEmpty(lotteryPrizeList)){
+				for (ActivityLottery.LotteryPrize lotteryPrize1 : lotteryPrizeList){
+					Integer sortNo = Integer.valueOf(lotteryPrize1.getPrizeName().
+							substring(0,lotteryPrize1.getPrizeName().length() - 3));
+					lotteryPrize1.setSortNo(sortNo);
+				}
+			}
+			activityLottery1.setLotteryPrizeList(lotteryPrizeList);
+			logger.info("[{}]activityLottery1：{}",JsonUtil.toJson(activityLottery1));
+			return activityLottery1.getLotteryPrizeList();
+		} catch (Exception e) {
+			logger.error("getLotteryPrize error",e);
+			throw new ServiceException(ResponseEnum.B_E_GET_DRAWNUM_ERROR);
 		}
 	}
 }

@@ -50,6 +50,7 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private Integer rebateType; //返利类型
 	private Long wechatId;
 	private String openId;
+	private Integer sortNo;
 
 
 	public String getOpenId() {
@@ -310,5 +311,12 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	public void setPayData(Date payData) {
 		this.payData = payData;
 	}
-	
+
+	public Integer getSortNo() {
+		return sortNo;
+	}
+
+	public void setSortNo(Integer sortNo) {
+		this.sortNo = sortNo;
+	}
 }

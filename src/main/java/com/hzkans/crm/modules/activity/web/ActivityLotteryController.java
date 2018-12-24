@@ -143,6 +143,8 @@ public class ActivityLotteryController extends BaseController {
 			//若totalOrder没传，则表示不限制
 			if (null == totalOrder){
 				activityLottery.setTotalOrder(0);
+			}else {
+				activityLottery.setTotalOrder(totalOrder);
 			}
 			activityLottery.setShopName(shopName);
 			activityLottery.setShopNo(shopNo);

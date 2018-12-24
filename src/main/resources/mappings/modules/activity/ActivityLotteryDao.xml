@@ -39,6 +39,14 @@
 		<include refid="activityLotteryJoins"/>
 		WHERE a.id = #{id} and a.del_flag = "0"
 	</select>
+
+	<select id="getActivityLottery" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery">
+		SELECT
+			<include refid="activityLotteryColumns"/>
+		FROM t_activity_lottery a
+		<include refid="activityLotteryJoins"/>
+		WHERE a.id = #{id} and a.activity_type= #{activityType}
+	</select>
 	
 	<select id="findList" resultType="com.hzkans.crm.modules.activity.entity.ActivityLottery">
 		SELECT 

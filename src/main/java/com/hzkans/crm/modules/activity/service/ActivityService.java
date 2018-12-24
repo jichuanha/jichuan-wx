@@ -6,11 +6,17 @@ package com.hzkans.crm.modules.activity.service;
 import com.hzkans.crm.common.persistence.Page;
 import com.hzkans.crm.common.service.CrudService;
 import com.hzkans.crm.modules.activity.dao.ActivityDao;
+import com.hzkans.crm.modules.activity.dao.ActivityLotteryDao;
 import com.hzkans.crm.modules.activity.entity.Activity;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 活动管理Service
@@ -21,6 +27,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ActivityService extends CrudService<ActivityDao, Activity> {
 
+	@Autowired
+	private ActivityDao activityDao;
+
+	@Autowired
+	private ActivityLotteryDao activityLotteryDao;
 	@Override
 	public Activity get(String id) {
 		return super.get(id);
@@ -34,6 +45,31 @@ public class ActivityService extends CrudService<ActivityDao, Activity> {
 	@Override
 	public Page<Activity> findPage(Page<Activity> page, Activity activity) {
 		return super.findPage(page, activity);
+	}
+
+	/**
+	 * 根据活动id和活动类型获取活动
+	 * @param id
+	 * @param activityType
+	 * @param <T>
+	 * @return
+	 */
+	public <T> T getActivity(String id, Integer activityType){
+		Map map = new HashMap();
+		map.put("id",id);
+		map.put("activityType",activityType);
+		Activity activity;
+		ActivityLottery activityLottery;
+		switch (activityType) {
+			case 1:
+				activity = activityDao.getActivity(map);
+				return (T) activity;
+			case 2:
+				activityLottery = activityLotteryDao.getActivityLottery(map);
+				return (T) activityLottery;
+			default:
+				return null;
+		}
 	}
 
 	@Override
