@@ -93,8 +93,8 @@
 		) VALUES (
 			#{wechatId},
 			#{openId},
-			#{createDate},
-			#{updateDate}
+			now(),
+			now()
 		)
 	</insert>
 	
@@ -103,13 +103,13 @@
 		<set>
 			sign = 1,
 			update_date = now(),
-			<if test="deleted ! = null">
+			<if test="deleted != null">
 				deleted = #{deleted},
 			</if>
 			<if test="nickName != null">
 				nick_name = #{nickName},
 			</if>
-			<if test="sex ! = null">
+			<if test="sex != null">
 				sex = #{sex},
 			</if>
 			<if test="headUrl != null">
@@ -118,9 +118,10 @@
 			<if test="unionId != null">
 				union_id = #{unionId},
 			</if>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
 		</set>
-
-
 		WHERE open_id = #{openId}
 	</update>
 	

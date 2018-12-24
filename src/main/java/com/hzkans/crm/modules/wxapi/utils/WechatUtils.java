@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
- */
 package com.hzkans.crm.modules.wxapi.utils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -26,7 +23,7 @@ import java.util.List;
 public class WechatUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(WechatUtils.class);
-
+	public static final Integer MAX_NUM = 4;
 	/**
 	 * 验证签名
 	 *

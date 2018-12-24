@@ -87,6 +87,8 @@ public enum ResponseEnum {
     KEYWORD_NO_REPLY_CONTENT(40041,0,"该关键字不存在"),
     B_E_MOBILE_SEND_MESSAGE_ERROR(40042,0,"手机发送验证码失败"),
     B_E_MOBILE_VERIFY_CODE_ERROR(40043, 0, "验证码有误!"),
+    B_E_GET_DRAWNUM_ERROR(40044, 0, "获取抽奖次数异常!"),
+    B_E_JOIN_ACTIVITY_ERROR(40045, 0, "参加活动异常!"),
     /**
      * 添加失败
      */

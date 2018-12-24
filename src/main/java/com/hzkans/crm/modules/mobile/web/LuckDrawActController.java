@@ -78,24 +78,33 @@ public class LuckDrawActController extends BaseController {
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, message);
         }
         //获取根据不同手机号查询的次数
-        JoinActivity joinActivity = new JoinActivity();
-        joinActivity.setOpenId(openId);
-        joinActivity.setMobile(mobile);
-        int count = joinActivityService.queryImportMobileNum(joinActivity);
-        if(count > MAX_NUM) {
+        int currentNum = (int) CacheUtils.get(openId+MAX_NUM);
+        logger.info("currentNum {}",currentNum);
+        if(currentNum > MAX_NUM) {
             //当数量大于4次时,会返回提示走验证码,当带着验证码来的时候,还会再走这个方法,防止出现重复返回问题
+            queryResult.setNeedCode(NeedCodeEnum.NEED.getCode());
             String cache = (String) CacheUtils.get("wechatCache", mobile+MAX_NUM);
             if(StringUtils.isEmpty(cache)) {
-                queryResult.setNeedCode(NeedCodeEnum.NEED.getCode());
                 CacheUtils.put("wechatCache", mobile+MAX_NUM, mobile);
                 return ResponseUtils.getSuccessApiResponseStr(queryResult);
             }
 
+        }else {
+            CacheUtils.put(openId+MAX_NUM, currentNum+1);
         }
         //参加活动的业务逻辑
+        try {
+            queryResult.setActId(actId);
+            queryResult.setMobile(mobile);
+            queryResult.setOpenId(openId);
+            QueryResult result = joinActivityService.joinActivity(queryResult);
+            logger.info(" result {}",result);
+            return ResponseUtils.getSuccessApiResponseStr(result);
+        } catch (Exception e) {
+            logger.error("ensureDrawNum con error",e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
 
-
-        return null;
     }
 
     /**

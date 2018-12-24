@@ -21,7 +21,7 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private static final long serialVersionUID = 1L;
 	private Long orderId;		// 订单id
 	private String orderSn;		// 订单编号
-	private Integer actId;		// 活动id
+	private Long actId;		// 活动id
 	private Integer actType;		// 活动类型
 	private String actName;		// 活动名称
 	private Integer status;		// status
@@ -245,11 +245,11 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 		this.orderSn = orderSn;
 	}
 
-	public Integer getActId() {
+	public Long getActId() {
 		return actId;
 	}
 
-	public void setActId(Integer actId) {
+	public void setActId(Long actId) {
 		this.actId = actId;
 	}
 

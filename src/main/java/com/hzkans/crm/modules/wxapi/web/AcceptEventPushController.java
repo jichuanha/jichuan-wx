@@ -1,9 +1,8 @@
 package com.hzkans.crm.modules.wxapi.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.utils.JsonUtil;
-import com.hzkans.crm.common.utils.RequestUtils;
-import com.hzkans.crm.common.utils.ResponseUtils;
+import com.hzkans.crm.common.utils.*;
+import com.hzkans.crm.modules.trade.constants.NeedCodeEnum;
 import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.MemberAssociationService;
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -143,13 +143,33 @@ public class AcceptEventPushController {
             //调取微信接口
             Map<String, Object> userInfo = wxApiObserver.getUserInfo(code, appId, wechatPlatform.getAppSecret());
             logger.info("userInfo {}", JsonUtil.toJson(userInfo));
-
+            String openId = (String) userInfo.get("openid");
+            //判断需不需要验证码
+            boolean codeFlg = false; //默认不需要验证码
+            int currentNum = (int) CacheUtils.get(openId+WechatUtils.MAX_NUM);
+            logger.info("currentNum {}",currentNum);
+            if(currentNum > WechatUtils.MAX_NUM) {
+                codeFlg = true;
+            }
+            //判断有没有绑定
+            boolean boundFlg = false; //默认没有绑定
+            MemberAssociation ass = new MemberAssociation();
+            ass.setOpenId(openId);
+            List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(ass);
+            String mobile = messageAttentionInfo.get(0).getMobile();
+            if(!StringUtils.isEmpty(mobile)) {
+                boundFlg = true;
+            }
+            userInfo.put("codeFlg", codeFlg);
+            userInfo.put("boundFlg", boundFlg);
+            userInfo.put("mobile", mobile);
             //将信息更新到数据库
             MemberAssociation association = new MemberAssociation();
             association.setHeadUrl((String) userInfo.get("headimgurl"));
             association.setNickName((String) userInfo.get("nickname"));
             association.setSex((Integer) userInfo.get("sex"));
             association.setUnionId((String) userInfo.get("unionid"));
+            association.setOpenId(openId);
             memberAssociationService.save(association);
             return ResponseUtils.getSuccessApiResponseStr(userInfo);
         } catch (Exception e) {

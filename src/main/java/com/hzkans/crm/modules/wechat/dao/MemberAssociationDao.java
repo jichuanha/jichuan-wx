@@ -16,4 +16,5 @@ import java.util.List;
 public interface MemberAssociationDao extends CrudDao<MemberAssociation> {
 
     List<MemberAssociation> selectMembers(MemberAssociation memberAssociation);
+
 }

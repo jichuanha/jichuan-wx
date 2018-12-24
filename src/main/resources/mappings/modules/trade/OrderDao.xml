@@ -32,6 +32,12 @@
 			<if test="data.orderSn != null and data.orderSn != ''">
 				AND a.order_sn = #{data.orderSn}
 			</if>
+			<if test="data.status != null and data.status != ''">
+				AND a.status = #{data.status}
+			</if>
+			<if test="data.mobile != null and data.mobile != ''">
+				AND a.mobile = #{data.mobile}
+			</if>
 			<if test="data.platformType != null">
 				AND a.platform_type = #{data.platformType}
 			</if>
@@ -40,6 +46,12 @@
 			</if>
 			<if test="data.startDate != null and data.endDate != null">
 				AND  <![CDATA[a.pay_time BETWEEN #{data.startDate} and #{data.endDate}]]>
+			</if>
+			<if test="data.shopLists != null and data.shopLists.size > 0">
+				AND a.own_shop in
+				<foreach collection="data.shopLists" index="index" item="item" separator="," open="(" close=")">
+				    #{item}
+				</foreach>
 			</if>
 		</where>
 	</sql>
@@ -119,6 +131,12 @@
 			</if>
 			<if test="id != null">
 				id = #{id}
+			</if>
+			<if test="ids != null and ids.size > 0">
+				id in
+				<foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
 			</if>
 		</where>
 	</update>

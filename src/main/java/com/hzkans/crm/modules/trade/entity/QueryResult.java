@@ -17,7 +17,25 @@ public class QueryResult implements Serializable{
     private Integer drawNum;
     private String mobile;
     private List<Long> ids;
+    private Long actId;
+    private String openId;
 
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public Long getActId() {
+        return actId;
+    }
+
+    public void setActId(Long actId) {
+        this.actId = actId;
+    }
 
     public Integer getNeedCode() {
         return needCode;

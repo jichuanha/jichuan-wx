@@ -8,7 +8,10 @@ package com.hzkans.crm.modules.trade.constants;
 public enum  OrderStatusEnum {
     ORDER_TO_AUDIT(0, "订单待审核"),
     ORDER_LIST(1, "订单审核成功"),
-    ORDER_AUDIT(2, "订单审核失败");
+    ORDER_AUDIT(2, "订单审核失败"),
+    HAS_JOIN_ACT(3, "已经参加过活动")
+
+    ;
 
     private Integer code;
     private String desc;

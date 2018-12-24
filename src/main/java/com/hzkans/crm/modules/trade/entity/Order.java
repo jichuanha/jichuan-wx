@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import com.hzkans.crm.common.persistence.DataEntity;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -45,6 +47,25 @@ public class Order extends DataEntity<Order> {
 	private String platformTypeStr;
 	private String shopNoStr;
 	private String payAmountStr;
+	private List<String> shopLists;
+	private List<Long> ids;
+
+
+	public List<Long> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Long> ids) {
+		this.ids = ids;
+	}
+
+	public List<String> getShopLists() {
+		return shopLists;
+	}
+
+	public void setShopLists(List<String> shopLists) {
+		this.shopLists = shopLists;
+	}
 
 	public String getPayAmountStr() {
 		return payAmountStr;

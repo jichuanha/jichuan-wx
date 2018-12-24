@@ -5,7 +5,6 @@ package com.hzkans.crm.modules.wechat.service;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import com.hzkans.crm.modules.wechat.entity.MessageRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +68,18 @@ public class MemberAssociationService{
 		return memberAssociations;
 	}
 
-
-
+	/**
+	 * 根据openId绑定手机号
+	 * @param memberAssociation
+	 */
+	public void boundMobile(MemberAssociation memberAssociation) {
+		TradeUtil.isAllNull(memberAssociation);
+		try {
+			memberAssociationDao.update(memberAssociation);
+		} catch (Exception e) {
+			logger.error("boundMobile error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
+	}
 
 }

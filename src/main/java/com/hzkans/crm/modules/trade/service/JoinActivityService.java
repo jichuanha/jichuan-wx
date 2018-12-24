@@ -17,9 +17,14 @@ import com.hzkans.crm.modules.activity.service.PlatformShopService;
 import com.hzkans.crm.modules.activity.utils.LotteryUtil;
 import com.hzkans.crm.modules.trade.constants.AttentionEnum;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
+import com.hzkans.crm.modules.trade.constants.NeedCodeEnum;
+import com.hzkans.crm.modules.trade.constants.OrderStatusEnum;
 import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.OrderMember;
+import com.hzkans.crm.modules.trade.entity.QueryResult;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
+import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
+import com.hzkans.crm.modules.wechat.service.MemberAssociationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +57,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	private ActivityService activityService;
 	@Autowired
 	private ActivityLotteryService activityLotteryService;
+	@Autowired
+	private MemberAssociationService memberAssociationService;
 
 	/**
 	 * 获取参加活动订单信息集合
@@ -214,7 +221,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		JoinActivity joinActivity = new JoinActivity();
 		joinActivity.setId(id.toString());
 		JoinActivity activity = getJoinActivity(joinActivity);
-		if(null == activity) {
+		if (null == activity) {
 			logger.error(ResponseEnum.B_E_NOT_FIND_JOIN.getMsg());
 			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_JOIN);
 		}
@@ -225,7 +232,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			e.printStackTrace();
 		}
 		Activity newAct = new Activity();
-		if(null == activityLottery) {
+		if (null == activityLottery) {
 			logger.error(ResponseEnum.B_E_NOT_FIND_ACT.getMsg());
 			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_ACT);
 		}
@@ -241,11 +248,126 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			resultMap.put("order", newJoin);
 			return resultMap;
 		} catch (Exception e) {
-			logger.error("getOrderDetail error",e);
+			logger.error("getOrderDetail error", e);
 			throw new ServiceException(ResponseEnum.S_E_SERVICE_ERROR);
+		}
+	}
+	/**
+	 * 参加活动的逻辑处理
+	 * @param queryResult
+	 */
+	public QueryResult joinActivity(QueryResult queryResult) {
+
+		try {
+			String mobile = queryResult.getMobile();
+			Long actId = queryResult.getActId();
+			QueryResult result = new QueryResult();
+			result.setMobile(mobile);
+			//判断是否要绑定手机号
+			Integer needCode = queryResult.getNeedCode();
+			if(NeedCodeEnum.NEED.getCode().equals(needCode)) {
+                //openId绑定手机号
+                MemberAssociation association = new MemberAssociation();
+                association.setMobile(queryResult.getMobile());
+                association.setOpenId(queryResult.getOpenId());
+                memberAssociationService.boundMobile(association);
+            }
+			Activity activity = activityService.get(actId.toString());
+            //获取可以参加活动的订单
+			PagePara<Order> drawNum = getDrawNum(queryResult, activity);
+			//1让这些订单参加活动
+			Integer count = drawNum.getCount();
+			List<Order> list = drawNum.getList();
+			result.setDrawNum(count);
+			//1.1 抽奖次数为0,就直接返回,不为0,将查询到的数据插入到参加活动表
+			if(count == 0) {
+				return result;
+			}
+			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult.getOpenId());
+			joinActivityDao.insertAllJoinActivity(joinActivities);
+			//1.2 将查询的订单状态修改
+			Order order = new Order();
+			order.setStatus(OrderStatusEnum.HAS_JOIN_ACT.getCode());
+			order.setIds(getIds(list));
+			orderService.updateOrder(order);
+			return result;
+		} catch (Exception e) {
+			logger.error("joinActivity error",e);
+			throw new ServiceException(ResponseEnum.B_E_JOIN_ACTIVITY_ERROR);
 		}
 
 	}
+
+	private List<Long> getIds(List<Order> list) {
+		List<Long> ids = new ArrayList<>();
+		for (Order order : list) {
+			ids.add(Long.valueOf(order.getId()));
+		}
+		return ids;
+	}
+
+	/**
+	 * 组装数据
+	 * @param orders
+	 * @param activity
+	 * @param openId
+	 * @return
+	 */
+	private List<JoinActivity> dealParemater(List<Order> orders, Activity activity, String openId) {
+		List<JoinActivity> joinActivities = new ArrayList<>();
+		for (Order order : orders) {
+			JoinActivity joinActivity = new JoinActivity();
+			joinActivity.setMobile(order.getMobile());
+			joinActivity.setOpenId(openId);
+			joinActivity.setOrderId(Long.valueOf(order.getId()));
+			joinActivity.setOrderSn(order.getOrderSn());
+			joinActivity.setPlatformType(order.getPlatformType());
+			joinActivity.setShopNo(Integer.valueOf(order.getShopNo()));
+			joinActivity.setPayData(order.getPayTime());
+			joinActivity.setActId(Long.valueOf(activity.getId()));
+			joinActivity.setActType(activity.getActivityType());
+			joinActivity.setActName(activity.getName());
+			joinActivities.add(joinActivity);
+		}
+		return joinActivities;
+	}
+
+	/**
+	 * 查询在该活动设置的订单有效时间内该手机号的订单
+	 * @param queryResult
+	 * @return
+	 */
+	public PagePara<Order> getDrawNum(QueryResult queryResult, Activity activity) {
+		try {
+
+			String shopNo = activity.getShopNo();
+			String[] split = shopNo.split(",");
+			List<String> strings = Arrays.asList(split);
+			Order order = new Order();
+			order.setMobile(queryResult.getMobile());
+			order.setStartDate(activity.getOrderActiveDate());
+			order.setEndDate(activity.getOrderInactiveDate());
+			order.setShopLists(strings);
+			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
+			PagePara<Order> pagePara = new PagePara<>();
+			pagePara.setData(order);
+			return orderService.getAllOrder(pagePara);
+		} catch (Exception e) {
+			logger.error("getDrawNum error",e);
+			throw new ServiceException(ResponseEnum.B_E_GET_DRAWNUM_ERROR);
+		}
+	}
+
+	public void saveAll(List<JoinActivity> joinActivities) {
+		TradeUtil.isAllNull(joinActivities);
+		try {
+			joinActivityDao.insertAllJoinActivity(joinActivities);
+		} catch (Exception e) {
+			logger.error("joinActivities error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_SAVE_ERROR);
+		}
+	}
+
 
 	private JoinActivity initParameter(String wechatId, JoinActivity ja) throws ServiceException{
 		try {
@@ -343,7 +465,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			joinActivity.setId(id.toString());
 			//从抽奖活动列表中获取活动id
 			JoinActivity joinActivity1 = get(id.toString());
-			Integer actId = joinActivity1.getActId();
+			Long actId = joinActivity1.getActId();
 
 			//从此活动中获取奖品概率
 			ActivityLottery activityLottery = activityLotteryService.getLottery
