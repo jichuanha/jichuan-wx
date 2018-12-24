@@ -149,6 +149,16 @@
         .page_ctrl .input_page_num{
             height: 28px;
         }
+        .img-block{
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            margin-left: 30px;
+        }
+        .img-block img{
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -270,7 +280,7 @@
                     $('.market-type').html(marketStr);
                     var prizeStr = '';
                     data.lottery_prize_list.forEach(function (el,index) {
-                        prizeStr += '<li>奖品类型'+(index+1)+':'+el.prize_name+' —— 获奖比例 :'+(el.prize_rate*100)+'%</li>'
+                        prizeStr += '<li>奖品类型'+(index+1)+' : '+el.prize_name+' —— 获奖比例 :'+(el.prize_rate*100)+'%<i class="img-block"><img src="//yiyezi.yyzws.com/ex/'+el.picture_url+'" alt=""></i></li>'
                     })
                     $('.przie-type').html(prizeStr);
                     var shopName = JSON.parse(data.shop_name);
@@ -364,6 +374,21 @@
         //点击查看图片
         $(".wrap").on("click",".img_ifram", function(){
             var src = $(this).attr("data-src");
+            $('#preview-layer').remove();
+            $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
+            layer.open({
+                type: 1,
+                closeBtn: 1,
+                title: "信息",
+                area: '640px',
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: $('#preview-layer')
+            });
+        })
+        //点击查看图片
+        $(".wrap").on("click",".img-block", function(){
+            var src = $(this).find("img").attr("src");
             $('#preview-layer').remove();
             $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
             layer.open({

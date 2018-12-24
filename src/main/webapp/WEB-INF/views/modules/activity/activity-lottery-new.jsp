@@ -10,6 +10,10 @@
 	<script src="${ctxStatic}/swiper/swiper.min.js"></script>
 	<script src="${ctxStatic}/clipboard.js"></script>
 	<script src="${ctxStatic}/layer/layer.js"></script>
+	<link rel="stylesheet" href="${ctxStatic}/webuploader-0.1.5/webuploader.css">
+	<script src="${ctxStatic}/webuploader-0.1.5/webuploader.js"></script>
+	<link rel="stylesheet" href="${ctxStatic}/jquery.page/page.css">
+	<script src="${ctxStatic}/jquery.page/page.js"></script>
 	<style>
 		.activity-title{
 			font-size: 17px;
@@ -74,6 +78,7 @@
 		}
 		.form-search .ul-form li{
 			margin: 5px 0;
+			height: auto;
 		}
 		.form-search .base-info .ul-form li{
 			margin: 10px 0;
@@ -270,6 +275,14 @@
 			width: 21px;
 			margin-left: 2px;
 		}
+		.less-key-btn{
+			display: inline-block;
+			width: 30px;
+			margin-left: 20px;
+		}
+		.less-key-btn img{
+			width: 100%;
+		}
 		.rate-unit{
 			display: inline-block;
 			position: relative;
@@ -282,6 +295,70 @@
 			height: 30px;
 			margin-top: -15px;
 			color: #858585;
+		}
+		.webuploader-pick ,.select-img-btn{
+			display: inline-block;
+			width: 100px;
+			background-color: #fff;
+			border: 1px solid #3F51B5;
+			line-height: 26px;
+			color: #3F51B5;
+			text-align: center;
+			border-radius: 5px;
+			margin-left: 20px;
+			vertical-align: middle;
+		}
+		.webuploader-pick{
+			height: 30px;
+			line-height: 30px;
+			margin-right: 425px;
+		}
+		.img-info{
+			width: 96%;
+			margin: 0 auto;
+		}
+		.img-block{
+			display: inline-block;
+			width: 100px;
+			height: 100px;
+			margin-left: 20px;
+		}
+		.img-block img{
+			width: 100%;
+			height: 100%;
+		}
+		#myModalImg{
+			display: none;
+			width: 700px;
+		}
+		#myModalImg .content-body ul{
+			list-style: none;
+			margin: 0;
+		}
+		#myModalImg .content-body ul li{
+			float: left;
+			width: 100px;
+			height: 100px;
+			margin: 15px;
+			position: relative;
+
+		}
+		#myModalImg .content-body ul li.active::after
+		{
+			content: url("${ctxStatic}/images/choose.png");
+			text-align: center;
+			line-height: 150px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100px;
+			height: 100px;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 2;
+		}
+		#myModalImg .content-body ul li img{
+			width: 100%;
+			height: 100%;
 		}
 	</style>
 </head>
@@ -351,12 +428,65 @@
 				<select name="prize_name"  class="mid-input prize-name">
 
 				</select>
-				<div class="hanle-block">
-					<a href="javascript:;" class="add-key-btn"><img src="${ctxStatic}/images/add.png" alt=""></a>
-					<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>
-				</div>
 				<label><span class="requ-span">*</span>奖品比例：</label>
 				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
+			</li>
+			<li><label><span class="requ-span">*</span>奖品设置：</label>
+				<select name="prize_name"  class="mid-input prize-name">
+
+				</select>
+				<label><span class="requ-span">*</span>奖品比例：</label>
+				<i class="rate-unit"><input type="text"  class="mid-input" name="prize_rate"><span class="rate-unit-con">%</span></i>
+				<a href="#" class="select-img-btn">选择图片</a>
 			</li>
 		</ul>
 
@@ -463,13 +593,46 @@
 		</div>
 		<a href="#" id="btnRelease">发布</a>
 	</form>
+	<div class="modal fade" id="myModalImg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						选择图片
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="content-body">
 
+					</div>
+					<div id="pagenation"></div>
+
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="upload-img-btn">上传图片</a>
+					<button type="button" class="btn btn-primary choose-mater">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
 </div>
 <script>
     $(function () {
+        uploadPic();
         var para = GetRequest();
         var prizeObj = {};
         var activityType = {}; //活动类型数据
+        var params = {
+            current_page:1,
+            page_size:50,
+        };
+        var hasInit = false;
         //获取活动类型参数
         $.ajax({
             url:'${ctx}/activity/activity/activityTypeList',
@@ -514,21 +677,21 @@
             }
         })
 
-		//获取奖品列表
-		$.ajax({
-			url:'${ctx}/activity/activityLottery/prizeTypeList',
-			type:'post',
-			success:function (msg) {
-				var msg = JSON.parse(msg);
-				if(msg.code == 10000){
-				    var data = msg.data;
+        //获取奖品列表
+        $.ajax({
+            url:'${ctx}/activity/activityLottery/prizeTypeList',
+            type:'post',
+            success:function (msg) {
+                var msg = JSON.parse(msg);
+                if(msg.code == 10000){
+                    var data = msg.data;
                     prizeObj = data;
                     $.each(prizeObj,function (key,value) {
                         $('select[name=prize_name]').append('<option value="'+key+'">'+value+'</option>')
                     })
-				}
+                }
             }
-		})
+        })
 
         $('#chooseAll').live('click',function () {
             var flag = $('#chooseAll')[0].checked;
@@ -537,10 +700,10 @@
                 shopValue[i].checked = flag
             }
         })
-		$('.add-key-btn').live('click',function () {
-			var lastName = $('.prize-form li:last').find('select[name=prize_name]').val();
-		    var lastRate = $('.prize-form li:last').find('input[name=prize_rate]').val();
-		    if(lastName != '' && lastRate != ''){
+        $('.add-key-btn').live('click',function () {
+            var lastName = $('.prize-form li:last').find('select[name=prize_name]').val();
+            var lastRate = $('.prize-form li:last').find('input[name=prize_rate]').val();
+            if(lastName != '' && lastRate != ''){
                 if($('.prize-form li:last').find('input[name=prize_rate]').val() )
                     $('.prize-form li:last').find('.add-key-btn').remove();
                 var prizeStr = '<li><label><span class="requ-span">*</span>奖品设置：</label>\n' +
@@ -548,7 +711,7 @@
                 $.each(prizeObj,function (key,value) {
                     prizeStr += '<option value="'+key+'">'+value+'</option>';
                 })
-				prizeStr += '\t\t\t\t</select>\n' +
+                prizeStr += '\t\t\t\t</select>\n' +
                     '\t\t\t\t<div class="hanle-block">\n' +
                     '\t\t\t\t\t<a href="javascript:;" class="add-key-btn"><img src="${ctxStatic}/images/add.png" alt=""></a>\n' +
                     '\t\t\t\t\t<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>\n' +
@@ -559,19 +722,18 @@
                 $('.prize-form').append(prizeStr);
                 $('select').select2();
 
-			}
-			else{
-		        layer.msg('请选择奖品和比例');
-			}
+            }
+            else{
+                layer.msg('请选择奖品和比例');
+            }
 
         })
-		$('.less-key-btn').live('click',function () {
-			if($('.prize-form li').length > 1){
-                $(this).parents('li').remove();
-			}
-			if($('.prize-form li .add-key-btn').length == 0){
-                $('.prize-form li:last').find('.less-key-btn').before('<a href="javascript:;" class="add-key-btn"><img src="${ctxStatic}/images/add.png" alt=""></a>')
-			}
+        $('.less-key-btn').live('click',function () {
+            $(this).parents('li').find('.img-block').remove();
+            $(this).parents('li').append('<a href="#" class="select-img-btn">选择图片</a>');
+            $(this).remove();
+            // uploader.destroy();
+            // uploadPic();
         })
         $('#searchForm input').change(function () {
             checkInput();
@@ -625,12 +787,14 @@
                 $.each(prizeValue,function (index,value) {
                     var nameText = $(this).find('select[name=prize_name]').find("option:selected").text();
                     var rateVal = $(this).find('input[name=prize_rate]').val();
-                    if(nameText != '' && rateVal != ''){
+                    var imgVal = $(this).find('.img-block').attr('data-img');
+                    if(nameText != '' && rateVal != '' && imgVal != ''){
                         prizeContent.push({
                             prize_name:nameText,
-                            prize_rate:rateVal/100
+                            prize_rate:rateVal/100,
+                            picture_url:imgVal
                         })
-					}
+                    }
                 })
                 dataObject.shop_name = JSON.stringify(shopNameArr);
                 dataObject.shop_no = shopNo;
@@ -638,7 +802,6 @@
                 dataObject.rebate_type = '1';
                 dataObject.activity_type = para.activity_type;
                 dataObject.content = JSON.stringify(prizeContent);
-                console.log(dataObject);
                 $.ajax({
                     url: "${ctx}/activity/activityLottery/save_Lottery",
                     type:"post",
@@ -684,9 +847,30 @@
                     shopFlag = true;
                 }
             }
-			if($('select[name=prize_name]').eq(0).val() != '' && $('input[name=prize_rate]').eq(0).val() != ''){
+            var prizeValue = $('.prize-form li');
+            var prizeContent = [];
+            $.each(prizeValue,function (index,value) {
+                var nameText = $(this).find('select[name=prize_name]').find("option:selected").text();
+                var rateVal = $(this).find('input[name=prize_rate]').val();
+                var imgVal = $(this).find('.img-block').attr('data-img');
+                if(nameText != '' && rateVal != '' && imgVal != undefined){
+                    prizeContent.push({
+                        prize_name:nameText,
+                        prize_rate:rateVal/100,
+                        picture_url:imgVal
+                    })
+                }
+            })
+            console.log(prizeContent)
+            if(prizeContent.length < 8){
+                var prizeFlag = false;
+            }
+            else{
                 var prizeFlag = true;
-			}
+            }
+            // if($('select[name=prize_name]').eq(0).val() != '' && $('input[name=prize_rate]').eq(0).val() != ''){
+            //    var prizeFlag = true;
+            // }
             var tempValue = $('input[name="template_link"]');
             var tempFlag;
             for (var i = 0; i < tempValue.length; i++) {
@@ -694,7 +878,6 @@
                     tempFlag = true;
                 }
             }
-            console.log(dataObject)
             if(dataObject.name != ""
                 && dataObject.activity_type != ""
                 && dataObject.active_date != ""
@@ -707,8 +890,8 @@
                 && dataObject.is_audit != ""
                 && tempFlag
                 && shopFlag
-				&& prizeFlag
-			) {
+                && prizeFlag
+            ) {
                 return true;
             }
             else{
@@ -839,8 +1022,118 @@
             }
             return theRequest;
         }
+        $('.select-img-btn').live('click',function () {
+            var index = $('.prize-form li').index($(this).parents('li'));
+			$('#myModalImg').modal('show').attr('data-index',index);
+            getPicList();
+        })
+		$('#myModalImg .content-body li').live('click',function () {
+            $('#myModalImg .content-body li').removeClass('active');
+			$(this).addClass('active');
+        })
+		$('.choose-mater').live('click',function () {
+            var imgUrl = $('#myModalImg .content-body li.active').attr('data-img');
+            var imgIndex = $('#myModalImg').attr('data-index');
+            $('.prize-form li').eq(imgIndex).find('.select-img-btn').remove();
+            $('.prize-form li').eq(imgIndex).append('' +
+				'<i class="img-block" data-img="'+imgUrl+'"><img src="//yiyezi.yyzws.com/ex/'+imgUrl+'" alt=""></i>' +
+				'<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>');
+       		$('#myModalImg').modal('hide');
+            checkCon();
+        })
+		function getPicList() {
+            $.ajax({
+                url:'${ctx}/activity/activityLottery/list.do',
+                type:'post',
+				data:params,
+                success:function (msg) {
+                    var msg = JSON.parse(msg);
+                    if(msg.code == 10000){
+                        $('#myModalImg .content-body').html('<ul class="clearfix"></ul>');
+                        msg.data.result.forEach(function (el,index) {
+                            $('#myModalImg .content-body ul').append('<li data-img="'+el.image+'"><img src="//yiyezi.yyzws.com/ex/'+el.image+'" alt=""></li>')
+                        })
+                        if(!hasInit){
+                            var obj = {
+                                obj_box: '#pagenation',
+                                total_item: msg.data.totalCount,
+                                per_num: params.page_size,
+                                current_page: params.current_page,
+                                change_content: function(per_num, current_page) {
+                                    if(hasInit){
+                                        params.current_page = current_page;
+                                        getPicList();
+                                    }
+                                }
+                            };
+                            page_ctrl(obj);
+                            hasInit=true;
+                        }
+                    }
 
+                }
 
+            })
+        }
+        function uploadPic() {
+            var uploader = WebUploader.create({
+                auto: true, // 选择文件后自动上传
+                runtimeOrder: 'html5', // 直接使用html5模式，还有flash的我就忽略了..
+                formData:{
+                },
+                pick: {
+                    id: '.upload-img-btn', // 按钮元素
+                    multiple: false // 是否支持文件多选，false表示只能选一个
+                },
+                server: '${ctx}/activity/activityLottery/upload.do', // 上传文件的接口（替换成你们后端给的接口路径）
+                accept: {
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*',
+                },
+                disableGlobalDnd: true, // 禁掉全局的拖拽功能。
+                fileNumLimit: 1, // 验证文件总数量, 超出则不允许加入队列
+                fileSizeLimit: 30 * 1024 * 1024, // 限制所有上传文件的大小
+                fileSingleSizeLimit: 30 * 1024 * 1024,// 限制单个上传文件的大小
+            });
+            uploader.on( 'uploadProgress', function( file, percentage ) {
+                layer.open({content:'上传中,请稍后'})
+            });
+            uploader.on('uploadSuccess',function(file,data){
+                typeof data != 'object'&& (data = JSON.parse(data));
+                if(data.code == 10000){
+                    var imgIndex = $('#myModalImg').attr('data-index');
+                    $('.prize-form li').eq(imgIndex).find('.select-img-btn').remove();
+                    $('.prize-form li').eq(imgIndex).append('' +
+                        '<i class="img-block" data-img="'+data.msg+'"><img src="//yiyezi.yyzws.com/ex/'+data.msg+'" alt=""></i>' +
+                        '<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>');
+                    $('#myModalImg').modal('hide');
+                    layer.closeAll();
+                    checkCon();
+                }
+            });
+            uploader.on('uploadError',function () {
+                uploader.reset();
+                layer.open({
+                    content:'服务器开小差了,请稍重新上传',
+                })
+            })
+        }
+
+        //点击查看图片
+        $(".nav").on("click",".img-block", function(){
+            var src = $(this).find("img").attr("src");
+            $('#preview-layer').remove();
+            $('body').append('<div id="preview-layer" style="display:none;"><img src="' + src + '" style="width:100%;"></div>');
+            layer.open({
+                type: 1,
+                closeBtn: 1,
+                title: "信息",
+                area: '640px',
+                skin: 'layui-layer-nobg', //没有背景色
+                shadeClose: true,
+                content: $('#preview-layer')
+            });
+        })
     })
 
 
