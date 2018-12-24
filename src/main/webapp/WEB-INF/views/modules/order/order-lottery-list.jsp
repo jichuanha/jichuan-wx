@@ -221,9 +221,8 @@
 </head>
 <body>
 <ul class="nav my-nav-tabs nav-tabs clearfix">
-    <li><a href="${ctx}/activity/activity/activity-list">活动列表</a></li>
-    <li class="active"><a href="${ctx}/trade/order/order_list">订单列表</a></li>
-    <li><a href="${ctx}/trade/order/order_review">订单审核</a></li>
+    <li><a href="${ctx}/activity/activityLottery/getLotteryList">活动列表</a></li>
+    <li class="active"><a href="${ctx}/trade/order/order_lottery_list">订单列表</a></li>
 </ul><br/>
 <div class="wrap">
     <div class="wrap-header">
@@ -257,9 +256,8 @@
                     <input id="end_data" name="end_data" type="text" readonly="readonly" maxlength="20" class="mid-input Wdate" />
 
                 </li>
-                <li>
-                    <a href="#" class="current-data current30">近30天</a>
-                    <a href="#" class="current-data current60">近60天</a>
+                <li><label>订单编号：</label>
+                    <input type="text" name="order_sn" class="mid-input" id="order_sn">
                 </li>
                 <li><label>店铺平台：</label>
                     <select name="platform_type" id="platform_type" class="mid-input">
@@ -271,8 +269,8 @@
                         <option value="">请选择</option>
                     </select>
                 </li>
-                <li><label>订单编号：</label>
-                    <input type="text" name="order_sn" class="mid-input" id="order_sn">
+                <li><label>手机号：</label>
+                    <input type="text" name="phone" class="mid-input" id="phone">
                 </li>
                 <li class="clearfix"></li>
                 <li class="btns">
@@ -285,15 +283,13 @@
     <p class="h3-title search-box"><span class="activity-type"><i class="h3-deco"></i></span></p>
     <div class="order-lists">
         <ul class="lists-title clearfix">
-            <li class="mycol-10">订单状态</li>
-            <li class="mycol-10">绑定状态</li>
-            <li class="mycol-10">店铺平台</li>
-            <li class="mycol-15">所属店铺</li>
-            <li class="mycol-15">订单编号</li>
+            <li class="mycol-10">强制关注</li>
+            <li class="mycol-15">店铺平台</li>
+            <li class="mycol-20">所属店铺</li>
+            <li class="mycol-20">订单编号</li>
             <li class="mycol-10">买家姓名</li>
             <li class="mycol-10">收货手机号</li>
-            <li class="mycol-10">活动金额</li>
-            <li class="mycol-10">评价截图</li>
+            <li class="mycol-15">奖品</li>
         </ul>
         <div class="lists-show">
 
@@ -333,8 +329,8 @@
         //带上活动类型参数
         var paraStr = '?activity_type='+para.activity_type;
         $.each($('.my-nav-tabs li a'),function (index,selector) {
-                var oldHref = $(selector).attr('href');
-                $(selector).attr('href',oldHref+paraStr);
+            var oldHref = $(selector).attr('href');
+            $(selector).attr('href',oldHref+paraStr);
 
         })
         //获取店铺信息
@@ -404,6 +400,10 @@
             name:'订单编号',
             type:'input',
             id:'order_sn'
+        },{
+            name:'手机号',
+            type:'input',
+            id:'phone'
         }];
         //搜索
         $('#btnSubmit').click(function () {
@@ -567,14 +567,12 @@
                                 '</i>';
                             listStr += ' <ul class="order-list clearfix">';
                             listStr += '<li class="mycol-10">'+el.status_str+'</li>';
-                            listStr += '<li class="mycol-10">'+el.attention_str+'</li>';
-                            listStr += '<li class="mycol-10">'+el.platform_name+'</li>';
-                            listStr += '<li class="mycol-15">'+el.shop_name+'</li>';
-                            listStr += '<li class="mycol-15">'+el.order_sn+'</li>';
+                            listStr += '<li class="mycol-15">'+el.platform_name+'</li>';
+                            listStr += '<li class="mycol-20">'+el.shop_name+'</li>';
+                            listStr += '<li class="mycol-20">'+el.order_sn+'</li>';
                             listStr += '<li class="mycol-10" title="'+el.member_name+'">'+el.member_name+'</li>';
                             listStr += '<li class="mycol-10">'+el.mobile+'</li>';
-                            listStr += '<li class="mycol-10">¥ '+el.act_money+'</li>';
-                            listStr += '<li class="mycol-10"><a class="img_ifram" href="#" data-src="'+el.picture_url+'">点击查看</a></li>';
+                            listStr += '<li class="mycol-15">¥ '+el.act_money+'</li>';
                             listStr += '</ul>';
                         })
                         $('.lists-show').html(listStr);

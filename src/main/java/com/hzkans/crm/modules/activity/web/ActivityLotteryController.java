@@ -121,11 +121,9 @@ public class ActivityLotteryController extends BaseController {
 		for (ActivityLottery.LotteryPrize activityPrize : activityPrizeList){
 			Double prizeRate = activityPrize.getPrizeRate();
 			if (null != prizeRate) {
-                logger.info("[{}]prizeRate:{}",JsonUtil.toJson(prizeRate));
 				rate = rate.add(new BigDecimal(prizeRate.toString()));
 			}
 		}
-        logger.info("[{}]rate:{}",JsonUtil.toJson(rate));
 		if (rate.doubleValue() > 1){
 			return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_RATE_IS_BIGGER);
 		}else if (rate.doubleValue() < 1){
@@ -280,8 +278,6 @@ public class ActivityLotteryController extends BaseController {
 					prizeMap.put(dict.getValue(),dict.getLabel());
 				}
 			}
-			logger.info("[{}]prizeMap:{}",JsonUtil.toJson(ResponseUtils.getSuccessApiResponseStr(prizeMap)));
-
 			return ResponseUtils.getSuccessApiResponseStr(prizeMap);
 		} catch (Exception e) {
 			logger.error("findList is error",e);
