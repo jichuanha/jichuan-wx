@@ -18,15 +18,15 @@ public class QueryResult implements Serializable{
     private String mobile;
     private List<Long> ids;
     private Long actId;
-    private Long actType;
+    private Integer actType;
     private String openId;
 
 
-    public Long getActType() {
+    public Integer getActType() {
         return actType;
     }
 
-    public void setActType(Long actType) {
+    public void setActType(Integer actType) {
         this.actType = actType;
     }
 

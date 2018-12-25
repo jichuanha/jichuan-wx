@@ -261,7 +261,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * 参加活动的逻辑处理
 	 * @param queryResult
 	 */
-	public QueryResult joinActivity(QueryResult queryResult) {
+	public QueryResult joinActivity(QueryResult queryResult, ActivityLottery activity) {
 
 		try {
 			String mobile = queryResult.getMobile();
@@ -276,8 +276,6 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
                 association.setOpenId(queryResult.getOpenId());
                 memberAssociationService.boundMobile(association);
             }
-            //TODO  获取活动地方有所改动.....
-			Activity activity = activityService.get(actId.toString());
             //获取可以参加活动的订单
 			PagePara<Order> drawNum = getCanJoinActOrder(queryResult, activity);
 			//1让这些订单参加活动
@@ -336,7 +334,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param openId
 	 * @return
 	 */
-	private List<JoinActivity> dealParemater(List<Order> orders, Activity activity, String openId) {
+	private List<JoinActivity> dealParemater(List<Order> orders, ActivityLottery activity, String openId) {
 		List<JoinActivity> joinActivities = new ArrayList<>();
 		for (Order order : orders) {
 			JoinActivity joinActivity = new JoinActivity();
@@ -360,7 +358,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param queryResult
 	 * @return
 	 */
-	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, Activity activity) {
+	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, ActivityLottery activity) {
 		try {
 
 			String shopNo = activity.getShopNo();

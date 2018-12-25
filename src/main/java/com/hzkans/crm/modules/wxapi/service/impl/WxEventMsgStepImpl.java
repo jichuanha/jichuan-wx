@@ -50,7 +50,7 @@ public class WxEventMsgStepImpl implements BaseApiObserver {
         String openId = requestMap.get("FromUserName");
         switch (EventMsgTypeEnum.getByCode(event)) {
             case EVENT_TYPE_SUBSCRIBE:
-                dealSubscribeMsg(openId, wechatId, wechatNo);
+                resultXml = dealSubscribeMsg(openId, wechatId, wechatNo);
                 break;
             case EVENT_TYPE_UNSUBSCRIBE:
                 dealUnSubscribeMsg(openId, wechatNo);
@@ -91,6 +91,7 @@ public class WxEventMsgStepImpl implements BaseApiObserver {
         }
         //根据素材的类型决定回复方法
         resultXml = WechatUtils.dealType(wechatMaterialList.get(0), wechatNo, openId);
+        logger.info("resultXML {}",resultXml);
         return resultXml;
 
     }

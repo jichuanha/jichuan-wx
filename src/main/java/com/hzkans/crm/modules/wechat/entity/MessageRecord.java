@@ -1,5 +1,6 @@
 package com.hzkans.crm.modules.wechat.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,9 @@ import java.util.Date;
  * @description
  * @create 2018/12/15
  */
-public class MessageRecord {
+public class MessageRecord implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private String msgId;

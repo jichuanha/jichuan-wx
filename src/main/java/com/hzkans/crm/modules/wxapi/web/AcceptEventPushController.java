@@ -106,6 +106,7 @@ public class AcceptEventPushController {
         try {
             Map<String, String> requestMap = MessageUtils.parseXml(request);
             String result = wxApiObserver.dealWxMsg(requestMap);
+            logger.info("result controller {}",result);
             PrintWriter writer = response.getWriter();
             writer.print(result);
             writer.close();

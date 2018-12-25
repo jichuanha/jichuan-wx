@@ -2,6 +2,7 @@ package com.hzkans.crm.modules.wxapi.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzkans.crm.common.utils.CacheUtils;
+import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
@@ -12,6 +13,7 @@ import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
 import com.hzkans.crm.modules.wxapi.service.BaseApiObserver;
 import com.hzkans.crm.modules.wxapi.service.WxApiObserver;
 import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
+import com.hzkans.crm.modules.wxapi.utils.WXRedPackUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +45,11 @@ public class WxApiObserverImpl implements WxApiObserver {
 
     @Override
     public String dealWxMsg(Map<String, String> requestMap) {
-
         String resultXml = "";
-
         String wechatNo = requestMap.get("ToUserName");
-        logger.info("wechatNo:", wechatNo);
+        logger.info("wechatNo {}", wechatNo);
         Long wechatId = (Long) CacheUtils.get(WechatCofig.EHCACHE, wechatNo);
         if (null == wechatId) {
-
             //根据wechatNo获取对应的数据库id
             WechatPlatfrom platfrom = new WechatPlatfrom();
             platfrom.setWechatNo(wechatNo);
@@ -114,6 +113,19 @@ public class WxApiObserverImpl implements WxApiObserver {
                 "", "", 0, "false");
 
         return (Map<String, Object>) JSONObject.parse(infoResult);
+    }
+
+    /**
+     * 微信发送红包
+     * @param objectMap
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String sendWxRedPack(Map<String, Object> objectMap) throws Exception {
+
+        return WXRedPackUtils.doSendMoney(WechatCofig.SEND_READ_PACK,
+                WXRedPackUtils.createXML(objectMap), "", 0, "false");
     }
 
 }

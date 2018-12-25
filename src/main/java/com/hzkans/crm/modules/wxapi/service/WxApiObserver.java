@@ -28,4 +28,12 @@ public interface WxApiObserver{
      */
     Map<String, Object> getUserInfo(String code, String appId, String appSecret) throws Exception;
 
+    /**
+     * 微信发送红包
+     * @param objectMap
+     * @return
+     * @throws Exception
+     */
+    String sendWxRedPack(Map<String, Object> objectMap) throws Exception;
+
 }

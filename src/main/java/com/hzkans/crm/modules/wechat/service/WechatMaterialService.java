@@ -23,7 +23,7 @@ import java.util.List;
  * @version 2018-12-04
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional(rollbackFor = Exception.class)
 public class WechatMaterialService extends CrudService<WechatMaterialDao, WechatMaterial> {
 
 	@Autowired

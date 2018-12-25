@@ -46,13 +46,6 @@ public class ActivityService extends CrudService<ActivityDao, Activity> {
 		return super.findPage(page, activity);
 	}
 
-	/**
-	 * 根据活动id和活动类型获取活动
-	 * @param id
-	 * @param activityType
-	 * @param <T>
-	 * @return
-	 */
 
 	@Override
 	@Transactional(readOnly = false)

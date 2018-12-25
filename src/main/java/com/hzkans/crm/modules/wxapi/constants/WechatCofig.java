@@ -15,8 +15,12 @@ public class WechatCofig {
     public static final String HMACSHA256 = "HMAC-SHA256";
     public static final String MD5 = "MD5";
 
-    public static final String APPID = "wxef5cb80081c4dd13";
-    public static final String APPSECRET = "53ae0b6b1cb95774c3165fab695c2ecb";
+    //key
+    public static final String WECHAT_H5_PARTNER_KEY = "ADSFSY64UOiopasiljfiuadklkdj7569";
+    //证书路径
+    public static final String KEYSTORE_FILE = "/deploy/certs/wechatpay/";
+    //商户号
+    public static final String MCH_ID="1504534011";
 
     /** 获取access_token*/
     public static final String GET_ACCESS_TOKEN =
@@ -52,6 +56,8 @@ public class WechatCofig {
     public static final String GET_USER_INFO =
             "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 
-
+    /** 发红包接口(需要证书)*/
+    public static final String SEND_READ_PACK =
+            "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 
 }

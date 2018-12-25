@@ -5,6 +5,8 @@ import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.Activity;
+import com.hzkans.crm.modules.activity.entity.ActivityLottery;
+import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
 import com.hzkans.crm.modules.activity.service.ActivityService;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
@@ -44,6 +46,8 @@ public class LuckDrawActController extends BaseController {
     private MemberAssociationService memberAssociationService;
     @Autowired
     private JoinActivityService joinActivityService;
+    @Autowired
+    private ActivityLotteryService activityLotteryService;
 
     @RequestMapping("/lotteryPage")
     public String intoLottery() {
@@ -60,23 +64,26 @@ public class LuckDrawActController extends BaseController {
     @ResponseBody
     public String ensureDrawNum(HttpServletRequest request, HttpServletResponse response) {
         Long actId = RequestUtils.getLong(request, "act_id", "","act_id is null");
-        Long actType = RequestUtils.getLong(request, "act_type", "","act_type is null");
+        Integer actType = RequestUtils.getInt(request, "act_type", "","act_type is null");
         String mobile = RequestUtils.getString(request, "mobile", "mobile is null");
         String openId = RequestUtils.getString(request, "open_id", "open_id is null");
         String appId = RequestUtils.getString(request, "app_id", "app_id is null");
         String messageCode = RequestUtils.getString(request, "message_code");
-        //如果有验证码,验证验证码的有效性
-        if(!StringUtils.isEmpty(messageCode)) {
+        //如果有验证码,验证验证码的有效性  TODO 测试先去掉
+        /*if(!StringUtils.isEmpty(messageCode)) {
             String values = (String) CacheUtils.get("wechatCache", mobile);
             logger.info(" code values {}",values);
             if(values == null || !messageCode.equals(values)) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MOBILE_VERIFY_CODE_ERROR);
             }
-        }
+        }*/
 
         QueryResult queryResult = new QueryResult();
-        //校验活动和手机号 TODO  获取活动有所改变..
-        Activity activity = activityService.get(actId.toString());
+        //校验活动和手机号
+        ActivityLottery activityLottery = new ActivityLottery();
+        activityLottery.setId(actId.toString());
+        activityLottery.setActivityType(actType);
+        ActivityLottery activity = activityLotteryService.getActivityLottery(activityLottery);
         logger.info(" activity {}", JsonUtil.toJson(activity));
         String message = checkActivity(activity, mobile, appId);
         if(null != message) {
@@ -107,7 +114,7 @@ public class LuckDrawActController extends BaseController {
             queryResult.setActType(actType);
             queryResult.setMobile(mobile);
             queryResult.setOpenId(openId);
-            QueryResult result = joinActivityService.joinActivity(queryResult);
+            QueryResult result = joinActivityService.joinActivity(queryResult, activity);
             logger.info(" result {}",result);
             return ResponseUtils.getSuccessApiResponseStr(result);
         } catch (Exception e) {
@@ -160,7 +167,7 @@ public class LuckDrawActController extends BaseController {
      * @param appId
      * @return
      */
-    private String checkActivity(Activity activity, String mobile, String appId) {
+    private String checkActivity(ActivityLottery activity, String mobile, String appId) {
         //校验手机号
         Boolean checkMobile = TradeUtil.checkMobile(mobile);
         if(!checkMobile) {
