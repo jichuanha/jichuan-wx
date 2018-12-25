@@ -9,7 +9,6 @@ import com.hzkans.crm.modules.activity.dao.ActivityDao;
 import com.hzkans.crm.modules.activity.dao.ActivityLotteryDao;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

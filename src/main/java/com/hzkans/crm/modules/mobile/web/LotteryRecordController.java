@@ -25,7 +25,7 @@ import java.util.List;
  * @version 2018-12-20
  */
 @Controller
-@RequestMapping(value = "/mobile/lottery")
+@RequestMapping(value = "${frontPath}/mobile/lottery")
 public class LotteryRecordController extends BaseController {
 
 	@Autowired
