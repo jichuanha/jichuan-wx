@@ -1,5 +1,7 @@
 package com.hzkans.crm.modules.wxapi.utils;
 
+import com.hzkans.crm.modules.wechat.message.Article;
+import com.hzkans.crm.modules.wechat.message.NewsMessage;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -92,6 +94,19 @@ public class MessageUtils {
     public static <T>  String messageToXml(T t) {
         xstream.alias("xml", t.getClass());
         return xstream.toXML(t);
+    }
+
+
+    /**
+     * 图文消息对象转换成xml
+     *
+     * @param newsMessage 图文消息对象
+     * @return xml
+     */
+    public static String messageToXml(NewsMessage newsMessage) {
+        xstream.alias("xml", newsMessage.getClass());
+        xstream.alias("item", new Article().getClass());
+        return xstream.toXML(newsMessage);
     }
 
 }
