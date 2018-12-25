@@ -7,8 +7,6 @@ import com.hzkans.crm.common.persistence.CrudDao;
 import com.hzkans.crm.common.persistence.annotation.MyBatisDao;
 import com.hzkans.crm.modules.activity.entity.Activity;
 
-import java.util.Map;
-
 /**
  * 活动管理DAO接口
  * @author wsh
@@ -16,5 +14,5 @@ import java.util.Map;
  */
 @MyBatisDao
 public interface ActivityDao extends CrudDao<Activity> {
-    Activity getActivity(Map map);
+    Activity getActivity(Activity activity);
 }

@@ -53,23 +53,6 @@ public class ActivityService extends CrudService<ActivityDao, Activity> {
 	 * @param <T>
 	 * @return
 	 */
-	public <T> T getActivity(String id, Integer activityType){
-		Map map = new HashMap();
-		map.put("id",id);
-		map.put("activityType",activityType);
-		Activity activity;
-		ActivityLottery activityLottery;
-		switch (activityType) {
-			case 1:
-				activity = activityDao.getActivity(map);
-				return (T) activity;
-			case 2:
-				activityLottery = activityLotteryDao.getActivityLottery(map);
-				return (T) activityLottery;
-			default:
-				return null;
-		}
-	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -88,5 +71,14 @@ public class ActivityService extends CrudService<ActivityDao, Activity> {
 	public void update(Activity activity) {
 		super.update(activity);
 	}
-	
+
+	/**
+	 * 根据活动id和活动类型获取活动
+	 * @param activity
+	 * @return
+	 */
+	public Activity getActivity(Activity activity){
+		activity = activityDao.getActivity(activity);
+		return activity;
+	}
 }

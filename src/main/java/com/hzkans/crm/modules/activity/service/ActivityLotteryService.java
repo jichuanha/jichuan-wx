@@ -29,6 +29,9 @@ public class ActivityLotteryService extends CrudService<ActivityLotteryDao, Acti
 	@Autowired
 	private ActivityPrizeDao activityPrizeDao;
 
+	@Autowired
+	private ActivityLotteryDao activityLotteryDao;
+
 	@Override
 	public ActivityLottery get(String id) {
 		return super.get(id);
@@ -109,5 +112,15 @@ public class ActivityLotteryService extends CrudService<ActivityLotteryDao, Acti
 	@Transactional(readOnly = false)
 	public void delete(ActivityLottery activityLottery) {
 		super.delete(activityLottery);
+	}
+
+	/**
+	 * 根据活动id和活动类型获取活动
+	 * @param activityLottery
+	 * @return
+	 */
+	public ActivityLottery getActivityLottery(ActivityLottery activityLottery){
+		activityLottery = activityLotteryDao.getActivityLottery(activityLottery);
+		return activityLottery;
 	}
 }
