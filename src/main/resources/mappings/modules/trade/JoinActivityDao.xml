@@ -111,7 +111,17 @@
 	
 	<sql id="joinActivityJoins">
 	</sql>
-    
+
+	<select id="get" resultType="JoinActivity">
+		SELECT
+		<include refid="joinActivityColumns"/>
+		FROM t_join_activity a
+		<where>
+			<if test="id != null">
+				a.id = #{id}
+			</if>
+		</where>
+	</select>
 	<select id="selectAll" resultType="com.hzkans.crm.modules.trade.entity.JoinActivity"
 			parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity">
 		SELECT 
