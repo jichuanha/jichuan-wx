@@ -18,8 +18,17 @@ public class QueryResult implements Serializable{
     private String mobile;
     private List<Long> ids;
     private Long actId;
+    private Long actType;
     private String openId;
 
+
+    public Long getActType() {
+        return actType;
+    }
+
+    public void setActType(Long actType) {
+        this.actType = actType;
+    }
 
     public String getOpenId() {
         return openId;

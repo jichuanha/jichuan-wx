@@ -123,16 +123,16 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @return
 	 * @throws ServiceException
 	 */
-	public JoinActivity getJoinActivity(JoinActivity joinActivity) throws ServiceException {
+	public List<JoinActivity> getJoinActivity(JoinActivity joinActivity) throws ServiceException {
 		TradeUtil.isAllNull(joinActivity);
-		JoinActivity joinActivity1 = null;
+		List<JoinActivity> joinActivities;
 		try {
-			joinActivity1 = get(joinActivity);
+			joinActivities = joinActivityDao.selectAll(joinActivity);
 		} catch (Exception e) {
 			logger.error("getJoinActivity error",e);
 			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
 		}
-		return joinActivity1;
+		return joinActivities;
 	}
 
 	/**
@@ -176,11 +176,12 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		//根据id查找到申请记录
 		JoinActivity joinActivity = new JoinActivity();
 		joinActivity.setId(id.toString());
-		JoinActivity activity = getJoinActivity(joinActivity);
-		if(null == activity) {
+		List<JoinActivity> activitys = getJoinActivity(joinActivity);
+		if(CollectionUtils.isEmpty(activitys)) {
 			logger.error(ResponseEnum.B_E_NOT_FIND_JOIN.getMsg());
 			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_JOIN);
 		}
+		JoinActivity activity = activitys.get(0);
 		Activity act = null;
 		try {
 			act = activityService.get(activity.getActId().toString());
@@ -223,11 +224,12 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		//根据id查找到申请记录
 		JoinActivity joinActivity = new JoinActivity();
 		joinActivity.setId(id.toString());
-		JoinActivity activity = getJoinActivity(joinActivity);
-		if (null == activity) {
+		List<JoinActivity> activitys = getJoinActivity(joinActivity);
+		if (CollectionUtils.isEmpty(activitys)) {
 			logger.error(ResponseEnum.B_E_NOT_FIND_JOIN.getMsg());
 			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_JOIN);
 		}
+		JoinActivity activity = activitys.get(0);
 		ActivityLottery activityLottery = null;
 		try {
 			activityLottery = activityLotteryService.get(activity.getActId().toString());
@@ -274,9 +276,10 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
                 association.setOpenId(queryResult.getOpenId());
                 memberAssociationService.boundMobile(association);
             }
+            //TODO  获取活动地方有所改动.....
 			Activity activity = activityService.get(actId.toString());
             //获取可以参加活动的订单
-			PagePara<Order> drawNum = getDrawNum(queryResult, activity);
+			PagePara<Order> drawNum = getCanJoinActOrder(queryResult, activity);
 			//1让这些订单参加活动
 			Integer count = drawNum.getCount();
 			List<Order> list = drawNum.getList();
@@ -288,12 +291,10 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult.getOpenId());
 			saveAllResult(joinActivities);
 			//1.2 将查询的订单状态修改
-            List<Long> ids = getIds(list);
             Order order = new Order();
 			order.setStatus(OrderStatusEnum.HAS_JOIN_ACT.getCode());
-			order.setIds(ids);
+			order.setIds(getIds(list));
 			orderService.updateOrder(order);
-			result.setIds(ids);
 			return result;
 		} catch (Exception e) {
 			logger.error("joinActivity error",e);
@@ -303,7 +304,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	}
 
 	/**
-	 * 保存数据
+	 * 集合的整体保存
 	 * @param joinActivities
 	 */
 	public void saveAllResult(List<JoinActivity> joinActivities) {
@@ -359,7 +360,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param queryResult
 	 * @return
 	 */
-	public PagePara<Order> getDrawNum(QueryResult queryResult, Activity activity) {
+	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, Activity activity) {
 		try {
 
 			String shopNo = activity.getShopNo();
@@ -565,4 +566,29 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			throw new ServiceException(ResponseEnum.B_E_GET_DRAWNUM_ERROR);
 		}
 	}
+
+	public QueryResult getDrawNum(JoinActivity joinActivity) {
+		List<JoinActivity> joinActivity1 = getJoinActivity(joinActivity);
+		logger.info("joinActivity1 {}",JsonUtil.toJson(joinActivity1));
+		int drawNum = 0;
+		List<Long> ids = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(joinActivity1)) {
+			drawNum = joinActivity1.size();
+			ids = getJoinIds(joinActivity1);
+		}
+		QueryResult result = new QueryResult();
+		result.setMobile(joinActivity.getMobile());
+		result.setDrawNum(drawNum);
+		result.setIds(ids);
+		return result;
+	}
+
+	private List<Long> getJoinIds(List<JoinActivity> list) {
+		List<Long> ids = new ArrayList<>();
+		for (JoinActivity order : list) {
+			ids.add(Long.valueOf(order.getId()));
+		}
+		return ids;
+	}
+
 }

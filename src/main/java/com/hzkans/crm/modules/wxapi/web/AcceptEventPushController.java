@@ -133,7 +133,7 @@ public class AcceptEventPushController {
     public String getWxUserInfo(HttpServletRequest request, HttpServletResponse response) {
         String code = RequestUtils.getString(request, "code", "code is null");
         String appId = RequestUtils.getString(request, "appid", "app_id is null");
-        Long actId = RequestUtils.getLong(request, "act_id", "act_id is null");
+
         try {
             //根据appid找到对应的微信信息
             WechatPlatfrom platfrom = new WechatPlatfrom();
@@ -142,7 +142,6 @@ public class AcceptEventPushController {
 
             //调取微信接口
             Map<String, Object> userInfo = wxApiObserver.getUserInfo(code, appId, wechatPlatform.getAppSecret());
-            logger.info("userInfo {}", JsonUtil.toJson(userInfo));
             String openId = (String) userInfo.get("openid");
             //判断需不需要验证码
             boolean codeFlg = false; //默认不需要验证码
@@ -166,6 +165,7 @@ public class AcceptEventPushController {
             userInfo.put("code_flg", codeFlg);
             userInfo.put("bound_flg", boundFlg);
             userInfo.put("mobile", mobile);
+            logger.info("userInfo {}", JsonUtil.toJson(userInfo));
             //将信息更新到数据库
             MemberAssociation association = new MemberAssociation();
             association.setHeadUrl((String) userInfo.get("headimgurl"));

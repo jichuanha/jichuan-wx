@@ -10,7 +10,8 @@
 		a.deleted AS "deleted",
 		a.update_date AS "updateDate",
 		a.union_id AS "unionId",
-		a.sign AS "sign"
+		a.sign AS "sign",
+		a.mobile
 	</sql>
 	
 	<sql id="memberAssociationJoins">

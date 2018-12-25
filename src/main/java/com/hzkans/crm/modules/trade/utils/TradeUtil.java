@@ -1,13 +1,17 @@
 package com.hzkans.crm.modules.trade.utils;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
+import com.hzkans.crm.common.persistence.BaseEntity;
 import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.modules.trade.entity.Order;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -107,6 +111,21 @@ public class TradeUtil {
      */
     public static Boolean checkMobile(String mobile) {
         return Pattern.matches(REGEX_MOBILE,mobile);
+    }
+
+    public static  List<Long> getIds(List<BaseEntity> list) {
+        List<Long> ids = new ArrayList<>();
+        try {
+            for (BaseEntity t : list) {
+                Class<?> aClass = t.getClass();
+                Field id = aClass.getDeclaredField("id");
+                id.setAccessible(true);
+                ids.add((Long) id.get(t));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ids;
     }
 
 }

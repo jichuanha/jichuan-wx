@@ -1,14 +1,12 @@
 package com.hzkans.crm.modules.mobile.web;
 
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.utils.CacheUtils;
-import com.hzkans.crm.common.utils.RequestUtils;
-import com.hzkans.crm.common.utils.ResponseUtils;
-import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.common.service.ServiceException;
+import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.service.ActivityService;
-import com.hzkans.crm.modules.trade.constants.NeedCodeEnum;
+import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.entity.QueryResult;
 import com.hzkans.crm.modules.trade.service.JoinActivityService;
@@ -47,6 +45,11 @@ public class LuckDrawActController extends BaseController {
     @Autowired
     private JoinActivityService joinActivityService;
 
+    @RequestMapping("/lotteryPage")
+    public String intoLottery() {
+        return "modules/mobile/lottery";
+    }
+
     /**
      * 根据手机号确定抽奖次数
      * @param request
@@ -57,21 +60,24 @@ public class LuckDrawActController extends BaseController {
     @ResponseBody
     public String ensureDrawNum(HttpServletRequest request, HttpServletResponse response) {
         Long actId = RequestUtils.getLong(request, "act_id", "","act_id is null");
+        Long actType = RequestUtils.getLong(request, "act_type", "","act_type is null");
         String mobile = RequestUtils.getString(request, "mobile", "mobile is null");
         String openId = RequestUtils.getString(request, "open_id", "open_id is null");
         String appId = RequestUtils.getString(request, "app_id", "app_id is null");
         String messageCode = RequestUtils.getString(request, "message_code");
         //如果有验证码,验证验证码的有效性
         if(!StringUtils.isEmpty(messageCode)) {
-            String[] values = (String[]) CacheUtils.get("wechatCache", mobile);
-            if(values == null || !messageCode.equals(values[0])) {
+            String values = (String) CacheUtils.get("wechatCache", mobile);
+            logger.info(" code values {}",values);
+            if(values == null || !messageCode.equals(values)) {
                 return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MOBILE_VERIFY_CODE_ERROR);
             }
         }
 
         QueryResult queryResult = new QueryResult();
-        //校验活动和手机号
+        //校验活动和手机号 TODO  获取活动有所改变..
         Activity activity = activityService.get(actId.toString());
+        logger.info(" activity {}", JsonUtil.toJson(activity));
         String message = checkActivity(activity, mobile, appId);
         if(null != message) {
             logger.info("message {}", message);
@@ -98,6 +104,7 @@ public class LuckDrawActController extends BaseController {
         //参加活动的业务逻辑
         try {
             queryResult.setActId(actId);
+            queryResult.setActType(actType);
             queryResult.setMobile(mobile);
             queryResult.setOpenId(openId);
             QueryResult result = joinActivityService.joinActivity(queryResult);
@@ -109,6 +116,42 @@ public class LuckDrawActController extends BaseController {
         }
 
     }
+
+    @RequestMapping("/drawPageInfo")
+    @ResponseBody
+    public String drawPageInfo(HttpServletRequest request, HttpServletResponse response) {
+        //有两种情况 1.绑定手机号了就不需要传入手机号,2.没有绑定,就需要传入手机号
+        String mobile = RequestUtils.getString(request, "mobile");
+        String openId = RequestUtils.getString(request, "open_id", "open_id is null");
+        Long actId = RequestUtils.getLong(request, "act_id", "" ,"act_id is null");
+        Integer actType = RequestUtils.getInt(request, "act_type", "" ,"act_type is null");
+        try {
+            if(mobile == null) {
+                //绑定手机号情况
+                MemberAssociation association = new MemberAssociation();
+                association.setOpenId(openId);
+                List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(association);
+                mobile = messageAttentionInfo.get(0).getMobile();
+            }
+
+            //根据手机号查询抽奖次数
+            JoinActivity joinActivity = new JoinActivity();
+            joinActivity.setActId(actId);
+            joinActivity.setActType(actType);
+            joinActivity.setMobile(mobile);
+            //本次活动不需要审核
+            joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());
+            logger.info("joinActivity {}",JsonUtil.toJson(joinActivity));
+            return ResponseUtils.getSuccessApiResponseStr(joinActivityService.getDrawNum(joinActivity));
+        } catch (ServiceException e) {
+            logger.error("drawPageInfo controller error",e);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+        }
+    }
+
+
+
+
 
     /**
      * 参数校验

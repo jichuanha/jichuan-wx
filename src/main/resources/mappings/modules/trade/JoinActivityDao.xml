@@ -112,37 +112,25 @@
 	<sql id="joinActivityJoins">
 	</sql>
     
-	<select id="get" resultType="JoinActivity">
+	<select id="selectAll" resultType="com.hzkans.crm.modules.trade.entity.JoinActivity"
+			parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity">
 		SELECT 
 			<include refid="joinActivityColumns"/>
 		FROM t_join_activity a
 		<where>
 			<if test="id != null">
-				a.id = #{id}
-			</if>
-		</where>
-	</select>
-	
-	<select id="findList" resultType="JoinActivity">
-		SELECT 
-			<include refid="joinActivityColumns"/>
-		FROM t_join_activity a
-		<include refid="joinActivityJoins"/>
-		<where>
-			
-			<if test="id != null and id != ''">
 				AND a.id = #{id}
 			</if>
-			<if test="orderId != null and orderId != ''">
+			<if test="orderId != null">
 				AND a.order_id = #{orderId}
 			</if>
 			<if test="orderSn != null and orderSn != ''">
 				AND a.order_sn = #{orderSn}
 			</if>
-			<if test="actId != null and actId != ''">
+			<if test="actId != null ">
 				AND a.act_id = #{actId}
 			</if>
-			<if test="actType != null and actType != ''">
+			<if test="actType != null">
 				AND a.act_type = #{actType}
 			</if>
 			<if test="actName != null and actName != ''">
@@ -151,53 +139,12 @@
 			<if test="status != null and status != ''">
 				AND a.status = #{status}
 			</if>
-			<if test="message != null and message != ''">
-				AND a.message = #{message}
-			</if>
-			<if test="pictureUrl != null and pictureUrl != ''">
-				AND a.picture_url = #{pictureUrl}
-			</if>
-			<if test="auditor != null and auditor != ''">
-				AND a.auditor = #{auditor}
-			</if>
-			<if test="payData != null and payData != ''">
-				AND a.pay_data = #{payData}
-			</if>
-			<if test="createDate != null and createDate != ''">
-				AND a.create_date = #{createDate}
-			</if>
-			<if test="updateDate != null and updateDate != ''">
-				AND a.update_date = #{updateDate}
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
 			</if>
 		</where>
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
 	</select>
-	
-	<select id="findAllList" resultType="JoinActivity">
-		SELECT 
-			<include refid="joinActivityColumns"/>
-		FROM t_join_activity a
-		<include refid="joinActivityJoins"/>
-		<where>
-			
-		</where>		
-		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
-				ORDER BY ${page.orderBy}
-			</when>
-			<otherwise>
-				ORDER BY a.update_date DESC
-			</otherwise>
-		</choose>
-	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO t_join_activity(
 			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
