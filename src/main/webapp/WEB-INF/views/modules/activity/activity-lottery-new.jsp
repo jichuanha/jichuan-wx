@@ -732,8 +732,12 @@
             $(this).parents('li').find('.img-block').remove();
             $(this).parents('li').append('<a href="#" class="select-img-btn">选择图片</a>');
             $(this).remove();
-            // uploader.destroy();
-            // uploadPic();
+            if(checkCon()) {
+                $('#btnRelease').addClass('active');
+            }
+            else {
+                $('#btnRelease').removeClass('active');
+            }
         })
         $('#searchForm input').change(function () {
             checkInput();
@@ -861,7 +865,6 @@
                     })
                 }
             })
-            console.log(prizeContent)
             if(prizeContent.length < 8){
                 var prizeFlag = false;
             }
@@ -879,7 +882,6 @@
                 }
             }
             if(dataObject.name != ""
-                && dataObject.activity_type != ""
                 && dataObject.active_date != ""
                 && dataObject.inactive_date != ""
                 && dataObject.order_active_date != ""
@@ -887,7 +889,6 @@
                 && dataObject.is_follow != ""
                 && dataObject.audit_type != ""
                 && dataObject.text_audit_type != ""
-                && dataObject.is_audit != ""
                 && tempFlag
                 && shopFlag
                 && prizeFlag
@@ -1039,7 +1040,12 @@
 				'<i class="img-block" data-img="'+imgUrl+'"><img src="//yiyezi.yyzws.com/ex/'+imgUrl+'" alt=""></i>' +
 				'<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>');
        		$('#myModalImg').modal('hide');
-            checkCon();
+            if(checkCon()) {
+                $('#btnRelease').addClass('active');
+            }
+            else {
+                $('#btnRelease').removeClass('active');
+            }
         })
 		function getPicList() {
             $.ajax({
@@ -1108,7 +1114,12 @@
                         '<a href="javascript:;" class="less-key-btn"><img src="${ctxStatic}/images/less.png" alt=""></a>');
                     $('#myModalImg').modal('hide');
                     layer.closeAll();
-                    checkCon();
+                    if(checkCon()) {
+                        $('#btnRelease').addClass('active');
+                    }
+                    else {
+                        $('#btnRelease').removeClass('active');
+                    }
                 }
             });
             uploader.on('uploadError',function () {
