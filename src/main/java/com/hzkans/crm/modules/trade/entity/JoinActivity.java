@@ -51,7 +51,16 @@ public class JoinActivity extends DataEntity<JoinActivity> {
 	private Long wechatId;
 	private String openId;
 	private Integer sortNo;
+	private String appId;
 
+
+	public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
 
 	public String getOpenId() {
 		return openId;

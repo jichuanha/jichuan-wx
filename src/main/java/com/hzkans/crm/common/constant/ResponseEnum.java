@@ -91,6 +91,7 @@ public enum ResponseEnum {
     B_E_JOIN_ACTIVITY_ERROR(40045, 0, "参加活动异常!"),
     B_E_HAS_ON_THE_PRIZE_ERROR(40046, 0, "您已抽过奖!"),
     B_E_DEAL_PARaMETER_ERROR(40047, 0, "处理参数异常!"),
+    B_E_SEND_RED_PACK_ERROR(40047, 0, "发送红包异常!"),
     /**
      * 添加失败
      */

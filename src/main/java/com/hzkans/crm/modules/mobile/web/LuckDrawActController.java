@@ -114,6 +114,7 @@ public class LuckDrawActController extends BaseController {
             queryResult.setActType(actType);
             queryResult.setMobile(mobile);
             queryResult.setOpenId(openId);
+            queryResult.setAppId(appId);
             QueryResult result = joinActivityService.joinActivity(queryResult, activity);
             logger.info(" result {}",result);
             return ResponseUtils.getSuccessApiResponseStr(result);
@@ -132,13 +133,31 @@ public class LuckDrawActController extends BaseController {
         String openId = RequestUtils.getString(request, "open_id", "open_id is null");
         Long actId = RequestUtils.getLong(request, "act_id", "" ,"act_id is null");
         Integer actType = RequestUtils.getInt(request, "act_type", "" ,"act_type is null");
+        String appId = RequestUtils.getString(request, "app_id", "app_id is null");
         try {
             if(mobile == null) {
                 //绑定手机号情况
                 MemberAssociation association = new MemberAssociation();
                 association.setOpenId(openId);
                 List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(association);
+                logger.info("messageAttentionInfo {}",JsonUtil.toJson(messageAttentionInfo));
+                if(CollectionUtils.isEmpty(messageAttentionInfo)) {
+                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+                }
                 mobile = messageAttentionInfo.get(0).getMobile();
+                //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤,所以需要重新走
+                ActivityLottery activityLottery = new ActivityLottery();
+                activityLottery.setId(actId.toString());
+                activityLottery.setActivityType(actType);
+                ActivityLottery activity = activityLotteryService.getActivityLottery(activityLottery);
+                QueryResult queryResult = new QueryResult();
+                queryResult.setCodeFlg(false);
+                queryResult.setActId(actId);
+                queryResult.setActType(actType);
+                queryResult.setMobile(mobile);
+                queryResult.setOpenId(openId);
+                queryResult.setAppId(appId);
+                joinActivityService.joinActivity(queryResult, activity);
             }
 
             //根据手机号查询抽奖次数

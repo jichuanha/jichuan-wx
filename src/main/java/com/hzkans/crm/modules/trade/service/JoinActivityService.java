@@ -43,7 +43,7 @@ import java.util.*;
  * @version 2018-12-01
  */
 @Service
-@Transactional(rollbackFor = ServiceException.class)
+@Transactional(rollbackFor = Exception.class)
 public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivity> {
 
 	@Autowired
@@ -156,12 +156,26 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		}
 		try {
 			//修改表的状态
-			joinActivityDao.updateJoinActivityStatus(joinActivity);
+			updateJoinActivity(joinActivity);
 		} catch (Exception e) {
 			logger.error("auditOrder error",e);
 			throw new ServiceException(ResponseEnum.B_E_UPDATE_STATUS_FAIL);
 		}
 
+	}
+
+	/**
+	 * 修改(通用)
+	 * @param joinActivity
+	 */
+	public void updateJoinActivity(JoinActivity joinActivity) throws ServiceException{
+		TradeUtil.isAllNull(joinActivity);
+		try {
+			joinActivityDao.updateJoinActivityStatus(joinActivity);
+		} catch (Exception e) {
+			logger.error("updateJoinActivity error",e);
+			throw new ServiceException(ResponseEnum.B_E_MODIFY_ERROR);
+		}
 	}
 
 	/**
@@ -265,7 +279,6 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 
 		try {
 			String mobile = queryResult.getMobile();
-			Long actId = queryResult.getActId();
 			QueryResult result = new QueryResult();
 			result.setMobile(mobile);
 			//判断是否要绑定手机号
@@ -276,8 +289,14 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
                 association.setOpenId(queryResult.getOpenId());
                 memberAssociationService.boundMobile(association);
             }
-            //获取可以参加活动的订单
-			PagePara<Order> drawNum = getCanJoinActOrder(queryResult, activity);
+            //获取可以参加活动的订单 type =1 代表可以参加活动的订单,type=2代表所有类型的订单
+			PagePara<Order> drawNum = getCanJoinActOrder(queryResult, activity, 1);
+			logger.info(" drawNum {}",JsonUtil.toJson(drawNum));
+			//查询全部
+			PagePara<Order> allDrawNum = getCanJoinActOrder(queryResult, activity, 2);
+			if(allDrawNum == null) {
+				result.setValidOrder(false);
+			}
 			//1让这些订单参加活动
 			Integer count = drawNum.getCount();
 			List<Order> list = drawNum.getList();
@@ -286,7 +305,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			if(count == 0) {
 				return result;
 			}
-			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult.getOpenId());
+			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult);
 			saveAllResult(joinActivities);
 			//1.2 将查询的订单状态修改
             Order order = new Order();
@@ -331,15 +350,15 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * 组装数据
 	 * @param orders
 	 * @param activity
-	 * @param openId
 	 * @return
 	 */
-	private List<JoinActivity> dealParemater(List<Order> orders, ActivityLottery activity, String openId) {
+	private List<JoinActivity> dealParemater(List<Order> orders, ActivityLottery activity, QueryResult queryResult) {
 		List<JoinActivity> joinActivities = new ArrayList<>();
 		for (Order order : orders) {
 			JoinActivity joinActivity = new JoinActivity();
 			joinActivity.setMobile(order.getMobile());
-			joinActivity.setOpenId(openId);
+			joinActivity.setOpenId(queryResult.getOpenId());
+			joinActivity.setAppId(queryResult.getAppId());
 			joinActivity.setOrderId(Long.valueOf(order.getId()));
 			joinActivity.setOrderSn(order.getOrderSn());
 			joinActivity.setPlatformType(order.getPlatformType());
@@ -358,7 +377,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param queryResult
 	 * @return
 	 */
-	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, ActivityLottery activity) {
+	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, ActivityLottery activity, Integer type) {
 		try {
 
 			String shopNo = activity.getShopNo();
@@ -369,7 +388,9 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			order.setStartDate(activity.getOrderActiveDate());
 			order.setEndDate(activity.getOrderInactiveDate());
 			order.setShopLists(strings);
-			order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
+			if(type == 1) {
+				order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
+			}
 			PagePara<Order> pagePara = new PagePara<>();
 			pagePara.setData(order);
 			return orderService.getAllOrder(pagePara);
@@ -530,7 +551,7 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 					break;
 				default:
 			}
-			joinActivityDao.updateJoinActivityById(joinActivity);
+			joinActivityDao.updateJoinActivityStatus(joinActivity);
 			return joinActivity;
 		} catch (Exception e) {
 			logger.error("lottery error",e);

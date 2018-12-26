@@ -19,9 +19,7 @@
                         cron="0 0/1 * * * ?" />
 
         <!-- * 0/30 * * * ?-->
-        <!--<task:scheduled ref="timingDateImportService" method="deleteHasImportTable"
 
-                        cron="0 0/1 * * * ?" />-->
 
     </task:scheduled-tasks>
 

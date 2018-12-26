@@ -20,7 +20,26 @@ public class QueryResult implements Serializable{
     private Long actId;
     private Integer actType;
     private String openId;
+    private String appId;
+    //是否有有效订单
+    private Boolean validOrder = true;
 
+
+    public Boolean getValidOrder() {
+        return validOrder;
+    }
+
+    public void setValidOrder(Boolean validOrder) {
+        this.validOrder = validOrder;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
     public Integer getActType() {
         return actType;

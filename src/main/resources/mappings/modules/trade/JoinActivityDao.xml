@@ -19,6 +19,7 @@
 		a.platform_type AS "platformType",
 		a.shop_no AS "shopNo",
 		a.award AS "award",
+		a.app_id AS "appId",
 		a.award_grant_status AS "awardGrantStatus",
 		a.create_date AS "createDate"
 	</sql>
@@ -158,21 +159,21 @@
 	<insert id="insert">
 		INSERT INTO t_join_activity(
 			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
-			act_name, pay_data, create_date, update_date
+			act_name, pay_data, app_id , create_date, update_date
 		) VALUES
 		(#{mobile}, #{openId}, #{orderId}, #{orderSn}, #{platformType}, #{shopNo},
-			#{actId}, #{actType}, #{actName}, #{payData}, now(), now())
+			#{actId}, #{actType}, #{actName}, #{payData}, #{appId}, now(), now())
 	</insert>
 
 	<insert id="insertAllJoinActivity" parameterType="list" >
 		INSERT INTO t_join_activity(
 			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
-			act_name, pay_data, create_date, update_date
+			act_name, pay_data, app_id, create_date, update_date
 		) VALUES
 
 		<foreach collection="list" separator="," open="(" close=")" item="item" index="index">
 			(#{item.mobile}, #{item.openId}, #{item.orderId}, #{item.orderSn}, #{item.platformType}, #{item.shopNo},
-			#{item.actId}, #{item.actType}, #{item.actName}, #{item.payData}, now(), now())
+			#{item.actId}, #{item.actType}, #{item.actName}, #{item.payData}, #{item.appId}, now(), now())
 		</foreach>
 	</insert>
 	
@@ -231,6 +232,9 @@
 			<if test="status != null">
 				status = #{status},
 			</if>
+			<if test="pictureUrl != null and pictureUrl != ''">
+				picture_url = #{pictureUrl},
+			</if>
 			<if test="message != null and message != ''">
 				message = #{message},
 			</if>
@@ -251,28 +255,12 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
 		</where>
 	</update>
 
-	<update id="updateJoinActivityById"
-			parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity">
-		UPDATE t_join_activity
-		<set>
-			<if test="status != null">
-				status = #{status},
-			</if>
-			<if test="pictureUrl != null and pictureUrl != ''">
-				picture_url = #{pictureUrl},
-			</if>
-			<if test="award != null and award != ''">
-				award = #{award},
-			</if>
-			<if test="awardGrantStatus != null">
-				award_grant_status = #{awardGrantStatus}
-			</if>
-		</set>
-		WHERE id = #{id}
-	</update>
 	<select id="selectMobileNumByopenId" parameterType="com.hzkans.crm.modules.trade.entity.JoinActivity"
 			resultType="int">
 		SELECT
