@@ -275,7 +275,7 @@
                     else{
                         marketStr += '<li><i class="import-deco">*</i>强制关注： 否</li>';
                     }
-                    marketStr += '<li>活动订单： '+(data.max_order_limit == 0?"-":data.max_order_limit)+' / '+data.order_count+'</li>';
+                    marketStr += '<li>活动订单： '+(data.total_order == 0?"-":data.total_order)+' / '+data.order_count+'</li>';
                     // marketStr += '<li>活动金额： '+(data.total_amount == 0?"-":"¥ "+data.total_amount/100)+' / ¥ '+(data.order_count*data.per_amount/100)+'</li>';
                     $('.market-type').html(marketStr);
                     var prizeStr = '';
