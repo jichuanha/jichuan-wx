@@ -145,20 +145,22 @@ public class LuckDrawActController extends BaseController {
                     return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
                 }
                 mobile = messageAttentionInfo.get(0).getMobile();
-                //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤,所以需要重新走
-                ActivityLottery activityLottery = new ActivityLottery();
-                activityLottery.setId(actId.toString());
-                activityLottery.setActivityType(actType);
-                ActivityLottery activity = activityLotteryService.getActivityLottery(activityLottery);
-                QueryResult queryResult = new QueryResult();
-                queryResult.setCodeFlg(false);
-                queryResult.setActId(actId);
-                queryResult.setActType(actType);
-                queryResult.setMobile(mobile);
-                queryResult.setOpenId(openId);
-                queryResult.setAppId(appId);
-                joinActivityService.joinActivity(queryResult, activity);
+
+
             }
+            //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤,也防止了不通过输入手机号就进入抽奖页面情况
+            ActivityLottery activityLottery = new ActivityLottery();
+            activityLottery.setId(actId.toString());
+            activityLottery.setActivityType(actType);
+            ActivityLottery activity = activityLotteryService.getActivityLottery(activityLottery);
+            QueryResult queryResult = new QueryResult();
+            queryResult.setCodeFlg(false);
+            queryResult.setActId(actId);
+            queryResult.setActType(actType);
+            queryResult.setMobile(mobile);
+            queryResult.setOpenId(openId);
+            queryResult.setAppId(appId);
+            joinActivityService.joinActivity(queryResult, activity);
 
             //根据手机号查询抽奖次数
             JoinActivity joinActivity = new JoinActivity();

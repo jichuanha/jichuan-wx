@@ -1,26 +1,24 @@
 package com.hzkans.crm.modules.trade.service;
 
-import com.hzkans.crm.common.utils.DateUtil;
 import com.hzkans.crm.common.utils.JedisUtils;
 import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.modules.trade.Thread.ImportOrderTableThread;
 import com.hzkans.crm.modules.trade.constants.TableFlowStatusEnum;
 import com.hzkans.crm.modules.trade.constants.TableFlowTypeEnum;
 import com.hzkans.crm.modules.trade.dao.OrderDao;
 import com.hzkans.crm.modules.trade.dao.OrderMemberDao;
 import com.hzkans.crm.modules.trade.dao.TableFlowDao;
-import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.OrderMember;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
-import com.hzkans.crm.modules.trade.entity.TableTimeError;
 import com.hzkans.crm.modules.trade.utils.TradeUtil;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -39,6 +37,8 @@ public class TimingDateImportService {
     private Logger logger = LoggerFactory.getLogger(TimingDateImportService.class);
     private static final Integer TRANSFORM_AMOUNT = Integer.valueOf(100);
 
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Autowired
     private TableFlowService tableFlowService;
     @Autowired
@@ -92,29 +92,25 @@ public class TimingDateImportService {
             FileInputStream fis = new FileInputStream(file);
             Workbook workBook = TradeUtil.getWorkBook(name, fis);
             //保存表格数据到数据库
-            int result = 0;
+
             Sheet sheetAt = workBook.getSheetAt(0);
             if(type.equals(TableFlowTypeEnum.CUSTOMER.getCode())) {
                 //格式校验
-
                 //保存顾客信息表
-                result  = saveCustomerMessage(sheetAt);
+                saveCustomerMessage(sheetAt);
             }else if(type.equals(TableFlowTypeEnum.ORDER_INFO.getCode())) {
                 //格式校验
-
-
                 //保存订单信息
-                result = saveOrderMessage(sheetAt, id, table);
+                saveOrderMessage(sheetAt, id, table);
             }else if(type.equals(TableFlowTypeEnum.EVALUATE.getCode())) {
                 //保存评价信息
             }
 
             tableFlow.setId(id);
             tableFlow.setTimingDate(new Date());
-            tableFlow.setSuccessNum((long)result);
+            tableFlow.setSuccessNum((long)sheetAt.getLastRowNum());
             tableFlow.setStatus(TableFlowStatusEnum.TIMING_SUCCESS.getCode());
             tableFlowDao.update(tableFlow);
-
             long end = System.currentTimeMillis();
             logger.info("定时导入"+tableName+"到数据库,共耗时"+(end - start)+"毫秒");
         } catch (Exception e) {
@@ -178,80 +174,19 @@ public class TimingDateImportService {
         return 0;
     }
 
-    private int saveOrderMessage(Sheet sheetAt, String id, TableFlow table) {
-        int currentNum = 0;
-        int totalOrderNum = 0;
-
-            //获取总行数
+    private void saveOrderMessage(Sheet sheetAt, String id, TableFlow table) {
+        //获取总行数
+        try {
             int lastRowNum = sheetAt.getLastRowNum();
             logger.info("[{}]lastRowNum :{}",lastRowNum);
             //遍历数据
             for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
-                try {
-                    currentNum = rowNum;
-                    Row row = sheetAt.getRow(rowNum);
-                    String payTime = row.getCell(5).getStringCellValue();
-                    if(payTime.equals("-")) {
-                        continue;
-                    }
-                    Order order = new Order();
-                    order.setTableId(Long.parseLong(id));
-                    order.setOrderSn(row.getCell(0).getStringCellValue());
-                    //查询该订单是否已经导入
-                    Order order1 = orderDao.get(order);
-                    if(order1 != null) {
-                        continue;
-                    }
-                    order.setBuyerName(row.getCell(1).getStringCellValue());
-                    Cell cell2 = row.getCell(2);
-                    if(cell2 != null) {
-                        cell2.setCellType(Cell.CELL_TYPE_STRING);
-                        order.setMobile(cell2.getStringCellValue());
-                    }
-                    order.setOrderTime(DateUtil.parse(row.getCell(4).
-                            getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
-                    order.setPayTime(DateUtil.parse(row.getCell(5).
-                            getStringCellValue(),DateUtil.NORMAL_DATETIME_PATTERN));
-                    order.setItemName(row.getCell(7).getStringCellValue());
-                    order.setItemNo(row.getCell(8).getStringCellValue());
-                    Cell cell9 = row.getCell(9);
-                    if(cell9 != null) {
-                        cell9.setCellType(Cell.CELL_TYPE_STRING);
-                        order.setUnitPrice(priceY2F(cell9.getStringCellValue()));
-                    }
-                    Cell cell10 = row.getCell(10);
-                    if(cell10 != null) {
-                        cell10.setCellType(Cell.CELL_TYPE_STRING);
-                        order.setPayableAmmount(priceY2F(cell10.getStringCellValue()));
-                    }
-                    Cell cell11 = row.getCell(11);
-                    if(cell11 != null) {
-                        cell11.setCellType(Cell.CELL_TYPE_STRING);
-                        order.setPayAmount(priceY2F(cell11.getStringCellValue()));
-                    }
-                    order.setProvinceName(row.getCell(17).getStringCellValue());
-                    order.setCityName(row.getCell(18).getStringCellValue());
-                    order.setAreaName(row.getCell(19).getStringCellValue());
-                    order.setAddress(row.getCell(20).getStringCellValue());
-                    order.setConsignee(row.getCell(21).getStringCellValue());
-                    order.setShopNo(table.getShopNo().toString());
-                    order.setOwnShop(table.getShopNo().toString());
-                    order.setPlatformType(table.getPlatformType());
-                    int insert = orderDao.insert(order);
-                    if(insert > 0) {
-                        totalOrderNum ++;
-                    }
-                } catch (Exception e) {
-                    logger.error("saveOrderMessage error",e);
-                    TableTimeError tableTimeError  = new TableTimeError();
-                    tableTimeError.setErrorMessage(e.getMessage());
-                    tableTimeError.setErrorNum(currentNum);
-                    tableTimeError.setTableId(Long.parseLong(id));
-                    tableTimeError.setCreateDate(new Date());
-                    tableTimeErrorService.save(tableTimeError);
-                }
+                importInfoExecute(sheetAt, id, table, rowNum);
             }
-            return totalOrderNum;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -264,9 +199,23 @@ public class TimingDateImportService {
         }
     }
 
-    private Long priceY2F(String price) {
-        double v = Double.parseDouble(price);
-        return parseYuan2Fen(v);
+    private void importInfoExecute(Sheet sheetAt, String id, TableFlow table,
+                                      Integer rowNum) throws Exception{
+        try {
+            ImportOrderTableThread importOrderTableThread = new ImportOrderTableThread();
+            importOrderTableThread.setId(id);
+            importOrderTableThread.setSheetAt(sheetAt);
+            importOrderTableThread.setTable(table);
+            importOrderTableThread.setRowNum(rowNum);
+            importOrderTableThread.setOrderDao(orderDao);
+            importOrderTableThread.setTableTimeErrorService(tableTimeErrorService);
+            threadPoolTaskExecutor.execute(importOrderTableThread);
+        } catch (Exception e) {
+            logger.error("importInfoExecute error ",e);
+            throw new Exception(e);
+        }
     }
+
+
 
 }

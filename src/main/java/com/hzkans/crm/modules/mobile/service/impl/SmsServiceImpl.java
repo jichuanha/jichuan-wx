@@ -5,10 +5,13 @@ import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.mobile.entity.SmsSendLogDO;
 import com.hzkans.crm.modules.mobile.service.iface.SmsService;
+import com.hzkans.crm.modules.mobile.thread.SendMobileInfoThread;
 import com.hzkans.crm.modules.mobile.utils.Config;
 import com.hzkans.crm.modules.mobile.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 
@@ -35,6 +38,8 @@ public class SmsServiceImpl implements SmsService {
 
 	private static String accountSid = Config.ACCOUNT_SID;
 
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 
 	private String generateSmsContg(String tempSn, String... values) {
@@ -85,19 +90,19 @@ public class SmsServiceImpl implements SmsService {
 
 		try {
 			String content = generateSmsContg(smsTemplateCode, smsTemplateParamValues);
-
-			String url = Config.BASE_URL + operation;
-			String body = "accountSid=" + accountSid + "&to=" + receiverPhoneNumber + "&smsContent=" + content
-					+ HttpUtil.createCommonParam();
-
-			// 提交请求
-			String result = HttpUtil.post(url, body);
-			logger.info("[{}] result:{}", System.lineSeparator() + result);
+			sendMobileExecute(receiverPhoneNumber, content);
 			return true;
 		} catch (Exception e) {
 			logger.error(" sendSecondsTick error:{} ", e);
 			throw new ServiceException(ResponseEnum.B_E_MOBILE_SEND_MESSAGE_ERROR);
 		}
+	}
+
+	private void sendMobileExecute(String mobile, String content) {
+		SendMobileInfoThread sendMobileInfoThread = new SendMobileInfoThread();
+		sendMobileInfoThread.setContent(content);
+		sendMobileInfoThread.setReceiverPhoneNumber(mobile);
+		threadPoolTaskExecutor.execute(sendMobileInfoThread);
 	}
 
 }

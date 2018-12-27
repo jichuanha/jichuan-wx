@@ -586,6 +586,11 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		}
 	}
 
+	/**
+	 * 获取用户的抽奖次数
+	 * @param joinActivity
+	 * @return
+	 */
 	public QueryResult getDrawNum(JoinActivity joinActivity) {
 		List<JoinActivity> joinActivity1 = getJoinActivity(joinActivity);
 		logger.info("joinActivity1 {}",JsonUtil.toJson(joinActivity1));
@@ -600,6 +605,21 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 		result.setDrawNum(drawNum);
 		result.setIds(ids);
 		return result;
+	}
+
+	/**
+	 * 获取50条待发红包的数据
+	 * @return
+	 */
+	public List<JoinActivity> getSendRedPackInfo() throws ServiceException{
+		List<JoinActivity> joinActivities = null;
+		try {
+			joinActivities = joinActivityDao.selectRedPackInfo();
+		} catch (Exception e) {
+			logger.error("getSendRedPackInfo error",e);
+			throw new ServiceException(ResponseEnum.DATEBASE_QUERY_ERROR);
+		}
+		return joinActivities;
 	}
 
 	private List<Long> getJoinIds(List<JoinActivity> list) {

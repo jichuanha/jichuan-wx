@@ -21,6 +21,8 @@ public interface JoinActivityDao extends CrudDao<JoinActivity> {
 
     List<JoinActivity> selectAll(JoinActivity joinActivity);
 
+    List<JoinActivity> selectRedPackInfo();
+
     int selectJoinActivityPageCount(PagePara<JoinActivity> pagePara);
 
     int selectJoinActivityLotteryPageCount(PagePara<JoinActivity> pagePara);

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WxRedPackRecordDao">
+    
+	<sql id="wxRedPackRecordColumns">
+		a.id AS "id",
+		a.mch_billno AS "mchBillno",
+		a.wx_appid AS "wxAppid",
+		a.re_openid AS "reOpenid",
+		a.total_amount AS "totalAmount",
+		a.send_listid AS "sendListid",
+		a.result_code AS "resultCode",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wxRedPackRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WxRedPackRecord">
+		SELECT 
+			<include refid="wxRedPackRecordColumns"/>
+		FROM t_wx_red_pack_record a
+		<include refid="wxRedPackRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxRedPackRecord">
+		SELECT 
+			<include refid="wxRedPackRecordColumns"/>
+		FROM t_wx_red_pack_record a
+		<include refid="wxRedPackRecordJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="mchBillno != null and mchBillno != ''">
+				AND a.mch_billno = #{mchBillno}
+			</if>
+			<if test="wxAppid != null and wxAppid != ''">
+				AND a.wx_appid = #{wxAppid}
+			</if>
+			<if test="reOpenid != null and reOpenid != ''">
+				AND a.re_openid = #{reOpenid}
+			</if>
+			<if test="totalAmount != null and totalAmount != ''">
+				AND a.total_amount = #{totalAmount}
+			</if>
+			<if test="sendListid != null and sendListid != ''">
+				AND a.send_listid = #{sendListid}
+			</if>
+			<if test="resultCode != null and resultCode != ''">
+				AND a.result_code = #{resultCode}
+			</if>
+			<if test="errCode != null and errCode != ''">
+				AND a.err_code = #{errCode}
+			</if>
+			<if test="errCodeDes != null and errCodeDes != ''">
+				AND a.err_code_des = #{errCodeDes}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxRedPackRecord">
+		SELECT 
+			<include refid="wxRedPackRecordColumns"/>
+		FROM t_wx_red_pack_record a
+		<include refid="wxRedPackRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_wx_red_pack_record(
+			mch_billno,
+			wx_appid,
+			re_openid,
+			total_amount,
+			send_listid,
+			result_code,
+			err_code,
+			err_code_des,
+			create_date,
+			update_date,
+			return_code,
+			return_msg
+		) VALUES (
+			#{mch_billno},
+			#{wxappid},
+			#{re_openid},
+			#{total_amount},
+			#{send_listid},
+			#{result_code},
+			#{err_code},
+			#{err_code_des},
+			now(),
+			now(),
+			#{return_code},
+			#{return_msg}
+		)
+	</insert>
+
+	
+</mapper>

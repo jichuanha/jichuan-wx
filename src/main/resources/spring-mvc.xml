@@ -126,5 +126,11 @@
 		<property name="endpoint" value="${endpoint}"></property>
 		<property name="bucketName" value="${bucket.name}"></property>
 	</bean>
+
+	<bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="3"/>
+		<property name="maxPoolSize" value="10"/>
+		<property name="threadNamePrefix" value="rainbowcenter-workthread-"/>
+	</bean>
 	
 </beans>

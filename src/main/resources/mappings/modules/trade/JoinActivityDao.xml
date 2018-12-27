@@ -156,6 +156,13 @@
 		</where>
 	</select>
 
+	<select id="selectRedPackInfo" resultType="com.hzkans.crm.modules.trade.entity.JoinActivity">
+		SELECT
+		<include refid="joinActivityColumns"/>
+		FROM t_join_activity a
+		where status in (5, 7) limit 50
+	</select>
+
 	<insert id="insert">
 		INSERT INTO t_join_activity(
 			mobile, open_id, order_id, order_sn, platform_type, shop_no, act_id, act_type,
