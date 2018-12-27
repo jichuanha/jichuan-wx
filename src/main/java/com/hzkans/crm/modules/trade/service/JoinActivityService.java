@@ -538,7 +538,10 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 				});
 				lotteryPrize = LotteryUtil.lottery(lotteryPrizeList);
 			}
-			joinActivity.setAward(lotteryPrize.getPrizeName());
+			String fenPrize = lotteryPrize.getPrizeName().
+					substring(0,lotteryPrize.getPrizeName().length() - 3) + "00";
+
+			joinActivity.setAward(fenPrize);
 			joinActivity.setStatus(5);
 			switch (lotteryPrize.getPrizeName()){
 				case "2元红包":
@@ -578,7 +581,6 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 				}
 			}
 			activityLottery1.setLotteryPrizeList(lotteryPrizeList);
-			logger.info("[{}]activityLottery1：{}",JsonUtil.toJson(activityLottery1));
 			return activityLottery1.getLotteryPrizeList();
 		} catch (Exception e) {
 			logger.error("getLotteryPrize error",e);

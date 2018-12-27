@@ -86,7 +86,7 @@
 				AND a.audit_type = #{auditType}
 			</if>
 			<if test="shopNo != null and shopNo != ''">
-				AND a.shop_no LIKE concat('%',#{shopNo},'%')
+				AND FIND_IN_SET(#{shopNo},a.shop_no)
 			</if>
 			<if test="wechatPlatformId != null">
 				AND a.wechat_platform_id = #{wechatPlatformId}

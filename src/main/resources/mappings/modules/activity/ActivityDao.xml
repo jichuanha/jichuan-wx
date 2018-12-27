@@ -68,7 +68,7 @@
 				AND a.rebate_type = #{rebateType}
 			</if>
 			<if test="shopNo != null and shopNo != ''">
-				AND a.shop_no LIKE concat('%',#{shopNo},'%')
+				AND FIND_IN_SET(#{shopNo},a.shop_no)
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
