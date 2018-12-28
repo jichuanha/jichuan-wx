@@ -294,8 +294,8 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 			logger.info(" drawNum {}",JsonUtil.toJson(drawNum));
 			//查询全部
 			PagePara<Order> allDrawNum = getCanJoinActOrder(queryResult, activity, 2);
-			if(allDrawNum == null) {
-				result.setValidOrder(false);
+			if(allDrawNum.getCount() > 0) {
+				result.setValidOrder(true);
 			}
 			//1让这些订单参加活动
 			Integer count = drawNum.getCount();

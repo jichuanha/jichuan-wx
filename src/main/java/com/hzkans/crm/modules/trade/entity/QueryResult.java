@@ -22,7 +22,7 @@ public class QueryResult implements Serializable{
     private String openId;
     private String appId;
     //是否有有效订单
-    private Boolean validOrder = true;
+    private Boolean validOrder = false;
 
 
     public Boolean getValidOrder() {

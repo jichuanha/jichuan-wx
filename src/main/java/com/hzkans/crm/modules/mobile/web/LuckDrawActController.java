@@ -145,10 +145,13 @@ public class LuckDrawActController extends BaseController {
                     return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
                 }
                 mobile = messageAttentionInfo.get(0).getMobile();
-
+                if(StringUtils.isEmpty(mobile)) {
+                    logger.error("mobile is null");
+                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_DOUND_MOBILE__ERROR);
+                }
 
             }
-            //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤,也防止了不通过输入手机号就进入抽奖页面情况
+            //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤(将订单插入到参加活动表),也防止了不通过输入手机号就进入抽奖页面情况
             ActivityLottery activityLottery = new ActivityLottery();
             activityLottery.setId(actId.toString());
             activityLottery.setActivityType(actType);

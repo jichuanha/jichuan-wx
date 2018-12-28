@@ -1,7 +1,6 @@
 package com.hzkans.crm.modules.trade.Thread;
 
 import com.hzkans.crm.common.utils.DateUtil;
-import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.trade.dao.OrderDao;
 import com.hzkans.crm.modules.trade.entity.Order;
 import com.hzkans.crm.modules.trade.entity.TableFlow;
@@ -19,7 +18,7 @@ import java.util.Date;
 
 /**
  * @author jc
- * @description
+ * @description 订单导入数据库
  * @create 2018/12/26
  */
 public class ImportOrderTableThread implements Runnable {

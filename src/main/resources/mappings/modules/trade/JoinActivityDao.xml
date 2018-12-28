@@ -147,7 +147,7 @@
 			<if test="actName != null and actName != ''">
 				AND a.act_name = #{actName}
 			</if>
-			<if test="status != null and status != ''">
+			<if test="status != null">
 				AND a.status = #{status}
 			</if>
 			<if test="mobile != null and mobile != ''">

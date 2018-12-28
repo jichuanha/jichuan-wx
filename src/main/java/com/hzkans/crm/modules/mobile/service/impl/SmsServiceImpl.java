@@ -6,18 +6,12 @@ import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.mobile.entity.SmsSendLogDO;
 import com.hzkans.crm.modules.mobile.service.iface.SmsService;
 import com.hzkans.crm.modules.mobile.thread.SendMobileInfoThread;
-import com.hzkans.crm.modules.mobile.utils.Config;
-import com.hzkans.crm.modules.mobile.utils.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-
-/**
- * Created by lizg on 2017/1/5.
- */
 @Service
 public class SmsServiceImpl implements SmsService {
 
@@ -34,9 +28,6 @@ public class SmsServiceImpl implements SmsService {
 	/* 短信模板 */
 	private static String TEMP_CONTENT = null;
 
-	private static String operation = "/industrySMS/sendSMS";
-
-	private static String accountSid = Config.ACCOUNT_SID;
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
