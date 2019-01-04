@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzkans.crm.modules.wechat.dao.WxCompanyPayRecordDao">
+    
+	<sql id="wxCompanyPayRecordColumns">
+		a.id AS "id",
+		a.partner_trade_no AS "partnerTradeNo",
+		a.mch_appid AS "mchAppid",
+		a.mchid AS "mchid",
+		a.re_openid AS "reOpenid",
+		a.payment_no AS "paymentNo",
+		a.return_code AS "returnCode",
+		a.result_code AS "resultCode",
+		a.return_msg AS "returnMsg",
+		a.err_code AS "errCode",
+		a.err_code_des AS "errCodeDes",
+		a.payment_time AS "paymentTime",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wxCompanyPayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WxCompanyPayRecord">
+		SELECT 
+			<include refid="wxCompanyPayRecordColumns"/>
+		FROM t_wx_company_pay_record a
+		<include refid="wxCompanyPayRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxCompanyPayRecord">
+		SELECT 
+			<include refid="wxCompanyPayRecordColumns"/>
+		FROM t_wx_company_pay_record a
+		<include refid="wxCompanyPayRecordJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="partnerTradeNo != null and partnerTradeNo != ''">
+				AND a.partner_trade_no = #{partnerTradeNo}
+			</if>
+			<if test="mchAppid != null and mchAppid != ''">
+				AND a.mch_appid = #{mchAppid}
+			</if>
+			<if test="mchid != null and mchid != ''">
+				AND a.mchid = #{mchid}
+			</if>
+			<if test="reOpenid != null and reOpenid != ''">
+				AND a.re_openid = #{reOpenid}
+			</if>
+			<if test="paymentNo != null and paymentNo != ''">
+				AND a.payment_no = #{paymentNo}
+			</if>
+			<if test="returnCode != null and returnCode != ''">
+				AND a.return_code = #{returnCode}
+			</if>
+			<if test="resultCode != null and resultCode != ''">
+				AND a.result_code = #{resultCode}
+			</if>
+			<if test="returnMsg != null and returnMsg != ''">
+				AND a.return_msg = #{returnMsg}
+			</if>
+			<if test="errCode != null and errCode != ''">
+				AND a.err_code = #{errCode}
+			</if>
+			<if test="errCodeDes != null and errCodeDes != ''">
+				AND a.err_code_des = #{errCodeDes}
+			</if>
+			<if test="paymentTime != null and paymentTime != ''">
+				AND a.payment_time = #{paymentTime}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxCompanyPayRecord">
+		SELECT 
+			<include refid="wxCompanyPayRecordColumns"/>
+		FROM t_wx_company_pay_record a
+		<include refid="wxCompanyPayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_wx_company_pay_record(
+			id,
+			partner_trade_no,
+			mch_appid,
+			mchid,
+			re_openid,
+			payment_no,
+			return_code,
+			result_code,
+			return_msg,
+			err_code,
+			err_code_des,
+			payment_time,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{partnerTradeNo},
+			#{mchAppid},
+			#{mchid},
+			#{reOpenid},
+			#{paymentNo},
+			#{returnCode},
+			#{resultCode},
+			#{returnMsg},
+			#{errCode},
+			#{errCodeDes},
+			#{paymentTime},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_wx_company_pay_record SET 	
+			partner_trade_no = #{partnerTradeNo},
+			mch_appid = #{mchAppid},
+			mchid = #{mchid},
+			re_openid = #{reOpenid},
+			payment_no = #{paymentNo},
+			return_code = #{returnCode},
+			result_code = #{resultCode},
+			return_msg = #{returnMsg},
+			err_code = #{errCode},
+			err_code_des = #{errCodeDes},
+			payment_time = #{paymentTime},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_wx_company_pay_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
