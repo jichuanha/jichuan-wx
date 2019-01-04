@@ -27,7 +27,7 @@ public class TimingSendRedPack {
             return ;
         }
         for (JoinActivity joinActivity : sendRedPackInfo) {
-            wechatRedPackService.sendRedPackBusi(joinActivity);
+            wechatRedPackService.sendAwardBusi(joinActivity);
         }
 
     }

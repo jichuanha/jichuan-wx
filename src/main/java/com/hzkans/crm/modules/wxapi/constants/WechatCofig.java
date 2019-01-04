@@ -60,4 +60,12 @@ public class WechatCofig {
     public static final String SEND_READ_PACK =
             "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 
+    /** 企业付款到余额(需要证书)*/
+    public static final String COMPANY_PAY =
+            "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
+
+    /** 企业付款结果查询*/
+    public static final String QUERY_COMPANY_PAY =
+            "https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo";
+
 }

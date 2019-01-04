@@ -39,8 +39,6 @@ public class LuckDrawActController extends BaseController {
     private static final Integer MAX_NUM = 4;
 
     @Autowired
-    private ActivityService activityService;
-    @Autowired
     private WechatPlatfromService wechatPlatfromService;
     @Autowired
     private MemberAssociationService memberAssociationService;

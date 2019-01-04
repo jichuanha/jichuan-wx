@@ -36,4 +36,20 @@ public interface WxApiObserver{
      */
     String sendWxRedPack(Map<String, Object> objectMap) throws Exception;
 
+    /**
+     * 企业付款到余额
+     * @param objectMap
+     * @return
+     * @throws Exception
+     */
+    String companyPay(Map<String, Object> objectMap) throws Exception;
+
+    /**
+     * 查询企业付款结果
+     * @param objectMap
+     * @return
+     * @throws Exception
+     */
+    String queryConpanyPay(Map<String, Object> objectMap) throws Exception;
+
 }

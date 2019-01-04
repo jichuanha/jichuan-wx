@@ -128,4 +128,18 @@ public class WxApiObserverImpl implements WxApiObserver {
                 WXRedPackUtils.createXML(objectMap), "", 0, "false");
     }
 
+    @Override
+    public String companyPay(Map<String, Object> objectMap) throws Exception {
+
+        return WXRedPackUtils.doSendMoney(WechatCofig.COMPANY_PAY,
+                WXRedPackUtils.createXML(objectMap), "", 0, "false");
+    }
+
+    @Override
+    public String queryConpanyPay(Map<String, Object> objectMap) throws Exception {
+
+        return WXRedPackUtils.doSendMoney(WechatCofig.QUERY_COMPANY_PAY,
+                WXRedPackUtils.createXML(objectMap), "", 0, "false");
+    }
+
 }
