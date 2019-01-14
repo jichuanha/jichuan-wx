@@ -519,7 +519,7 @@
                     success:function (msg) {
                         var msg = JSON.parse(msg);
                         if(msg.code == 10000){
-                            ajaxFuc();
+                            // ajaxFuc();
                             $('.res-content').css('display','block');
                             $('.res-btn').css('display','block');
                         }
