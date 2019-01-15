@@ -37,7 +37,8 @@ public class WechatUtils {
 		// 1.将token、timestamp、nonce三个参数进行字典序排序
 
 		String token = Global.getConfig("wx.token");
-		if (StringUtils.isNotBlank(token)){
+		logger.info("token {}",token);
+		if (StringUtils.isBlank(token)){
 			return false;
 		}
 		String[] arr = new String[]{token, timestamp, nonce};

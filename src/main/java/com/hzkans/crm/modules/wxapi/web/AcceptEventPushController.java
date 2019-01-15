@@ -70,7 +70,6 @@ public class AcceptEventPushController {
             // 随机字符串
             String echostr = request.getParameter("echostr");
             PrintWriter out = response.getWriter();
-
             // 通过检验signature对请求进行校验，若校成功则原样返回echostr，表示接入成功，否则接入失败
             if (WechatUtils.checkSignature(signature, timestamp, nonce)) {
                 out.print(echostr);
@@ -79,13 +78,6 @@ public class AcceptEventPushController {
             out.close();
         } catch (Exception e) {
             logger.info("verification is fail：", e);
-        } finally {
-            //最后回复空串
-            PrintWriter writer = response.getWriter();
-            writer.print("");
-            writer.flush();
-            writer.close();
-
         }
     }
 
