@@ -52,4 +52,12 @@ public interface WxApiObserver{
      */
     String queryConpanyPay(Map<String, Object> objectMap) throws Exception;
 
+    /**
+     * 微信jsapi统一下单
+     * @param objectMap
+     * @return
+     * @throws Exception
+     */
+    String wxJsPay(Map<String, String> objectMap) throws Exception;
+
 }

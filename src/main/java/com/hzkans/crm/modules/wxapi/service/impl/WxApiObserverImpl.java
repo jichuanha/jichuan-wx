@@ -10,6 +10,7 @@ import com.hzkans.crm.modules.wechat.service.GetWxReplyMaterialService;
 import com.hzkans.crm.modules.wechat.service.MemberAssociationService;
 import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wxapi.constants.WechatCofig;
+import com.hzkans.crm.modules.wxapi.constants.WxPayConfig;
 import com.hzkans.crm.modules.wxapi.service.BaseApiObserver;
 import com.hzkans.crm.modules.wxapi.service.WxApiObserver;
 import com.hzkans.crm.modules.wxapi.utils.HttpRequestUtil;
@@ -124,22 +125,28 @@ public class WxApiObserverImpl implements WxApiObserver {
     @Override
     public String sendWxRedPack(Map<String, Object> objectMap) throws Exception {
 
-        return WXRedPackUtils.doSendMoney(WechatCofig.SEND_READ_PACK,
-                WXRedPackUtils.createXML(objectMap), "", 0, "false");
+        return WXRedPackUtils.requestOnce(WechatCofig.SEND_READ_PACK,
+                WXRedPackUtils.createXML(objectMap), true, "", 0, "false");
     }
 
     @Override
     public String companyPay(Map<String, Object> objectMap) throws Exception {
 
-        return WXRedPackUtils.doSendMoney(WechatCofig.COMPANY_PAY,
-                WXRedPackUtils.createXML(objectMap), "", 0, "false");
+        return WXRedPackUtils.requestOnce(WechatCofig.COMPANY_PAY,
+                WXRedPackUtils.createXML(objectMap), true, "", 0, "false");
     }
 
     @Override
     public String queryConpanyPay(Map<String, Object> objectMap) throws Exception {
 
-        return WXRedPackUtils.doSendMoney(WechatCofig.QUERY_COMPANY_PAY,
-                WXRedPackUtils.createXML(objectMap), "", 0, "false");
+        return WXRedPackUtils.requestOnce(WechatCofig.QUERY_COMPANY_PAY,
+                WXRedPackUtils.createXML(objectMap), true,"", 0, "false");
+    }
+
+    @Override
+    public String wxJsPay(Map<String, String> objectMap) throws Exception {
+        return WXRedPackUtils.requestOnce(WxPayConfig.PAY,
+                WXRedPackUtils.mapToXml(objectMap), false, "", 0, "false");
     }
 
 }

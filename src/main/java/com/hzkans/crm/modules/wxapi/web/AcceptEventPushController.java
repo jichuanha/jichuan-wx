@@ -10,6 +10,7 @@ import com.hzkans.crm.modules.wechat.service.WechatPlatfromService;
 import com.hzkans.crm.modules.wxapi.service.WxApiObserver;
 import com.hzkans.crm.modules.wxapi.utils.MessageUtils;
 import com.hzkans.crm.modules.wxapi.utils.WechatUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,13 +149,18 @@ public class AcceptEventPushController {
             }
             //判断有没有绑定
             boolean boundFlg = false; //默认没有绑定
+            String mobile = "";
             MemberAssociation ass = new MemberAssociation();
             ass.setOpenId(openId);
             List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(ass);
-            String mobile = messageAttentionInfo.get(0).getMobile();
-            if(!StringUtils.isEmpty(mobile)) {
-                boundFlg = true;
+
+            if(CollectionUtils.isNotEmpty(messageAttentionInfo)) {
+                mobile = messageAttentionInfo.get(0).getMobile();
+                if(!StringUtils.isEmpty(mobile)) {
+                    boundFlg = true;
+                }
             }
+
             userInfo.put("code_flg", codeFlg);
             userInfo.put("bound_flg", boundFlg);
             userInfo.put("mobile", mobile);

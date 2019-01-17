@@ -1,5 +1,7 @@
 package com.hzkans.crm.modules.wxapi.constants;
 
+import org.apache.http.client.HttpClient;
+
 /**
  * @author jc
  * @description
@@ -11,16 +13,20 @@ public class WechatCofig {
     public static final String FIELD_SIGN = "sign";
     public static final String FIELD_SIGN_TYPE = "sign_type";
 
+    public static final String WXPAYSDK_VERSION = "WXPaySDK/3.0.9";
+    public static final String USER_AGENT = WXPAYSDK_VERSION +
+            " (" + System.getProperty("os.arch") + " " + System.getProperty("os.name") + " " + System.getProperty("os.version") +
+            ") Java/" + System.getProperty("java.version") + " HttpClient/" + HttpClient.class.getPackage().getImplementationVersion();
 
     public static final String HMACSHA256 = "HMAC-SHA256";
     public static final String MD5 = "MD5";
 
     //key
-    public static final String WECHAT_H5_PARTNER_KEY = "ADSFSY64UOiopasiljfiuadklkdj7569";
-    //证书路径
-    public static final String KEYSTORE_FILE = "/deploy/certs/wechatpay/";
-    //商户号
-    public static final String MCH_ID="1504534011";
+    public static final String WECHAT_H5_PARTNER_KEY = "ADSZJC64UOiopasiljfiuadklkdj7569";
+    //证书路径 E:\cert   /deploy/certs/wechatpay/
+    public static final String KEYSTORE_FILE = "E:/cert/";
+    //商户号 1504534011
+    public static final String MCH_ID="1247278501";
 
     /** 获取access_token*/
     public static final String GET_ACCESS_TOKEN =

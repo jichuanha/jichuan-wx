@@ -1,10 +1,11 @@
 package com.hzkans.crm.modules.wechat.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.JsonUtil;
+import com.hzkans.crm.common.utils.StringUtils;
+import com.hzkans.crm.common.utils.XmlUtil;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.service.JoinActivityService;
@@ -25,6 +26,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -68,19 +70,20 @@ public class WechatRedPackService {
             String resultCode = "";
             String returnCode = "";
             int joinStatus = 0;
-
+            String openId = joinActivity.getOpenId();
             if(type == 1) {
                 //调用发送红包api
                 WxRedPackRecord record1 = sendRedPack(joinActivity);
                 resultCode = record1.getResult_code();
                 returnCode = record1.getReturn_code();
                 //保存记录
-                wxRedPackRecordDao.get(record1);
+                wxRedPackRecordDao.insert(record1);
             }else if(type == 2) {
                 //企业付款到余额
                 WxCompanyPayRecord record1 = companyPay(joinActivity);
                 resultCode = record1.getResult_code();
                 returnCode = record1.getReturn_code();
+                record1.setRe_openid(openId);
                 //下面这种状况时需要查询付款状态
                 if(resultCode != null && resultCode.equals("FAIL")) {
                     String payStatus = queryCompanyPay(joinActivity);
@@ -100,10 +103,10 @@ public class WechatRedPackService {
                 joinStatus = JoinActivityStatusEnum.SEND_FAIL.getCode();
             }
             //修改状态
-            JoinActivity activity = new JoinActivity();
+            /*JoinActivity activity = new JoinActivity();
             activity.setStatus(joinStatus);
             activity.setId(joinActivity.getId());
-            joinActivityService.updateJoinActivity(activity);
+            joinActivityService.updateJoinActivity(activity);*/
 
         } catch (Exception e) {
             logger.error("sendRedPackBusi error",e);
@@ -112,6 +115,48 @@ public class WechatRedPackService {
             lock.unlock();
         }
 
+    }
+
+    /**
+     * 统一下单
+     * @return
+     */
+    public Map<String, String> payOrder(String ip, String openId) {
+        Map<String, String> map = null;
+        try {
+            Map<String, String> objectMap = generateParameter(ip, openId);
+            logger.info("objectMap {}", objectMap);
+            String s = wxApiObserver.wxJsPay(objectMap);
+            logger.info("s {}",s);
+            map = WXRedPackUtils.xmlToMap(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private Map<String, String> generateParameter(String ip, String openId) {
+        Map<String, String> parameterMap = new TreeMap<>();
+        if(StringUtils.isEmpty(ip)) {
+            ip = "10.1.10.56";
+        }
+        try {
+            parameterMap.put("appid", "wxc34e2d05619f3915");
+            parameterMap.put("mch_id", "1523079941");
+            parameterMap.put("nonce_str", WXRedPackUtils.buildRandom());
+            parameterMap.put("body", "嗨云商超");
+            parameterMap.put("out_trade_no", WXRedPackUtils.buildRandom());
+            parameterMap.put("openid", openId);
+            parameterMap.put("total_fee", 1+"");
+            parameterMap.put("spbill_create_ip", ip);
+            parameterMap.put("notify_url", "https://crmtest.yyzws.com/dongyin_CRM/pay/callback");
+            parameterMap.put("trade_type", "JSAPI");
+            parameterMap.put("sign",WXRedPackUtils.getWxParamSign(parameterMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return parameterMap;
     }
 
     private String queryCompanyPay(JoinActivity joinActivity) {
@@ -124,8 +169,8 @@ public class WechatRedPackService {
             objectMap.put("sign", WXRedPackUtils.createSign(objectMap));
             String result = wxApiObserver.queryConpanyPay(objectMap);
             logger.info("queryCompanyPay {}",result);
-            JSONObject object = JSONObject.parseObject(result);
-            return object.getString("status");
+            Map<String, String> map = XmlUtil.xmlStr2Map(result);
+            return map.get("status");
 
         } catch (Exception e) {
             logger.error("queryCompanyPay error");
@@ -138,9 +183,8 @@ public class WechatRedPackService {
             Map<String, Object> objectMap = dealRedPackParemater(joinActivity);
             String sendResult = wxApiObserver.sendWxRedPack(objectMap);
             logger.info("sendResult {}", sendResult);
-            WxRedPackRecord record1 = JSONArray.parseObject(sendResult, WxRedPackRecord.class);
-            logger.info("record1 {}",JsonUtil.toJson(record1));
-            return record1;
+            Map<String, String> map = XmlUtil.xmlStr2Map(sendResult);
+            return JSONArray.parseObject(JsonUtil.toJson(map), WxRedPackRecord.class);
         } catch (Exception e) {
             logger.error("sendRedPack error",e);
             throw new ServiceException("sendRedPack error");
@@ -150,11 +194,11 @@ public class WechatRedPackService {
     private WxCompanyPayRecord companyPay(JoinActivity joinActivity) {
         try {
             Map<String, Object> objectMap = dealCompanyPay(joinActivity);
+            logger.info("objectMap {} ",JsonUtil.toJson(objectMap));
             String payResult = wxApiObserver.companyPay(objectMap);
             logger.info("payResult {}", payResult);
-            WxCompanyPayRecord record1 = JSONArray.parseObject(payResult, WxCompanyPayRecord.class);
-            logger.info("record1 {}",JsonUtil.toJson(record1));
-            return record1;
+            Map<String, String> map = XmlUtil.xmlStr2Map(payResult);
+            return JSONArray.parseObject(JsonUtil.toJson(map), WxCompanyPayRecord.class);
         } catch (Exception e) {
             logger.error("sendRedPack error",e);
             throw new ServiceException("sendRedPack error");
@@ -166,16 +210,16 @@ public class WechatRedPackService {
     private Map<String, Object> dealCompanyPay(JoinActivity joinActivity) {
 
         try {
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new TreeMap<>();
+            map.put("amount", joinActivity.getAward());
+            //是否校验用户名称 NO_CHECK :不校验  FORCE_CHECK :强制校验
+            map.put("check_name", "NO_CHECK");
+            map.put("desc", "活动");
             map.put("mch_appid", joinActivity.getAppId());
             map.put("mchid", WechatCofig.MCH_ID);
             map.put("nonce_str", WXRedPackUtils.buildRandom());
-            map.put("partner_trade_no", joinActivity.getOrderSn());
             map.put("openid", joinActivity.getOpenId());
-            //是否校验用户名称 NO_CHECK :不校验  FORCE_CHECK :强制校验
-            map.put("check_name", "NO_CHECK");
-            map.put("amount", joinActivity.getAward());
-            map.put("desc", "活动");
+            map.put("partner_trade_no", joinActivity.getOrderSn());
             map.put("spbill_create_ip", InetAddress.getLocalHost());
             map.put("sign", WXRedPackUtils.createSign(map));
             return map;
