@@ -123,19 +123,19 @@
 			update_date
 		) VALUES (
 			#{id},
-			#{partnerTradeNo},
-			#{mchAppid},
+			#{partner_trade_no},
+			#{mch_appid},
 			#{mchid},
-			#{reOpenid},
-			#{paymentNo},
-			#{returnCode},
-			#{resultCode},
-			#{returnMsg},
-			#{errCode},
-			#{errCodeDes},
-			#{paymentTime},
-			#{createDate},
-			#{updateDate}
+			#{re_openid},
+			#{payment_no},
+			#{return_code},
+			#{result_code},
+			#{return_msg},
+			#{err_code},
+			#{err_code_des},
+			#{payment_time},
+			now(),
+			now()
 		)
 	</insert>
 	

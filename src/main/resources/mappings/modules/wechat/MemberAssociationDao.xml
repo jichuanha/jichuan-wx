@@ -122,6 +122,9 @@
 			<if test="mobile != null">
 				mobile = #{mobile},
 			</if>
+			<if test="wechatId != null">
+				wechat_id = #{wechatId},
+			</if>
 		</set>
 		WHERE open_id = #{openId}
 	</update>
