@@ -93,6 +93,9 @@ public enum ResponseEnum {
     B_E_DEAL_PARaMETER_ERROR(40047, 0, "处理参数异常!"),
     B_E_SEND_RED_PACK_ERROR(40047, 0, "发送红包异常!"),
     B_E_DOUND_MOBILE__ERROR(40047, 0, "绑定手机号异常!"),
+    B_E_NOT_FIND_ORDER(40048, 0, "该订单号错误,请重新提交新的订单号!"),
+    B_E_ORDRE_HAS_JOIN_ACTIVITY(40049, 0, "该订单号已参加抽奖,请重新提交新的订单号!"),
+    B_E_MOBILE_IS_NULL(40050, 0, "手机号不能为空!"),
     /**
      * 添加失败
      */

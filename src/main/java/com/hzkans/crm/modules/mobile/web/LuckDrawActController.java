@@ -1,13 +1,12 @@
 package com.hzkans.crm.modules.mobile.web;
 
+import com.google.common.base.Strings;
 import com.hzkans.crm.common.constant.ResponseEnum;
 import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
-import com.hzkans.crm.modules.activity.entity.Activity;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
-import com.hzkans.crm.modules.activity.service.ActivityService;
 import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
 import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.entity.QueryResult;
@@ -36,7 +35,7 @@ import java.util.List;
 @RequestMapping("${frontPath}/luckAct")
 public class LuckDrawActController extends BaseController {
 
-    private static final Integer MAX_NUM = 4;
+    private static final Integer MAX_NUM = 3;
 
     @Autowired
     private WechatPlatfromService wechatPlatfromService;
@@ -52,21 +51,24 @@ public class LuckDrawActController extends BaseController {
         return "modules/mobile/lottery";
     }
 
+
     /**
-     * 根据手机号确定抽奖次数
+     * 根据手机号确定抽奖次数()
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/drawNum")
     @ResponseBody
+    @Deprecated
     public String ensureDrawNum(HttpServletRequest request, HttpServletResponse response) {
         Long actId = RequestUtils.getLong(request, "act_id", "","act_id is null");
         Integer actType = RequestUtils.getInt(request, "act_type", "","act_type is null");
-        String mobile = RequestUtils.getString(request, "mobile", "mobile is null");
         String openId = RequestUtils.getString(request, "open_id", "open_id is null");
         String appId = RequestUtils.getString(request, "app_id", "app_id is null");
+        String orderSn = RequestUtils.getString(request, "order_sn", "order_sn is null");
         String messageCode = RequestUtils.getString(request, "message_code");
+        String mobile = RequestUtils.getString(request, "mobile");
         //如果有验证码,验证验证码的有效性  TODO 测试先去掉
         /*if(!StringUtils.isEmpty(messageCode)) {
             String values = (String) CacheUtils.get("wechatCache", mobile);
@@ -88,24 +90,21 @@ public class LuckDrawActController extends BaseController {
             logger.info("message {}", message);
             return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, message);
         }
-        //获取根据不同手机号查询的次数
+        //获取根据不同订单号查询的次数
         Integer currentNum = (Integer) CacheUtils.get(openId+MAX_NUM);
         logger.info("currentNum {}",currentNum);
         if(currentNum == null) {
             currentNum = 0;
         }
-        if(currentNum >= MAX_NUM) {
-            //当数量大于4次时,会返回提示走验证码,当带着验证码来的时候,还会再走这个方法,防止出现重复返回问题
+        if(currentNum.equals(MAX_NUM)) {
+            //当数量为第4次时,需要绑定手机号
             queryResult.setCodeFlg(true);
-            String cache = (String) CacheUtils.get("wechatCache", mobile+MAX_NUM);
-            if(StringUtils.isEmpty(cache)) {
-                CacheUtils.put("wechatCache", mobile+MAX_NUM, mobile);
-                return ResponseUtils.getSuccessApiResponseStr(queryResult);
+            if(Strings.isNullOrEmpty(mobile)) {
+                return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_MOBILE_IS_NULL);
             }
-
-        }else {
-            CacheUtils.put(openId+MAX_NUM, currentNum+1);
         }
+        //参加活动次数加1
+        CacheUtils.put(openId+MAX_NUM, currentNum+1);
         //参加活动的业务逻辑
         try {
             queryResult.setActId(actId);
@@ -113,73 +112,16 @@ public class LuckDrawActController extends BaseController {
             queryResult.setMobile(mobile);
             queryResult.setOpenId(openId);
             queryResult.setAppId(appId);
+            queryResult.setOrderSn(orderSn);
             QueryResult result = joinActivityService.joinActivity(queryResult, activity);
             logger.info(" result {}",result);
             return ResponseUtils.getSuccessApiResponseStr(result);
         } catch (Exception e) {
             logger.error("ensureDrawNum con error",e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
+            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR, e.getMessage());
         }
 
     }
-
-    @RequestMapping("/drawPageInfo")
-    @ResponseBody
-    public String drawPageInfo(HttpServletRequest request, HttpServletResponse response) {
-        //有两种情况 1.绑定手机号了就不需要传入手机号,2.没有绑定,就需要传入手机号
-        String mobile = RequestUtils.getString(request, "mobile");
-        String openId = RequestUtils.getString(request, "open_id", "open_id is null");
-        Long actId = RequestUtils.getLong(request, "act_id", "" ,"act_id is null");
-        Integer actType = RequestUtils.getInt(request, "act_type", "" ,"act_type is null");
-        String appId = RequestUtils.getString(request, "app_id", "app_id is null");
-        try {
-            if(mobile == null) {
-                //绑定手机号情况
-                MemberAssociation association = new MemberAssociation();
-                association.setOpenId(openId);
-                List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(association);
-                logger.info("messageAttentionInfo {}",JsonUtil.toJson(messageAttentionInfo));
-                if(CollectionUtils.isEmpty(messageAttentionInfo)) {
-                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-                }
-                mobile = messageAttentionInfo.get(0).getMobile();
-                if(StringUtils.isEmpty(mobile)) {
-                    logger.error("mobile is null");
-                    return ResponseUtils.getFailApiResponseStr(ResponseEnum.B_E_DOUND_MOBILE__ERROR);
-                }
-
-            }
-            //如果通过个人中心绑定的手机号,就不会走参加活动这个步骤(将订单插入到参加活动表),也防止了不通过输入手机号就进入抽奖页面情况
-            ActivityLottery activityLottery = new ActivityLottery();
-            activityLottery.setId(actId.toString());
-            activityLottery.setActivityType(actType);
-            ActivityLottery activity = activityLotteryService.getActivityLottery(activityLottery);
-            QueryResult queryResult = new QueryResult();
-            queryResult.setCodeFlg(false);
-            queryResult.setActId(actId);
-            queryResult.setActType(actType);
-            queryResult.setMobile(mobile);
-            queryResult.setOpenId(openId);
-            queryResult.setAppId(appId);
-            joinActivityService.joinActivity(queryResult, activity);
-
-            //根据手机号查询抽奖次数
-            JoinActivity joinActivity = new JoinActivity();
-            joinActivity.setActId(actId);
-            joinActivity.setActType(actType);
-            joinActivity.setMobile(mobile);
-            //本次活动不需要审核
-            joinActivity.setStatus(JoinActivityStatusEnum.UN_AUDIT.getCode());
-            logger.info("joinActivity {}",JsonUtil.toJson(joinActivity));
-            return ResponseUtils.getSuccessApiResponseStr(joinActivityService.getDrawNum(joinActivity));
-        } catch (ServiceException e) {
-            logger.error("drawPageInfo controller error",e);
-            return ResponseUtils.getFailApiResponseStr(ResponseEnum.S_E_SERVICE_ERROR);
-        }
-    }
-
-
-
 
 
     /**
@@ -190,24 +132,22 @@ public class LuckDrawActController extends BaseController {
      * @return
      */
     private String checkActivity(ActivityLottery activity, String mobile, String appId) {
-        //校验手机号
-        Boolean checkMobile = TradeUtil.checkMobile(mobile);
-        if(!checkMobile) {
-            return "手机号码格式有误";
-        }
         WechatPlatfrom platfrom = (WechatPlatfrom) CacheUtils.get("wechatCache", appId);
         if(null == platfrom) {
             WechatPlatfrom plat = new WechatPlatfrom();
             plat.setAppId(appId);
             platfrom = wechatPlatfromService.getWechatPlatform(plat);
         }
-        MemberAssociation association = new MemberAssociation();
-        association.setWechatId(platfrom.getWechatNo());
-        association.setMobile(mobile);
-        List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(association);
-        if(CollectionUtils.isNotEmpty(messageAttentionInfo)) {
-            return "号码已经被绑定";
+        if(!Strings.isNullOrEmpty(mobile)){
+            MemberAssociation association = new MemberAssociation();
+            association.setWechatId(platfrom.getWechatNo());
+            association.setMobile(mobile);
+            List<MemberAssociation> messageAttentionInfo = memberAssociationService.getMessageAttentionInfo(association);
+            if(CollectionUtils.isNotEmpty(messageAttentionInfo)) {
+                return "号码已经被绑定";
+            }
         }
+
         if(null == activity) {
             return "活动已结束";
         }

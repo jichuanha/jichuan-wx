@@ -12,7 +12,9 @@ public class QueryResult implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    //是否需要验证码 (1:需要 2:不需要)
+    /**
+     * 是否需要验证码 (1:需要 2:不需要)
+     */
     private Boolean codeFlg = false;
     private Integer drawNum;
     private String mobile;
@@ -21,9 +23,20 @@ public class QueryResult implements Serializable{
     private Integer actType;
     private String openId;
     private String appId;
-    //是否有有效订单
+    private String orderSn;
+    /**
+     * 是否有有效订单
+     */
     private Boolean validOrder = false;
 
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
 
     public Boolean getValidOrder() {
         return validOrder;

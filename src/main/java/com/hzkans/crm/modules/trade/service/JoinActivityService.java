@@ -277,9 +277,10 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 */
 	public QueryResult joinActivity(QueryResult queryResult, ActivityLottery activity) {
 
+		PagePara<Order> drawNum = null;
+		QueryResult result = new QueryResult();
 		try {
 			String mobile = queryResult.getMobile();
-			QueryResult result = new QueryResult();
 			result.setMobile(mobile);
 			//判断是否要绑定手机号
 			if(queryResult.getCodeFlg()) {
@@ -290,33 +291,35 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
                 memberAssociationService.boundMobile(association);
             }
             //获取可以参加活动的订单 type =1 代表可以参加活动的订单,type=2代表所有类型的订单
-			PagePara<Order> drawNum = getCanJoinActOrder(queryResult, activity, 1);
+			drawNum = getCanJoinActOrder(queryResult, activity);
 			logger.info(" drawNum {}",JsonUtil.toJson(drawNum));
-			//查询全部
-			PagePara<Order> allDrawNum = getCanJoinActOrder(queryResult, activity, 2);
-			if(allDrawNum.getCount() > 0) {
-				result.setValidOrder(true);
-			}
-			//1让这些订单参加活动
-			Integer count = drawNum.getCount();
-			List<Order> list = drawNum.getList();
-			result.setDrawNum(count);
-			//1.1 抽奖次数为0,就直接返回,不为0,将查询到的数据插入到参加活动表
-			if(count == 0) {
-				return result;
-			}
-			List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult);
-			saveAllResult(joinActivities);
-			//1.2 将查询的订单状态修改
-            Order order = new Order();
-			order.setStatus(OrderStatusEnum.HAS_JOIN_ACT.getCode());
-			order.setIds(getIds(list));
-			orderService.updateOrder(order);
-			return result;
 		} catch (Exception e) {
 			logger.error("joinActivity error",e);
 			throw new ServiceException(ResponseEnum.B_E_JOIN_ACTIVITY_ERROR);
 		}
+		//1让这些订单参加活动
+		Integer count = drawNum.getCount();
+		List<Order> list = drawNum.getList();
+		result.setDrawNum(count);
+		//1.1 如果没有查到数据,就抛出订单号不存在异常
+		if(count == 0) {
+			throw new ServiceException(ResponseEnum.B_E_NOT_FIND_ORDER);
+		}
+		Order findOrder = list.get(0);
+		//1.2 如果订单的状态不为待审核状态,就代表该订单已经参加过活动
+		if(!OrderStatusEnum.ORDER_TO_AUDIT.getCode().equals(findOrder.getStatus())) {
+			throw new ServiceException(ResponseEnum.B_E_ORDRE_HAS_JOIN_ACTIVITY);
+		}
+		//1.3订单参加活动
+		List<JoinActivity> joinActivities = dealParemater(list, activity, queryResult);
+		saveAllResult(joinActivities);
+		//1.2 将查询的订单状态修改
+		Order order = new Order();
+		order.setStatus(OrderStatusEnum.HAS_JOIN_ACT.getCode());
+		order.setIds(getIds(list));
+		orderService.updateOrder(order);
+		return result;
+
 
 	}
 
@@ -377,22 +380,20 @@ public class JoinActivityService extends CrudService<JoinActivityDao, JoinActivi
 	 * @param queryResult
 	 * @return
 	 */
-	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, ActivityLottery activity, Integer type) {
+	public PagePara<Order> getCanJoinActOrder(QueryResult queryResult, ActivityLottery activity) {
 		try {
 
 			String shopNo = activity.getShopNo();
 			String[] split = shopNo.split(",");
 			List<String> strings = Arrays.asList(split);
 			Order order = new Order();
-			order.setMobile(queryResult.getMobile());
+			order.setOrderSn(queryResult.getOrderSn());
 			order.setStartDate(activity.getOrderActiveDate());
 			order.setEndDate(activity.getOrderInactiveDate());
 			order.setShopLists(strings);
-			if(type == 1) {
-				order.setStatus(OrderStatusEnum.ORDER_LIST.getCode());
-			}
 			PagePara<Order> pagePara = new PagePara<>();
 			pagePara.setData(order);
+			logger.info(" pagePara {}",JsonUtil.toJson(pagePara));
 			return orderService.getAllOrder(pagePara);
 		} catch (Exception e) {
 			logger.error("getDrawNum error",e);

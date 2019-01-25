@@ -86,6 +86,34 @@ public class WXRedPackUtils {
         return DigestUtils.md5Hex(toSignStr).toUpperCase();
     }
 
+    /**
+     * 不需要证书
+     * @param url
+     * @param data
+     * @param hostName
+     * @param port
+     * @param isHttps
+     * @return
+     * @throws Exception
+     */
+    public static String reqeustOnceNotUserCert(String url, String data,String hostName,int port,String isHttps) throws Exception{
+        return requestOnce(url, data, false, hostName, port, isHttps);
+    }
+
+    /**
+     * 需要证书
+     * @param url
+     * @param data
+     * @param hostName
+     * @param port
+     * @param isHttps
+     * @return
+     * @throws Exception
+     */
+    public static String reqeustOnceUserCert(String url, String data,String hostName,int port,String isHttps) throws Exception{
+        return requestOnce(url, data, true, hostName, port, isHttps);
+    }
+
     public static String requestOnce(String url, String data, boolean userCert,String hostName,int port,String isHttps) throws Exception {
         BasicHttpClientConnectionManager connManager;
         if(userCert) {

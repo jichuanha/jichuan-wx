@@ -2,7 +2,6 @@ package com.hzkans.crm.modules.wxapi.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzkans.crm.common.utils.CacheUtils;
-import com.hzkans.crm.common.utils.JsonUtil;
 import com.hzkans.crm.common.utils.StringUtils;
 import com.hzkans.crm.modules.wechat.constants.MessageTypeEnum;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;

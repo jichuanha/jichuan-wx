@@ -2,7 +2,7 @@ package com.hzkans.crm.modules.trade.constants;
 
 /**
  * @author jc
- * @description
+ * @description 订单状态
  * @create 2018/12/4
  */
 public enum  OrderStatusEnum {

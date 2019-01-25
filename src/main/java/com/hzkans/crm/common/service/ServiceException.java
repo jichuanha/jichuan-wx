@@ -19,6 +19,7 @@ public class ServiceException extends RuntimeException {
 		super();
 	}
     public ServiceException(ResponseEnum responseEnum) {
+		super( responseEnum.getMsg());
         this.code = responseEnum.getCode();
         this.serviceMessage = responseEnum.getMsg();
     }
@@ -51,7 +52,7 @@ public class ServiceException extends RuntimeException {
     }
 
 	public ServiceException(int code,String message){
-		super();
+		super( message);
 		this.code =code;
 		this.serviceMessage =message;
 	}
