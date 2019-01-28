@@ -2,16 +2,12 @@ package com.hzkans.crm.modules.mobile.web;
 
 import com.google.common.base.Strings;
 import com.hzkans.crm.common.constant.ResponseEnum;
-import com.hzkans.crm.common.service.ServiceException;
 import com.hzkans.crm.common.utils.*;
 import com.hzkans.crm.common.web.BaseController;
 import com.hzkans.crm.modules.activity.entity.ActivityLottery;
 import com.hzkans.crm.modules.activity.service.ActivityLotteryService;
-import com.hzkans.crm.modules.trade.constants.JoinActivityStatusEnum;
-import com.hzkans.crm.modules.trade.entity.JoinActivity;
 import com.hzkans.crm.modules.trade.entity.QueryResult;
 import com.hzkans.crm.modules.trade.service.JoinActivityService;
-import com.hzkans.crm.modules.trade.utils.TradeUtil;
 import com.hzkans.crm.modules.wechat.entity.MemberAssociation;
 import com.hzkans.crm.modules.wechat.entity.WechatPlatfrom;
 import com.hzkans.crm.modules.wechat.service.MemberAssociationService;
@@ -53,7 +49,7 @@ public class LuckDrawActController extends BaseController {
 
 
     /**
-     * 根据手机号确定抽奖次数()
+     * 根据手机号确定抽奖次数
      * @param request
      * @param response
      * @return
